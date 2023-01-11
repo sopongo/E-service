@@ -14,6 +14,8 @@ error_reporting(error_reporting() & ~E_NOTICE);
 
 //$stmt = new CRUD();
 
+/*ทดสอบ คอมเม้นต์ และอัพโหลดลง GITHUB*/
+
 if($_SESSION['sess_id_user']==NULL && $_SESSION['sess_status_user']==NULL){ 
   $_SESSION = []; //empty array. 
   session_destroy(); die(include('login.inc.php')); 
