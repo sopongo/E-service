@@ -1,0 +1,52 @@
+/*!
+ *   AdminLTE v3.2.0 Customize
+ *   Author: Bouy22
+ */
+/*!
+ * Bootstrap v4.6.1 (https://getbootstrap.com/)
+ * Copyright 2011-2021 The Bootstrap Authors
+ * Copyright 2011-2021 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
+
+
+ 
+  .rounded {
+    width: 100px;
+
+  }
+  .img-thumbnail {
+    width: 80px !important;
+  }
+  .message {
+    display: none;
+  }
+  #overlay {
+    background: #ffffff;
+    color: #666666;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 5000;
+    top: 0;
+    left: 0;
+    float: left;
+    text-align: center;
+    padding-top: 25%;
+    opacity: 0.8;
+  }
+
+a.brand-link{ background-color: #EEE;}
+a.brand-link img{ display: block; background-color: #EEE; width:100%;}
+a.brand-link span{ font-size:14px; color:#000; font-weight: bold; text-align: center; background-color: #fcb900; width: 100%; margin: auto;
+display: block; margin-top:40px; padding:5px 5px 5px 5px ; }
+
+.breadcrumb-item{ font-size:0.70rem;}
+.total{ font-size: 0.90rem; font-weight:800;}
+
+.text-1{ color: #080;} /*green*/
+.text-2{ color: #f00;} /*red*/
+
+
+/*Font-Size*/
+.font-1r{ font-size:0.90rem;}

@@ -1,0 +1,15 @@
+/*!
+ *   CSS เพิ่มเติม
+ *   Author: โสภณ โกมลชลมาศ
+ *   Website: 
+ *   License: 
+ */
+
+ /*background: url('../img/icon_top.png') no-repeat center bottom; */
+.scrollup{ width:70px; height:40px; opacity:0.8; position:fixed; bottom:120px; right:30px; display:none; /*text-indent:-9999px;*/ font-size:1.0rem; line-height:5px; color:#000; text-align:center;}
+.scrollup img { margin:auto; display:block;} 
+/*a.scrollup:hover{ } /*background: url('../img/icon_top.png') no-repeat center bottom; */
+
+/*.ul-datetime-clock{  }*/
+.ul-datetime-clock ul{ list-style: none; margin-top:0px;}
+.ul-datetime-clock ul li{ list-style: none; display: inline-block; color: #212529; font-size:0.85rem; font-weight:bold;}
