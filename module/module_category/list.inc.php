@@ -127,7 +127,6 @@ foreach($cate as $x => $val) {
   });
 
 
-
     $('#example1').DataTable({
       "processing": true,
       "serverSide": true,
@@ -159,10 +158,7 @@ foreach($cate as $x => $val) {
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 
-
-
 $(document).ready(function () {
-    
   //var table = $('#example1').DataTable();
   //var info = table.page.info();
 

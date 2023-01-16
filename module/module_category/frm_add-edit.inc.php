@@ -41,7 +41,7 @@
                                 <select class="custom-select" name="ref_id_dept" id="ref_id_dept" style="width:100%; font-size:0.85rem;" required>  
                                     <?PHP
                                     //id_menu name_menu
-                                    $rowData = $obj->fetchRows("SELECT * FROM tb_dept WHERE dept_status=1 ORDER BY id_dept ASC");
+                                    $rowData = $obj->fetchRows("SELECT * FROM tb_dept WHERE mt_request_manage=1 AND dept_status=1 ORDER BY id_dept ASC");
                                     if (count($rowData)!=0) {
                                         echo '<option value="" disabled selected>เลือกแผนกที่รับผิดชอบ</option>';
                                         foreach($rowData as $key => $value) {

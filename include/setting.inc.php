@@ -17,8 +17,8 @@ $limit_perPage = 10; #จำนวนข้อมูลที่แสดงต�
 $pathImg = "uploads/";
 $pathImgDefault = "uploads/default.png";
 
-$pathProduct = "uploads-product/";
-$pathProductDefault = "uploads-product/default.png";
+$pathProduct = "uploads-asset/";
+$pathProductDefault = "uploads-asset/default.png";
 
 $pathUser= "uploads-user/";
 $pathUserDefault = "uploads-user/default.png";

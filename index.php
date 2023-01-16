@@ -95,12 +95,18 @@ switch($module){
     $title_site = "รายชื่อผู้ใช้งาน"; $title_act = "รายชื่อผู้ใช้งาน"; $breadcrumb_txt = "รายชื่อผู้ใช้งาน";
     $include_module = "module/module_user/list.inc.php";
     $module=="userlist" ? ($active_userlist="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_userlist=""); #ไฮไลท์เมนูด้านซ้าย
-  break;  
+  break;
 
   case 'logout':
     $title_site = "กำลังทำงาน"; $title_act = "กำลังทำงาน"; $ico_act = "ico32_loading";
     //$include_page = "logout.inc.php";
     include('logout.inc.php');
+  break;
+
+  case 'machine-master':
+    $title_site = "ข้อมูลเครื่องจักร-อุปกรณ์ (Master Data)"; $title_act = "ข้อมูลเครื่องจักร-อุปกรณ์ (Master Data)"; $breadcrumb_txt = "ข้อมูลเครื่องจักร-อุปกรณ์ (Master Data)";
+    $include_module = "module/module_machine_master/list.inc.php";
+    $module=="machine-master" ? ($active_machine="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_machine=""); #ไฮไลท์เมนูด้านซ้าย
   break;
 
   case 'profile':
@@ -330,7 +336,7 @@ $obj = new CRUD();
         <li class="nav-item <?PHP echo $active_treeview_1; ?>"><!--ถ้าจะให้เปิดใส่คลาส menu-open-->
             <a href="#" class="nav-link"><i class="nav-icon fas fa-sitemap"></i><p>จัดการระบบ<i class="right fas fa-angle-left"></i></p></a>
             <ul class="nav nav-treeview">
-              <li class="nav-item"><a href="?module=offsupp-master" class="nav-link <?PHP echo $active_offsupp_master; ?>"><i class="fa fa-caret-right nav-icon"></i><p>เครื่องจักร-อุปกรณ์ (Master)</p></a></li>
+              <li class="nav-item"><a href="?module=machine-master" class="nav-link <?PHP echo $active_machine; ?>"><i class="fa fa-caret-right nav-icon"></i><p>เครื่องจักร-อุปกรณ์ (Master)</p></a></li>
               <li class="nav-item"><a href="?module=category" class="nav-link <?PHP echo $active_category; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ประเภทเครื่องจักร-อุปกรณ์</p></a></li>
               <li class="nav-item"><a href="?module=userlist" class="nav-link <?PHP echo $active_userlist; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ผู้ใช้งาน</p></a></li>
               <li class="nav-item"><a href="?module=site" class="nav-link <?PHP echo $active_site; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ไซต์งาน</p></a></li>
