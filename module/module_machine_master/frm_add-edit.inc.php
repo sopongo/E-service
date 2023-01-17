@@ -6,6 +6,8 @@
 .text-size-1{
  font-size:0.90rem;
 }
+
+/*#preview{ width: 200px; height:auto;}*/
 </style>
 
 <div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="dataformLabel" aria-hidden="true">
@@ -84,7 +86,7 @@
                         <div class="col-sm-6 col-md-6 col-xs-6">  
                         <div class="form-group">  
                         <label>เลือกหมวดหลัก: </label> 
-                            <select class="custom-select" name="ref_id_menu" id="ref_id_menu" style="width:100%; font-size:0.85rem;" required>  
+                            <select class="custom-select" name="ref_id_menu" id="ref_id_menu" style="width:100%; font-size:0.85rem;">  
                             <option disabled selected value="" >เลือกแผนกที่รับผิดชอบก่อน</option>
                             </select>
                             <div class="invalid-feedback">เลือกหมวดหลัก</div>
@@ -114,13 +116,14 @@
                         <div class="row">  
                                 <div class="col-sm-6 col-md-6 col-xs-6">  
                                     <div class="form-group">  
-                                        <label>เครื่องจักร-อุปกรณ์ (ถ้ามี): <br /><span class="text-red font-11">**ขนาดไฟล์ไม่เกิน 2MB. ขนาดกว้างxสูง 800x800 Pixel</span></label>  
+                                        <label>เครื่องจักร-อุปกรณ์ (ถ้ามี): <br /><span class="text-red font-11">**ขนาดไฟล์ไม่เกิน 5MB. ขนาดกว้างxสูง 800x800 Pixel</span></label>  
                                         <div class="custom-file">  <input type="file" class="custom-file-input" id="photo" name="photo"><label class="custom-file-label" for="validatedCustomFile">Choose file...</label>  </div>  
                                     </div>                                  
                                 </div>  
-                                <div class="col-sm-6 col-md-6 col-xs-6">  
+                                <div class="col-sm-6 col-md-6 col-xs-6">  <span class="alert"></span>
                                     <label>ตัวอย่างรูป:</label>  
-                                    <img src="uploads-temp/default.png?ver=1" class="border p-2 w-50 d-block" />
+                                    <img src="uploads-temp/default.png?ver=1" id="preview" class="border p-2 w-50 d-block" />
+                                    <a class="pt-2 d-block remove-photo text-danger" href="#"><i class="fas fa-trash-alt"></i> ลบรูป</a>
                                 </div>
                         </div>                        
                     </div><!--card-body-->
@@ -130,6 +133,7 @@
             </div><!--row-->
         </div><!--container-->
             <input type="hidden" value="" name="id_row" id="id_row" />
+            <input type="hidden" value="adddata" name="action" id="action" />            
         </form>
         <!--FORM 1-->
 
@@ -149,11 +153,58 @@
 
 $(document).ready(function(){
 
+    function readURL(input) {    
+        if (input.files && input.files[0]) {   
+            var reader = new FileReader();
+            var filename = $("#photo").val();
+            filename = filename.substring(filename.lastIndexOf('\\')+1);
+            reader.onload = function(e) {
+            // debugger;      
+            $('#preview').attr('src', e.target.result);
+            $('#preview').hide();
+            $('#preview').fadeIn(200);      
+            
+            $('.remove-photo').removeClass('d-none');
+            $('.custom-file-label').text(filename);             
+            }
+            reader.readAsDataURL(input.files[0]);    
+        } 
+        $(".alert").removeClass("loading").hide();
+    }
+    function RecurFadeIn(){ 
+        console.log('ran');
+        FadeInAlert("Wait for it...");  
+    }
+    function FadeInAlert(text){
+        $(".alert").show();
+        $(".alert").text(text).addClass("loading");  
+    }
+
 $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
     $('body').find('.was-validated').removeClass();
     $('form').each(function() { this.reset() });
+    $('#photo').val('');
+    $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
 });
 
+$('.remove-photo').on('click', function() {
+    $('#photo').attr("value", "");  
+    $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
+});
+
+$(document).on("change", "#photo", function (e){ 
+    e.preventDefault();
+    var filesize  = (this.files[0].size)/100;
+    if(filesize><?PHP echo $imagesize;?>){
+        swal("ผิดพลาด!", "ขนาดไฟล์ต้องไม่เกิน 5 Mb.", "error");
+        $('#photo').val('');
+        return false;
+    }else{
+        RecurFadeIn();
+        readURL(this);    
+    }
+    //alert(filesize);
+});
 
 $(document).on("change", "#ref_id_menu", function (e){ 
     var ref_id_menu = $("#ref_id_menu option:selected" ).val();
@@ -211,9 +262,11 @@ $(document).on("change", "#ref_id_dept", function (e){
 
 /*ปุ่ม ADD Recive รับวัสดุเข้าระบบ <<<<<<<<<< เขียนใหม่ใช้โค๊ดนี้ สมบรูณ์กว่าไม่มีบั๊ครีเฟรชหน้าจอ*/
     $(document).on("click", ".btn-submit", function (event){
+    //$(document).on("submit", "form#needs-validation", function(event){
+    event.preventDefault();
     var formAdd = document.getElementById('needs-validation');  
-    var frmData = $("form#needs-validation").serialize();
-
+    //var frmData = $("form#needs-validation").serialize();
+    var frm_Data= new FormData($('form#needs-validation')[0]);
     if(formAdd.checkValidity()===false) {  
         event.preventDefault();  
         event.stopPropagation();
@@ -222,14 +275,15 @@ $(document).on("change", "#ref_id_dept", function (e){
         $.ajax({
             url: "module/module_machine_master/ajax_action.php",
             type: "POST",
-            //processData: false,
-            //contentType: false,
-            data:{"data":frmData, "action":"adddata"},
+            //dataType: "JSON",
+            data: frm_Data,
+            processData: false,
+            contentType: false,            
+            //data:{"data":frm_Data, "action":"adddata"},
             beforeSend: function () {
             },
             success: function (data) {
-            console.log(data);
-            return false;
+            //console.log(data); //return false;
             if(data==1){
                 sweetAlert("ผิดพลาด!", "ชื่อย่อ'"+$("#location_initialname").val()+"' หรือ '"+$("#location_name").val()+"' ถูกใช้แล้ว", "error");
                 return false;
@@ -241,6 +295,8 @@ $(document).on("change", "#ref_id_dept", function (e){
                 sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
                 $('body').find('.was-validated').removeClass();
                 $('form').each(function() { this.reset() });
+                $('#photo').attr("value", "");  
+                $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
             }   
                 event.preventDefault();
             },

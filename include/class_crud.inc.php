@@ -230,8 +230,7 @@ class CRUD extends Database
     }
 
 
-    public function uploadPhoto($file,$path)
-    {
+    public function uploadPhoto($file,$path){
         if (!empty($file)) {
             $fileTempPath = $file['tmp_name'];
             $fileName = $file['name'];
@@ -248,7 +247,6 @@ class CRUD extends Database
                     return $newFileName;
                 }
             }
-
         }
     }    
 

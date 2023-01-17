@@ -19,6 +19,7 @@
 .dropdown-menu{  /*left:-70px;*/}
 .dropdown-menu a.dropdown-item{  font-size:0.85rem; /* 40px/16=2.5em */ }
 
+.img{ width:30px; height:30px;}
 </style>
 
 <!-- Main content -->
@@ -91,9 +92,17 @@
 <script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- Ekko Lightbox -->
+<script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>  
 
 
 <script type="text/javascript"> 
+    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+      event.preventDefault();
+      $(this).ekkoLightbox({
+        alwaysShowClose: true
+      });
+    });
 
   $('#some_button').click(function refreshData() {
     $('#example1').DataTable().ajax.reload();
@@ -153,15 +162,19 @@ $(document).ready(function () {
       dataType: "json",
       data:{action:"edit", id_row:id_row},
       success: function (data) {
-        //console.log(data);
+        console.log(data);
         if(data){//tb_id_location   id_location, ref_id_site, ref_id_building, location_initialname, location_name, location_status
-          $('#location_initialname').val(data.location_initialname);
-          $('#location_name').val(data.location_name);
-          $('#id_row').val(data.id_location);
-          $('#ref_id_site option:eq('+data.ref_id_site+')').prop('selected', true);
-          $('#ref_id_building').html(data.slt_building);
+          $('#machine_code').val(data.machine_code);
+          $('#name_machine').val(data.name_machine);
+          $('#id_row').val(data.id_machine);
+          $('#ref_id_dept option[value='+data.ref_id_dept+']').attr('selected','selected');
+          //$('#ref_id_menu option[value='+data.ref_id_menu+']').attr('selected','selected');
+          //$('#ref_id_sub_menu option[value='+data.ref_id_sub_menu+']').attr('selected','selected');                    
+          $('#detail_machine').val(data.detail_machine);
+          $('#ref_id_menu').html(data.slt_ref_id_menu)
+          $('#ref_id_sub_menu').html(data.ref_id_sub_menu);
           $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์ (Master Data): "+data.location_name);
-          if(data.location_status==1){
+          if(data.status_machine==1){
             $('#status_use').prop('checked',true);
             $('#status_hold').prop('checked',false);
           }else{

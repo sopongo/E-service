@@ -13,12 +13,12 @@ $keygen = 'Pcs@'; //sha1+password
 $btn_perPage = 10;#จำนวนปุ่มแสดงเลขหน้า
 $limit_perPage = 10; #จำนวนข้อมูลที่แสดงต่อ 1 หน้า *ทั้งโปรแกรม
 
-
+$imagesize = 5100;
 $pathImg = "uploads/";
 $pathImgDefault = "uploads/default.png";
 
-$pathProduct = "uploads-asset/";
-$pathProductDefault = "uploads-asset/default.png";
+$path_machine= "uploads-asset/";
+$path_machine_Default = "uploads-asset/default.png";
 
 $pathUser= "uploads-user/";
 $pathUserDefault = "uploads-user/default.png";

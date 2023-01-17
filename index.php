@@ -10,6 +10,7 @@ require_once ('include/setting.inc.php');
 require_once ('include/class_crud.inc.php');
 require_once ('include/timer.inc.php');
 require_once ('include/query_class.inc.php');
+
 error_reporting(error_reporting() & ~E_NOTICE);
 
 //$stmt = new CRUD();
