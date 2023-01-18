@@ -1,9 +1,7 @@
 <?php
-
  // bin/class.currency.php
  // class Currency โดย http://www.goragod.com (กรกฎ วิริยะ)
  // สงวนลิขสิทธ์ ห้ามซื้อขาย ให้นำไปใช้ได้ฟรีเท่านั้น
-
 
  function searchArray($arrays, $key, $search) {
     $count = 0; 

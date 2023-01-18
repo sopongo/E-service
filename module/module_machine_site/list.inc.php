@@ -38,7 +38,7 @@
     </div>
 
     <?php
-      include_once 'module/module_machine_master/frm_add-edit.inc.php'; //หน้า add/edit
+      include_once 'module/module_machine_site/frm_add-edit.inc.php'; //หน้า add/edit
     ?>
 
     <div class="testx"></div>
@@ -119,7 +119,7 @@
         beforeSend: function () {
           //จะให้ทำอะไรก่อนส่งค่าไปหรือไม่
         },
-        url: 'module/module_machine_master/datatable_processing.php',
+        url: 'module/module_machine_site/datatable_processing.php',
         type: 'POST',
         data : {"action":"get"},//"slt_search":slt_search
         async: false,
@@ -142,31 +142,27 @@ $(document).ready(function () {
   //var table = $('#example1').DataTable();
   //var info = table.page.info();
 
-  $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มเครื่องจักร-อุปกรณ์ (Master Data)</button></div>');
+  $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มเครื่องจักร-อุปกรณ์</button></div>');
   $('input[type=search]').attr('placeholder', 'ชื่ออาคาร หรือ ชื่ออาคาร');
   //$('#example1_filter').append('<select class="custom-select dataTables_filter" name="search" id="slt_search" aria-controls="example1"><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>');
 
 
   $(document).on('click','#addData',function(){   
-    $('#exampleModalLabel span').html("เพิ่มเครื่องจักร-อุปกรณ์ (Master Data)");
+    $('#exampleModalLabel span').html("เพิ่มเครื่องจักร-อุปกรณ์");
     $('.editby').html('');
-    $('.chk-remove').removeClass("del-photo");
-    $('.chk-remove').addClass("remove-photo");
   });
   
   $(document).on('click','.edit-data',function(){   
-    $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์ (Master Data)");
+    $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์");
     var id_row = $(this).data("id");
     $.ajax({
       type: 'POST',
-      url: "module/module_machine_master/ajax_action.php",
+      url: "module/module_machine_site/ajax_action.php",
       dataType: "json",
       data:{action:"edit", id_row:id_row},
       success: function (data) {
         //console.log(data);
         if(data){//tb_id_location   id_location, ref_id_site, ref_id_building, location_initialname, location_name, location_status
-          $('.chk-remove').addClass("del-photo");
-          $('.chk-remove').removeClass("remove-photo");
           $('#machine_code').val(data.machine_code);
           $('#name_machine').val(data.name_machine);
           $('#id_row').val(data.id_machine);
@@ -180,7 +176,7 @@ $(document).ready(function () {
           $('#model_name').val(data.model_name);
           $('.editby').html(data.fullname);
           $('#preview').attr('src', '<?PHP echo $path_machine;?>'+data.path_attachment_name);
-          $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์ (Master Data): "+data.machine_code);
+          $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์: "+data.machine_code);
           if(data.status_machine==1){
             $('#status_use').prop('checked',true);
             $('#status_hold').prop('checked',false);
@@ -228,7 +224,7 @@ $(document).ready(function () {
       if (isConfirm) {
         $.ajax({
           type: 'POST',
-          url: "module/module_machine_master/ajax_action.php",
+          url: "module/module_machine_site/ajax_action.php",
           data:{action:"update-status", chk_box_value:chk_box_value, id_row:id_row},
           success: function (data) {
             console.log(data);
@@ -263,5 +259,5 @@ $(document).ready(function () {
 });
   
 
-    /*module/module_machine_master/datatable_processing.php*/
+    /*module/module_machine_site/datatable_processing.php*/
 </script>

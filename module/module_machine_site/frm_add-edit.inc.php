@@ -14,7 +14,7 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title font-weight-bold" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span>เพิ่มสถานที่ใช้งาน</span></h5>
+        <h5 class="modal-title font-weight-bold" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span>เพิ่มเครื่องจักร-อุปกรณ์รายไซต์</span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
@@ -43,7 +43,7 @@
                         </div><!--row-1 tb_machine_master    id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine-->
 
                         <div class="row row-4">
-                            <div class="col-sm-6 col-md-6 col-xs-6">  
+                            <div class="col-sm-4 col-md-4 col-xs-4">  
                             <div class="form-group mb-2">
                                 <label><span class="text-danger">**</span> แผนกที่รับผิดชอบ: </label> 
                                 <select class="custom-select" name="ref_id_dept" id="ref_id_dept" style="width:100%; font-size:0.85rem;" required>  
@@ -63,33 +63,8 @@
                                 <div class="invalid-feedback">เลือกแผนกที่รับผิดชอบ</div>
                             </div>
                         </div>
-                            <div class="col-sm-6 col-md-6 col-xs-6">  
-                                <div class="form-group">  
-                                    <label for="firstname">รหัสเครื่องจักร-อุปกรณ์ (**ระบบจะสร้างให้อัตโนมัติ):</label>  
-                                    <input type="text" id="machine_code" name="machine_code" readonly placeholder="??-AS-???" class="form-control" aria-describedby="inputGroupPrepend" required />
-                                    <div class="invalid-feedback">กรอกรหัสเครื่องจักร-อุปกรณ์</div>
-                                </div>
-                            </div>                        
-                        </div><!--row-4-->
 
-                        <div class="row row-2">
-                        <div class="col-sm-6 col-md-6 col-xs-6">  
-                                <div class="form-group">  
-                                    <label for="firstname">ชื่อรุ่น (Model):</label>  
-                                    <input type="text" id="model_name" name="model_name" placeholder="ชื่อรุ่น" class="form-control" aria-describedby="inputGroupPrepend" />
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-xs-6">  
-                                <div class="form-group">  
-                                    <label for="firstname"><span class="text-danger">**</span> ชื่อเครื่องจักร-อุปกรณ์:</label>  
-                                    <input type="text" id="name_machine" name="name_machine" placeholder="ชื่อเครื่องจักร-อุปกรณ์" class="form-control" aria-describedby="inputGroupPrepend" required />
-                                    <div class="invalid-feedback">กรอกชื่อเครื่อง-อุปกรณ์</div>
-                                </div>
-                            </div>
-                        </div><!--row row-2 -->                        
-
-                        <div class="row row-cate">
-                        <div class="col-sm-6 col-md-6 col-xs-6">  
+                        <div class="col-sm-4 col-md-4 col-xs-4">  
                         <div class="form-group">  
                         <label><span class="text-danger">**</span> เลือกหมวดหลัก: </label> 
                             <select class="custom-select" name="ref_id_menu" id="ref_id_menu" style="width:100%; font-size:0.85rem;" required>  
@@ -99,7 +74,7 @@
                         </div>
                         </div>
 
-                        <div class="col-sm-6 col-md-6 col-xs-6">  
+                        <div class="col-sm-4 col-md-4 col-xs-4">  
                         <div class="form-group">  
                         <label>เลือกหมวดย่อย: </label> 
                             <select class="custom-select" name="ref_id_sub_menu" id="ref_id_sub_menu" style="width:100%; font-size:0.85rem;">  
@@ -107,31 +82,118 @@
                             </select>
                             <div class="invalid-feedback">เลือกหมวดย่อย</div>
                         </div>
+                        </div>                        
+                        </div><!--row-4-->
+
+                        <div class="row row-2">
+                                <div class="col-sm-6 col-md-6 col-xs-6">  
+                                <div class="form-group">  
+                                    <label for="firstname"><span class="text-danger">**</span> เลือกเครื่องจักร-อุปกรณ์:</label>  
+                                    <select class="custom-select" name="ref_id_sub_menu" id="ref_id_sub_menu" style="width:100%; font-size:0.85rem;"></select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6 col-xs-6">
+                        <div class="form-group">  
+                        <label>ซัพพลายเออร์: </label> 
+                            <select class="custom-select" name="ref_id_site" id="ref_id_site" style="width:100%; font-size:0.85rem;" required>  
+                                    <?PHP
+                                    //id_menu name_menu
+                                    $rowData = $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY id_site ASC");
+                                    if (count($rowData)!=0) {
+                                        echo '<option value="" disabled selected>เลือกซัพพลายเออร์</option>';
+                                        foreach($rowData as $key => $value) {
+                                            echo '<option value="'.$rowData[$key]['id_site'].'">'.$rowData[$key]['site_initialname'].' - '.$rowData[$key]['site_name'].'</option>';
+                                        }
+                                    } else {
+                                        echo '<option disabled selected value="" >เลือกซัพพลายเออร์</option>  ';
+                                    }
+                                    ?>
+                            </select>
+                            <div class="invalid-feedback">เลือกไซต์งาน</div>
                         </div>
+                        </div>                            
+
+                        </div><!--row row-2 -->
+
+
+                            <div class="row row-2">
+                                <div class="col-sm-6 col-md-6 col-xs-6">  
+                                <div class="form-group">  
+                                    <label for="firstname">Serial No. / : ซีเรียลนัมเบอร์ (ถ้ามี):</label>  
+                                    <input type="text" id="serial_number" name="serial_number" placeholder="Serial No. / : ซีเรียลนัมเบอร์" class="form-control" aria-describedby="inputGroupPrepend" />
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 col-md-6 col-xs-6"><!--000-->
+                              <div class="form-group">  
+                                <label for="date_rcv">วันที่รับเข้า:</label>
+                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input input-md mr-0" id="date_rcv" name="date_rcv" value="<?PHP echo date('Y/m/d');?>" data-target="#reservationdate" required />
+                                  <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    <div class="invalid-feedback">เลือกวันที่รับเข้า</div>
+                                  </div>
+                                </div>
+                              </div><!--form-group-->
+                              </div>
+
+                        </div><!--row row-2 -->                        
+
+                        <div class="row row-cate">
+
                         </div><!--row-cate-->
 
                         <div class="row row-5">
                             <div class="col-sm-12 col-md-12 col-xs-12">  
                                 <div class="form-group">  
-                                    <label for="firstname">รายละเอียดเครื่องจักร-อุปกรณ์:</label>  
+                                    <label for="firstname">รายละเอียดเพิ่มเติมเกี่ยวกับเครื่องจักร-อุปกรณ์นี้ (ถ้ามี):</label>  
                                     <textarea class="form-control w-100" id="detail_machine" name="detail_machine" rows="3" placeholder="รายละเอียด ..."></textarea>
                                 </div>
                             </div>
                         </div><!--row-5-->
 
-                        <div class="row">  
-                                <div class="col-sm-6 col-md-6 col-xs-6">  
-                                    <div class="form-group">  
-                                        <label>เครื่องจักร-อุปกรณ์ (ถ้ามี): <br /><span class="text-red font-11">**ขนาดไฟล์ไม่เกิน 5MB. ขนาดกว้างxสูง 800x800 Pixel</span></label>  
-                                        <div class="custom-file">  <input type="file" class="custom-file-input" id="photo" name="photo"><label class="custom-file-label" for="validatedCustomFile">Choose file...</label>  </div>  
-                                    </div>                                  
-                                </div>  
-                                <div class="col-sm-6 col-md-6 col-xs-6">  <span class="alert"></span>
-                                    <label>ตัวอย่างรูป:</label>  
-                                    <img src="uploads-temp/default.png?ver=1" id="preview" class="border p-2 w-50 d-block" />
-                                    <a class="chk-remove pt-2 d-block text-danger" ><i class="fas fa-trash-alt"></i> ลบรูป</a>
-                                </div>
+                        <div class="row row-6">
+                        <div class="col-sm-4 col-md-4 col-xs-4">
+                        <div class="form-group">  
+                        <label><span class="text-danger">**</span> ไซต์งาน: </label> 
+                            <select class="custom-select" name="ref_id_site" id="ref_id_site" style="width:100%; font-size:0.85rem;" required>  
+                                    <?PHP
+                                    //id_menu name_menu
+                                    $rowData = $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY id_site ASC");
+                                    if (count($rowData)!=0) {
+                                        echo '<option value="" disabled selected>เลือกไซต์งาน</option>';
+                                        foreach($rowData as $key => $value) {
+                                            echo '<option value="'.$rowData[$key]['id_site'].'">'.$rowData[$key]['site_initialname'].' - '.$rowData[$key]['site_name'].'</option>';
+                                        }
+                                    } else {
+                                        echo '<option disabled selected value="" >เลือกไซต์งาน</option>  ';
+                                    }
+                                    ?>
+                            </select>
+                            <div class="invalid-feedback">เลือกไซต์งาน</div>
+                        </div>
+                        </div>
+
+                        <div class="col-sm-4 col-md-4 col-xs-4">
+                        <div class="form-group">  
+                        <label>อาคาร: </label> 
+                            <select class="custom-select" name="ref_id_building" id="ref_id_building" style="width:100%; font-size:0.85rem;"><option value="" disabled selected>ต้องเลือกไซต์งานก่อน</option></select>
+                            <div class="invalid-feedback">เลือกอาคาร</div>
+                        </div>
+                        </div>
+
+                        <div class="col-sm-4 col-md-4 col-xs-4">
+                        <div class="form-group">  
+                        <label><span class="text-danger">**</span> สถานที่ใช้งาน: </label> 
+                            <select class="custom-select" name="ref_id_building" id="ref_id_building" style="width:100%; font-size:0.85rem;"><option value="" disabled selected>ต้องเลือกไซต์งานก่อน</option></select>
+                            <div class="invalid-feedback">เลือกสถานที่ใช้งาน</div>
+                        </div>
                         </div>                        
+
+                        </div><!--row-6-->
+
+           
                     </div><!--card-body-->
                 </div><!--card-->
             </div>                
@@ -155,126 +217,38 @@
 </div>
 <!-- /.modal-default -->
 
+
+<!-- daterange picker -->
+<link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+<!-- Select2 -->
+<script src="plugins/select2/js/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="plugins/moment/moment.min.js"></script>
+<script src="plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="plugins/daterangepicker/daterangepicker.js"></script>
+<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
 <script type="text/javascript">
 
 $(document).ready(function(){
-
-    function readURL(input) {    
-        if (input.files && input.files[0]) {   
-            var reader = new FileReader();
-            var filename = $("#photo").val();
-            filename = filename.substring(filename.lastIndexOf('\\')+1);
-            reader.onload = function(e) {
-            // debugger;      
-            $('#preview').attr('src', e.target.result);
-            $('#preview').hide();
-            $('#preview').fadeIn(200);      
-            
-            $('.remove-photo').removeClass('d-none');
-            $('.custom-file-label').text(filename);             
-            }
-            reader.readAsDataURL(input.files[0]);    
-        } 
-        $(".alert").removeClass("loading").hide();
-    }
-    function RecurFadeIn(){ 
-        console.log('ran');
-        FadeInAlert("Wait for it...");  
-    }
-    function FadeInAlert(text){
-        $(".alert").show();
-        $(".alert").text(text).addClass("loading");  
-    }
+    $("#modal-default").modal("show"); 
+    //Date picker
+    $('#reservationdate').datetimepicker({
+        //format: 'L',
+        format: 'YYYY/MM/DD'
+    });
 
 $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
     $('body').find('.was-validated').removeClass();
     $('form').each(function() { this.reset() });
-    $('#photo').val('');
-    $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
-});
-
-$('.del-photo').on('click', function(){
-    var chk_box = $(this).parent().find('input[type="checkbox"]');
-    var id_row = $(this).parent().find('input[type="checkbox"]').data("id");
-
-    if(chk_box.is(":checked")==true){
-      chk_box_text = "ระงับการใช้งาน";
-      chk_box_value = 2;
-    }else{
-      chk_box_text = "ใช้งานรายการนี้";
-      chk_box_value = 1;
-    }
-
-    swal({
-    title: "ยืนยันการทำงาน !",
-    text: "คุณต้องการ"+chk_box_text+". ใช่หรือไม่ ?",
-    type: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#DD6B55",
-    confirmButtonText: "ใช่, ทำรายการ!",
-    cancelButtonText: "ไม่, ยกเลิก!",
-    closeOnConfirm: false,
-    closeOnCancel: true
-   },
-    function (isConfirm) {
-      if (isConfirm) {
-        $.ajax({
-          type: 'POST',
-          url: "module/module_machine_master/ajax_action.php",
-          data:{action:"update-status", chk_box_value:chk_box_value, id_row:id_row},
-          success: function (data) {
-            console.log(data);
-            if(data==1){
-              swal("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว.", "success");
-              if(chk_box.is(":checked")==true){
-                ///alert("checked");
-                chk_box.prop('checked',false);
-              }else{
-                //alert("ไม่ได้ checked");
-                chk_box.prop('checked',true);
-              }
-            }else{
-              swal("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้.", "error");
-            }
-          },
-          error: function (data) {
-            swal("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้.", "error");
-          }
-        });
-      } else {
-        return true;        
-        //swal("Cancelled", "Your imaginary file is safe :)", "error");
-      }
-    });
-    return false;
-    //$(this).parent().find('input[type="checkbox"]').prop('checked',true);
-});
-
-$('.remove-photo').on('click', function(e) {
-    $('#photo').attr("value", "");  
-    $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
-    e.preventDefault();
-});
-
-$(document).on("change", "#photo", function (e){ 
-    e.preventDefault();
-    var filesize  = (this.files[0].size)/100;
-    if(filesize><?PHP echo $imagesize;?>){
-        swal("ผิดพลาด!", "ขนาดไฟล์ต้องไม่เกิน 5 Mb.", "error");
-        $('#photo').val('');
-        return false;
-    }else{
-        RecurFadeIn();
-        readURL(this);    
-    }
-    //alert(filesize);
 });
 
 $(document).on("change", "#ref_id_menu", function (e){ 
     var ref_id_menu = $("#ref_id_menu option:selected" ).val();
     //alert(id_site_val);
     $.ajax({
-        url: "module/module_machine_master/ajax_action.php",
+        url: "module/module_machine_site/ajax_action.php",
         type: "POST",
         data:{"ref_id_menu":ref_id_menu, "action":"chk_subCate"},
         beforeSend: function () {
@@ -302,7 +276,7 @@ $(document).on("change", "#ref_id_dept", function (e){
     //let word = myArray[1];
     //alert(ref_id_dept+'-----'+ref_id_dept_txt+'----'+myArray[0]);    return false;
     $.ajax({
-        url: "module/module_machine_master/ajax_action.php",
+        url: "module/module_machine_site/ajax_action.php",
         type: "POST",
         data:{"ref_id_dept":ref_id_dept, "action":"chk_dept_cate"},
         beforeSend: function () {
@@ -337,7 +311,7 @@ $(document).on("change", "#ref_id_dept", function (e){
     }else{
         //alert('Send Ajax'); return false;
         $.ajax({
-            url: "module/module_machine_master/ajax_action.php",
+            url: "module/module_machine_site/ajax_action.php",
             type: "POST",
             //dataType: "JSON",
             data: frm_Data,

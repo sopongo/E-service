@@ -12,9 +12,7 @@ require_once ('include/timer.inc.php');
 require_once ('include/query_class.inc.php');
 
 error_reporting(error_reporting() & ~E_NOTICE);
-
 //$stmt = new CRUD();
-
 /*ทดสอบ คอมเม้นต์ และอัพโหลดลง GITHUB*/
 
 if($_SESSION['sess_id_user']==NULL && $_SESSION['sess_status_user']==NULL){ 
@@ -108,6 +106,12 @@ switch($module){
     $title_site = "ข้อมูลเครื่องจักร-อุปกรณ์ (Master Data)"; $title_act = "ข้อมูลเครื่องจักร-อุปกรณ์ (Master Data)"; $breadcrumb_txt = "ข้อมูลเครื่องจักร-อุปกรณ์ (Master Data)";
     $include_module = "module/module_machine_master/list.inc.php";
     $module=="machine-master" ? ($active_machine="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_machine=""); #ไฮไลท์เมนูด้านซ้าย
+  break;
+
+  case 'machine-site':
+    $title_site = "ข้อมูลเครื่องจักร-อุปกรณ์รายไซต์"; $title_act = "ข้อมูลเครื่องจักร-อุปกรณ์รายไซต์"; $breadcrumb_txt = "ข้อมูลเครื่องจักร-อุปกรณ์รายไซต์";
+    $include_module = "module/module_machine_site/list.inc.php";
+    $module=="machine-site" ? ($active_machine_site="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_machine_site=""); #ไฮไลท์เมนูด้านซ้าย
   break;
 
   case 'profile':
@@ -216,7 +220,6 @@ $obj = new CRUD();
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <!--<script src="dist/js/jquery.cookie.js"></script>-->
-
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400&display=swap');
@@ -331,7 +334,7 @@ $obj = new CRUD();
         <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ใบแจ้งซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-wrench"></i> <p>ใบแจ้งซ่อมของคุณ</p></a></li>
-        <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์</p></a></li>
+        <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>
 
         <?PHP if($_SESSION['sess_class_user']==4){?>
         <li class="nav-item <?PHP echo $active_treeview_1; ?>"><!--ถ้าจะให้เปิดใส่คลาส menu-open-->
