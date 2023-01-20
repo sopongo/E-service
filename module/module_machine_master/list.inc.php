@@ -39,6 +39,7 @@
 
     <?php
       include_once 'module/module_machine_master/frm_add-edit.inc.php'; //หน้า add/edit
+      include_once 'module/module_machine_master/frm_view.inc.php'; //หน้า add/edit
     ?>
 
     <div class="testx"></div>
@@ -150,10 +151,45 @@ $(document).ready(function () {
   $(document).on('click','#addData',function(){   
     $('#exampleModalLabel span').html("เพิ่มเครื่องจักร-อุปกรณ์ (Master Data)");
     $('.editby').html('');
+    $('#id_row').val('');
+    $('#chk_ref_id_dept').val('');
     $('.chk-remove').removeClass("del-photo");
     $('.chk-remove').addClass("remove-photo");
+    $('body').find('.was-validated').removeClass();
+    $('form').each(function() { this.reset() });
+    $('#photo').val('');
+    $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
+    $('#ref_id_dept option:eq(0)').attr('selected','selected');
+    //$('#ref_id_dept option:eq(1)').html('New text');
+    $('#ref_id_menu option:eq(0)').attr('selected','selected');
   });
   
+  $(document).on('click','.view-data',function(){   
+      $('#exampleModalLabel span').html("เครื่องจักร-อุปกรณ์ (Master Data)");
+      var id_row = $(this).data("id");
+      $.ajax({
+      type: 'POST',
+      url: "module/module_machine_master/ajax_action.php",
+      dataType: "json",
+      data:{action:"view", id_row:id_row},
+      success: function (data) {
+        console.log(data); //return false;
+        if(data){
+          $('#exampleModalview span').html(data.machine_code+' : '+data.name_machine);
+          $('.table-view').html(data.view);
+        }else{
+          console.log(data);
+          swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
+        }
+      },
+      error: function (data) {
+        console.log(data);
+        swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ.", "error");
+      }
+    });    
+  });
+
+
   $(document).on('click','.edit-data',function(){   
     $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์ (Master Data)");
     var id_row = $(this).data("id");
@@ -170,6 +206,7 @@ $(document).ready(function () {
           $('#machine_code').val(data.machine_code);
           $('#name_machine').val(data.name_machine);
           $('#id_row').val(data.id_machine);
+          $('#chk_ref_id_dept').val(data.ref_id_dept);
           $('#ref_id_dept option[value='+data.ref_id_dept+']').attr('selected','selected');
           //$('#ref_id_menu option[value='+data.ref_id_menu+']').attr('selected','selected');
           //$('#ref_id_sub_menu option[value='+data.ref_id_sub_menu+']').attr('selected','selected');                    

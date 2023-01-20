@@ -180,7 +180,7 @@
             $fetchRow = $obj->fetchRows("SELECT * FROM tb_category WHERE tb_category.ref_id_menu=".$ref_id_menu." AND tb_category.level_menu=2");
             //id_menu, menu_code, level_menu, sort_menu, ref_id_menu, ref_id_sub, ref_id_dept, name_menu, desc_menu, menu_adddate, ref_id_user_add, menu_editdate, ref_id_user_edit, status_menu
             if (!empty($fetchRow)) {
-                $slt_cate.='<option value="" selected>เลือกหมวดหลัก</option>'; //disabled
+                $slt_cate.='<option value="" selected>เลือกหมวดรอง</option>'; //disabled
                 foreach($fetchRow as $key=>$value) {
                     $slt_cate.='<option value="'.$fetchRow[$key]['id_menu'].'">'.($fetchRow[$key]['menu_code']!=NULL ? $fetchRow[$key]['menu_code'].'-' : '').$fetchRow[$key]['name_menu'].'</option>';
                 }

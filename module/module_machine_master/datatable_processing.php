@@ -79,9 +79,9 @@ if (count($fetchRow)>0) {
         $dataRow[] = '<div class="check-status custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline">
         <input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['status_machine']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_machine'].'" id="customSwitch'.$fetchRow[$key]['id_machine'].'">
         <label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_machine'].'"></label></div>';
-        $dataRow[] = '<div class="btn-group dropdown"><button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">จัดการ</button>
-        <div class="dropdown-menu" style="margin-left:-4rem;"><a class="dropdown-item edit-data" data-id="'.$fetchRow[$key]['id_machine'].'" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fas fa-pencil-alt"></i> แก้ไขข้อมูล</a>
-        </div></div>'.'';
+        $dataRow[] = '
+        <button type="button" class="btn btn-success btn-sm view-data" data-id="'.$fetchRow[$key]['id_machine'].'" data-toggle="modal" data-target="#modal-view" id="viewData" data-backdrop="static" data-keyboard="false" title="ดูข้อมูล"><i class="fa fa-file-alt"></i></button>
+        <button type="button" class="btn btn-warning btn-sm edit-data" data-id="'.$fetchRow[$key]['id_machine'].'" data-toggle="modal" data-target="#modal-default" id="edit-data" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button>';
         $arrData[] = $dataRow;
         $No--;
     }

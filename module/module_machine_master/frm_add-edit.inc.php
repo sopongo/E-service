@@ -51,12 +51,12 @@
                                     //id_menu name_menu
                                     $rowData = $obj->fetchRows("SELECT * FROM tb_dept WHERE mt_request_manage=1 AND dept_status=1 ORDER BY id_dept ASC");
                                     if (count($rowData)!=0) {
-                                        echo '<option value="" disabled selected>เลือกแผนกที่รับผิดชอบ</option>';
+                                        echo '<option value="" >เลือกแผนกที่รับผิดชอบ</option>';
                                         foreach($rowData as $key => $value) {
                                             echo '<option value="'.$rowData[$key]['id_dept'].'">'.$rowData[$key]['dept_initialname'].' - '.$rowData[$key]['dept_name'].'</option>';
                                         }
                                     } else {
-                                        echo '<option disabled selected value="" >เลือกแผนกที่รับผิดชอบ</option>  ';
+                                        echo '<option value="" >เลือกแผนกที่รับผิดชอบ</option>  ';
                                     }
                                     ?>
                                 </select>
@@ -139,6 +139,7 @@
             </div><!--row-->
         </div><!--container-->
             <input type="hidden" value="" name="id_row" id="id_row" />
+            <input type="hidden" value="" name="chk_ref_id_dept" id="chk_ref_id_dept" />
             <input type="hidden" value="adddata" name="action" id="action" />            
         </form>
         <!--FORM 1-->
@@ -347,21 +348,21 @@ $(document).on("change", "#ref_id_dept", function (e){
             beforeSend: function () {
             },
             success: function (data) {
-            console.log(data); //return false;
-            if(data==1){
-                sweetAlert("ผิดพลาด!", "ชื่อย่อ'"+$("#location_initialname").val()+"' หรือ '"+$("#location_name").val()+"' ถูกใช้แล้ว", "error");
-                return false;
-            }else{
-                sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
-                $('#example1').DataTable().ajax.reload();
-                $("#modal-default").modal("hide"); 
-                $(".modal-backdrop").hide().fadeOut();
-                sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
-                $('body').find('.was-validated').removeClass();
-                $('form').each(function() { this.reset() });
-                $('#photo').attr("value", "");  
-                $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
-            }   
+                console.log(data); //return false;
+                if(data==1){
+                    sweetAlert("ผิดพลาด!", "ชื่อเครื่องจักร-อุปกรณ์: '"+$("#name_machine").val()+"' ถูกใช้แล้ว", "error");
+                    return false;
+                }else{
+                    sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
+                    $('#example1').DataTable().ajax.reload();
+                    $("#modal-default").modal("hide"); 
+                    $(".modal-backdrop").hide().fadeOut();
+                    sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
+                    $('body').find('.was-validated').removeClass();
+                    $('form').each(function() { this.reset() });
+                    $('#photo').attr("value", "");  
+                    $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
+                }   
                 event.preventDefault();
             },
                 error: function (jXHR, textStatus, errorThrown) {

@@ -89,14 +89,14 @@
                                 <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname"><span class="text-danger">**</span> เลือกเครื่องจักร-อุปกรณ์:</label>  
-                                    <select class="custom-select" name="ref_id_sub_menu" id="ref_id_sub_menu" style="width:100%; font-size:0.85rem;"></select>
+                                    <select class="custom-select" name="ref_id_machine" id="ref_id_machine" style="width:100%; font-size:0.85rem;"></select>
                                 </div>
                             </div>
 
                             <div class="col-sm-6 col-md-6 col-xs-6">
                         <div class="form-group">  
                         <label>ซัพพลายเออร์: </label> 
-                            <select class="custom-select" name="ref_id_site" id="ref_id_site" style="width:100%; font-size:0.85rem;" required>  
+                            <select class="custom-select" name="ref_id_site" id="ref_id_site" style="width:100%; font-size:0.85rem;">  
                                     <?PHP
                                     //id_menu name_menu
                                     $rowData = $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY id_site ASC");
@@ -110,12 +110,10 @@
                                     }
                                     ?>
                             </select>
-                            <div class="invalid-feedback">เลือกไซต์งาน</div>
                         </div>
                         </div>                            
 
                         </div><!--row row-2 -->
-
 
                             <div class="row row-2">
                                 <div class="col-sm-6 col-md-6 col-xs-6">  
@@ -145,15 +143,19 @@
                         </div><!--row-cate-->
 
                         <div class="row row-5">
-                            <div class="col-sm-12 col-md-12 col-xs-12">  
+                            <div class="col-sm-8 col-md-8 col-xs-8">  
                                 <div class="form-group">  
                                     <label for="firstname">รายละเอียดเพิ่มเติมเกี่ยวกับเครื่องจักร-อุปกรณ์นี้ (ถ้ามี):</label>  
-                                    <textarea class="form-control w-100" id="detail_machine" name="detail_machine" rows="3" placeholder="รายละเอียด ..."></textarea>
+                                    <textarea class="form-control w-100" id="detail_machine" name="detail_machine" rows="6" placeholder="รายละเอียด ..."></textarea>
                                 </div>
                             </div>
+                            <div class="col-sm-4 col-md-4 col-xs-4">
+                                    <label>รูปเครื่องจักร-อุปกรณ์:</label>  
+                                    <img src="uploads-temp/default.png?ver=1" id="preview" class="border p-2 w-100 d-block" />
+                                </div>
                         </div><!--row-5-->
 
-                        <div class="row row-6">
+                        <div class="row row-6 mt-3">
                         <div class="col-sm-4 col-md-4 col-xs-4">
                         <div class="form-group">  
                         <label><span class="text-danger">**</span> ไซต์งาน: </label> 
@@ -185,7 +187,7 @@
 
                         <div class="col-sm-4 col-md-4 col-xs-4">
                         <div class="form-group">  
-                        <label><span class="text-danger">**</span> สถานที่ใช้งาน: </label> 
+                        <label>สถานที่ใช้งาน: </label> 
                             <select class="custom-select" name="ref_id_building" id="ref_id_building" style="width:100%; font-size:0.85rem;"><option value="" disabled selected>ต้องเลือกไซต์งานก่อน</option></select>
                             <div class="invalid-feedback">เลือกสถานที่ใช้งาน</div>
                         </div>
