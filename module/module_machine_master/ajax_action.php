@@ -29,7 +29,9 @@
         !empty($_POST['id_row']) ? $query_id = " AND id_machine!=".$_POST["id_row"]."" : $query_id = "";
         $totalRow = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master WHERE (machine_code = '".(trim($_POST['machine_code']))."' OR name_machine='".(trim($_POST['name_machine']))."') ".$query_id."");
 
-        $_POST['machine_code'] = str_replace("-0000", "", $_POST['machine_code']);
+        //$_POST['machine_code'] = str_replace("-0000", "", $_POST['machine_code']);
+        $_POST['machine_code'] = substr($_POST['machine_code'], 0, -5);
+
         $countCode = 0;
         $countCode = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master WHERE LEFT(machine_code, ".strlen($_POST['machine_code']).")='".$_POST['machine_code']."' ");
         $countCode = str_pad(($countCode+1), 4, '0', STR_PAD_LEFT);
@@ -40,7 +42,7 @@
             exit();
         }else{ ##ถ้าไม่มีจะทำการเช็คว่ามี $rowID ที่ส่งมาจากฟอร์มหรือไม่ (ถ้่ามีคือการ update) ถ้าไม่มีคือ insert
             if(empty($rowID)){
-                echo 'new add-'.$machine_code; exit();
+                //echo 'new add-'.$machine_code; exit();
                 $insertRow = [
                     'machine_code' => (!empty($machine_code)) ? $machine_code : "Not found.",
                     'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : NULL,
@@ -59,9 +61,12 @@
             }else{
                 //echo 2;  exit; //Update Data
                 if($_POST['chk_ref_id_dept']!=$_POST['ref_id_dept']){
-                    $insertRow = [ 'machine_code' => (!empty($machine_code)) ? $machine_code : "Not found.",];
+                    //echo 'edit row and edit cate-'.$machine_code; exit();
+                    //echo $machine_code; exit();
+                    $insertRow_mc_code = [ 'machine_code' => (!empty($machine_code)) ? $machine_code : "Not found.",];
                 }
-
+                //echo 'edit row only'; exit();
+                
                 $insertRow = [
                     'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : NULL,
                     'ref_id_menu' => (!empty($_POST['ref_id_menu'])) ? $_POST['ref_id_menu'] : NULL,
@@ -73,6 +78,7 @@
                     'ref_id_user_edit' => $_SESSION['sess_id_user'],
                     'status_machine' => (!empty($_POST['status_machine'])) ? $_POST['status_machine'] : NULL,
                 ];
+                $insertRow = array_merge($insertRow_mc_code, $insertRow);
                 $rowID = $obj->update($insertRow, "id_machine=".$rowID."", "tb_machine_master");
             }
 
