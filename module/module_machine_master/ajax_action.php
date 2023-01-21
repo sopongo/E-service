@@ -27,15 +27,14 @@
         $rowID = $_POST['id_row'];
         $_POST['name_machine'] = trim($_POST['name_machine']);
         !empty($_POST['id_row']) ? $query_id = " AND id_machine!=".$_POST["id_row"]."" : $query_id = "";
+
         $totalRow = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master WHERE (machine_code = '".(trim($_POST['machine_code']))."' OR name_machine='".(trim($_POST['name_machine']))."') ".$query_id."");
 
-        //$_POST['machine_code'] = str_replace("-0000", "", $_POST['machine_code']);
-        $_POST['machine_code'] = substr($_POST['machine_code'], 0, -5);
-
         $countCode = 0;
-        $countCode = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master WHERE LEFT(machine_code, ".strlen($_POST['machine_code']).")='".$_POST['machine_code']."' ");
-        $countCode = str_pad(($countCode+1), 4, '0', STR_PAD_LEFT);
-        $machine_code = $_POST['machine_code'].'-'.$countCode;
+        $_POST['machine_code'] = str_replace("-0000", "", $_POST['machine_code']);
+        ##หารหัสเครื่องจักรล่าสุดของหมวดนั้นๆ (ORDER BY DESC เช่น MT-AS-0002) จากนั้นเอามาตัดเอาตัวเลข 4 ตัวท้าย strip 0 ออกจากนั้นเอาไป+1
+        $countCode = $obj->customSelect("SELECT machine_code FROM tb_machine_master WHERE LEFT(machine_code, ".strlen($_POST['machine_code']).")='".$_POST['machine_code']."' ORDER BY machine_code DESC LIMIT 1");
+        $machine_code =  $_POST['machine_code'].'-'.str_pad(intval(substr($countCode['machine_code'],  -4)+1), 4, 0, STR_PAD_LEFT);
 
         if($totalRow!=0){ ##ถ้า $totalRow ไม่เท่ากับ 0 แสดงว่ามีในระบบแล้ว
             echo json_encode(1);
@@ -64,9 +63,10 @@
                     //echo 'edit row and edit cate-'.$machine_code; exit();
                     //echo $machine_code; exit();
                     $insertRow_mc_code = [ 'machine_code' => (!empty($machine_code)) ? $machine_code : "Not found.",];
+                }else{
+                    $insertRow_mc_code = [];
                 }
                 //echo 'edit row only'; exit();
-                
                 $insertRow = [
                     'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : NULL,
                     'ref_id_menu' => (!empty($_POST['ref_id_menu'])) ? $_POST['ref_id_menu'] : NULL,
@@ -78,7 +78,13 @@
                     'ref_id_user_edit' => $_SESSION['sess_id_user'],
                     'status_machine' => (!empty($_POST['status_machine'])) ? $_POST['status_machine'] : NULL,
                 ];
-                $insertRow = array_merge($insertRow_mc_code, $insertRow);
+                $insertRow = array_merge($insertRow, $insertRow_mc_code);
+
+                /*echo $_POST['ref_id_dept'].'-----------'.$_POST['ref_id_menu'];
+                echo '-----------';
+                echo $insertRow['ref_id_dept'].'----'.$insertRow['ref_id_menu'];
+                exit();*/
+            
                 $rowID = $obj->update($insertRow, "id_machine=".$rowID."", "tb_machine_master");
             }
 
@@ -115,7 +121,7 @@
             $rowData = $obj->customSelect("SELECT tb_machine_master.*, tb_attachment.path_attachment_name, userAdd.fullname AS userAdd_name,
             userEdit.fullname AS userEdit_name, mainCate.name_menu AS mainCate_name, subCate.name_menu AS subCate_name , tb_dept.dept_initialname, tb_dept.dept_name 
             FROM tb_machine_master 
-            LEFT JOIN tb_attachment ON (tb_attachment.ref_id_machine=tb_machine_master.id_machine) 
+            LEFT JOIN tb_attachment ON (tb_attachment.ref_id_machine=tb_machine_master.id_machine AND tb_attachment.attachment_type=1) 
             LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_machine_master.ref_id_dept) 
             LEFT JOIN tb_category AS mainCate ON (tb_machine_master.ref_id_menu=mainCate.id_menu) 
             LEFT JOIN tb_category AS subCate ON (tb_machine_master.ref_id_sub_menu=subCate.id_menu) 
@@ -127,11 +133,11 @@
             $rowData['userEdit_name'] = ''.($rowData['userEdit_name']==NULL ? ' - ' : $rowData['userEdit_name']).' วันที่: '.($rowData['mc_editdate']==NULL ? '-' : nowDateShort($rowData['mc_editdate'])).' เวลา: '.($rowData['mc_editdate']==NULL ? '-' : nowTime($rowData['mc_editdate'])).' น.';
             $rowData['userAdd_name'] = ''.($rowData['userAdd_name']==NULL ? ' - ' : $rowData['userAdd_name']).' วันที่: '.($rowData['mc_adddate']==NULL ? '-' : nowDateShort($rowData['mc_adddate'])).' เวลา: '.($rowData['mc_adddate']==NULL ? '-' : nowTime($rowData['mc_adddate'])).' น.';            
             $rowData['view'] = '<tr>
-            <td rowspan="9" class="col-sm-3 col-md-3 col-xs-3 text-center"><img src="'.$rowData['path_attachment_name'].'" class="w-100 p-2" /></td>
+            <td rowspan="9" class="col-sm-4 col-md-4 col-xs-4 text-center"><img src="'.$rowData['path_attachment_name'].'" class="w-100 p-2" /></td>
             <td class="text-bold p-0 m-0 text-right col-sm-3 col-md-3 col-xs-3">สถานะการใช้งาน:</td><td class="col-sm-6 col-md-6 col-xs-6">'.($rowData['status_machine']!=NULL ? $rowData['status_machine'] = $statusArr[$rowData['status_machine']] : $rowData['status_machine']='-').'</td></tr>
         </tr>
         <tr><td class="text-bold p-0 m-0 text-right col-sm-3 col-md-3 col-xs-3 p-0 m-0">แผนกที่รับผิดชอบ:</td><td class="col-sm-6 col-md-6 col-xs-6">'.($rowData['dept_initialname']!=NULL ? $rowData['dept_initialname'].' - '.$rowData['dept_name'] : '-').'</td></tr>
-        <tr><td class="text-bold p-0 m-0 text-right">รหัสเครื่องจักร-อุปกรณ์:</td><td>'.($rowData['machine_code']!=NULL ? $rowData['machine_code'] : '-').'</td></tr>
+        <tr><td class="text-bold p-0 m-0 text-right ">รหัสเครื่องจักร-อุปกรณ์:</td><td class="col-sm-5 col-md-5 col-xs-5">'.($rowData['machine_code']!=NULL ? $rowData['machine_code'] : '-').'</td></tr>
         <tr><td class="text-bold p-0 m-0 text-right">ชื่อรุ่น (Model):</td><td>'.($rowData['model_name']!=NULL ? $rowData['model_name'] : '-').'</td></tr>
         <tr><td class="text-bold p-0 m-0 text-right">ชื่อเครื่องจักร-อุปกรณ์:</td><td>'.($rowData['name_machine']!=NULL ? $rowData['name_machine'] : '-').'</td></tr>
         <tr><td class="text-bold p-0 m-0 text-right">หมวดหลัก:</td><td>'.($rowData['mainCate_name']!=NULL ? $rowData['mainCate_name'] : '-').'</td></tr>
@@ -139,8 +145,7 @@
         <tr><td class="text-bold p-0 m-0 text-right">เพิ่มข้อมูลโดย:</td><td>'.($rowData['userAdd_name']).'</td></tr>
         <tr><td class="text-bold p-0 m-0 text-right">แก้ไขล่าสุดโดย:</td><td>'.($rowData['userEdit_name']).'</td></tr>
         <tr><td colspan="3" class="col-sm-12 col-md-12 col-xs-12 text-bold text-left">รายละเอียดเครื่องจักร-อุปกรณ์:</td></tr>
-        <tr><td colspan="3">'.($rowData['detail_machine']).'</td></tr>
-        ';
+        <tr><td colspan="3"><p>'.(nl2br($rowData['detail_machine'])).'</p></td></tr>';
             echo json_encode($rowData);
             exit();
         }

@@ -160,9 +160,8 @@ $(document).ready(function () {
     $('form').each(function() { this.reset() });
     $('#photo').val('');
     $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
-    $('#ref_id_dept option:eq(0)').attr('selected','selected');
-    //$('#ref_id_dept option:eq(1)').html('New text');
-    $('#ref_id_menu option:eq(0)').attr('selected','selected');
+    $('#ref_id_dept option:eq(0)').prop('selected',true);
+    $('#ref_id_menu option:eq(0)').prop('selected',true);
   });
   
   $(document).on('click','.view-data',function(){   
@@ -191,9 +190,13 @@ $(document).ready(function () {
   });
 
   $(document).on('click','.edit-data',function(){   
+    $('#ref_id_dept option:eq(0)').prop('selected',true);
+    $('#ref_id_menu option:eq(0)').prop('selected',true);
     $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์ (Master Data)");
     var id_row = $(this).data("id");
     $.ajax({
+      beforeSend: function () {
+      },
       type: 'POST',
       url: "module/module_machine_master/ajax_action.php",
       dataType: "json",
@@ -207,7 +210,7 @@ $(document).ready(function () {
           $('#name_machine').val(data.name_machine);
           $('#id_row').val(data.id_machine);
           $('#chk_ref_id_dept').val(data.ref_id_dept);
-          $('#ref_id_dept option[value='+data.ref_id_dept+']').attr('selected','selected');
+          $('#ref_id_dept option[value='+data.ref_id_dept+']').prop('selected',true);
           //$('#ref_id_menu option[value='+data.ref_id_menu+']').attr('selected','selected');
           //$('#ref_id_sub_menu option[value='+data.ref_id_sub_menu+']').attr('selected','selected');                    
           $('#detail_machine').val(data.detail_machine);

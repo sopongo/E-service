@@ -348,7 +348,7 @@ $(document).on("change", "#ref_id_dept", function (e){
             beforeSend: function () {
             },
             success: function (data) {
-                console.log(data); //return false;
+                //console.log(data); return false;
                 if(data==1){
                     sweetAlert("ผิดพลาด!", "ชื่อเครื่องจักร-อุปกรณ์: '"+$("#name_machine").val()+"' ถูกใช้แล้ว", "error");
                     return false;
@@ -360,6 +360,10 @@ $(document).on("change", "#ref_id_dept", function (e){
                     sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
                     $('body').find('.was-validated').removeClass();
                     $('form').each(function() { this.reset() });
+                    $('#id_row').val('');
+                    $('#chk_ref_id_dept').val('');
+                    $('#ref_id_dept option:eq(0)').attr('selected','selected');
+                    $('#ref_id_menu option:eq(0)').attr('selected','selected');
                     $('#photo').attr("value", "");  
                     $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
                 }   

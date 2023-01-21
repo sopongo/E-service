@@ -7,8 +7,7 @@
  font-size:0.90rem;
 }
 .remove-photo{ cursor:pointer;}
-
-.table-view tr td{ line-height:0.5rem; vertical-align:middle;}
+.table-view tr td{ line-height:auto; vertical-align:middle; padding:5px 5px; margin:0px;}
 /*#preview{ width: 200px; height:auto;}*/
 </style>
 
@@ -30,7 +29,7 @@
                 <div class="card">  
                     <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">รายละเอียด</p> <span class="float-right editby"></span></div>
                     <div class="card-body p-3"> 
-                    <table class="table-view table table-responsive table-borderless p-0 m-0"></table>
+                    <table class="table-view table table-borderless table-responsive p-0 m-0"></table>
                     </div><!--card-body-->
                 </div><!--card-->
             </div><!--offset-md-0-->
