@@ -153,6 +153,44 @@
             exit();
         }
     }
+    
+    if ($action=="chk_machine_site") {
+        $dept_query = '';
+        $menu_query = '';
+        $submenu_query = '';
+        $slt_mc = '';
+        $val_id_dept = (!empty(intval($_POST['val_id_dept']))) ? ($_POST['val_id_dept']) && ($dept_query = ' AND ref_id_dept='.$_POST['val_id_dept'].'') && ($supplier_query=' 
+         AND ref_id_dept='.$_POST['val_id_dept'].'') : '';
+        $val_id_menu = (!empty(intval($_POST['val_id_menu']))) ? ($_POST['val_id_menu']) && ($menu_query = ' AND ref_id_menu='.$_POST['val_id_menu'].'') : '';
+        $val_id_sub_menu = (!empty(intval($_POST['val_id_sub_menu']))) ? ($_POST['val_id_sub_menu']) && ($submenu_query = ' AND ref_id_sub_menu='.$_POST['val_id_sub_menu'].'') : '';
+        
+            $fetchMC = $obj->fetchRows("SELECT * FROM tb_machine_master WHERE status_machine=1 ".$dept_query.$menu_query.$submenu_query." ORDER BY machine_code DESC ");
+            if (!empty($fetchMC)) {
+                //id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, model_name, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine
+                $slt_mc.='<option value="" selected>เลือกเครื่องจักรและอุปกรณ์</option>'; //disabled
+                foreach($fetchMC as $key=>$value) {
+                    $slt_mc.='<option value="'.$fetchMC[$key]['id_machine'].'">'.$fetchMC[$key]['machine_code'].' : '.$fetchMC[$key]['name_machine'].'</option>';
+                }
+            }else{
+                $slt_mc.='<option value="" selected>ไม่มีข้อมูล</option>';
+            }
+
+            $slt_supplier = '';
+            $fetch_supplier = $obj->fetchRows("SELECT * FROM tb_supplier WHERE supplier_status=1 ".$supplier_query ." ORDER BY supplier_name DESC ");
+            if (!empty($fetch_supplier)) {
+                //id_supplier, ref_id_dept, supplier_name, supplier_phone, supplier_remark, supplier_status                
+                $slt_supplier.='<option value="" selected>เลือกซัพพลายเออร์</option>'; //disabled
+                foreach($fetch_supplier as $key=>$value) {
+                    $slt_supplier.='<option value="'.$fetch_supplier[$key]['id_supplier'].'">'.$fetch_supplier[$key]['supplier_name'].'</option>';
+                }
+            }else{
+                $slt_supplier.='<option value="" selected>ไม่มีข้อมูล</option>';
+            }
+            $rowArr = ['slt_mc' => $slt_mc, 'slt_supplier' => $slt_supplier];
+            echo json_encode($rowArr);
+            exit();
+    }       
+
 
     if ($action=="chk_dept_cate") {
         $slt_cate = '';

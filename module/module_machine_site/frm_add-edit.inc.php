@@ -10,6 +10,7 @@
 /*#preview{ width: 200px; height:auto;}*/
 </style>
 
+
 <div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="dataformLabel" aria-hidden="true">
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -21,8 +22,8 @@
     </div>
 
     <div class="modal-body p-0 py-2">
-
         <!--FORM 1-->
+        <div class="check"></div>
         <form id="needs-validation" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
         <div class="container">
             <div class="row">
@@ -31,6 +32,16 @@
                 <div class="card">  
                     <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p> <span class="float-right editby"></span></div>
                     <div class="card-body p-3"> 
+
+                    <div class="row row-4">
+                            <div class="col-sm-6 col-md-6 col-xs-6">  
+                                <div class="form-group">  
+                                    <label for="firstname">รหัสเครื่องจักร-อุปกรณ์ (**ระบบจะสร้างให้อัตโนมัติ):</label>  
+                                    <input type="text" id="machine_code" name="machine_code" readonly placeholder="??-AS-0000-000" class="form-control" aria-describedby="inputGroupPrepend" required />
+                                    <div class="invalid-feedback">กรอกรหัสเครื่องจักร-อุปกรณ์</div>
+                                </div>
+                            </div>                        
+                        </div><!--row-4-->                    
 
                         <div class="row row-1">
                         <div class="col-sm-12 col-md-12 col-xs-12">  
@@ -89,27 +100,15 @@
                                 <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname"><span class="text-danger">**</span> เลือกเครื่องจักร-อุปกรณ์:</label>  
-                                    <select class="custom-select" name="ref_id_machine" id="ref_id_machine" style="width:100%; font-size:0.85rem;"></select>
+                                    <select class="custom-select" name="ref_id_machine" id="ref_id_machine" style="width:100%; font-size:0.85rem;">
+                                    <option value="" disabled selected>ไม่มีข้อมูล</option></select>
                                 </div>
                             </div>
 
                             <div class="col-sm-6 col-md-6 col-xs-6">
                         <div class="form-group">  
                         <label>ซัพพลายเออร์: </label> 
-                            <select class="custom-select" name="ref_id_site" id="ref_id_site" style="width:100%; font-size:0.85rem;">  
-                                    <?PHP
-                                    //id_menu name_menu
-                                    $rowData = $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY id_site ASC");
-                                    if (count($rowData)!=0) {
-                                        echo '<option value="" disabled selected>เลือกซัพพลายเออร์</option>';
-                                        foreach($rowData as $key => $value) {
-                                            echo '<option value="'.$rowData[$key]['id_site'].'">'.$rowData[$key]['site_initialname'].' - '.$rowData[$key]['site_name'].'</option>';
-                                        }
-                                    } else {
-                                        echo '<option disabled selected value="" >เลือกซัพพลายเออร์</option>  ';
-                                    }
-                                    ?>
-                            </select>
+                            <select class="custom-select" name="ref_id_supplier" id="ref_id_supplier" style="width:100%; font-size:0.85rem;"><option disabled selected value="" >เลือกซัพพลายเออร์</option></select>
                         </div>
                         </div>                            
 
@@ -143,13 +142,13 @@
                         </div><!--row-cate-->
 
                         <div class="row row-5">
-                            <div class="col-sm-8 col-md-8 col-xs-8">  
+                            <div class="col-sm-9 col-md-9 col-xs-9">  
                                 <div class="form-group">  
                                     <label for="firstname">รายละเอียดเพิ่มเติมเกี่ยวกับเครื่องจักร-อุปกรณ์นี้ (ถ้ามี):</label>  
                                     <textarea class="form-control w-100" id="detail_machine" name="detail_machine" rows="6" placeholder="รายละเอียด ..."></textarea>
                                 </div>
                             </div>
-                            <div class="col-sm-4 col-md-4 col-xs-4">
+                            <div class="col-sm-3 col-md-3 col-xs-3">
                                     <label>รูปเครื่องจักร-อุปกรณ์:</label>  
                                     <img src="uploads-temp/default.png?ver=1" id="preview" class="border p-2 w-100 d-block" />
                                 </div>
@@ -188,7 +187,7 @@
                         <div class="col-sm-4 col-md-4 col-xs-4">
                         <div class="form-group">  
                         <label>สถานที่ใช้งาน: </label> 
-                            <select class="custom-select" name="ref_id_building" id="ref_id_building" style="width:100%; font-size:0.85rem;"><option value="" disabled selected>ต้องเลือกไซต์งานก่อน</option></select>
+                            <select class="custom-select" name="ref_id_location" id="ref_id_location" style="width:100%; font-size:0.85rem;"><option value="" disabled selected>ต้องเลือกไซต์งานก่อน</option></select>
                             <div class="invalid-feedback">เลือกสถานที่ใช้งาน</div>
                         </div>
                         </div>                        
@@ -246,8 +245,17 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
     $('form').each(function() { this.reset() });
 });
 
+$(document).on("change", "#ref_id_sub_menu", function (e){ 
+    var ref_id_menu = $("#ref_id_menu option:selected" ).val();
+    var ref_id_sub_menu = $("#ref_id_sub_menu option:selected" ).val();       
+    var ref_id_dept = $("#ref_id_dept option:selected" ).val();    
+    chk_machine_site(ref_id_dept, ref_id_menu, ref_id_sub_menu);
+});
+
 $(document).on("change", "#ref_id_menu", function (e){ 
     var ref_id_menu = $("#ref_id_menu option:selected" ).val();
+    var ref_id_sub_menu = $("#ref_id_sub_menu option:selected" ).val();       
+    var ref_id_dept = $("#ref_id_dept option:selected" ).val();    
     //alert(id_site_val);
     $.ajax({
         url: "module/module_machine_site/ajax_action.php",
@@ -259,6 +267,7 @@ $(document).on("change", "#ref_id_menu", function (e){
         //console.log(data);
         if(data){
             $('#ref_id_sub_menu').html(data);
+            chk_machine_site(ref_id_dept, ref_id_menu, ref_id_sub_menu);
         }else{
             swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
         }   
@@ -271,23 +280,83 @@ $(document).on("change", "#ref_id_menu", function (e){
     });
 });
 
+function chk_location_mc(ref_id_site, ref_id_building){
+    var ref_id_site = $("#ref_id_site option:selected" ).val();
+    var ref_id_location = $("#ref_id_location option:selected" ).val();    
+    $.ajax({
+        dataType: "json",
+        url: "module/module_machine_site/ajax_action.php",
+        type: "POST",
+        data:{"ref_id_site":ref_id_site, "ref_id_location":ref_id_location, "action":"chk_location_mc"},
+        beforeSend: function () {
+            //$('.check').html(ref_id_dept+'----------'+ref_id_menu+'----------'+ref_id_sub_menu);
+        },
+        success: function (data) {
+            console.log(data); //return false;
+            $('#ref_id_location').html(data.slt_id_location);
+            $('#ref_id_building').html(data.slt_id_building);
+            event.preventDefault();
+        },
+            error: function (jXHR, textStatus, errorThrown) {
+            //console.log(data);
+            alert(errorThrown);
+        }
+    });
+}
+
+function chk_machine_site(val_id_dept, val_id_menu, val_id_sub_menu){
+    $.ajax({
+        dataType: "json",
+        url: "module/module_machine_site/ajax_action.php",
+        type: "POST",
+        data:{"val_id_dept":val_id_dept, "val_id_menu":val_id_menu, "val_id_sub_menu":val_id_sub_menu, "action":"chk_machine_site"},
+        beforeSend: function () {
+            //$('.check').html(ref_id_dept+'----------'+ref_id_menu+'----------'+ref_id_sub_menu);
+        },
+        success: function (data) {
+            console.log(data); //return false;
+            $('#ref_id_machine').html(data.slt_mc);
+            $('#ref_id_supplier').html(data.slt_supplier);
+            event.preventDefault();
+        },
+            error: function (jXHR, textStatus, errorThrown) {
+            //console.log(data);
+            alert(errorThrown);
+        }
+    });
+}
+
+$(document).on("change", "#ref_id_machine", function (e){ 
+    var ref_id_machine = $("#ref_id_machine option:selected" ).text();    
+    const  myArray = ref_id_machine.split(" : ");
+    $('#machine_code').val(myArray[0]+'-000');
+});
+
 $(document).on("change", "#ref_id_dept", function (e){ 
+    var ref_id_menu = $("#ref_id_menu option:selected" ).val();
+    var ref_id_sub_menu = $("#ref_id_sub_menu option:selected" ).val();    
+
     var ref_id_dept = $("#ref_id_dept option:selected" ).val();
     var ref_id_dept_txt = $("#ref_id_dept option:selected" ).text();
     const  myArray = ref_id_dept_txt.split(" - ");
     //let word = myArray[1];
     //alert(ref_id_dept+'-----'+ref_id_dept_txt+'----'+myArray[0]);    return false;
+    //$("#ref_id_menu" ).html('<option value="" selected="">เลือกแผนกที่รับผิดชอบ</option>');
+    //$("#ref_id_sub_menu" ).html('<option value="" selected="">เลือกหมวดหลัก</option>');  
+
     $.ajax({
         url: "module/module_machine_site/ajax_action.php",
         type: "POST",
         data:{"ref_id_dept":ref_id_dept, "action":"chk_dept_cate"},
         beforeSend: function () {
+            //$('.check').html(ref_id_dept+'----------'+ref_id_menu+'----------'+ref_id_sub_menu);
         },
         success: function (data) {
-        //console.log(data);
+        //console.log(data); //return false;
         if(data){
             $('#ref_id_menu').html(data);
-            $('#machine_code').val(myArray[0]+'-AS-0000');
+            $('#machine_code').val(myArray[0]+'-AS-0000-000');
+            chk_machine_site(ref_id_dept, ref_id_menu, ref_id_sub_menu);
         }else{
             swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
         }   
@@ -350,7 +419,7 @@ $(document).on("change", "#ref_id_dept", function (e){
     //alert('Ajax'); return false;
     formAdd.classList.add('was-validated');      
     return false;
-});
+    });
 
 
 });//document

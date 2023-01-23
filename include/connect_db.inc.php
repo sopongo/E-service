@@ -4,6 +4,8 @@ class Database
 {
     ####localhost 
     private $dbServer = 'localhost'; private $dbUser = 'root'; private $dbPassword = ''; private $dbName = 'db_e-service';
+    //private $dbServer = 'mail.cc.pcs-plp.com'; private $dbUser = 'itpcs'; private $dbPassword = 'Pcs@1234'; private $dbName = 'db_eservice_new'; //ON SERVER;
+    
     
     ####Server
     //private $dbServer = 'mail.cc.pcs-plp.com'; private $dbUser = 'itpcs2'; private $dbPassword = 'Pcs@1234Pcs@1233'; private $dbName = 'db_centralstore_online';
