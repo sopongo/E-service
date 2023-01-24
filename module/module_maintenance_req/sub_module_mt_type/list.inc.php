@@ -31,7 +31,7 @@
 
     <!--<a id="some_button" class="btn btn-danger">refesh</a>-->
     
-    <table id="example1" class="table table-bordered table-hover dataTable dtr-inline">
+    <table id="example1" class="table table-bordered table-hover dataTable dtr-inline table-responsive-xl">
       <thead>
       <tr class="bg-light">
         <th class="sorting_disabled">No</th>

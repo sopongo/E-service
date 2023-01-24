@@ -100,8 +100,9 @@
                                 <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname"><span class="text-danger">**</span> เลือกเครื่องจักร-อุปกรณ์:</label>  
-                                    <select class="custom-select" name="ref_id_machine" id="ref_id_machine" style="width:100%; font-size:0.85rem;">
+                                    <select class="custom-select" name="ref_id_machine" id="ref_id_machine" style="width:100%; font-size:0.85rem;" required>
                                     <option value="" disabled selected>ไม่มีข้อมูล</option></select>
+                                    <div class="invalid-feedback">เลือกเครื่องจักร-อุปกรณ์:</div>
                                 </div>
                             </div>
 
@@ -193,7 +194,6 @@
                         </div>                        
 
                         </div><!--row-6-->
-
            
                     </div><!--card-body-->
                 </div><!--card-->
@@ -280,31 +280,38 @@ $(document).on("change", "#ref_id_menu", function (e){
     });
 });
 
-function chk_location_mc(ref_id_site, ref_id_building){
+
+$(document).on("change", "#ref_id_site", function (e){ 
+    //var ref_id_site = $("#ref_id_site option:selected" ).val();
+    //var ref_id_building = $("#ref_id_building option:selected" ).val();    
+    //alert('xxxxxx');
+    chk_location_mc();
+});
+
+function chk_location_mc(){
+    //$('#ref_id_building').html('<option value="" selected>เลือกอาคาร</option>');
     var ref_id_site = $("#ref_id_site option:selected" ).val();
-    var ref_id_location = $("#ref_id_location option:selected" ).val();    
     $.ajax({
         dataType: "json",
         url: "module/module_machine_site/ajax_action.php",
         type: "POST",
-        data:{"ref_id_site":ref_id_site, "ref_id_location":ref_id_location, "action":"chk_location_mc"},
-        beforeSend: function () {
-            //$('.check').html(ref_id_dept+'----------'+ref_id_menu+'----------'+ref_id_sub_menu);
-        },
+        data:{"ref_id_site":ref_id_site, "action":"chk_location_mc"},
+        beforeSend: function () {},
         success: function (data) {
             console.log(data); //return false;
-            $('#ref_id_location').html(data.slt_id_location);
-            $('#ref_id_building').html(data.slt_id_building);
+            $('#ref_id_building').html(data.slt_building);
+            $('#ref_id_location').html(data.slt_location);
             event.preventDefault();
         },
             error: function (jXHR, textStatus, errorThrown) {
-            //console.log(data);
-            alert(errorThrown);
+            console.log(data);
+            //alert(errorThrown);
         }
     });
 }
 
 function chk_machine_site(val_id_dept, val_id_menu, val_id_sub_menu){
+    $('img#preview').attr('src', '<?PHP echo $path_machine_Default;?>');
     $.ajax({
         dataType: "json",
         url: "module/module_machine_site/ajax_action.php",
@@ -315,6 +322,7 @@ function chk_machine_site(val_id_dept, val_id_menu, val_id_sub_menu){
         },
         success: function (data) {
             console.log(data); //return false;
+            //alert(data.slt_mc);
             $('#ref_id_machine').html(data.slt_mc);
             $('#ref_id_supplier').html(data.slt_supplier);
             event.preventDefault();
@@ -327,9 +335,31 @@ function chk_machine_site(val_id_dept, val_id_menu, val_id_sub_menu){
 }
 
 $(document).on("change", "#ref_id_machine", function (e){ 
-    var ref_id_machine = $("#ref_id_machine option:selected" ).text();    
-    const  myArray = ref_id_machine.split(" : ");
+    var ref_text_machine = $("#ref_id_machine option:selected" ).text();    
+    var ref_id_machine = $("#ref_id_machine option:selected" ).val();
+    const  myArray = ref_text_machine.split(" : ");
     $('#machine_code').val(myArray[0]+'-000');
+        $.ajax({
+            dataType: "json",
+            url: "module/module_machine_site/ajax_action.php",
+            type: "POST",
+            data:{"ref_id_machine":ref_id_machine, "action":"chk_machine_detail"},
+            beforeSend: function () {},
+            success: function (data) {
+            console.log(data); //return false;
+            if(data.photo){
+                $('img#preview').attr('src', '<?PHP echo $path_machine;?>'+data.photo+'');
+            }else{
+                $('img#preview').attr('src', '<?PHP echo $path_machine_Default;?>');
+                //swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
+            }   
+                event.preventDefault();
+            },
+                error: function (jXHR, textStatus, errorThrown) {
+                console.log(data);
+                alert(errorThrown);
+            }
+        });
 });
 
 $(document).on("change", "#ref_id_dept", function (e){ 
@@ -392,7 +422,7 @@ $(document).on("change", "#ref_id_dept", function (e){
             beforeSend: function () {
             },
             success: function (data) {
-            console.log(data); //return false;
+            //console.log(data); //return false;
             if(data==1){
                 sweetAlert("ผิดพลาด!", "ชื่อย่อ'"+$("#location_initialname").val()+"' หรือ '"+$("#location_name").val()+"' ถูกใช้แล้ว", "error");
                 return false;

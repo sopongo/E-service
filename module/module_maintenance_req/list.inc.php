@@ -56,7 +56,7 @@
                 <?php include_once 'module/module_maintenance_req/sub_module_mt_type/list.inc.php'; //หน้ารายการประเภทใบแจ้งซ่อม                ?>
             </div>
 
-            <div class="tab-pane fade" id="custom-tabs-content-2" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+            <div class="tab-pane fade table-responsive-xl" id="custom-tabs-content-2" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
                 ...TAB-2 Wait process
                 <?php //include_once 'module/module_maintenance_req/sub_module_failure_code/list.inc.php'; //หน้ารายการประเภทใบแจ้งซ่อม ?>
             </div>

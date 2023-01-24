@@ -154,6 +154,45 @@
         }
     }
     
+    if ($action=="chk_machine_detail") {
+        !empty(intval($_POST['ref_id_machine'])) ? ($ref_id_machine = intval($_POST['ref_id_machine'])) && ($machine_query = '') : ''; 
+        $fetch_detail = $obj->customSelect("SELECT path_attachment_name FROM tb_attachment WHERE ref_id_machine=".$ref_id_machine." ORDER BY id_attachment ASC LIMIT 1");
+        $rowArr = ['photo' => $fetch_detail['path_attachment_name'], ];
+        echo json_encode($rowArr);
+        exit();        
+    }
+
+    if ($action=="chk_location_mc") {
+        !empty(intval($_POST['ref_id_site'])) ? ($ref_id_site = intval($_POST['ref_id_site'])) : '';
+        $fetchbuild = $obj->fetchRows("SELECT * FROM tb_building WHERE ref_id_site=".$ref_id_site." AND building_status=1 ORDER BY building_name DESC ");
+
+        $slt_building = '';
+        if (!empty($fetchbuild)) {
+            $slt_building.='<option value="" selected>เลือกอาคาร</option>'; //disabled
+            foreach($fetchbuild as $key=>$value) {
+                $slt_building.='<option value="'.$fetchbuild[$key]['id_building'].'">'.$fetchbuild[$key]['building_name'].'</option>';
+            }
+        }else{
+            $slt_building.='<option value="" selected>ไม่มีข้อมูล</option>';
+        }
+        
+        $fetch_location = $obj->fetchRows("SELECT * FROM tb_location WHERE ref_id_site=".$ref_id_site." AND location_status=1 ORDER BY location_name DESC ");
+        $slt_location = '';
+        if (!empty($fetch_location)) {
+            $slt_location.='<option value="" selected>เลือกสถานที่</option>'; //disabled
+            foreach($fetch_location as $key=>$value) {
+                $slt_location.='<option value="'.$fetch_location[$key]['id_location'].'">'.$fetch_location[$key]['location_name'].'</option>';
+            }
+        }else{
+            $slt_location.='<option value="" selected>ไม่มีข้อมูล</option>';
+        }
+
+        $rowArr = ['slt_building' => $slt_building, 'slt_location' => $slt_location];
+        echo json_encode($rowArr);
+        exit();
+    }    
+
+    
     if ($action=="chk_machine_site") {
         $dept_query = '';
         $menu_query = '';

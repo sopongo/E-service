@@ -2,8 +2,6 @@
 //$obj = new CRUD();
 ?>
 
-
-
 <style>
 .dataTables_length, .form-control-sm{  font-size:0.85rem; /* 40px/16=2.5em */
 }
@@ -28,7 +26,7 @@
 
     <!--<a id="some_button" class="btn btn-danger">refesh</a>-->
     
-    <table id="example2" class="table table-bordered table-hover dataTable dtr-inline">
+    <table id="example2" class="table table-responsive-xl table-bordered table-hover dataTable dtr-inline">
       <thead>
       <tr class="bg-light">
         <th class="sorting_disabled">No</th>

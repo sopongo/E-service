@@ -26,6 +26,7 @@
         //#tb_machine_master     id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine
         $rowID = $_POST['id_row'];
         $_POST['name_machine'] = trim($_POST['name_machine']);
+        $_POST['model_name'] = trim($_POST['model_name']);        
         !empty($_POST['id_row']) ? $query_id = " AND id_machine!=".$_POST["id_row"]."" : $query_id = "";
 
         $totalRow = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master WHERE (machine_code = '".(trim($_POST['machine_code']))."' OR name_machine='".(trim($_POST['name_machine']))."') ".$query_id."");
