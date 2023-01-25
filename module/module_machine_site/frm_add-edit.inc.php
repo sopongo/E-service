@@ -145,7 +145,7 @@
                         <div class="row row-5">
                             <div class="col-sm-9 col-md-9 col-xs-9">  
                                 <div class="form-group">  
-                                    <label for="firstname">รายละเอียดเพิ่มเติมเกี่ยวกับเครื่องจักร-อุปกรณ์นี้ (ถ้ามี):</label>  
+                                    <label for="firstname">ประวัติ, รายละเอียดเพิ่มเติมเกี่ยวกับเครื่องจักร-อุปกรณ์นี้ (ถ้ามี):</label>  
                                     <textarea class="form-control w-100" id="detail_machine" name="detail_machine" rows="6" placeholder="รายละเอียด ..."></textarea>
                                 </div>
                             </div>
@@ -278,6 +278,57 @@ $(document).on("change", "#ref_id_menu", function (e){
             alert(errorThrown);
         }
     });
+});
+
+$(document).on("change", "#ref_id_location", function (e){ 
+    var ref_id_location = $("#ref_id_location option:selected").val();
+    //alert(ref_id_location); //return false;
+    if(ref_id_location==""){
+        alert('xxxxxxxxxxxxxxx');
+        $('#ref_id_building option:eq(0)').prop('selected', true); return false;
+    }
+    $.ajax({
+        dataType: "json",
+        url: "module/module_machine_site/ajax_action.php",
+        type: "POST",
+        data:{"ref_id_location":ref_id_location, "action":"chk_building_location"},
+        beforeSend: function () {},
+        success: function (data) {
+            console.log(data); //return false;
+            if(data.ref_id_building!=0){
+                $('#ref_id_building option[value='+data.ref_id_building+']').prop('selected', true);
+            }else{
+                $('#ref_id_building option:eq(0)').prop('selected', true);
+            }
+            event.preventDefault();
+        },
+            error: function (jXHR, textStatus, errorThrown) {
+            console.log(data);
+            //alert(errorThrown);
+        }
+    });
+});
+    
+$(document).on("change", "#ref_id_building", function (e){ 
+    var ref_id_building = $("#ref_id_building option:selected" ).val();
+    //alert(ref_id_building);    
+    $.ajax({
+        dataType: "json",
+        url: "module/module_machine_site/ajax_action.php",
+        type: "POST",
+        data:{"ref_id_building":ref_id_building, "action":"chk_location_building"},
+        beforeSend: function () {},
+        success: function (data) {
+            console.log(data); //return false;
+            $('#ref_id_location').html(data.slt_location);
+            event.preventDefault();
+        },
+            error: function (jXHR, textStatus, errorThrown) {
+            console.log(data);
+            //alert(errorThrown);
+        }
+    });
+
 });
 
 

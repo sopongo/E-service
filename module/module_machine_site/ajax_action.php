@@ -162,6 +162,35 @@
         exit();        
     }
 
+
+    if ($action=="chk_building_location") {
+        !empty(intval($_POST['ref_id_location'])) ? ($ref_id_location = intval($_POST['ref_id_location'])) && ($query_building="id_location=".$ref_id_location."") : ($query_building="") ;
+        if (!empty($ref_id_location)) {
+            $fetchBuilding= $obj->customSelect("SELECT * FROM tb_location WHERE ".$query_building." ");
+            $rowArr = ['ref_id_building' => $fetchBuilding['ref_id_building'], ];
+            echo json_encode($rowArr);
+        }
+        exit();
+    }    
+
+    if ($action=="chk_location_building") {
+        !empty(intval($_POST['ref_id_building'])) ? ($ref_id_building = intval($_POST['ref_id_building'])) && ($query_location="ref_id_building=".$ref_id_building." AND ") : ($query_location="") ;
+        $fetchlocation = $obj->fetchRows("SELECT * FROM tb_location WHERE ".$query_location." location_status=1 ORDER BY location_name DESC ");
+        $slt_location = '';
+        if (!empty($fetchlocation)) {
+            $slt_location.='<option value="" selected>เลือกสถานที่</option>'; //disabled
+            foreach($fetchlocation as $key=>$value) {
+                $slt_location.='<option value="'.$fetchlocation[$key]['id_location'].'">'.$fetchlocation[$key]['location_name'].'</option>';
+            }
+        }else{
+            $slt_location.='<option value="" selected>ไม่มีข้อมูล</option>';
+        }
+        $rowArr = ['slt_location' => $slt_location];
+        echo json_encode($rowArr);
+        exit();
+    }    
+
+
     if ($action=="chk_location_mc") {
         !empty(intval($_POST['ref_id_site'])) ? ($ref_id_site = intval($_POST['ref_id_site'])) : '';
         $fetchbuild = $obj->fetchRows("SELECT * FROM tb_building WHERE ref_id_site=".$ref_id_site." AND building_status=1 ORDER BY building_name DESC ");
