@@ -23,7 +23,7 @@
     } 
        
     if ($action=='adddata' && !empty($_POST)) {
-        //#tb_machine_master     id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine
+        //#tb_machine_site      id_machine_site, code_machine_site, serial_number, recived_date, ref_id_machine, ref_id_building, ref_id_location, ref_id_site, ref_id_supplier, status_work, detail_machine_site, mcs_adddate, ref_id_user_add, mcs_editdate, ref_id_user_edit, status_machine_site
         /*
         if(isset($_POST['data'])){
             //echo $_POST['data']; exit();
@@ -32,74 +32,54 @@
         }
         */
         $rowID = "";
-        !empty($_POST['id_row']) ? ($rowID = $_POST["id_row"]) && ($query_id = " AND id_machine!=".$_POST["id_row"]."") : ($query_id = "");
+        !empty($_POST['id_row']) ? ($rowID = $_POST["id_row"]) && ($query_id = " AND id_machine_site!=".$_POST["id_row"]."") : ($query_id = "");
 
-        echo $rowID;
-        exit();
-        //$_POST['location_initialname'] = str_replace(" ","",$_POST['location_initialname']);
-        $_POST['name_machine'] = trim($_POST['name_machine']);
-        $totalRow = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master WHERE machine_code = '".(trim($_POST['machine_code']))."' OR name_machine='".(trim($_POST['name_machine']))."' ".$query_id."");
-        $totalRow = 0;
+        //echo $rowID; exit();
+        $_POST['serial_number'] = trim($_POST['serial_number']);
 
-        if($totalRow!=0){ ##ถ้า $totalRow ไม่เท่ากับ 0 แสดงว่ามีในระบบแล้ว
-            echo json_encode(1);
-            exit();
-        }else{ ##ถ้าไม่มีจะทำการเช็คว่ามี $rowID ที่ส่งมาจากฟอร์มหรือไม่ (ถ้่ามีคือการ update) ถ้าไม่มีคือ insert          
-           //#tb_machine_master     id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine
             if(empty($rowID)){
-                $_POST['machine_code'] = str_replace("-0000", "", $_POST['machine_code']);
+                //echo 1;  exit;
+                $_POST['code_machine_site'] = substr($_POST['code_machine_site'], 0, -4);
                 $countCode = 0;
-                $countCode = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master WHERE LEFT(machine_code, ".strlen($_POST['machine_code']).")='".$_POST['machine_code']."' ");
+                $countCode = $obj->getCount("SELECT count(id_machine_site) AS total_row FROM tb_machine_site WHERE LEFT(code_machine_site, ".strlen($_POST['code_machine_site']).")='".$_POST['code_machine_site']."' ");
                 $countCode = str_pad(($countCode+1), 4, '0', STR_PAD_LEFT);
-                $machine_code = $_POST['machine_code'].'-'.$countCode;
-
+                $code_machine_site = $_POST['code_machine_site'].'-'.$countCode;
+                //echo $code_machine_site; exit();
                 $insertRow = [
-                    'machine_code' => (!empty($machine_code)) ? $machine_code : "Not found.",
-                    'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : NULL,
-                    'ref_id_menu' => (!empty($_POST['ref_id_menu'])) ? $_POST['ref_id_menu'] : NULL,
-                    'ref_id_sub_menu' => (!empty($_POST['ref_id_sub_menu'])) ? $_POST['ref_id_sub_menu'] : NULL,
-                    'model_name' => (!empty($_POST['model_name'])) ? $_POST['model_name'] : NULL,
-                    'name_machine' => (!empty($_POST['name_machine'])) ? $_POST['name_machine'] : NULL,
-                    'detail_machine' => (!empty($_POST['detail_machine'])) ? $_POST['detail_machine'] : NULL,
-                    'mc_adddate' => date('Y-m-d H:i:s'),
+                    "code_machine_site" => (!empty($code_machine_site)) ? $code_machine_site : "Not found.",
+                    "serial_number" => (!empty($_POST['serial_number'])) ? $_POST['serial_number'] : NULL,
+                    "recived_date" => (!empty($_POST['date_rcv'])) ? $_POST['date_rcv'] : NULL,
+                    "ref_id_machine_master" => (!empty($_POST['ref_id_machine'])) ? $_POST['ref_id_machine'] : NULL,
+                    "ref_id_building" => (!empty($_POST['ref_id_building'])) ? $_POST['ref_id_building'] : NULL,
+                    "ref_id_location" => (!empty($_POST['ref_id_location'])) ? $_POST['ref_id_location'] : NULL,
+                    "ref_id_site" => (!empty($_POST['ref_id_site'])) ? $_POST['ref_id_site'] : NULL,
+                    "ref_id_supplier" => (!empty($_POST['ref_id_supplier'])) ? $_POST['ref_id_supplier'] : NULL,
+                    "detail_machine_site" => (!empty($_POST['detail_machine'])) ? $_POST['detail_machine'] : NULL,
+                    'mcs_adddate' => date('Y-m-d H:i:s'),
                     'ref_id_user_add' => $_SESSION['sess_id_user'],
-                    'mc_editdate' => NULL,
-                    'ref_id_user_edit' => NULL,
-                    'status_machine' => (!empty($_POST['status_machine'])) ? $_POST['status_machine'] : NULL,
+                    "status_machine_site" => (!empty($_POST['status_machine'])) ? $_POST['status_machine'] : NULL,
                 ];
-                $rowID = $obj->addRow($insertRow, "tb_machine_master");
+                $rowID = $obj->addRow($insertRow, "tb_machine_site");
             }else{
-                //echo 2;  exit;
+                echo 2;  exit;
                 $insertRow = [
-                    //'machine_code' => (!empty($_POST['machine_code'])) ? $_POST['machine_code'] : NULL,
-                    'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : NULL,
-                    'ref_id_menu' => (!empty($_POST['ref_id_menu'])) ? $_POST['ref_id_menu'] : NULL,
-                    'ref_id_sub_menu' => (!empty($_POST['ref_id_sub_menu'])) ? $_POST['ref_id_sub_menu'] : NULL,
-                    'model_name' => (!empty($_POST['model_name'])) ? $_POST['model_name'] : NULL,
-                    'name_machine' => (!empty($_POST['name_machine'])) ? $_POST['name_machine'] : NULL,
-                    'detail_machine' => (!empty($_POST['detail_machine'])) ? $_POST['detail_machine'] : NULL,
-                    'mc_editdate' => date('Y-m-d H:i:s'),
+                    "code_machine_site" => (!empty($code_machine_site)) ? $code_machine_site : "Not found.",
+                    "serial_number" => (!empty($_POST['serial_number'])) ? $_POST['serial_number'] : NULL,
+                    "recived_date" => (!empty($_POST['date_rcv'])) ? $_POST['date_rcv'] : NULL,
+                    "ref_id_machine_master" => (!empty($_POST['ref_id_machine'])) ? $_POST['ref_id_machine'] : NULL,
+                    "ref_id_building" => (!empty($_POST['ref_id_building'])) ? $_POST['ref_id_building'] : NULL,
+                    "ref_id_location" => (!empty($_POST['ref_id_location'])) ? $_POST['ref_id_location'] : NULL,
+                    "ref_id_site" => (!empty($_POST['ref_id_site'])) ? $_POST['ref_id_site'] : NULL,
+                    "ref_id_supplier" => (!empty($_POST['ref_id_supplier'])) ? $_POST['ref_id_supplier'] : NULL,
+                    "detail_machine_site" => (!empty($_POST['detail_machine'])) ? $_POST['detail_machine'] : NULL,
+                    'mcs_editdate' => date('Y-m-d H:i:s'),
                     'ref_id_user_edit' => $_SESSION['sess_id_user'],
-                    'status_machine' => (!empty($_POST['status_machine'])) ? $_POST['status_machine'] : NULL,
+                    "status_machine_site" => (!empty($_POST['status_machine'])) ? $_POST['status_machine'] : NULL,
                 ];
-                $rowID = $obj->update($insertRow, "id_machine=".$rowID."", "tb_machine_master");
-            }
-
-            $imagename = '';
-            //id_attachment, ref_id_machine, attachment_sort, attachment_name, attachment_type
-            if (!empty($_FILES['photo'])){ ##ถ้ามีแนบไฟล์รูปมาให้อัพโหลดรูปก่อน
-                $imagename = $obj->uploadPhoto($_FILES['photo'], $path_machine);
-                $insertPhoto = [
-                    'ref_id_machine' => $rowID,
-                    'attachment_sort' => null,
-                    'path_attachment_name' => $imagename,
-                    'attachment_type' => 1
-                ];    
-                $rowID = $obj->addRow($insertPhoto, "tb_attachment");        
+                $rowID = $obj->update($insertRow, "id_machine_site=".$rowID."", "tb_machine_site");
             }
             echo json_encode($rowID);
             exit();
-        }
     }
 
     if($action=='update-status'){
@@ -156,20 +136,26 @@
     
     if ($action=="chk_machine_detail") {
         !empty(intval($_POST['ref_id_machine'])) ? ($ref_id_machine = intval($_POST['ref_id_machine'])) && ($machine_query = '') : ''; 
-        $fetch_detail = $obj->customSelect("SELECT path_attachment_name FROM tb_attachment WHERE ref_id_machine=".$ref_id_machine." ORDER BY id_attachment ASC LIMIT 1");
-        $rowArr = ['photo' => $fetch_detail['path_attachment_name'], ];
+        $fetch_detail = $obj->customSelect("SELECT tb_attachment.path_attachment_name, tb_machine_master.ref_id_menu, tb_machine_master.ref_id_sub_menu 
+        FROM tb_machine_master 
+        LEFT JOIN tb_attachment ON (tb_attachment.ref_id_machine=tb_machine_master.id_machine)
+        WHERE id_machine=".$ref_id_machine." ORDER BY tb_attachment.id_attachment ASC LIMIT 1");
+        $rowArr = [
+            'photo' => $fetch_detail['path_attachment_name'], 
+            'ref_id_menu' => $fetch_detail['ref_id_menu'], 
+            'ref_id_sub_menu' => $fetch_detail['ref_id_sub_menu'], 
+        ];
         echo json_encode($rowArr);
         exit();        
     }
-
 
     if ($action=="chk_building_location") {
         !empty(intval($_POST['ref_id_location'])) ? ($ref_id_location = intval($_POST['ref_id_location'])) && ($query_building="id_location=".$ref_id_location."") : ($query_building="") ;
         if (!empty($ref_id_location)) {
             $fetchBuilding= $obj->customSelect("SELECT * FROM tb_location WHERE ".$query_building." ");
-            $rowArr = ['ref_id_building' => $fetchBuilding['ref_id_building'], ];
-            echo json_encode($rowArr);
         }
+        $rowArr = ['ref_id_building' => $fetchBuilding['ref_id_building'], ];
+        echo json_encode($rowArr);
         exit();
     }    
 
@@ -215,13 +201,11 @@
         }else{
             $slt_location.='<option value="" selected>ไม่มีข้อมูล</option>';
         }
-
         $rowArr = ['slt_building' => $slt_building, 'slt_location' => $slt_location];
         echo json_encode($rowArr);
         exit();
     }    
 
-    
     if ($action=="chk_machine_site") {
         $dept_query = '';
         $menu_query = '';
@@ -229,7 +213,9 @@
         $slt_mc = '';
         $val_id_dept = (!empty(intval($_POST['val_id_dept']))) ? ($_POST['val_id_dept']) && ($dept_query = ' AND ref_id_dept='.$_POST['val_id_dept'].'') && ($supplier_query=' 
          AND ref_id_dept='.$_POST['val_id_dept'].'') : '';
+
         $val_id_menu = (!empty(intval($_POST['val_id_menu']))) ? ($_POST['val_id_menu']) && ($menu_query = ' AND ref_id_menu='.$_POST['val_id_menu'].'') : '';
+        
         $val_id_sub_menu = (!empty(intval($_POST['val_id_sub_menu']))) ? ($_POST['val_id_sub_menu']) && ($submenu_query = ' AND ref_id_sub_menu='.$_POST['val_id_sub_menu'].'') : '';
         
             $fetchMC = $obj->fetchRows("SELECT * FROM tb_machine_master WHERE status_machine=1 ".$dept_query.$menu_query.$submenu_query." ORDER BY machine_code DESC ");

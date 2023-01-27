@@ -53,11 +53,14 @@
       <tr class="bg-light">
         <th class="sorting_disabled">No</th>
         <th>รูป</th>
+        <th>สถานะเครื่องจักร</th>
         <th>รหัสเครื่องจักร-อุปกรณ์</th>
-        <th>รุ่น/โมเดล</th>
-        <th>ชื่อเครื่อง-อุปกรณ์</th>
-        <th>หมวดหลัก</th>
-        <th>แผนกที่รับผิดชอบ</th>
+        <th>Serial No.</th>
+        <th>ชื่อเครื่องจักร-อุปกรณ์</th>
+        <th>หมวดหมู่</th>
+        <th>ไซต์</th>
+        <th>อาคาร</th>
+        <th>สถานที่</th>
         <th>สถานะใช้งาน</th>
         <th>จัดการ</th>
       </tr>
@@ -112,8 +115,8 @@
       "serverSide": true,
       "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
       "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0, 1, 7, 8] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
-        { "bSearchable": false, "aTargets": [0, 1, 5, 6, 7, 8] } //คอลัมน์ที่จะไม่ให้เสริท
+        { "bSortable": false, "aTargets": [0, 1, 2,  4, 8, 9, 10, 11] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+        { "bSearchable": false, "aTargets": [0, 1, 2, 6, 7, 8, 9, 10, 11] } //คอลัมน์ที่จะไม่ให้เสริท
       ], 
       ajax: {
         beforeSend: function () {
@@ -144,6 +147,7 @@ $(document).ready(function () {
 
   $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มเครื่องจักร-อุปกรณ์</button></div>');
   $('input[type=search]').attr('placeholder', 'ชื่ออาคาร หรือ ชื่ออาคาร');
+  $('input[type=search]').attr('maxlength', 20);
   //$('#example1_filter').append('<select class="custom-select dataTables_filter" name="search" id="slt_search" aria-controls="example1"><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>');
 
 

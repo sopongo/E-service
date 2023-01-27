@@ -37,7 +37,7 @@
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname">รหัสเครื่องจักร-อุปกรณ์ (**ระบบจะสร้างให้อัตโนมัติ):</label>  
-                                    <input type="text" id="machine_code" name="machine_code" readonly placeholder="??-AS-0000-000" class="form-control" aria-describedby="inputGroupPrepend" required />
+                                    <input type="text" id="code_machine_site" name="code_machine_site" readonly placeholder="??-AS-0000-000" class="form-control" aria-describedby="inputGroupPrepend" required />
                                     <div class="invalid-feedback">กรอกรหัสเครื่องจักร-อุปกรณ์</div>
                                 </div>
                             </div>                        
@@ -51,7 +51,7 @@
                                 <div class="form-check-inline"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="status_hold" name="status_machine" value="2" aria-describedby="inputGroupPrepend" required><label class="custom-control-label text-danger w-auto d-inline" for="status_hold">ระงับใช้งาน</label><div class="invalid-feedback float-right w-auto pl-3">เลือกสถานะการใช้งาน</div></div></div>
                             </div>
                         </div>  
-                        </div><!--row-1 tb_machine_master    id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine-->
+                        </div><!--row-1 tb_machine_master    id_machine, code_machine_site, ref_id_dept, ref_id_menu, ref_id_sub_menu, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine-->
 
                         <div class="row row-4">
                             <div class="col-sm-4 col-md-4 col-xs-4">  
@@ -233,7 +233,7 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-    $("#modal-default").modal("show"); 
+   // $("#modal-default").modal("show"); 
     //Date picker
     $('#reservationdate').datetimepicker({
         //format: 'L',
@@ -282,11 +282,9 @@ $(document).on("change", "#ref_id_menu", function (e){
 
 $(document).on("change", "#ref_id_location", function (e){ 
     var ref_id_location = $("#ref_id_location option:selected").val();
+    var ref_id_building = $("#ref_id_building option:selected").val();
     //alert(ref_id_location); //return false;
-    if(ref_id_location==""){
-        alert('xxxxxxxxxxxxxxx');
-        $('#ref_id_building option:eq(0)').prop('selected', true); return false;
-    }
+    if(ref_id_location=="" || ref_id_location===null){ return false; }
     $.ajax({
         dataType: "json",
         url: "module/module_machine_site/ajax_action.php",
@@ -389,7 +387,11 @@ $(document).on("change", "#ref_id_machine", function (e){
     var ref_text_machine = $("#ref_id_machine option:selected" ).text();    
     var ref_id_machine = $("#ref_id_machine option:selected" ).val();
     const  myArray = ref_text_machine.split(" : ");
-    $('#machine_code').val(myArray[0]+'-000');
+    if(ref_id_machine===null || ref_id_machine==''){
+        //alert("xcvvxcxvcvcx'");
+        return false;
+    }
+    $('#code_machine_site').val(myArray[0]+'-000');
         $.ajax({
             dataType: "json",
             url: "module/module_machine_site/ajax_action.php",
@@ -400,6 +402,8 @@ $(document).on("change", "#ref_id_machine", function (e){
             console.log(data); //return false;
             if(data.photo){
                 $('img#preview').attr('src', '<?PHP echo $path_machine;?>'+data.photo+'');
+                $('#ref_id_menu option[value='+data.ref_id_menu+']').prop('selected', true);
+                $('#ref_id_sub_menu option[value='+data.ref_id_sub_menu+']').prop('selected', true);
             }else{
                 $('img#preview').attr('src', '<?PHP echo $path_machine_Default;?>');
                 //swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
@@ -414,6 +418,7 @@ $(document).on("change", "#ref_id_machine", function (e){
 });
 
 $(document).on("change", "#ref_id_dept", function (e){ 
+    $('#ref_id_sub_menu').html('<option disabled="" selected="" value="">เลือกหมวดหลักก่อน</option>');
     var ref_id_menu = $("#ref_id_menu option:selected" ).val();
     var ref_id_sub_menu = $("#ref_id_sub_menu option:selected" ).val();    
 
@@ -424,7 +429,6 @@ $(document).on("change", "#ref_id_dept", function (e){
     //alert(ref_id_dept+'-----'+ref_id_dept_txt+'----'+myArray[0]);    return false;
     //$("#ref_id_menu" ).html('<option value="" selected="">เลือกแผนกที่รับผิดชอบ</option>');
     //$("#ref_id_sub_menu" ).html('<option value="" selected="">เลือกหมวดหลัก</option>');  
-
     $.ajax({
         url: "module/module_machine_site/ajax_action.php",
         type: "POST",
@@ -433,10 +437,10 @@ $(document).on("change", "#ref_id_dept", function (e){
             //$('.check').html(ref_id_dept+'----------'+ref_id_menu+'----------'+ref_id_sub_menu);
         },
         success: function (data) {
-        //console.log(data); //return false;
+        console.log(data); //return false;
         if(data){
             $('#ref_id_menu').html(data);
-            $('#machine_code').val(myArray[0]+'-AS-0000-000');
+            $('#code_machine_site').val(myArray[0]+'-AS-0000-000');
             chk_machine_site(ref_id_dept, ref_id_menu, ref_id_sub_menu);
         }else{
             swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
@@ -473,9 +477,10 @@ $(document).on("change", "#ref_id_dept", function (e){
             beforeSend: function () {
             },
             success: function (data) {
-            //console.log(data); //return false;
+            console.log(data); //
+            //return false;
             if(data==1){
-                sweetAlert("ผิดพลาด!", "ชื่อย่อ'"+$("#location_initialname").val()+"' หรือ '"+$("#location_name").val()+"' ถูกใช้แล้ว", "error");
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทีกข้อมูลได้", "error");
                 return false;
             }else{
                 sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display

@@ -51,8 +51,7 @@ $arrData = array();
 
 $numRow = $obj->getCount("SELECT count(id_site) AS total_row FROM tb_site ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
 
-$fetchRow = $obj->fetchRows("SELECT * FROM tb_site ".$query_search."
-ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
+$fetchRow = $obj->fetchRows("SELECT * FROM tb_site ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
 
