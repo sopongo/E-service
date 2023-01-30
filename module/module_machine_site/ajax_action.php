@@ -58,6 +58,7 @@
                     'mcs_adddate' => date('Y-m-d H:i:s'),
                     'ref_id_user_add' => $_SESSION['sess_id_user'],
                     "status_machine_site" => (!empty($_POST['status_machine'])) ? $_POST['status_machine'] : NULL,
+                    "status_work" => 1,
                 ];
                 $rowID = $obj->addRow($insertRow, "tb_machine_site");
             }else{
@@ -75,6 +76,7 @@
                     'mcs_editdate' => date('Y-m-d H:i:s'),
                     'ref_id_user_edit' => $_SESSION['sess_id_user'],
                     "status_machine_site" => (!empty($_POST['status_machine'])) ? $_POST['status_machine'] : NULL,
+                    "status_work" => 1,
                 ];
                 $rowID = $obj->update($insertRow, "id_machine_site=".$rowID."", "tb_machine_site");
             }
@@ -94,12 +96,80 @@
 
     if ($action=="edit") {
         $rowID = (!empty($_POST['id_row'])) ? $_POST['id_row'] : '';
+        //echo json_encode($rowID ); exit();
         if (!empty($rowID)) {        
-            $rowData = $obj->customSelect("SELECT tb_machine_master.*, tb_attachment.path_attachment_name, tb_user.fullname FROM tb_machine_master 
-            LEFT JOIN tb_attachment ON (tb_attachment.ref_id_machine=tb_machine_master.id_machine) 
-            LEFT JOIN tb_user ON (tb_user.id_user=tb_machine_master.ref_id_user_edit) WHERE tb_machine_master.id_machine=".$rowID."");         
+            $rowData = $obj->customSelect("SELECT tb_machine_site.*, tb_machine_master.id_machine,  tb_machine_master.model_name, tb_machine_master.ref_id_dept, tb_machine_master.ref_id_menu, tb_machine_master.ref_id_sub_menu, tb_machine_master.name_machine, tb_attachment.path_attachment_name, mainCate.name_menu AS mainCate_name, subCate.name_menu AS subCate_name , tb_dept.dept_initialname, tb_dept.dept_name, tb_machine_master.detail_machine,
+            tb_site.site_initialname, tb_building.building_name, tb_location.location_name, userAdd.fullname AS userAdd_name, userEdit.fullname AS userEdit_name
+            FROM tb_machine_site 
+            LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+            LEFT JOIN tb_attachment ON (tb_attachment.ref_id_machine=tb_machine_master.id_machine AND tb_attachment.attachment_type=1) 
+            LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_machine_master.ref_id_dept) 
+            LEFT JOIN tb_category AS mainCate ON (tb_machine_master.ref_id_menu=mainCate.id_menu) 
+            LEFT JOIN tb_category AS subCate ON (tb_machine_master.ref_id_sub_menu=subCate.id_menu) 
+            LEFT JOIN tb_site ON (tb_site.id_site=tb_machine_site.ref_id_site) 
+            LEFT JOIN tb_building ON (tb_building.id_building=tb_machine_site.ref_id_building) 
+            LEFT JOIN tb_location ON (tb_location.id_location=tb_machine_site.ref_id_location) 
+            LEFT JOIN tb_user AS userAdd ON (userAdd.id_user=tb_machine_site.ref_id_user_add) 
+            LEFT JOIN tb_user AS userEdit ON (userEdit.id_user=tb_machine_site.ref_id_user_edit) WHERE tb_machine_site.id_machine_site=".$rowID."");         
             $slt_ref_id_menu= '';
             $ref_id_sub_menu= '';
+            $ref_id_machine= '';
+            $ref_id_supplier= '';
+            $ref_id_building= '<option value="" disabled="" selected="">ต้องเลือกไซต์งานก่อน</option>';
+            $ref_id_location= '<option value="" disabled="" selected="">ต้องเลือกไซต์งานก่อน</option>';
+
+            if($rowData['ref_id_location']!=NULL){
+                $rowData['ref_id_building']!=NULL ? $query_location = ' AND ref_id_building='.$rowData['ref_id_building'].'' : $query_location = '';                
+                $fetch_location= $obj->fetchRows("SELECT * FROM tb_location WHERE ref_id_site=".$rowData['ref_id_site']." ".$query_location." AND location_status='1' ");
+                if (!empty($fetch_location)) {//id_location, ref_id_site, ref_id_building, location_initialname, location_name, location_status
+                    $ref_id_location.='<option value="">ต้องเลือกไซต์งานก่อน</option>'; //disabled
+                    foreach($fetch_location as $key=>$value) {
+                        $ref_id_location.='<option '.($fetch_location[$key]['id_location']==$rowData['ref_id_location'] ? 'selected' : '').' value="'.$fetch_location[$key]['id_location'].'">'.$fetch_location[$key]['location_name'].'</option>';
+                    }
+                }else{
+                    $ref_id_location.='<option value="" disabled="" selected="">ต้องเลือกไซต์งานก่อน</option>';
+                }
+                $rowData['ref_id_location'] = $ref_id_location;
+            }
+
+            if($rowData['ref_id_building']!=NULL){
+                $fetchbuilding= $obj->fetchRows("SELECT * FROM tb_building WHERE ref_id_site=".$rowData['ref_id_site']." AND building_status='1' ");
+                //echo json_encode(count($fetchbuilding)); exit();
+                if (!empty($fetchbuilding)) {//id_building, ref_id_site, building_initialname, building_name, building_status
+                    $ref_id_building.='<option value="">เลือกอาคาร</option>'; //disabled
+                    foreach($fetchbuilding as $key=>$value) {
+                        $ref_id_building.='<option '.($fetchbuilding[$key]['id_building']==$rowData['ref_id_building'] ? 'selected' : '').' value="'.$fetchbuilding[$key]['id_building'].'">'.$fetchbuilding[$key]['building_name'].'</option>';
+                    }
+                }else{
+                    $ref_id_building.='<option value="" disabled="" selected="">ต้องเลือกไซต์งานก่อน</option>';
+                }
+                $rowData['ref_id_building'] = $ref_id_building;
+            }
+
+            $rowData['ref_id_sub_menu']!=NULL ? $query_subcate = ' AND ref_id_sub_menu='.$rowData['ref_id_sub_menu'].'' : $query_subcate = '';
+            //id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, model_name, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine
+            $fetchMC = $obj->fetchRows("SELECT * FROM tb_machine_master WHERE tb_machine_master.ref_id_dept=".$rowData['ref_id_dept']." AND tb_machine_master.ref_id_menu=".$rowData['ref_id_menu']." ".$query_subcate."");
+            if (!empty($fetchMC)) {
+                $ref_id_machine.='<option value="">เลือกหมวดหลัก</option>'; //disabled
+                foreach($fetchMC as $key=>$value) {
+                    $ref_id_machine.='<option '.($fetchMC[$key]['id_machine']==$rowData['ref_id_machine_master'] ? 'selected' : '').' value="'.$fetchMC[$key]['id_machine'].'">'.($fetchMC[$key]['machine_code']!=NULL ? $fetchMC[$key]['machine_code'].'-' : '').$fetchMC[$key]['name_machine'].'</option>';
+                }
+            }else{
+                $ref_id_machine.='<option value="" selected>ไม่มีข้อมูล</option>';
+            }
+            $rowData['ref_id_machine'] = $ref_id_machine;
+
+            $fetchSup = $obj->fetchRows("SELECT * FROM tb_supplier WHERE tb_supplier.ref_id_dept=".$rowData['ref_id_dept']." AND tb_supplier.supplier_status=1 ");
+            if (!empty($fetchSup)) {//id_supplier, ref_id_dept, supplier_name, supplier_phone, supplier_remark, supplier_status
+                $ref_id_supplier.='<option value="">เลือกซัพพลายเออร์</option>'; //disabled
+                foreach($fetchSup as $key=>$value) {
+                    $ref_id_supplier.='<option '.($fetchSup[$key]['id_supplier']==$rowData['ref_id_supplier'] ? 'selected' : '').' value="'.$fetchSup[$key]['id_supplier'].'">'.$fetchSup[$key]['supplier_name'].'</option>';
+                }
+            }else{
+                $ref_id_supplier.='<option value="" selected>ไม่มีข้อมูล</option>';
+            }
+            $rowData['ref_id_supplier'] = $ref_id_supplier;            
+
             $fetchRow = $obj->fetchRows("SELECT * FROM tb_category WHERE tb_category.ref_id_dept=".$rowData['ref_id_dept']." AND tb_category.level_menu=1");
             if (!empty($fetchRow)) {
                 $slt_ref_id_menu.='<option value="">เลือกหมวดหลัก</option>'; //disabled
@@ -121,14 +191,66 @@
                 }else{
                     $ref_id_sub_menu.='<option disabled="" selected="" value="">เลือกหมวดหลักก่อน</option>';
                 }
-
             }else{
                 $ref_id_sub_menu.='<option disabled="" selected="" value="">เลือกหมวดหลักก่อน</option>';
             }
+            //echo json_encode('OxxK'); exit();
+            
+            $rowData['recived_date'] = str_replace(" 00:00:00", "", $rowData['recived_date']) ;
+            $rowData['recived_date'] = str_replace("-", "/", $rowData['recived_date']) ;
             $rowData['ref_id_sub_menu'] = $ref_id_sub_menu;
-
             $rowData['path_attachment_name']==NULL ? $rowData['path_attachment_name'] = 'default.png?ver=1' : $rowData['path_attachment_name'];
-            $rowData['fullname'] = 'แก้ไขล่าสุดโดย:'.($rowData['fullname']==NULL ? ' - ' : $rowData['fullname']).' เมื่อ: '.($rowData['mc_editdate']==NULL ? '-' : nowDateShort($rowData['mc_editdate'])).' เวลา: '.($rowData['mc_editdate']==NULL ? '-' : nowTime($rowData['mc_editdate'])).' น.';
+            //echo json_encode('OxxK'); exit();
+            $rowData['userEdit_name'] = 'แก้ไขล่าสุดโดย:'.($rowData['userEdit_name']==NULL ? ' - ' : $rowData['userEdit_name']).' เมื่อ: '.($rowData['mcs_editdate']==NULL ? '-' : nowDateShort($rowData['mcs_editdate'])).' เวลา: '.($rowData['mcs_editdate']==NULL ? '-' : nowTime($rowData['mcs_editdate'])).' น.';
+            echo json_encode($rowData);
+            exit();
+        }
+    }
+    
+
+    if ($action=="view") {
+        $rowID = (!empty($_POST['id_row'])) ? $_POST['id_row'] : '';
+        if (!empty($rowID)) {        
+            $rowData = $obj->customSelect("SELECT tb_machine_site.*, tb_machine_master.id_machine,  tb_machine_master.model_name, tb_machine_master.ref_id_dept, tb_machine_master.ref_id_menu, tb_machine_master.ref_id_sub_menu, tb_machine_master.name_machine, tb_attachment.path_attachment_name, mainCate.name_menu AS mainCate_name, subCate.name_menu AS subCate_name , tb_dept.dept_initialname, tb_dept.dept_name, tb_machine_master.detail_machine,
+            tb_site.site_initialname, tb_building.building_name, tb_location.location_name, userAdd.fullname AS userAdd_name, userEdit.fullname AS userEdit_name
+            FROM tb_machine_site 
+            LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+            LEFT JOIN tb_attachment ON (tb_attachment.ref_id_machine=tb_machine_master.id_machine AND tb_attachment.attachment_type=1) 
+            LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_machine_master.ref_id_dept) 
+            LEFT JOIN tb_category AS mainCate ON (tb_machine_master.ref_id_menu=mainCate.id_menu) 
+            LEFT JOIN tb_category AS subCate ON (tb_machine_master.ref_id_sub_menu=subCate.id_menu) 
+            LEFT JOIN tb_site ON (tb_site.id_site=tb_machine_site.ref_id_site) 
+            LEFT JOIN tb_building ON (tb_building.id_building=tb_machine_site.ref_id_building) 
+            LEFT JOIN tb_location ON (tb_location.id_location=tb_machine_site.ref_id_location) 
+            LEFT JOIN tb_user AS userAdd ON (userAdd.id_user=tb_machine_site.ref_id_user_add) 
+            LEFT JOIN tb_user AS userEdit ON (userEdit.id_user=tb_machine_site.ref_id_user_edit) WHERE tb_machine_site.id_machine_site=".$rowID."");
+            
+            $rowData['path_attachment_name']==NULL ? $rowData['path_attachment_name'] = $path_machine_Default : $rowData['path_attachment_name'] = $path_machine.$rowData['path_attachment_name'];
+            $rowData['userEdit_name'] = ''.($rowData['userEdit_name']==NULL ? ' - ' : $rowData['userEdit_name']).' วันที่: '.($rowData['mcs_editdate']==NULL ? '-' : nowDateShort($rowData['mcs_editdate'])).' เวลา: '.($rowData['mcs_editdate']==NULL ? '-' : nowTime($rowData['mcs_editdate'])).' น.';
+            $rowData['userAdd_name'] = ''.($rowData['userAdd_name']==NULL ? ' - ' : $rowData['userAdd_name']).' วันที่: '.($rowData['mcs_adddate']==NULL ? '-' : nowDateShort($rowData['mcs_adddate'])).' เวลา: '.($rowData['mcs_adddate']==NULL ? '-' : nowTime($rowData['mcs_adddate'])).' น.';
+            $rowData['view'] = '<tr>
+            <td rowspan="12" class="col-sm-4 col-md-4 col-xs-4 text-center"><img src="'.$rowData['path_attachment_name'].'" class="w-100 p-2" /></td>
+            <td class="text-bold p-0 m-0 text-right col-sm-3 col-md-3 col-xs-3">สถานะการใช้งาน:</td><td class="col-sm-6 col-md-6 col-xs-6">'.($rowData['status_machine_site']!=NULL ? $rowData['status_machine_site'] = $statusArr[$rowData['status_machine_site']] : $rowData['status_machine_site']='-').'</td></tr>
+        </tr>
+        <tr><td class="text-bold p-0 m-0 text-right col-sm-3 col-md-3 col-xs-3 p-0 m-0">สถานะการทำงาน:</td><td class="col-sm-6 col-md-6 col-xs-6">'.($rowData['status_work']!=NULL ? $rowData['status_work'] = $statusArr[$rowData['status_work']] : $rowData['status_work']='-').'</td></tr>
+
+        <tr><td class="text-bold p-0 m-0 text-right col-sm-3 col-md-3 col-xs-3 p-0 m-0">ไซต์งาน:</td><td class="col-sm-6 col-md-6 col-xs-6">'.($rowData['site_initialname']!=NULL ? $rowData['site_initialname'] = $rowData['site_initialname'] : $rowData['site_initialname']='-').'</td></tr>
+        <tr><td class="text-bold p-0 m-0 text-right col-sm-3 col-md-3 col-xs-3 p-0 m-0">อาคาร:</td><td class="col-sm-6 col-md-6 col-xs-6">'.($rowData['building_name']!=NULL ? $rowData['building_name'] = $rowData['building_name'] : $rowData['building_name']='-').'</td></tr>
+        <tr><td class="text-bold p-0 m-0 text-right col-sm-3 col-md-3 col-xs-3 p-0 m-0">สถานที่:</td><td class="col-sm-6 col-md-6 col-xs-6">'.($rowData['location_name']!=NULL ? $rowData['location_name'] = $rowData['location_name'] : $rowData['location_name']='-').'</td></tr>               
+
+        <tr><td class="text-bold p-0 m-0 text-right col-sm-3 col-md-3 col-xs-3 p-0 m-0">แผนกที่รับผิดชอบ:</td><td class="col-sm-6 col-md-6 col-xs-6">'.($rowData['dept_initialname']!=NULL ? $rowData['dept_initialname'].' - '.$rowData['dept_name'] : '-').'</td></tr>
+        <tr><td class="text-bold p-0 m-0 text-right ">รหัสเครื่องจักร-อุปกรณ์:</td><td class="col-sm-5 col-md-5 col-xs-5">'.($rowData['code_machine_site']!=NULL ? $rowData['code_machine_site'] : '-').'</td></tr>
+        <tr><td class="text-bold p-0 m-0 text-right ">ซีเรียลนัมเบอร์ (Serial No):</td><td class="col-sm-5 col-md-5 col-xs-5">'.($rowData['serial_number']!=NULL ? $rowData['serial_number'] : '-').'</td></tr>
+        <tr><td class="text-bold p-0 m-0 text-right align-top">ชื่อรุ่น (Model):</td><td>'.($rowData['model_name']!=NULL ? $rowData['model_name'] : '-').'</td></tr>
+        <tr><td class="text-bold p-0 m-0 text-right align-top">ชื่อเครื่องจักร-อุปกรณ์:</td><td>'.($rowData['name_machine']!=NULL ? $rowData['name_machine'] : '-').'</td></tr>
+        <tr><td class="text-bold p-0 m-0 text-right">หมวดหลัก:</td><td>'.($rowData['mainCate_name']!=NULL ? $rowData['mainCate_name'] : '-').'</td></tr>
+        <tr><td class="text-bold p-0 m-0 text-right">หมวดย่อย:</td><td>'.($rowData['subCate_name']!=NULL ? $rowData['subCate_name'] : '-').'</td></tr>
+        <tr><td colspan="3" class="col-sm-12 col-md-12 col-xs-12 text-bold text-left">รายละเอียดเครื่องจักร-อุปกรณ์:</td></tr>
+        <tr><td colspan="3"><p>'.($rowData['detail_machine']!=NULL ? nl2br($rowData['detail_machine']) : '-').'</p></td></tr>
+        <tr><td colspan="3" class="col-sm-12 col-md-12 col-xs-12 text-bold text-left">รายละเอียดเครื่องจักร-อุปกรณ์รายไซต์:</td></tr>
+        <tr><td colspan="3"><p>'.($rowData['detail_machine_site']!=NULL ? nl2br($rowData['detail_machine_site']) : '-').'</p></td></tr>
+        <tr><td colspan="3" class="col-sm-12 col-md-12 col-xs-12 text-left"><span  class="text-bold ">เพิ่มข้อมูลโดย:</span> '.($rowData['userAdd_name']).'</td></tr>
+        <tr><td colspan="3" class="col-sm-12 col-md-12 col-xs-12 text-left"><span  class="text-bold ">แก้ไขล่าสุดโดย:</span '.($rowData['userEdit_name']).'</td></tr>';
             echo json_encode($rowData);
             exit();
         }

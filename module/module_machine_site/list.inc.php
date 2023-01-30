@@ -39,6 +39,7 @@
 
     <?php
       include_once 'module/module_machine_site/frm_add-edit.inc.php'; //หน้า add/edit
+      include_once 'module/module_machine_site/frm_view.inc.php'; //หน้า add/edit
     ?>
 
     <div class="testx"></div>
@@ -137,7 +138,7 @@
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      /*"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]*/
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {
@@ -165,29 +166,33 @@ $(document).ready(function () {
       dataType: "json",
       data:{action:"edit", id_row:id_row},
       success: function (data) {
-        //console.log(data);
+        console.log(data); //return false;
         if(data){//tb_id_location   id_location, ref_id_site, ref_id_building, location_initialname, location_name, location_status
-          $('#machine_code').val(data.machine_code);
-          $('#name_machine').val(data.name_machine);
-          $('#id_row').val(data.id_machine);
-          $('#ref_id_dept option[value='+data.ref_id_dept+']').attr('selected','selected');
-          //$('#ref_id_menu option[value='+data.ref_id_menu+']').attr('selected','selected');
-          //$('#ref_id_sub_menu option[value='+data.ref_id_sub_menu+']').attr('selected','selected');                    
-          $('#detail_machine').val(data.detail_machine);
-          $('#ref_id_menu').html(data.slt_ref_id_menu)
-          $('#ref_id_sub_menu').html(data.ref_id_sub_menu);
-          $('#ref_id_menu').html(data.slt_ref_id_menu);
-          $('#model_name').val(data.model_name);
-          $('.editby').html(data.fullname);
-          $('#preview').attr('src', '<?PHP echo $path_machine;?>'+data.path_attachment_name);
-          $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์: "+data.machine_code);
-          if(data.status_machine==1){
+          $('#code_machine_site').val(data.code_machine_site);
+          if(data.status_machine_site==1){
             $('#status_use').prop('checked',true);
             $('#status_hold').prop('checked',false);
           }else{
             $('#status_use').prop('checked',false);
             $('#status_hold').prop('checked',true);
           }
+          $('#ref_id_machine').html(data.ref_id_machine);
+          $('#ref_id_supplier').html(data.ref_id_supplier);
+          $('#serial_number').val(data.serial_number);          
+          $('#detail_machine').val(data.detail_machine_site);
+          $('#date_rcv').val(data.recived_date);
+          $('#id_row').val(data.id_machine_site);
+          $('#ref_id_site option[value='+data.ref_id_site+']').prop('selected', true);
+          $('#ref_id_dept option[value='+data.ref_id_dept+']').attr('selected','selected');          
+          $('#ref_id_building').html(data.ref_id_building);
+          $('#ref_id_menu').html(data.slt_ref_id_menu)
+          $('#ref_id_sub_menu').html(data.ref_id_sub_menu);
+          $('#ref_id_location').html(data.ref_id_location);
+
+          $('.editby').html(data.fullname);
+          //$('#preview').attr('src', '<?PHP echo $path_machine;?>'+data.path_attachment_name);
+          $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์: "+data.machine_code);
+          $("#modal-default").modal("show"); 
         }else{
           console.log(data);
           swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
@@ -200,6 +205,32 @@ $(document).ready(function () {
     });
   });
 
+  $(document).on('click','.view-data',function(){   
+    //alert('xxxx'); return false;
+      $('#exampleModalLabel span').html("เครื่องจักร-อุปกรณ์รายไซต์");
+      var id_row = $(this).data("id");
+      $.ajax({
+      type: 'POST',
+      url: "module/module_machine_site/ajax_action.php",
+      dataType: "json",
+      data:{action:"view", id_row:id_row},
+      success: function (data) {
+        console.log(data); //return false;
+        if(data){
+          $("#modal-view").modal("show"); 
+          $('#exampleModalview span').html('<span class="text-info">'+data.code_machine_site+'</span> : '+data.name_machine);
+          $('.table-view').html(data.view);
+        }else{
+          console.log(data);
+          swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
+        }
+      },
+      error: function (data) {
+        console.log(data);
+        swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ.", "error");
+      }
+    });    
+  });
 
   $(document).on('click','.check-status',function(){
     var chk_box = $(this).parent().find('input[type="checkbox"]');
