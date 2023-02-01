@@ -37,7 +37,7 @@
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname">รหัสเครื่องจักร-อุปกรณ์ (**ระบบจะสร้างให้อัตโนมัติ):</label>  
-                                    <input type="text" id="code_machine_site" name="code_machine_site" readonly placeholder="??-AS-0000-000" class="form-control" aria-describedby="inputGroupPrepend" required />
+                                    <input type="text" id="code_machine_site" name="code_machine_site" readonly placeholder="??-AS-0000-0000" class="form-control" aria-describedby="inputGroupPrepend" required />
                                     <div class="invalid-feedback">กรอกรหัสเครื่องจักร-อุปกรณ์</div>
                                 </div>
                             </div>                        
@@ -202,6 +202,7 @@
             </div><!--row-->
         </div><!--container-->
             <input type="hidden" value="" name="id_row" id="id_row" />
+            <input type="hidden" value="" name="chk_code_machine_site" id="chk_code_machine_site" />
             <input type="hidden" value="adddata" name="action" id="action" />            
         </form>
         <!--FORM 1-->
@@ -361,6 +362,20 @@ function chk_location_mc(){
 
 function chk_machine_site(val_id_dept, val_id_menu, val_id_sub_menu){
     $('img#preview').attr('src', '<?PHP echo $path_machine_Default;?>');
+    var chk_code_machine_site = $('#chk_code_machine_site').val(); //ตัวแปรใช้เช็คว่าหน้าที่เรียกมาเป็นหน้า Add หรือ Edit
+    //alert(chk_code_machine_site); //return false;
+    
+    if(chk_code_machine_site===null || chk_code_machine_site===''){
+        //alert(val_id_dept+'----'+val_id_menu+'----'+val_id_sub_menu); 
+        //alert("ว่าง");
+    }else{
+        val_id_dept = val_id_dept;
+        val_id_menu = 'NULL';
+        val_id_sub_menu = 'NULL';
+        //alert('ไม่ว่าง'); return false;
+        //alert(chk_code_machine_site+'----'+val_id_menu+'----'+val_id_sub_menu); return false;    
+    }
+    
     $.ajax({
         dataType: "json",
         url: "module/module_machine_site/ajax_action.php",
@@ -391,7 +406,7 @@ $(document).on("change", "#ref_id_machine", function (e){
         //alert("xcvvxcxvcvcx'");
         return false;
     }
-    $('#code_machine_site').val(myArray[0]+'-000');
+    $('#code_machine_site').val(myArray[0]+'-0000');
         $.ajax({
             dataType: "json",
             url: "module/module_machine_site/ajax_action.php",
@@ -403,7 +418,8 @@ $(document).on("change", "#ref_id_machine", function (e){
             if(data.photo){
                 $('img#preview').attr('src', '<?PHP echo $path_machine;?>'+data.photo+'');
                 $('#ref_id_menu option[value='+data.ref_id_menu+']').prop('selected', true);
-                $('#ref_id_sub_menu option[value='+data.ref_id_sub_menu+']').prop('selected', true);
+                $('#ref_id_sub_menu').html(data.ref_id_sub_menu);
+                //$('#ref_id_sub_menu option[value='+data.ref_id_sub_menu+']').prop('selected', true);
             }else{
                 $('img#preview').attr('src', '<?PHP echo $path_machine_Default;?>');
                 //swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
@@ -440,7 +456,7 @@ $(document).on("change", "#ref_id_dept", function (e){
         console.log(data); //return false;
         if(data){
             $('#ref_id_menu').html(data);
-            $('#code_machine_site').val(myArray[0]+'-AS-0000-000');
+            $('#code_machine_site').val(myArray[0]+'-AS-0000-0000');
             chk_machine_site(ref_id_dept, ref_id_menu, ref_id_sub_menu);
         }else{
             swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
@@ -491,6 +507,7 @@ $(document).on("change", "#ref_id_dept", function (e){
                 $('body').find('.was-validated').removeClass();
                 $('form').each(function() { this.reset() });
                 $('#photo').attr("value", "");  
+                $('#chk_code_machine_site').val('');                
                 $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
             }   
                 event.preventDefault();

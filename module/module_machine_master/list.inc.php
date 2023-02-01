@@ -20,8 +20,6 @@ echo var_dump($bbb);*/
 .img{ width:30px; height:30px;}
 </style>
 
-
-
 <!-- Main content -->
 <section class="content">
 

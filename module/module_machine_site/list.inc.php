@@ -1,4 +1,5 @@
 <?PHP
+//test add text
 ?>
 <!-- DataTables -->
 <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -151,12 +152,29 @@ $(document).ready(function () {
   $('input[type=search]').attr('maxlength', 20);
   //$('#example1_filter').append('<select class="custom-select dataTables_filter" name="search" id="slt_search" aria-controls="example1"><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>');
 
-
-  $(document).on('click','#addData',function(){   
-    $('#exampleModalLabel span').html("เพิ่มเครื่องจักร-อุปกรณ์");
-    $('.editby').html('');
-  });
   
+  $(document).on('click','#addData',function(){   
+    $('#exampleModalLabel span').html("เพิ่มเครื่องจักร-อุปกรณ์รายไซต์");
+    //$('#ref_id_dept option:eq(0)').prop('selected', true);
+    $('#ref_id_dept option:eq(0)').attr('selected',true);
+    $('#ref_id_menu').html('<option disabled="" selected="" value="">เลือกแผนกที่รับผิดชอบก่อน</option>');
+    $('#ref_id_sub_menu').html('<option disabled="" selected="" value="">เลือกแผนกที่รับผิดชอบก่อน</option>');
+    $('#ref_id_machine').html('<option value="" disabled="" selected="">ไม่มีข้อมูล</option>');
+    $('#ref_id_supplier').html('<option disabled="" selected="" value="">เลือกซัพพลายเออร์</option>');
+    $('#serial_number').val('');
+    $('#date_rcv').val('<?PHP echo date('Y/m/d');?>');
+    $('#detail_machine').val('');
+    $('#preview').attr('src', 'uploads-temp/default.png?ver=1');
+    $('#ref_id_site option:eq(0)').prop('selected',true);   
+    $('#ref_id_building').html('<option value="" disabled="" selected="">ต้องเลือกไซต์งานก่อน</option>');
+    $('#ref_id_location').html('<option value="" disabled="" selected="">ต้องเลือกไซต์งานก่อน</option>');
+    $('#id_row').val('');
+    $('#chk_code_machine_site').val('');
+    $('body').find('.was-validated').removeClass();
+    $('form').each(function() { this.reset() });
+  });
+
+
   $(document).on('click','.edit-data',function(){   
     $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์");
     var id_row = $(this).data("id");
@@ -182,6 +200,7 @@ $(document).ready(function () {
           $('#detail_machine').val(data.detail_machine_site);
           $('#date_rcv').val(data.recived_date);
           $('#id_row').val(data.id_machine_site);
+          $('#chk_code_machine_site').val(data.code_machine_site);
           $('#ref_id_site option[value='+data.ref_id_site+']').prop('selected', true);
           $('#ref_id_dept option[value='+data.ref_id_dept+']').attr('selected','selected');          
           $('#ref_id_building').html(data.ref_id_building);
@@ -190,8 +209,8 @@ $(document).ready(function () {
           $('#ref_id_location').html(data.ref_id_location);
 
           $('.editby').html(data.fullname);
-          //$('#preview').attr('src', '<?PHP echo $path_machine;?>'+data.path_attachment_name);
-          $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์: "+data.machine_code);
+          $('#preview').attr('src', '<?PHP echo $path_machine;?>'+data.path_attachment_name);
+          $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์: "+data.code_machine_site);
           $("#modal-default").modal("show"); 
         }else{
           console.log(data);
