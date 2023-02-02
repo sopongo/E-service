@@ -15,6 +15,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
 //$stmt = new CRUD();
 /*ทดสอบ คอมเม้นต์ และอัพโหลดลง GITHUB*/
 
+//if($_SESSION['sess_id_user']!=NULL && $_SESSION['sess_status_user']!=NULL){ 
 if($_SESSION['sess_id_user']==NULL && $_SESSION['sess_status_user']==NULL){ 
   $_SESSION = []; //empty array. 
   session_destroy(); die(include('login.inc.php')); 
@@ -24,11 +25,16 @@ if($_SESSION['sess_id_user']==NULL && $_SESSION['sess_status_user']==NULL){
 $Time = new Processing(); // instance to class processing
 $start = $Time->Start_Time(); // inits time		
 
-
 /*เช็คการรับค่าโมดูลต่างๆ เพื่อดึงไฟล์มา include โฟลเดอร์ module_xxxx*/
 isset($_REQUEST['module']) ? $module = $_REQUEST['module'] : $module = '';
 
 switch($module){  
+
+    case 'create-request':
+    $title_site = "แจ้งซ่อม"; $title_act = "แจ้งซ่อม"; $breadcrumb_txt = "แจ้งซ่อม";
+    $include_module = "module/module_maintenance_list/frm_add-edit.inc.php";
+    $module=="site" ? ($active_createrequest="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_createrequest=""); #ไฮไลท์เมนูด้านซ้าย
+  break;
  
   case 'site':
     $title_site = "ไซต์งาน"; $title_act = "ไซต์งาน"; $breadcrumb_txt = "ไซต์งาน";
@@ -146,6 +152,8 @@ switch($module){
   break;
 }
 
+
+/*
 if($_SESSION['sess_id_location']==0 || $_SESSION['sess_id_dept']==0){
   if($module=="howto"){
     $include_module = "module/module_howto/list.inc.php";  
@@ -155,6 +163,7 @@ if($_SESSION['sess_id_location']==0 || $_SESSION['sess_id_dept']==0){
     $title_site = "แก้ไขข้อมูลส่วนตัว"; $title_act = "แก้ไขข้อมูลส่วนตัว"; $breadcrumb_txt = "แก้ไขข้อมูลส่วนตัว";
   }
 }
+*/
 
 $obj = new CRUD();
 ?>
@@ -330,7 +339,7 @@ $obj = new CRUD();
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item"><a href="./" class="nav-link <?PHP echo $active_dashbord;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
-        <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
+        <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ใบแจ้งซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-wrench"></i> <p>ใบแจ้งซ่อมของคุณ</p></a></li>

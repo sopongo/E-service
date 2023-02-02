@@ -33,8 +33,8 @@
 
 
 <!--<script src="/html5-qrcode.min.js"></script>-->
-<!--<script src="plugins/html5-qrcode/html5-qrcode.min.v2.3.4.js"></script>-->
-<script src="https://scanapp.org/assets/js/html5-qrcode.min.v2.3.4.js"></script>
+<script src="plugins/html5-qrcode/html5-qrcode.min.v2.3.4.js"></script>
+<!--<script src="https://scanapp.org/assets/js/html5-qrcode.min.v2.3.4.js"></script>-->
 
 
 <script>

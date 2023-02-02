@@ -197,12 +197,8 @@ $(document).ready(function () { //When the page has loaded
     echo "<br />";
     echo $_POST['remember'];    die;*/
 
-    $fetchRow = $obj->fetchRows("SELECT tb_user.*,
-    tb_location.location_short, tb_location.location_name, tb_dept.id_dept,
-    tb_dept.dept_name, tb_dept.initial_name FROM tb_user
-    LEFT JOIN tb_location ON (tb_location.id_location=tb_user.ref_id_location) 
-    LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_dept) 
-    WHERE email='".$_POST['email']."' AND password='".$password."'");
+    $fetchRow = $obj->fetchRows("SELECT tb_user.* FROM tb_user WHERE email='".$_POST['email']."' AND password='".$password."'");
+
 
     if (!empty($fetchRow) && count($fetchRow)==1){
       //$fetchRow[0]['photo_name']
