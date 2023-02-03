@@ -31,8 +31,8 @@
         $_POST['serial_number'] = trim($_POST['serial_number']);
 
             if(empty($rowID)){
-                //echo 1;  exit;
-                $_POST['code_machine_site'] = substr($_POST['code_machine_site'], 0, -4);
+                //echo 1;  //exit;
+                $_POST['code_machine_site'] = substr($_POST['code_machine_site'], 0, -5);
                 $countCode = 0;
                 $countCode = $obj->getCount("SELECT count(id_machine_site) AS total_row FROM tb_machine_site WHERE LEFT(code_machine_site, ".strlen($_POST['code_machine_site']).")='".$_POST['code_machine_site']."' ");
                 $countCode = str_pad(($countCode+1), 4, '0', STR_PAD_LEFT);

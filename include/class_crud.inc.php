@@ -62,7 +62,6 @@ class CRUD extends Database
     }
     /*-----------จบฟังก์ชั่นที่นำมาแก้ไขเอง--------------*/
 
-
     /**
      * function is used to addRow record
      * @param array $data

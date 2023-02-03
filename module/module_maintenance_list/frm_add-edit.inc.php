@@ -1,12 +1,17 @@
+<?PHP
+?>
 <!-- Select2 -->
 <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
 <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 
-
-<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="dist/css/jquery.uploader.css?ver=1"  rel="stylesheet" type="text/css">
-
 <style type="text/css"> 
+.MultiFile-label{background:#fff /*EB2B2B*/; padding:6px; width:100%; margin-right:5px; margin-top:10px;  }
+.MultiFile-list{ background:#eee; margin:3px; padding:5px; width: 100%; }
+.MultiFile-title{ width:100%; font-size:0.80rem;  padding: 4px; background:#fff;}
+.MultiFile-remove{ background:#fff;}
+img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin-top:10px; width:100px; height:100px;}
+
+.newscan{ cursor:pointer;}
 
 .select2-container .select2-selection--single {
     height: 38px;
@@ -18,8 +23,6 @@
 
 #select2-slt_machine-container{ font-size:0.90rem; }
 </style>
-
-
 
 <!-- Main content -->
 <section class="content">
@@ -46,7 +49,7 @@
 
             <div class="offset-md-12 col-md-12 offset-md-12 w-100">  
                 <div class="card w-100">  
-                    <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1 xxxxxxw">กรอกรายละเอียด</p></div>
+                    <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p></div>
                     <div class="card-body p-3"> 
 
                     <div class="row row-1">
@@ -54,6 +57,7 @@
                             <div class="form-group">
                                     <div id="qr-reader" style="width:100%"></div>
                                     <div id="qr-reader-results"></div>
+                                    <div class="m-auto bg-gray text-center py-1 newscan"><i class="fas fa-qrcode fa-1x"></i> คลิก สแกนอีกครั้ง</div>
                             </div>
                         </div>
                     </div><!--row-1 -->
@@ -61,7 +65,7 @@
                     <div class="row row-2 d-block">
                             <div class="col-sm-4 col-md-4 col-xs-4 p-0 m-0">  
                             <div class="form-group">
-                                <label><span class="text-danger">**</span> แจ้งซ่อมไปที่แผนก: </label> 
+                                <label for="ref_id_dept"><span class="text-danger">**</span> แจ้งซ่อมไปที่แผนก: </label> 
                                 <select class="custom-select" name="ref_id_dept" id="ref_id_dept" style="width:100%; font-size:0.85rem;" required>  
                                     <?PHP
                                     //id_menu name_menu
@@ -81,12 +85,12 @@
                         </div><!--row-2-->
 
                     <div class="row row-2">
-                            <div class="col-sm-4 col-md-4 col-xs-4">  
+                            <div class="col-sm-5 col-md- col-xs-5">  
                                 <div class="form-group">
-                                <label for="firstname"><span class="text-red font-size-sm">**</span> เครื่องจักร/อุปกรณ์</label>  
-                                <select id="slt_machine" class="select2 custom-select pb-5" style="width: 100%;">
+                                <label for="slt_machine"><span class="text-red font-size-sm">**</span> เครื่องจักร/อุปกรณ์ (ใส่รหัสหรือชื่อเครื่องจักร)</label>  
+                                <select id="slt_machine" class="select2 custom-select pb-5" style="width: 100%;" required>
                                 <option disable selected>เลือกแผนกที่รับผิดชอบก่อน</option>
-                                <option>Alabama</option>
+                                <!--<option>Alabama</option>
                                 <option>Alaska</option>
                                 <option value="6970701070012">6970701070012</option>
                                 <option>California</option>
@@ -95,7 +99,7 @@
                                 <option value="KERPU023088758 1 1 SAS01">KERPU023088758 1 1 SAS01</option>
                                 <option>Texas</option>
                                 <option>Washington</option>
-                                <option value="P1001812043776">P1001812043776</option>            
+                                <option value="P1001812043776">P1001812043776</option>-->
                                 </select>
                                 </div>
                                 <!-- /.form-group -->
@@ -105,9 +109,9 @@
                         <div class="row row-4">
                             <div class="col-sm-4 col-md-4 col-xs-4">  
                                 <div class="form-group">  
-                                    <label for="firstname"><span class="text-red font-size-sm">**</span> อาการเสีย/ปัญหาที่พบ:</label>  
-                                    <textarea class="form-control" rows="5" id="site_initialname" name="site_initialname" placeholder="Enter ..." required></textarea>
-                                    <div class="invalid-feedback">กรอกชื่อย่อไซต์งาน</div>
+                                    <label for="problem_statement"><span class="text-red font-size-sm">**</span> อาการเสีย/ปัญหาที่พบ:</label>  
+                                    <textarea class="form-control" rows="5" id="problem_statement" name="problem_statement" placeholder="Enter ..." required> test test test test test test</textarea>
+                                    <div class="invalid-feedback">กรอกอาการเสีย/ปัญหาที่พบ</div>
                                 </div>
                             </div>
                         </div><!--row-4-->
@@ -115,13 +119,13 @@
                         <div class="row row-4">
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
-                                    <label for="firstname"><span class="text-red font-size-sm">**</span> ภาพถ่ายอาการเสีย / ปัญหาที่พบ:</label>  
-                                    <ul>
-        <li>
-            <i>Multiple File Upload</i>
-            <input type="text" id="demo1" value="">
-        </li>
-    </ul>
+                                    <label for="machine_image"><span class="text-red font-size-sm">**</span> ภาพถ่ายอาการเสีย / ปัญหาที่พบ:</label>  
+			<div class="row-fluid">
+				<div class="col-md-12">
+					<input name="files[]" type="file" multiple="multiple" data-maxsize="6000" maxlength="6" id="our-test" class="border  p-1 multi with-preview w-auto" />
+                    <span class="text-red font-size-sm mt-2 d-block w-100">** ไม่เกิน 6 รูป / ไฟล์ไซต์ไม่เกิน 6 เมกะไบต์ต่อรูป</span> 
+				</div>
+			</div>
                                 </div>
                             </div>
                         </div><!--row-4-->                        
@@ -130,8 +134,8 @@
                             <div class="col-sm-5 col-md-5 col-xs-5">
                                     <label for="firstname">เกี่ยวกับความปลอดภัย:</label>  <br />
                                     <div class="icheck-danger d-inline">
-                        <input type="checkbox"  id="checkboxDanger3">
-                        <label for="checkboxDanger3">แจ้ง จป. เพื่อตรวจสอบก่อนและหลังแก้ไข</label>
+                        <input type="checkbox"  id="related_to_safty">
+                        <label for="related_to_safty">แจ้ง จป. เพื่อตรวจสอบก่อนและหลังแก้ไข</label>
                       </div>                                    
                             </div>
                         </div><!--row-5-->
@@ -140,8 +144,8 @@
                         <div class="col-sm-12 col-md-12 col-xs-12">  
                             <div class="form-group mb-2">
                                 <label class="d-block">ความเร่งด่วน: </label> 
-                                <div class="form-check-inline"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="status_use" name="status_machine" value="1" aria-describedby="inputGroupPrepend" required><label class="custom-control-label text-success" for="status_use">ไม่เร่งด่วน</label></div></div>
-                                <div class="form-check-inline"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="status_hold" name="status_machine" value="2" aria-describedby="inputGroupPrepend" required><label class="custom-control-label text-danger w-auto d-inline" for="status_hold">ด่วน</label><div class="invalid-feedback float-right w-auto pl-3">เลือกสถานะการใช้งาน</div></div></div>
+                                <div class="form-check-inline"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="status_normal" name="urgent_type" value="1" aria-describedby="inputGroupPrepend" required><label class="custom-control-label text-success" for="status_normal">ไม่เร่งด่วน</label></div></div>
+                                <div class="form-check-inline"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="status_urgent" name="urgent_type" value="2" aria-describedby="inputGroupPrepend" required><label class="custom-control-label text-danger w-auto d-inline" for="status_urgent">ด่วน</label><div class="invalid-feedback float-right w-auto pl-3">เลือกสถานะการใช้งาน</div></div></div>
                             </div>
                         </div>  
                         </div><!--row-1-->
@@ -150,11 +154,18 @@
                             <div class="col-sm-3 col-md-3 col-xs-3">
                                 <div class="form-group">  
                                     <label for="firstname">ผู้แจ้งซ่อม:</label>  
-                                    <input type="text" id="site_name" name="site_name" readonly="true" placeholder="ชื่อไซต์งาน" class="form-control" aria-describedby="inputGroupPrepend" required />
+                                    <input type="text" id="ref_id_user_request" name="ref_id_user_request" readonly="true" value="ชื่อผู้แจ้งซ่อม" class="form-control" aria-describedby="inputGroupPrepend" required />
                                     <div class="invalid-feedback">กรอกชื่อไซต์งาน</div>
                                 </div>
                             </div>
                         </div><!--row-5-->
+
+                        <div class="modal-footer justify-content-between">
+                            <input type="hidden" name="action" id="action" value="adddata" />
+                            <input type="hidden" name="ref_id_machine_site" id="ref_id_machine_site" value="" />
+                            <input type="submit" class="fa-user btn btn-primary btn-submit btn-success" value="ส่งใบแจ้งซ่อม" />
+                            <input type="reset" class="btn btn-cancel btn-danger" value="ยกเลิก" />
+                        </div>
 
                     </div><!--card-body-->
                 </div><!--card-->
@@ -168,47 +179,27 @@
 </div><!-- /.card-body -->
 
 </div><!-- /.card -->
-<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 </section>
 <!-- /.content -->
 
-
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>-->
-<script src="plugins/uploader/jquery.uploader.min.js"></script>
-
-<script type="application/javascript">
-let ajaxConfig = {
-    ajaxRequester: function (config, uploadFile, pCall, sCall, eCall) {
-        let progress = 0
-        let interval = setInterval(() => {
-            progress += 10;
-            pCall(progress)
-            if (progress >= 100) {
-                clearInterval(interval)
-                const windowURL = window.URL || window.webkitURL;
-                sCall({
-                    data: windowURL.createObjectURL(uploadFile.file)
-                })
-            }
-        }, 300)
-    }
-}
-$("#demo1").uploader({
-    multiple: true, 
-    ajaxConfig: ajaxConfig,
-    autoUpload: true
-    });
-</script>
-
-<script src="plugins/html5-qrcode/html5-qrcode.min.v2.3.4.js"></script>
-<!--<script src="https://scanapp.org/assets/js/html5-qrcode.min.v2.3.4.js"></script>-->
+<!--<script src="plugins/html5-qrcode/html5-qrcode.min.v2.3.4.js"></script>-->
+<script src="https://scanapp.org/assets/js/html5-qrcode.min.v2.3.4.js"></script>
 
 <!-- Select2 -->
 <script src="plugins/select2/js/select2.full.min.js"></script>
 
 <!-- Page specific script -->
 <script>
+
   $(function () {
+
+    $('#our-test').MultiFile({
+        max: 6,
+        onFileChange: function(){
+            console.log('TEST CHANGE:', this, arguments);
+        }
+    });
+
     //Initialize Select2 Elements
     $('.select2').select2({
     });
@@ -225,7 +216,110 @@ $("#demo1").uploader({
 <script>
 $(document).ready(function(){
 
- 
+    $(document).on("click", ".btn-submit", function (event){
+        var slt_machine = $("#slt_machine option:selected" ).val();
+        //alert($('.select2').select2().val());
+        $('#ref_id_machine_site').val($('.select2').select2().val());
+        if(slt_machine===null || slt_machine===''){
+            sweetAlert("ผิดพลาด!", "เลือกรายการที่ต้องการแจ้งซ่อม", "error");
+            return false;
+        }
+    //$(document).on("submit", "form#needs-validation", function(event){
+    event.preventDefault();
+    var formAdd = document.getElementById('needs-validation');  
+    //var frmData = $("form#needs-validation").serialize();
+    var frm_Data= new FormData($('form#needs-validation')[0]);
+    if(formAdd.checkValidity()===false) {  
+        event.preventDefault();  
+        event.stopPropagation();
+    }else{
+        swal({
+        title: "ยืนยัน ?",   text: "ต้องการส่งใบแจ้งซ่อมนี้หรือไม่.",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "ตกลง",
+        cancelButtonText: "ไม่, ยกเลิก",        
+        closeOnConfirm: false 
+      }, function(){   
+        $.ajax({
+                url: "module/module_maintenance_list/send_request.inc.php",
+                type: "POST",
+                //dataType: "json",
+                //data:{ "action":"send-req"},
+                processData: false,
+                contentType: false,
+                data: frm_Data, 
+                beforeSend: function () {
+                },success: function (json) {
+                    console.log(json); 
+                    return false;
+                    if(json.error=='over_req'){
+                        sweetAlert("ผิดพลาด!", "รหัส: จำนวนคงเหลือไม่พอให้เบิกแล้ว", "error");
+                        return false;
+                    }
+                    swal({
+                        title: "ส่งใบเบิกเรียบร้อย!",
+                        text: "ใบเบิกของคุณอยู่ระหว่างการอนุมัติ.",
+                        type: "success",
+                        //timer: 3000
+                    }, 
+                    function(){
+                        window.location.href = "?module=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+                    })
+                },error: function (json) {
+                    console.log(json);
+                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+                }
+        });
+    });
+        event.preventDefault();    
+    }
+    //alert('Ajax'); return false;
+    formAdd.classList.add('was-validated');      
+    return false;
+    });    
+
+
+    $(document).on("click", ".select2-container--default ", function (){ 
+        var ref_id_dept = $("#ref_id_dept option:selected" ).val();
+        //alert(ref_id_dept);
+        if(ref_id_dept==''){
+            swal("ผิดพลาด!", "เลือกแผนกที่รับผิดชอบก่อน", "error");
+            return false;
+        }
+    });
+
+    
+    $(document).on("click", ".newscan", function (){ 
+        window.location.reload();
+    });
+
+    $(document).on("change", "#ref_id_dept", function (){ 
+        var ref_id_dept = $("#ref_id_dept option:selected" ).val();
+        //alert(ref_id_dept);
+        if(ref_id_dept==='' || ref_id_dept===null ){
+            swal("ผิดพลาด!", "เลือกแผนกที่รับผิดชอบก่อน", "error");
+            return false;
+        }else{
+            $.ajax({
+                url: "module/module_maintenance_list/chk_qrcode.inc.php",
+                type: "POST",
+                data:{"action":"chk_dept","ref_id_dept":ref_id_dept},
+                beforeSend: function () {
+                },
+                success: function (data) {
+                    console.log(data);
+                    $('#slt_machine').html(data);
+                    event.preventDefault();
+                },
+                    error: function (jXHR, textStatus, errorThrown) {
+                    console.log(data);
+                    alert(errorThrown);
+                }
+            });      
+        }
+    });     
 });
 
 function docReady(fn) {
@@ -239,25 +333,35 @@ function docReady(fn) {
     }
 }
 
-
 docReady(function () {
     var resultContainer = document.getElementById('qr-reader-results');
     var lastResult, countResults = 0;
     function onScanSuccess(decodedText, decodedResult) {
         //alert(decodedText); //QR Barcode ที่อ่านได้
-        $('#slt_machine option[value='+decodedText+']').prop('selected', true);
-        $('#slt_machine option[value='+decodedText+']').attr('selected', 'selected');
-        $('#select2-slt_machine-container').html(decodedText);
+        //$('#slt_machine option[value='+decodedText+']').prop('selected', true);
+        //$('#slt_machine option[value='+decodedText+']').attr('selected', 'selected');
         $.ajax({
+        dataType: "json",
         url: "module/module_maintenance_list/chk_qrcode.inc.php",
         type: "POST",
         data:{"action":"chk_qr","qrcode":decodedText},
         beforeSend: function () {
+            $('#select2-slt_machine-container').html(decodedText);
         },
         success: function (data) {
             console.log(data);
-            $('#site_name').val(data);
-            $('#slt_machine').append(data);
+            if(data==0){
+                $('#select2-slt_machine-container').html('');
+                $('#ref_id_dept option:eq(0)').prop('selected', true);
+                $('#slt_machine').html('<option value="" selected>เลือกแผนกที่รับผิดชอบก่อน</option>');
+                swal("ผิดพลาด!", "ไม่พบข้อมูลตามที่สแกน", "error");
+                html5QrcodeScanner.clear();
+                return false;
+            }else{
+                $('#ref_id_dept option[value='+data.ref_id_dept+']').prop('selected', true);
+                $('#slt_machine').html(data.slt_machine);
+            }
+            html5QrcodeScanner.clear();
             event.preventDefault();
         },
             error: function (jXHR, textStatus, errorThrown) {
@@ -279,7 +383,17 @@ docReady(function () {
     }
 
     var html5QrcodeScanner = new Html5QrcodeScanner(
-        "qr-reader", { fps:80, qrbox:220, disableFlip:true });
+        "qr-reader", { 
+            fps:80, qrbox:220, disableFlip:true,
+            useBarCodeDetectorIfSupported: true,
+            rememberLastUsedCamera: true,
+            aspectRatio: 4/3,
+            //showTorchButtonIfSupported: true,
+            //showZoomSliderIfSupported: true,
+            //defaultZoomValueIfSupported: 2
+        });
     html5QrcodeScanner.render(onScanSuccess);
 });    
 </script>
+
+<script src='plugins/multifile/jquery.MultiFile.js'></script>
