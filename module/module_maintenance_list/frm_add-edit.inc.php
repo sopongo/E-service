@@ -154,7 +154,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                             <div class="col-sm-3 col-md-3 col-xs-3">
                                 <div class="form-group">  
                                     <label for="firstname">ผู้แจ้งซ่อม:</label>  
-                                    <input type="text" id="ref_id_user_request" name="ref_id_user_request" readonly="true" value="ชื่อผู้แจ้งซ่อม" class="form-control" aria-describedby="inputGroupPrepend" required />
+                                    <input type="text" id="fullnam_request" name="fullnam_request" readonly="true" value="<?PHP echo $_SESSION['sess_fullname']; ?>" class="form-control" aria-describedby="inputGroupPrepend" required />
                                     <div class="invalid-feedback">กรอกชื่อไซต์งาน</div>
                                 </div>
                             </div>
@@ -265,7 +265,7 @@ $(document).ready(function(){
                         //timer: 3000
                     }, 
                     function(){
-                        window.location.href = "?module=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+                        window.location.href = "?module=requestlist";
                     })
                 },error: function (json) {
                     console.log(json);
@@ -355,13 +355,13 @@ docReady(function () {
                 $('#ref_id_dept option:eq(0)').prop('selected', true);
                 $('#slt_machine').html('<option value="" selected>เลือกแผนกที่รับผิดชอบก่อน</option>');
                 swal("ผิดพลาด!", "ไม่พบข้อมูลตามที่สแกน", "error");
-                html5QrcodeScanner.clear();
+                //html5QrcodeScanner.clear();
                 return false;
             }else{
                 $('#ref_id_dept option[value='+data.ref_id_dept+']').prop('selected', true);
                 $('#slt_machine').html(data.slt_machine);
+                html5QrcodeScanner.clear();
             }
-            html5QrcodeScanner.clear();
             event.preventDefault();
         },
             error: function (jXHR, textStatus, errorThrown) {

@@ -35,6 +35,14 @@ switch($module){
     $include_module = "module/module_maintenance_list/frm_add-edit.inc.php";
     $module=="site" ? ($active_createrequest="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_createrequest=""); #ไฮไลท์เมนูด้านซ้าย
   break;
+
+  case 'requestid':
+    $title_site = "ใบแจ้งซ่อมเลขที่: 00000000"; $title_act = "ใบแจ้งซ่อมเลขที่: 00000000"; $breadcrumb_txt = "ใบแจ้งซ่อมเลขที่: 00000000";
+    $include_module = "module/module_maintenance_list/view.inc.php";
+    $module=="requestid" ? ($active_requestid="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestid=""); #ไฮไลท์เมนูด้านซ้าย
+  break;  
+
+  
  
   case 'site':
     $title_site = "ไซต์งาน"; $title_act = "ไซต์งาน"; $breadcrumb_txt = "ไซต์งาน";
@@ -276,7 +284,7 @@ $obj = new CRUD();
 
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed"><!--sidebar-collapse-->
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed"><!--sidebar-collapse sidebar-mini layout-fixed layout-navbar-fixed sidebar-closed sidebar-collapse layout-navbar-fixed-->
 <div class="wrapper">
 
   <!-- Preloader -->
@@ -321,9 +329,9 @@ $obj = new CRUD();
                   
                   
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar"><br><br>
       <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="user-panel mt-3 pb-1 mb-3 d-flex">
         <div class="image">
           <img src="dist/img/user2-160x160.png" class="img-circle elevation-2" alt="User Image">
         </div>
@@ -340,9 +348,10 @@ $obj = new CRUD();
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item"><a href="./" class="nav-link <?PHP echo $active_dashbord;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
-        <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ใบแจ้งซ่อม</p></a></li>
+        <li class="nav-item"><a href="?module=requestid&id=1234" class="nav-link <?PHP echo $active_requestid;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ใบแจ้งซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-wrench"></i> <p>ใบแจ้งซ่อมของคุณ</p></a></li>
+        <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p></a></li>
         <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>
 
         <?PHP if($_SESSION['sess_class_user']==4){?>
