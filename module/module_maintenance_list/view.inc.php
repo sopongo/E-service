@@ -11,6 +11,10 @@
 </style>
 
 
+<?PHP 
+      include_once 'module/module_maintenance_list/frm_update_result.inc.php'; //หน้า add/edit
+?>
+
 <!-- Main content -->
 <section class="content">
 
@@ -90,35 +94,31 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <strong><i class="fas fa-book mr-1"></i> Education</strong>
+                <strong><i class="fas fa-book mr-1"></i> Title Wait</strong>
 
                 <p class="text-muted">
-                  B.S. in Computer Science from the University of Tennessee at Knoxville
+                Text Wait
                 </p>
 
                 <hr>
 
-                <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
+                <strong><i class="fas fa-map-marker-alt mr-1"></i> Title Wait</strong>
 
-                <p class="text-muted">Malibu, California</p>
+                <p class="text-muted">Text Wait</p>
 
                 <hr>
 
-                <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
+                <strong><i class="fas fa-pencil-alt mr-1"></i> Title Wait</strong>
 
                 <p class="text-muted">
-                  <span class="tag tag-danger">UI Design</span>
-                  <span class="tag tag-success">Coding</span>
-                  <span class="tag tag-info">Javascript</span>
-                  <span class="tag tag-warning">PHP</span>
-                  <span class="tag tag-primary">Node.js</span>
+                  <span class="tag tag-danger">Text Wait</span>
                 </p>
 
                 <hr>
 
-                <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
+                <strong><i class="far fa-file-alt mr-1"></i> Title Wait</strong>
 
-                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+                <p class="text-muted">Text Wait</p>
               </div>
               <!-- /.card-body -->
             </div>
@@ -208,8 +208,7 @@
                 </div>
               </div><!-- /.row -->
               
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-clipboard-check"></i> สรุปผลการซ่อม: <button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i>
- อัพเดท</button></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-clipboard-check"></i> สรุปผลการซ่อม: <button type="button" class="btn btn-default btn-sm update_result" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">รหัสอาการเสีย:</strong> MySQL_Val<br>
@@ -253,10 +252,10 @@
                     <?PHP for($i=1; $i<=3; $i++){?>
                     <tr>
                       <td>1</td>
-                      <td>Call of Duty</td>
+                      <td>Spare Parts Name</td>
                       <td>455-981-221</td>
-                      <td>El snort testosterone trophy driving gloves handsome</td>
-                      <td>$<?PHP echo $i; ?>4.50</td>
+                      <td>Spare Parts Detail</td>
+                      <td>฿<?PHP echo $i; ?>4.50</td>
                     </tr>
                     <?PHP } ?>
                     </tbody>
@@ -284,9 +283,9 @@
  อัพเดท</button></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-4 invoice-col">
-                    <strong class="d-inline-block w-50">แผนก:</strong> Fullname<br>
-                    <strong class="d-inline-block w-50">แผนก:</strong> Fullname<br>
-                    <strong class="d-inline-block w-50">แผนก:</strong> Fullname<br>
+                    <strong class="d-inline-block w-50">Title_Wait:</strong> MySQL_Val<br>
+                    <strong class="d-inline-block w-50">Title_Wait:</strong> MySQL_Val<br>
+                    <strong class="d-inline-block w-50">Title_Wait:</strong> MySQL_Val<br>
                 </div><!-- /.col -->
               </div><!-- /.row -->         
               
@@ -457,5 +456,25 @@
 <!-- /.content -->
 
 <script>
+$(document).on("click", ".update_result", function (e){ 
+  //event.preventDefault();
+  e.stopPropagation();
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"update-result","ref_id":1},
+      beforeSend: function () {
+      },
+      success: function (data) {
+          $(".modal-body-update-result").html(data);
+          console.log(data);
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });
+});
     
 </script>

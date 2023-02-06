@@ -265,6 +265,7 @@ $(document).ready(function(){
                         //timer: 3000
                     }, 
                     function(){
+                        return false();
                         window.location.href = "?module=requestlist";
                     })
                 },error: function (json) {
@@ -317,7 +318,7 @@ $(document).ready(function(){
                     console.log(data);
                     alert(errorThrown);
                 }
-            });      
+            });
         }
     });     
 });
