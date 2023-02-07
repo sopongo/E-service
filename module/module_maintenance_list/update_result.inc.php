@@ -40,7 +40,9 @@
 
 <script>
     $(document).on("click", ".btn_test", function (e){ 
-        e.preventDefault();
+    //$('.btn_test').on('click',function(e){
+        //e.preventDefault();
+        e.stopImmediatePropagation(); //ป้องกันการส่ง success ซ้ำ
         $.ajax({
             url: "module/module_maintenance_list/update_result.inc.php",
             type: "POST",

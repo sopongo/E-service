@@ -251,25 +251,24 @@ $(document).ready(function(){
                 contentType: false,
                 data: frm_Data, 
                 beforeSend: function () {
-                },success: function (json) {
-                    console.log(json); 
-                    return false;
-                    if(json.error=='over_req'){
+                },success: function (data) {
+                    console.log(data); //return false;
+                    if(data.error=='over_req'){
                         sweetAlert("ผิดพลาด!", "รหัส: จำนวนคงเหลือไม่พอให้เบิกแล้ว", "error");
                         return false;
                     }
                     swal({
-                        title: "ส่งใบเบิกเรียบร้อย!",
-                        text: "ใบเบิกของคุณอยู่ระหว่างการอนุมัติ.",
+                        title: "ส่งใบแจ้งซ่อมเรียบร้อย!",
+                        text: "กรุณารอช่างติดต่อกลับ เพื่อประเมิณการซ่อม",
                         type: "success",
                         //timer: 3000
                     }, 
                     function(){
-                        return false();
-                        window.location.href = "?module=requestlist";
+                        //return false();
+                        window.location.href = "?module=requestlist&id=xxx";
                     })
-                },error: function (json) {
-                    console.log(json);
+                },error: function (data) {
+                    console.log(data);
                     sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
                 }
         });

@@ -12,42 +12,62 @@
         $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเรียกใช้งานคลาส,ฟังก์ชั่นต่างๆ
     } 
 
-/*
-    echo "<pre>";    print_r($_POST);    echo "</pre>";
-    echo "<pre>";    print_r($_FILES);    echo "</pre>";
-    die();
-*/
-
+    /*
+        <pre>Array
+        (
+            [ref_id_dept] => 7
+            [problem_statement] =>  test test test test test test
+            [urgent_type] => 1
+            [fullnam_request] => สมชาย ห้องเห็น
+            [action] => adddata
+            [ref_id_machine_site] => 18
+        )
+        </pre><pre>Array
+    */
     if ($action=='adddata' && !empty($_POST)) {    
-        echo 'xxx';
-        //id_maintenance_request, maintenance_request_no, mt_request_date, ref_id_user_request, ref_id_machine_site, ref_id_mt_type, status_approved, ref_id_user_approver, allotted_date, allotted_accept_date, related_to_safty, problem_statement, ref_id_job_type, urgent_type, outsource_service_status, caused_by_os, ref_id_user_approve_os, duration_serv_start, duration_serv_end, estimate_hand_over_date, hand_over_date, ref_id_user_hand_over, cause_mt_request_cancel, maintenance_request_status                        
-        $insertRow = [
-            'id_maintenance_request' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'maintenance_request_no' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'mt_request_date' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'ref_id_user_request' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'ref_id_machine_site' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'ref_id_mt_type' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'status_approved' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'ref_id_user_approver' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'allotted_date' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'allotted_accept_date' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'related_to_safty' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'problem_statement' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'ref_id_job_type' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'urgent_type' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'outsource_service_status' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'caused_by_os' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'ref_id_user_approve_os' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'duration_serv_start' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'duration_serv_end' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'estimate_hand_over_date' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'hand_over_date' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'ref_id_user_hand_over' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'cause_mt_request_cancel' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-            'maintenance_request_status' => (!empty($output['site_initialname'])) ? $output['site_initialname'] : '',
-        ];
+        
+        //echo "<pre>";    print_r($_POST);    echo "</pre>";
+        //echo "<pre>";    print_r($_FILES);    echo "</pre>";
+           
+        $rowData = $obj->customSelect("SELECT dept_initialname FROM tb_dept WHERE tb_dept.id_dept=".$_POST['ref_id_dept']."");
+        $chk_no = $_SESSION['sess_dept_initialname'].'-FM-'.$rowData['dept_initialname'].'-'.date('y').''.date('m');
+        #สร้างรหัสใบแจ้งซ่อม Ex. PCS-FM-IT-2302-0001	 
+        $countNo= 0; 
+        $countNo = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE LEFT(maintenance_request_no,".strlen($chk_no).")='".$chk_no."'");
+        $countNo = str_pad(($countNo+1), 4, '0', STR_PAD_LEFT);
+        $maintenance_request_no = $chk_no.'-'.$countNo;
 
+        //id_maintenance_request, maintenance_request_no, ref_id_dept, mt_request_date, ref_id_user_request, ref_id_machine_site, ref_id_mt_type, status_approved, ref_id_user_approver, allotted_date, allotted_accept_date, related_to_safty, problem_statement, ref_id_job_type, urgent_type, outsource_service_status, caused_by_os, ref_id_user_approve_os, duration_serv_start, duration_serv_end, estimate_hand_over_date, hand_over_date, ref_id_user_hand_over, cause_mt_request_cancel, maintenance_request_status
+        $insertRow = [
+            'maintenance_request_no' => ($maintenance_request_no),
+            'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : '',
+            'mt_request_date' => (date('Y-m-d H:i:s')),
+            'ref_id_user_request' => ($_SESSION['sess_id_user']),
+            'ref_id_machine_site' => (!empty($_POST['ref_id_machine_site'])) ? $_POST['ref_id_machine_site'] : '',
+            'ref_id_mt_type' => (0),
+            'status_approved' => (0),
+            'ref_id_user_approver' => (0),
+            'allotted_date' => (NULL),
+            'allotted_accept_date' => (NULL),
+            'related_to_safty' => (!empty($_POST['related_to_safty'])) ? $_POST['related_to_safty'] : NULL,
+            'problem_statement' => (!empty($_POST['problem_statement'])) ? $_POST['problem_statement'] : '',
+            'ref_id_job_type' => (NULL),
+            'urgent_type' => (!empty($_POST['urgent_type'])) ? $_POST['urgent_type'] : '',
+            'outsource_service_status' => 0,
+            'caused_by_os' => (NULL),
+            'ref_id_user_approve_os' => (NULL),
+            'duration_serv_start' => (NULL),
+            'estimate_hand_over_date' => (NULL),
+            'estimate_hand_over_date' => (NULL),
+            'hand_over_date' => (NULL),
+            'ref_id_user_hand_over' => (NULL),
+            'cause_mt_request_cancel' => (NULL),
+            'maintenance_request_status' => 1,
+        ];
+        $rowID = $obj->addRow($insertRow, "tb_maintenance_request");
+        echo str_replace(" ","",$rowID);
+
+        exit();
     }
 
 

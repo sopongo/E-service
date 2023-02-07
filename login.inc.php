@@ -216,7 +216,9 @@ $(document).ready(function () { //When the page has loaded
       $_SESSION['sess_fullname'] = $fetchRow[0]['fullname'];
       $_SESSION['sess_class_user'] = $fetchRow[0]['class_user'];
       $_SESSION['sess_id_dept'] = $fetchRow[0]['ref_dept'];
-      $_SESSION['sess_dept_name'] = $fetchRow[0]['dept_name'];            
+      $_SESSION['sess_dept_name'] = $fetchRow[0]['dept_name'];
+      $_SESSION['sess_dept_initialname'] = $fetchRow[0]['dept_initialname'];      
+      $_SESSION['sess_dept_initialname'] = 'PCS';
       $_SESSION['sess_status_user'] = $fetchRow[0]['status_user'];
       $_SESSION['sess_popup_howto'] = 0;
     ?>
