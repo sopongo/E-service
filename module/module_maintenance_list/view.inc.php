@@ -8,11 +8,14 @@
 
 .w-30{ width: 30%;}
 .linehi-170{ line-height:1.60rem;}
+
+.text-size-1{ font-size:0.90rem;}
 </style>
 
 
 <?PHP 
-      include_once 'module/module_maintenance_list/frm_update_result.inc.php'; //หน้า add/edit
+  include_once 'module/module_maintenance_list/frm_update_result.inc.php'; #หน้าอัพเดทผลการซ่อม
+  include_once 'module/module_maintenance_list/frm_cancel.inc.php'; #หน้ายกเลิกใบแจ้งซ่อม
 ?>
 
 <!-- Main content -->
@@ -51,10 +54,10 @@
 
                 <ul class="list-group list-group-unbordered mb-1">
                 <li class="list-group-item text-red">
-                    <b>ความเร่งด่วน</b> <span class="float-right"><i class="fas fa-lightbulb fa-1x"></i> ด่วน</span>
+                    <b>ความเร่งด่วน</b> <span class="float-right"> <?PHP echo $rowData['urgent_type']==1 ? '<i class="fas fa-lightbulb fa-1x"></i>'.$urgentArr[$rowData['urgent_type']] : '<span class="text-green">'.$urgentArr[$rowData['urgent_type']].'</span>';?></span>
                   </li>
                   <li class="list-group-item">
-                    <b>ประเภทใบแจ้งซ่อม</b> <span class="float-right">งานเกี่ยวกับเครื่องทำความเย็น	</span>
+                    <b>ประเภทใบแจ้งซ่อม</b> <button type="button" class="btn btn-default btn-sm float-right" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button> <span class="float-right">งานเกี่ยวกับเครื่องทำความเย็น	</span>
                   </li>
                   <li class="list-group-item">
                     <b>ประเภทงานซ่อม</b> <span class="float-right"><i class="fas fa-lightbulb fa-1x"></i> แจ้งช่างซ่อม</span>
@@ -81,7 +84,7 @@
                 <a href="#" class="btn btn-warning btn-block"><b>เริ่มซ่อม</b></a>
                 <a href="#" class="btn btn-success btn-block"><b>ปิดงาน</b></a>
                 <a href="#" class="btn btn-warning btn-block"><b>ไม่อนุมัติใบแจ้งซ่อม</b></a>
-                <a href="#" class="btn btn-danger btn-block"><b>ยกเลิกใบแจ้งซ่อม</b></a>
+                <button type="button" class="btn btn-danger btn-block btn-cancel" data-toggle="modal" data-target="#modal-cancel" id="addData" data-backdrop="static" data-keyboard="false"> ยกเลิกใบแจ้งซ่อม</button>                
               </div>
               <!-- /.card-body -->
             </div>
@@ -449,6 +452,28 @@
 <!-- /.content -->
 
 <script>
+
+
+$(document).on("click", ".btn-cancel", function (e){ 
+  e.stopPropagation();
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"cancel","ref_id":1},
+      beforeSend: function () {
+      },
+      success: function (data) {
+          $(".modal-body-cancel").html(data);
+          console.log(data);
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });
+});
+
 $(document).on("click", ".update_result", function (e){ 
   //event.preventDefault();
   e.stopPropagation();

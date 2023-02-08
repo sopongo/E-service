@@ -20,7 +20,6 @@
 
     if ($action=='update-result') {    
     ?>
-
 <form id="needs-validation" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
 <div class="container">
     <div class="row">
@@ -35,8 +34,7 @@
 
     </div><!--row-->
 </div><!--container-->
-</form>
-<!--FORM 1-->
+</form><!--FORM 1-->
 
 <script>
     $(document).on("click", ".btn_test", function (e){ 
@@ -44,7 +42,7 @@
         //e.preventDefault();
         e.stopImmediatePropagation(); //ป้องกันการส่ง success ซ้ำ
         $.ajax({
-            url: "module/module_maintenance_list/update_result.inc.php",
+            url: "module/module_maintenance_list/frm_cancel.inc.php",
             type: "POST",
             data:{"action":"chk_dept","ref_id_dept":999},
             beforeSend: function () {
@@ -72,4 +70,26 @@
         exit();
 ?>
 sa asd sdsfad sfad fsda sfdasfad fsda fsd fsdaasfd
-<?PHP } ?>
+<?PHP 
+    } 
+    if($action=='cancel'){
+?>
+    <form id="needs-validation" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+    <div class="container">
+        <div class="row">
+        <div class="offset-md-0 col-md-12 offset-md-0">  
+            <div class="card">  
+                <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p> <span class="float-right editby"></span></div>
+                <div class="card-body p-3">
+                    <!--ajax data hear-->
+                </div><!--card-body-->
+            </div><!--card-->
+        </div>                
+
+        </div><!--row-->
+    </div><!--container-->
+    </form><!--FORM 1-->
+<?PHP
+        //echo 'ยกเลิกใบแจ้งซ่อม'; exit();
+    }
+?>

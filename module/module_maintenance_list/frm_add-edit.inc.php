@@ -243,34 +243,34 @@ $(document).ready(function(){
         closeOnConfirm: false 
       }, function(){   
         $.ajax({
-                url: "module/module_maintenance_list/send_request.inc.php",
-                type: "POST",
-                //dataType: "json",
-                //data:{ "action":"send-req"},
-                processData: false,
-                contentType: false,
-                data: frm_Data, 
-                beforeSend: function () {
-                },success: function (data) {
-                    console.log(data); //return false;
-                    if(data.error=='over_req'){
-                        sweetAlert("ผิดพลาด!", "รหัส: จำนวนคงเหลือไม่พอให้เบิกแล้ว", "error");
-                        return false;
-                    }
-                    swal({
-                        title: "ส่งใบแจ้งซ่อมเรียบร้อย!",
-                        text: "กรุณารอช่างติดต่อกลับ เพื่อประเมิณการซ่อม",
-                        type: "success",
-                        //timer: 3000
-                    }, 
-                    function(){
-                        //return false();
-                        window.location.href = "?module=requestlist&id=xxx";
-                    })
-                },error: function (data) {
-                    console.log(data);
-                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            //dataType: "json",
+            //data:{ "action":"send-req"},
+            processData: false,
+            contentType: false,
+            data: frm_Data, 
+            beforeSend: function () {
+            },success: function (data) {
+                console.log(data); //return false;
+                if(data.error=='over_req'){
+                    sweetAlert("ผิดพลาด!", "รหัส: จำนวนคงเหลือไม่พอให้เบิกแล้ว", "error");
+                    return false;
                 }
+                swal({
+                    title: "ส่งใบแจ้งซ่อมเรียบร้อย!",
+                    text: "กรุณารอช่างติดต่อกลับ เพื่อประเมิณการซ่อม",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //return false();
+                    window.location.href = "?module=requestlist&id=xxx";
+                })
+            },error: function (data) {
+                console.log(data);
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+            }
         });
     });
         event.preventDefault();    

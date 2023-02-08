@@ -21,15 +21,24 @@ if($_SESSION['sess_id_user']==NULL && $_SESSION['sess_status_user']==NULL){
   session_destroy(); die(include('login.inc.php')); 
 }
 
+$obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเรียกใช้งานคลาส,ฟังก์ชั่นต่างๆ
+
 //เริ่มต้นการใช้งาน แทรกส่วนนี้ไว้ตอนต้นๆของเพจ ก่อนการประมวลผล
 $Time = new Processing(); // instance to class processing
 $start = $Time->Start_Time(); // inits time		
 
 /*เช็คการรับค่าโมดูลต่างๆ เพื่อดึงไฟล์มา include โฟลเดอร์ module_xxxx*/
 isset($_REQUEST['module']) ? $module = $_REQUEST['module'] : $module = '';
+isset($_REQUEST['id']) ? $id = intval($_REQUEST['id']) : $id = '';
 
 switch($module){  
-
+  
+  case 'permission':
+    $title_site = "กำหนดสิทธิ์การใช้งาน"; $title_act = "กำหนดสิทธิ์การใช้งาน"; $breadcrumb_txt = "กำหนดสิทธิ์การใช้งาน";
+    $include_module = "module/module_permission/view.inc.php";
+    $module=="permission" ? ($active_permission="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_permission=""); #ไฮไลท์เมนูด้านซ้าย
+  break;
+   
     case 'create-request':
     $title_site = "แจ้งซ่อม"; $title_act = "แจ้งซ่อม"; $breadcrumb_txt = "แจ้งซ่อม";
     $include_module = "module/module_maintenance_list/frm_add-edit.inc.php";
@@ -37,11 +46,16 @@ switch($module){
   break;
 
   case 'requestid':
-    $title_site = "ใบแจ้งซ่อมเลขที่: 00000000"; $title_act = "ใบแจ้งซ่อมเลขที่: 00000000"; $breadcrumb_txt = "ใบแจ้งซ่อมเลขที่: 00000000";
-    $include_module = "module/module_maintenance_list/view.inc.php";
+    $rowData = $obj->customSelect("SELECT tb_maintenance_request.* 
+    FROM tb_maintenance_request WHERE tb_maintenance_request.id_maintenance_request=".$id." ");
+    if($rowData['id_maintenance_request']!=$id){
+      header('location:./');
+    }else{
+      $include_module = "module/module_maintenance_list/view.inc.php";
+    }
+    $title_site = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no'].""; $title_act = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no'].""; $breadcrumb_txt = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no']."";
     $module=="requestid" ? ($active_requestid="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestid=""); #ไฮไลท์เมนูด้านซ้าย
   break;  
-
   
  
   case 'site':
@@ -159,7 +173,6 @@ switch($module){
     $title_act = $title_site_3; $breadcrumb_txt = $title_site_3;
   break;
 }
-
 
 /*
 if($_SESSION['sess_id_location']==0 || $_SESSION['sess_id_dept']==0){
@@ -348,7 +361,7 @@ $obj = new CRUD();
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item"><a href="./" class="nav-link <?PHP echo $active_dashbord;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
-        <li class="nav-item"><a href="?module=requestid&id=1234" class="nav-link <?PHP echo $active_requestid;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ใบแจ้งซ่อม</p></a></li>
+        <li class="nav-item"><a href="?module=requestid&id=1" class="nav-link <?PHP echo $active_requestid;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ใบแจ้งซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-wrench"></i> <p>ใบแจ้งซ่อมของคุณ</p></a></li>
         <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p></a></li>
@@ -361,6 +374,7 @@ $obj = new CRUD();
               <li class="nav-item"><a href="?module=machine-master" class="nav-link <?PHP echo $active_machine; ?>"><i class="fa fa-caret-right nav-icon"></i><p>เครื่องจักร-อุปกรณ์ (Master)</p></a></li>
               <li class="nav-item"><a href="?module=category" class="nav-link <?PHP echo $active_category; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ประเภทเครื่องจักร-อุปกรณ์</p></a></li>
               <li class="nav-item"><a href="?module=userlist" class="nav-link <?PHP echo $active_userlist; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ผู้ใช้งาน</p></a></li>
+              <li class="nav-item"><a href="?module=permission" class="nav-link <?PHP echo $active_permission; ?>"><i class="fa fa-users-cog nav-icon"></i><p>สิทธิ์การใช้งาน</p></a></li>
               <li class="nav-item"><a href="?module=site" class="nav-link <?PHP echo $active_site; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ไซต์งาน</p></a></li>
               <li class="nav-item"><a href="?module=building" class="nav-link <?PHP echo $active_building; ?>"><i class="fa fa-caret-right nav-icon"></i><p>อาคาร</p></a></li>
               <li class="nav-item"><a href="?module=location" class="nav-link <?PHP echo $active_location; ?>"><i class="fa fa-caret-right nav-icon"></i><p>สถานที่</p></a></li>                            
@@ -397,7 +411,7 @@ $obj = new CRUD();
 
     <!-- Main content -->
     <?PHP
-        include($include_module);
+    include($include_module);
     ?>
 
     <?PHP
