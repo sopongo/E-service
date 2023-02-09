@@ -7,12 +7,11 @@
         <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body-cancel p-0 py-2">
+    <div class="modal-body-cancel p-0 py-0">
 
     </div><!--modal-body-->
     <div class="modal-footer justify-content-between">
-        <!--<input type="submit" class="btn btn-primary btn-submit btn-success" value="อัพเดท" />-->
-        <button type="button" class="btn btn-block btn-success btn-md w-auto btn_test">อัพเดท</button>
+        <button type="button" class="btn btn-block btn-success btn-md w-auto btn-update-cancel">อัพเดท</button>
         <input type="reset" class="btn btn-cancel btn-danger" data-dismiss="modal" value="ยกเลิก" />
     </div>
     </div>

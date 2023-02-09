@@ -453,6 +453,67 @@
 
 <script>
 
+$(document).on("click", ".btn-update-cancel", function (event){
+
+        if($('#cancel_statement').val()==''){
+            sweetAlert("ผิดพลาด!", "กรอกสาเหตุการยกเลิก", "error");
+            return false;
+        }
+    //$(document).on("submit", "form#needs-validation", function(event){
+    event.preventDefault();
+    var formAdd = document.getElementById('needs-validation_2');  
+    //var frmData = $("form#needs-validation").serialize();
+    var frm_Data= new FormData($('form#needs-validation_2')[0]);
+    if(formAdd.checkValidity()===false) {  
+        event.preventDefault();  
+        event.stopPropagation();
+    }else{
+        swal({
+        title: "ยืนยัน ?",   text: "ต้องการส่งใบแจ้งซ่อมนี้หรือไม่.",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "ตกลง",
+        cancelButtonText: "ไม่, ยกเลิก",        
+        closeOnConfirm: false 
+      }, function(){   
+        $.ajax({
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            //dataType: "json",
+            //data:{ "action":"send-req"},
+            processData: false,
+            contentType: false,
+            data: frm_Data, 
+            beforeSend: function () {
+            },success: function (data) {
+                console.log(data); //return false;
+                if(data.error=='over_req'){
+                    sweetAlert("ผิดพลาด!", "รหัส: จำนวนคงเหลือไม่พอให้เบิกแล้ว", "error");
+                    return false;
+                }
+                swal({
+                    title: "ส่งใบแจ้งซ่อมเรียบร้อย!",
+                    text: "กรุณารอช่างติดต่อกลับ เพื่อประเมิณการซ่อม",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //return false();
+                    window.location.href = "?module=requestlist&id=xxx";
+                })
+            },error: function (data) {
+                console.log(data);
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+            }
+        });
+    });
+        event.preventDefault();    
+    }
+    //alert('Ajax'); return false;
+    formAdd.classList.add('was-validated');      
+    return false;
+    });    
 
 $(document).on("click", ".btn-cancel", function (e){ 
   e.stopPropagation();
