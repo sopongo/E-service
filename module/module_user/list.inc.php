@@ -5,8 +5,6 @@ for($i=14;$i<=500;$i++){
 }
 */
 ?>
-
-
 <!-- DataTables -->
 <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -44,7 +42,7 @@ for($i=14;$i<=500;$i++){
     </div>
 
     <?php
-      include_once 'module/module_unit/frm_add-edit.inc.php'; //หน้า add/edit
+      include_once 'module/module_user/frm_add-edit.inc.php'; //หน้า add/edit
     ?>
 
     <div class="card-body">
@@ -57,8 +55,13 @@ for($i=14;$i<=500;$i++){
       <thead>
       <tr class="bg-light">
         <th class="sorting_disabled">No</th>
-        <th>ชื่อหน่วยนับ</th>
-        <th>สถานะ</th>
+        <th>รหัสพนักงาน</th>
+        <th>อีเมล์</th>
+        <th>ชื่อ-นามสกุล</th>
+        <th>ไซต์</th>
+        <th>แผนก</th>
+        <th>ระดับผู้ใช้งาน</th>
+        <th>สถานะใช้งาน</th>
         <th>จัดการ</th>
       </tr>
       </thead>
@@ -105,14 +108,14 @@ for($i=14;$i<=500;$i++){
       "serverSide": true,
       "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
       "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0,2,3] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
-        { "bSearchable": false, "aTargets": [ 0, 2, 3] } //คอลัมน์ที่าจะไม่ให้เสริท
+        { "bSortable": false, "aTargets": [0,7,8] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+        { "bSearchable": false, "aTargets": [ 0, 5, 6, 7, 8] } //คอลัมน์ที่าจะไม่ให้เสริท
       ], 
       ajax: {
         beforeSend: function () {
           //จะให้ทำอะไรก่อนส่งค่าไปหรือไม่
         },
-        url: 'module/module_unit/datatable_processing.php',
+        url: 'module/module_user/datatable_processing.php',
         type: 'POST',
         data : {"action":"get"},//"slt_search":slt_search
         async: false,
@@ -127,7 +130,7 @@ for($i=14;$i<=500;$i++){
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      "buttons": ["csv", "pdf",  "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {
@@ -150,7 +153,7 @@ $(document).ready(function () {
     var id_row = $(this).data("id");
     $.ajax({
       type: 'POST',
-      url: "module/module_unit/ajax_action.php",
+      url: "module/module_user/ajax_action.php",
       dataType: "json",
       data:{action:"edit", id_row:id_row},
       success: function (data) {
@@ -204,7 +207,7 @@ $(document).ready(function () {
       if (isConfirm) {
         $.ajax({
           type: 'POST',
-          url: "module/module_unit/ajax_action.php",
+          url: "module/module_user/ajax_action.php",
           data:{action:"update-status", chk_box_value:chk_box_value, id_row:id_row},
           success: function (data) {
             console.log(data);
@@ -239,5 +242,5 @@ $(document).ready(function () {
 });
   
 
-    /*module/module_unit/datatable_processing.php*/
+    /*module/module_user/datatable_processing.php*/
 </script>

@@ -4,8 +4,8 @@ require_once '../../include/setting.inc.php';
 $obj = new CRUD();
 
 
-//EX.tb_unit
-//id_unit, unit_name, status_unit
+//EX.tb_user
+//id_user, fullname, status_user
 /*
 /*$_POST['length'] คือ จำนวนต่อหน้า
 $_POST["draw"] คือ ??? ประมาณว่าเลขหน้า
@@ -21,7 +21,7 @@ $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 $search = $_POST["search"]["value"];
 $query_search = "";
 if(!empty($search[0])){
-    $query_search = " WHERE unit_name LIKE '%".$search."%' ";
+    $query_search = " WHERE (email LIKE '%".$search."%' OR fullname LIKE '%".$search."%' )";
 }
 
 if($_POST["start"]==0){
@@ -31,41 +31,52 @@ if($_POST["start"]==0){
 }
 $start = ($_POST["start"]-1)*$_POST['length'];
 
-
 empty($_POST['order']['0']['column']) ? $_POST['order']['0']['column']=0 : $_POST['order']['0']['column'];
 //empty($_POST['order']['0']['dir']) ? $_POST['order']['0']['dir']='desc' : $_POST['order']['0']['dir']='';
 
+//No 	รหัสพนักงาน	อีเมล์	ชื่อ-นามสกุล	ไซต์	แผนก	ระดับผู้ใช้งาน	สถานะใช้งาน	จัดการ
+//id_user, no_user, password, email, line_token, fullname, sex, phone, photo, class_user, ref_id_site, ref_id_dept, ref_id_position, status_user, create_date, ref_id_user_add, edit_date, ref_id_user_edit, latest_login, ip_address
 $colunm_sort = array( //ใช้เรียงข้อมูล
-    0=> "tb_unit.id_unit",
-    1=> "tb_unit.id_unit",
-    2=> "tb_unit.unit_name",
-    3=> "tb_unit.status_unit"
+    0=> "tb_user.id_user",
+    1=> "tb_user.id_user",
+    2=> "tb_user.no_user",
+    3=> "tb_user.email",
+    4=> "tb_user.fullname",
+    5=> "tb_user.ref_id_site",
+    6=> "tb_user.ref_id_dept",
+   7=> "tb_user.class_user",
 );
 
 $orderBY = $colunm_sort[$_POST['order']['0']['column']];
 
 $arrData = array();	
 
-$numRow = $obj->getCount("SELECT count(id_unit) AS total_row FROM tb_unit ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
+$numRow = $obj->getCount("SELECT count(id_user) AS total_row FROM tb_user ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
 
-$fetchRow = $obj->fetchRows("SELECT * FROM tb_unit ".$query_search."
-ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
+$fetchRow = $obj->fetchRows("SELECT tb_user.*, tb_dept.dept_initialname, site_initialname  FROM tb_user 
+LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept)
+LEFT JOIN tb_site ON (tb_site.id_site=tb_user.ref_id_site)
+".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
 
-//id_unit, status_unit, unit_name, status_unit
+//No 	รหัสพนักงาน	อีเมล์	ชื่อ-นามสกุล	ไซต์	แผนก	ระดับผู้ใช้งาน	สถานะใช้งาน	จัดการ
+//id_user, no_user, password, email, line_token, fullname, sex, phone, photo, class_user, ref_id_site, ref_id_dept, ref_id_position, status_user, create_date, ref_id_user_add, edit_date, ref_id_user_edit, latest_login, ip_address
 if (count($fetchRow)>0) {
     $No = ($numRow-$_POST['start']);
     foreach($fetchRow as $key=>$value){
         $dataRow = array();
         $dataRow[] = $No.'.';
-        $dataRow[] = ($fetchRow[$key]['unit_name']=='' ? '-' : $fetchRow[$key]['unit_name']);
+        $dataRow[] = ($fetchRow[$key]['no_user']=='' ? '-' : $fetchRow[$key]['no_user']);
+        $dataRow[] = ($fetchRow[$key]['email']=='' ? '-' : $fetchRow[$key]['email']);
+        $dataRow[] = ($fetchRow[$key]['fullname']=='' ? '-' : $fetchRow[$key]['fullname']);
+        $dataRow[] = ($fetchRow[$key]['site_initialname']=='' ? '-' : $fetchRow[$key]['site_initialname']);
+        $dataRow[] = ($fetchRow[$key]['dept_initialname']=='' ? '-' : $fetchRow[$key]['dept_initialname']);
+        $dataRow[] = ($fetchRow[$key]['class_user']=='' ? '-' : $classArr[$fetchRow[$key]['class_user']]);
         $dataRow[] = '<div class="check-status custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline">
-        <input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['status_unit']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_unit'].'" id="customSwitch'.$fetchRow[$key]['id_unit'].'">
-        <label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_unit'].'"></label></div>';
-        $dataRow[] = '<div class="btn-group dropdown"><button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">จัดการ</button>
-        <div class="dropdown-menu" style="margin-left:-4rem;"><a class="dropdown-item edit-data" data-id="'.$fetchRow[$key]['id_unit'].'" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fas fa-pencil-alt"></i> แก้ไขข้อมูล</a></div></div>'.'';
-        //.'SELECT * FROM tb_user '.$query_search.' ORDER BY '.$orderBY.' '.$_POST['order']['0']['dir'].' LIMIT '.$_POST['start'].', '.$length.''
+        <input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['status_user']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_user'].'" id="customSwitch'.$fetchRow[$key]['id_user'].'"><label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_user'].'"></label></div>';
+        $dataRow[] = '<button type="button" class="btn btn-success btn-sm view-data" data-id="'.$fetchRow[$key]['id_user'].'" data-toggle="modal" data-target="#modal-view" id="viewData" data-backdrop="static" data-keyboard="false" title="ดูข้อมูล"><i class="fa fa-file-alt"></i></button>
+        <button type="button" class="btn btn-warning btn-sm edit-data" data-id="'.$fetchRow[$key]['id_user'].'" data-toggle="modal" data-target="#modal-default" id="edit-data" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button>';
         $arrData[] = $dataRow;
         $No--;
     }

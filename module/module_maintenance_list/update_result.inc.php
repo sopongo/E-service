@@ -88,6 +88,11 @@ sa asd sdsfad sfad fsda sfdasfad fsda fsd fsdaasfd
                                 <label for="problem_statement"><span class="text-red font-size-sm"></span> ผู้ยกเลิก:</label> <?PHP echo $_SESSION['sess_fullname']; ?>
                             </div>
                         </div>
+                        <div class="col-sm-12 col-md-12 col-xs-12">  
+                            <div class="form-group">  
+                                <label for="problem_statement"><span class="text-red font-size-sm"></span> ตำแหน่ง:</label> <?PHP echo $_SESSION['sess_class_user']; ?>
+                            </div>
+                        </div>
                     </div><!--row-4-->
                     <div class="row row-5">
                         <div class="col-sm-12 col-md-12 col-xs-12">  

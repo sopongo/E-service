@@ -19,16 +19,6 @@
     </ol>
     </div>
 </div>
-No
-ชื่อ-นามสกุล
-อีเมล์
-ไซต์งาน
-แผนก
-ระดับผู้ใช้งาน
-สถานะใช้งาน
-จัดการ
-
-
 <div class="card-body">
 
                 <table class="table table-bordered">
@@ -38,37 +28,41 @@ No
                       <th class="w-10">ผู้ใช้ระบบ</th>
                       <th class="w-10">ช่าง</th>
                       <th class="w-10">หัวหน้าช่าง</th>
-                      <th class="w-10">ผู้จัดการระบบ</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                        <td>จัดการระบบ</td>
+                        <td>
+                          <strong class="text-blue">โมดูลจัดการระบบ</strong> <br/>
+                          สามารถ เพิ่ม, ลบ, แก้ไข, ระงับข้อมูลได้ ในเมนู เครื่องจักร-อุปกรณ์ (Master), ประเภทเครื่องจักร-อุปกรณ์, สิทธิ์การใช้งาน, ไซต์งาน, อาคาร, สถานที่, แผนก, หน่วยนับ, แบรนด์, ซัพพลายเออร์                          
+                        </td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess1"><label for="checkboxSuccess1"></label></div></td>
                         <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess3"><label for="checkboxSuccess3"></label></div></td>
                     </tr>
                     <tr>
-                        <td>ตั้งค่าใบแจ้งซ่อม</td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
+                        <td><strong class="text-blue">โมดูลตั้งค่าใบแจ้งซ่อม</strong> <br/>
+                        สามารถ เพิ่ม, ลบ, แก้ไข, ระงับข้อมูลได้ ในเมนู ประเภทใบแจ้งซ่อม, รหัสอาการเสีย, รหัสสาเหตุการเสีย, รหัสการซ่อม,วิธีซ่อม, สาเหตุการปฏิเสธงานซ่อม
+                        </td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess4"><label for="checkboxSuccess4"></label></div></td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess5"><label for="checkboxSuccess5"></label></div></td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess6"><label for="checkboxSuccess6"></label></div></td>
                     </tr>
                     <tr>
-                        <td>แจ้งซ่อม</td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
+                        <td><strong class="text-blue">โมดูลแจ้งซ่อม</strong> <br/>
+                        สามารถแจ้งซ่อมได้ ดูความคืบหน้า พิมพ์ใบแจ้งซ่อมของแผนกผู้ใช้งานได้
+                        </td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess7"><label for="checkboxSuccess7"></label></div></td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess8"><label for="checkboxSuccess8"></label></div></td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess9"><label for="checkboxSuccess9"></label></div></td>
                     </tr>
                     <tr>
-                        <td>จ่ายงานซ่อม</td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
-                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess2"><label for="checkboxSuccess2"></label></div></td>
+                        <td><strong class="text-blue">โมดูลจ่ายงานซ่อม</strong> <br/>
+                            จัดการใบแจ้งซ่อม-จ่ายงานได้
+                        </td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess10"><label for="checkboxSuccess10"></label></div></td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess11"><label for="checkboxSuccess11"></label></div></td>
+                        <td><div class="icheck-success d-inline"><input type="checkbox" id="checkboxSuccess12"><label for="checkboxSuccess12"></label></div></td>
                     </tr>
                   </tbody>
                 </table>
