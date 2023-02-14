@@ -73,7 +73,6 @@
 <!-- /.modal-default -->
 
 <script type="text/javascript">
-
 $(document).ready(function(){
 
 $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/

@@ -138,18 +138,18 @@ $(document).ready(function () {
   var table = $('#example1').DataTable();
   //var info = table.page.info();
 
-  $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มหน่วยนับ</button></div>');
-  $('input[type=search]').attr('placeholder', 'ชื่อย่อ หรือ ชื่อหน่วยนับ');
+  $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มผู้ใช้งาน</button></div>');
+  $('input[type=search]').attr('placeholder', 'ชื่อย่อ หรือ ชื่อผู้ใช้งาน');
   //$('#example1_filter').append('<select class="custom-select dataTables_filter" name="search" id="slt_search" aria-controls="example1"><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>');
 
 
   $(document).on('click','#addData',function(){   
-    $('#exampleModalLabel span').html("เพิ่มหน่วยนับ");
+    $('#exampleModalLabel span').html("เพิ่มผู้ใช้งาน");
   });
 
   
   $(document).on('click','.edit-data',function(){   
-    $('#exampleModalLabel span').html("แก้ไขหน่วยนับ");
+    $('#exampleModalLabel span').html("แก้ไขผู้ใช้งาน");
     var id_row = $(this).data("id");
     $.ajax({
       type: 'POST',
@@ -161,7 +161,7 @@ $(document).ready(function () {
         if(data){//id_unit, unit_name, status_unit
           $('#unit_name').val(data.unit_name);
           $('#id_row').val(data.id_unit);
-          $('#exampleModalLabel span').html("แก้ไขหน่วยนับ: "+data.unit_name);
+          $('#exampleModalLabel span').html("แก้ไขผู้ใช้งาน: "+data.unit_name);
           if(data.status_unit==1){
             $('#status_use').prop('checked',true);
             $('#status_hold').prop('checked',false);
