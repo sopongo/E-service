@@ -182,8 +182,8 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
 </section>
 <!-- /.content -->
 
-<!--<script src="plugins/html5-qrcode/html5-qrcode.min.v2.3.4.js"></script>-->
-<script src="https://scanapp.org/assets/js/html5-qrcode.min.v2.3.4.js"></script>
+<script src="plugins/html5-qrcode/html5-qrcode.min.v2.3.4.js"></script>
+<!--<script src="https://scanapp.org/assets/js/html5-qrcode.min.v2.3.4.js"></script>-->
 
 <!-- Select2 -->
 <script src="plugins/select2/js/select2.full.min.js"></script>

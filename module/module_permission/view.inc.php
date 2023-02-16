@@ -46,11 +46,15 @@
                                 //$rowData = $obj->customSelect("SELECT * FROM tb_permission WHERE ref_class_user='".$."' AND module_name=".$i."");
                                 $a++;
                             }
+
+                            $rowData_1 = $obj->customSelect("SELECT * FROM tb_permission WHERE ref_class_user='1' AND module_name=".$i."");
+                            $rowData_2 = $obj->customSelect("SELECT * FROM tb_permission WHERE ref_class_user='2' AND module_name=".$i."");                            
+                            $rowData_3 = $obj->customSelect("SELECT * FROM tb_permission WHERE ref_class_user='3' AND module_name=".$i."");
                         ?>
                         </td>
-                        <td class="text-center"><div class="icheck-success d-inline"><input type="checkbox" value="1" name="checkboxSuccess_1_<?PHP echo $i; ?>" id="checkboxSuccess_1_<?PHP echo $i; ?>"><label for="checkboxSuccess_1_<?PHP echo $i; ?>"></label></div><?PHP echo "<br> SELECT * FROM tb_permission WHERE ref_class_user='1' AND module_name=".$i.""; ?></td>
-                        <td class="text-center"><div class="icheck-success d-inline"><input type="checkbox" value="1" name="checkboxSuccess_2_<?PHP echo $i; ?>" id="checkboxSuccess_2_<?PHP echo $i; ?>"><label for="checkboxSuccess_2_<?PHP echo $i; ?>"></label></div><?PHP echo "<br> SELECT * FROM tb_permission WHERE ref_class_user='2' AND module_name=".$i.""; ?></td>
-                        <td class="text-center"><div class="icheck-success d-inline"><input type="checkbox" value="1" name="checkboxSuccess_3_<?PHP echo $i; ?>" id="checkboxSuccess_3_<?PHP echo $i; ?>"><label for="checkboxSuccess_3_<?PHP echo $i; ?>"></label></div><?PHP echo "<br> SELECT * FROM tb_permission WHERE ref_class_user='3' AND module_name=".$i.""; ?></td>
+                        <td class="text-center"><div class="icheck-success d-inline"><input type="checkbox" value="1" <?PHP echo $rowData_1['accept_denied']==1 ? 'checked' : '';?> name="checkboxSuccess_1_<?PHP echo $i; ?>" id="checkboxSuccess_1_<?PHP echo $i; ?>"><label for="checkboxSuccess_1_<?PHP echo $i; ?>"></label></div><?PHP //echo "<br> SELECT * FROM tb_permission WHERE ref_class_user='1' AND module_name=".$i.""; ?></td>
+                        <td class="text-center"><div class="icheck-success d-inline"><input type="checkbox" value="1" <?PHP echo $rowData_2['accept_denied']==1 ? 'checked' : '';?> name="checkboxSuccess_2_<?PHP echo $i; ?>" id="checkboxSuccess_2_<?PHP echo $i; ?>"><label for="checkboxSuccess_2_<?PHP echo $i; ?>"></label></div><?PHP //echo "<br> SELECT * FROM tb_permission WHERE ref_class_user='2' AND module_name=".$i.""; ?></td>
+                        <td class="text-center"><div class="icheck-success d-inline"><input type="checkbox" value="1" <?PHP echo $rowData_3['accept_denied']==1 ? 'checked' : '';?> name="checkboxSuccess_3_<?PHP echo $i; ?>" id="checkboxSuccess_3_<?PHP echo $i; ?>"><label for="checkboxSuccess_3_<?PHP echo $i; ?>"></label></div><?PHP //echo "<br> SELECT * FROM tb_permission WHERE ref_class_user='3' AND module_name=".$i.""; ?></td>
                     </tr>
                   <?PHP
                   }
@@ -95,19 +99,8 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
             },
             success: function (data) {
             console.log(data);
-            if(data==1){
-                sweetAlert("ผิดพลาด!", "ชื่อย่อหน่วยนับ '"+$("#unit_name").val()+"' ถูกใช้แล้ว", "error");
-                return false;
-            }else{
-                //sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
-                return false;
-                $('#example1').DataTable().ajax.reload();
-                $("#modal-default").modal("hide"); 
-                $(".modal-backdrop").hide().fadeOut();
                 sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
-                $('body').find('.was-validated').removeClass();
-                $('form').each(function() { this.reset() });
-            }   
+                return false;
                 event.preventDefault();
             },
                 error: function (jXHR, textStatus, errorThrown) {

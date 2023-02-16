@@ -53,7 +53,7 @@ switch($module){
     }else{
       $include_module = "module/module_maintenance_list/view.inc.php";
     }
-    $title_site = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no'].""; $title_act = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no'].""; $breadcrumb_txt = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no']."";
+    $title_site = "".$rowData['maintenance_request_no'].""; $title_act = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no'].""; $breadcrumb_txt = "".$rowData['maintenance_request_no']."";
     $module=="requestid" ? ($active_requestid="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestid=""); #ไฮไลท์เมนูด้านซ้าย
   break;  
   
