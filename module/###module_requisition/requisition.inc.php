@@ -1,34 +1,16 @@
-
 <!-- Ekko Lightbox -->
 <script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>  
 <script src="plugins/autoNumeric/autoNumeric.js"></script>  
 
 <style type="text/css">
 
-table tr td{ color:#333;
-  font-style: normal;
-  font-weight:500;
-}
-a.page-link{
-  font-style: normal;
-  font-weight:500;	
-}
-
+table tr td{ color:#333;  font-style: normal;  font-weight:500;}
+a.page-link{  font-style: normal;  font-weight:500;	}
 .pagination-input{ display:none;}
+.ui-w-40 {    width:50px !important;    height: auto;}
+.mr-4, .mx-4 {    margin-right: 1.5rem!important;}
 
-
-.ui-w-40 {
-    width:50px !important;
-    height: auto;
-}
-.mr-4, .mx-4 {
-    margin-right: 1.5rem!important;
-}
-
-.btn-increment, .btn-decrement{ 
-  padding:0px 4px 0px 4px; margin:0px;
-}
-
+.btn-increment, .btn-decrement{   padding:0px 4px 0px 4px; margin:0px;}
 .bg-green-2{ background-color:#DCF8C6;}
 
 </style>

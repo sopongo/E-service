@@ -90,16 +90,6 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                                 <label for="slt_machine"><span class="text-red font-size-sm">**</span> เครื่องจักร/อุปกรณ์ (ใส่รหัสหรือชื่อเครื่องจักร)</label>  
                                 <select id="slt_machine" class="select2 custom-select pb-5" style="width: 100%;" required>
                                 <option disable selected>เลือกแผนกที่รับผิดชอบก่อน</option>
-                                <!--<option>Alabama</option>
-                                <option>Alaska</option>
-                                <option value="6970701070012">6970701070012</option>
-                                <option>California</option>
-                                <option>Delaware</option>
-                                <option>Tennessee</option>
-                                <option value="KERPU023088758 1 1 SAS01">KERPU023088758 1 1 SAS01</option>
-                                <option>Texas</option>
-                                <option>Washington</option>
-                                <option value="P1001812043776">P1001812043776</option>-->
                                 </select>
                                 </div>
                                 <!-- /.form-group -->
@@ -130,7 +120,22 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                             </div>
                         </div><!--row-4-->                        
 
-                        <div class="row row-5 mt-2">
+                        <div class="row row-7 mt-2">
+                            <div class="col-sm-5 col-md-5 col-xs-5">
+                                    <label for="ref_id_job_type">ประเภทงานซ่อม:</label>  <br />
+                                    <div class="icheck-danger d-inline">
+                                    <input type="radio" id="radioPrimary1" name="ref_id_job_type" value="1" checked>
+                                    <label for="radioPrimary1">แจ้งช่างซ่อม</label>
+                                    </div>
+                                    <div class="ml-5 icheck-success d-inline">
+                                    <input type="radio" id="radioPrimary2" name="ref_id_job_type" value="2">
+                                    <label for="radioPrimary2">ช่างซ่อมเอง</label>
+                                    </div>
+                            </div>
+                        </div><!--row-7-->
+
+
+                        <div class="row row-5 mt-3">
                             <div class="col-sm-5 col-md-5 col-xs-5">
                                     <label for="firstname">เกี่ยวกับความปลอดภัย:</label>  <br />
                                     <div class="icheck-danger d-inline">
@@ -245,7 +250,7 @@ $(document).ready(function(){
         $.ajax({
             url: "module/module_maintenance_list/send_request.inc.php",
             type: "POST",
-            //dataType: "json",
+            dataType: "json",
             //data:{ "action":"send-req"},
             processData: false,
             contentType: false,
@@ -253,8 +258,9 @@ $(document).ready(function(){
             beforeSend: function () {
             },success: function (data) {
                 console.log(data); //return false;
+                var ref_id = data;
                 if(data.error=='over_req'){
-                    sweetAlert("ผิดพลาด!", "รหัส: จำนวนคงเหลือไม่พอให้เบิกแล้ว", "error");
+                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
                     return false;
                 }
                 swal({
@@ -265,7 +271,8 @@ $(document).ready(function(){
                 }, 
                 function(){
                     //return false();
-                    window.location.href = "?module=requestlist&id=xxx";
+                    //alert(ref_id);
+                    window.location.href = '?module=requestid&id='+data+'';
                 })
             },error: function (data) {
                 console.log(data);
@@ -290,8 +297,7 @@ $(document).ready(function(){
         }
     });
 
-    
-    $(document).on("click", ".newscan", function (){ 
+        $(document).on("click", ".newscan", function (){ 
         window.location.reload();
     });
 

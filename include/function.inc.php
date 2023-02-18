@@ -111,7 +111,8 @@ function shortDateEN($date){
 	return ((int) $d).'-'.$thMonth[$m].'-'.($y); 
 }
 
-function nowTime($date){ $h = substr($date, -8, -6); $m = substr($date, -5, -3); return $h.'.'.$m.''; }	
+//00:00:00
+function nowTime($date){ $h = substr($date, -8, -6); $m = substr($date, -5, -3); $s = substr($date, -2, 2);  return $h.':'.$m.':'.$s.' น.'; }	
 
 
 

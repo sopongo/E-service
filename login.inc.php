@@ -106,14 +106,12 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 					</div>
 					<div class="card fat">
 						<div class="card-body">
-							<h4 class="card-title">เข้าสู่ระบบ Central Store Online</h4><br /><br />
+							<h4 class="card-title text-center w-100 text-bold" style="line-height:1.8rem;">เข้าสู่ระบบ E-Service <br />แจ้งซ่อมออนไลน์</h4><br /><br />
 							<form method="POST" class="my-login-validation" novalidate="">
 								<div class="form-group">
 									<label for="email">E-Mail Address</label>
 									<input id="email" type="email" class="form-control" name="email" value="" required autofocus>
-									<div class="invalid-feedback">
-										Email is invalid
-									</div>
+									<div class="invalid-feedback">Email is invalid</div>
 								</div>
 
 								<div class="form-group">
@@ -197,8 +195,10 @@ $(document).ready(function () { //When the page has loaded
     echo "<br />";
     echo $_POST['remember'];    die;*/
 
-    $fetchRow = $obj->fetchRows("SELECT tb_user.* FROM tb_user WHERE email='".$_POST['email']."' AND password='".$password."'");
-
+    $fetchRow = $obj->fetchRows("SELECT tb_user.*, tb_dept.dept_initialname, tb_dept.dept_name
+    FROM tb_user 
+    LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept)
+    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."'");
 
     if (!empty($fetchRow) && count($fetchRow)==1){
       //$fetchRow[0]['photo_name']
@@ -215,10 +215,10 @@ $(document).ready(function () { //When the page has loaded
       $_SESSION['sess_location_name'] = $fetchRow[0]['location_name'];
       $_SESSION['sess_fullname'] = $fetchRow[0]['fullname'];
       $_SESSION['sess_class_user'] = $fetchRow[0]['class_user'];
-      $_SESSION['sess_id_dept'] = $fetchRow[0]['ref_dept'];
+      $_SESSION['sess_id_dept'] = $fetchRow[0]['ref_id_dept'];
       $_SESSION['sess_dept_name'] = $fetchRow[0]['dept_name'];
       $_SESSION['sess_dept_initialname'] = $fetchRow[0]['dept_initialname'];      
-      $_SESSION['sess_dept_initialname'] = 'PCS';
+      //$_SESSION['sess_dept_initialname'] = 'PCS';
       $_SESSION['sess_status_user'] = $fetchRow[0]['status_user'];
       $_SESSION['sess_popup_howto'] = 0;
     ?>

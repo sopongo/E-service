@@ -6,6 +6,7 @@
     require_once ('../../include/function.inc.php');
         
     $action = $_REQUEST['action']; #รับค่า action มาจากหน้าจัดการ
+    !empty($_POST['ref_id']) ? $ref_id = intval($_POST['ref_id']): '';
 
     if (!empty($action)) { ##ถ้า $action มีการส่งค่ามาจะดึงไฟล์ class.inc.php (ไฟล์ class+function) มาใช้งาน
         require_once ('../../include/class_crud.inc.php');
@@ -47,11 +48,12 @@
             'ref_id_mt_type' => (0),
             'status_approved' => (0),
             'ref_id_user_approver' => (0),
+            'detail_note_approved' => (NULL),
             'allotted_date' => (NULL),
             'allotted_accept_date' => (NULL),
             'related_to_safty' => (!empty($_POST['related_to_safty'])) ? $_POST['related_to_safty'] : NULL,
             'problem_statement' => (!empty($_POST['problem_statement'])) ? $_POST['problem_statement'] : '',
-            'ref_id_job_type' => (NULL),
+            'ref_id_job_type' => (!empty($_POST['ref_id_job_type'])) ? $_POST['ref_id_job_type'] : '',
             'urgent_type' => (!empty($_POST['urgent_type'])) ? $_POST['urgent_type'] : '',
             'outsource_service_status' => 0,
             'caused_by_os' => (NULL),
@@ -62,13 +64,27 @@
             'hand_over_date' => (NULL),
             'ref_id_user_hand_over' => (NULL),
             'cause_mt_request_cancel' => (NULL),
+            'date_mt_request_cancel' =>(NULL),
+            'ref_id_user_cancel' => (NULL),
             'maintenance_request_status' => 1,
         ];
         $rowID = $obj->addRow($insertRow, "tb_maintenance_request");
-        echo str_replace(" ","",$rowID);
-
+        echo  json_encode(trim(intval($rowID)));
         exit();
     }
+
+    if ($action=='cancel-req') {
+        $insertRow = [
+            'cause_mt_request_cancel' => (!empty($_POST['cancel_statement'])) ? $_POST['cancel_statement'] : '',
+            'maintenance_request_status' => 2,
+            'date_mt_request_cancel' => (date('Y-m-d H:i:s')),
+            'ref_id_user_cancel' => ($_SESSION['sess_id_user']),
+        ];
+        $resultUpdate = $obj->update($insertRow, "id_maintenance_request=".$ref_id."", "tb_maintenance_request");
+        echo json_encode($resultUpdate);
+        exit();
+    }
+
 
 
 

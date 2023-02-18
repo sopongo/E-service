@@ -46,15 +46,43 @@ switch($module){
   break;
 
   case 'requestid':
-    $rowData = $obj->customSelect("SELECT tb_maintenance_request.* 
-    FROM tb_maintenance_request WHERE tb_maintenance_request.id_maintenance_request=".$id." ");
+    $rowData = $obj->customSelect("SELECT tb_maintenance_request.*, tb_maintenance_type.name_mt_type, tb_dept_responsibility.dept_initialname AS dept_responsibility,
+    tb_user_request.no_user, tb_user_request.email, tb_user_request.fullname, tb_user_request.ref_id_dept AS ref_id_dept_request, tb_user_dept_request.dept_initialname AS dept_user_request,
+    tb_user_cancel.fullname AS cancel_fullname, tb_user_approved.fullname AS approved_fullname
+    FROM tb_maintenance_request  
+    LEFT JOIN tb_maintenance_type ON (tb_maintenance_type.id_mt_type=tb_maintenance_request.ref_id_mt_type)
+    LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept)
+    LEFT JOIN tb_user AS tb_user_request ON (tb_user_request.id_user=tb_maintenance_request.ref_id_user_request)    
+    LEFT JOIN tb_user AS tb_user_cancel ON (tb_user_cancel.id_user=tb_maintenance_request.ref_id_user_cancel)    
+    LEFT JOIN tb_user AS tb_user_approved ON (tb_user_approved.id_user=tb_maintenance_request.ref_id_user_approver) 
+    LEFT JOIN tb_dept AS tb_user_dept_request ON (tb_user_dept_request.id_dept=tb_user_request.ref_id_dept)
+    WHERE tb_maintenance_request.id_maintenance_request=".$id." ");
+
+    $rowMachine = $obj->customSelect("SELECT tb_machine_site.*, tb_machine_master.*,
+    tb_site.site_initialname, tb_building.building_name, tb_location.location_name, tb_dept.dept_initialname, tb_category.name_menu  FROM tb_machine_site
+    LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+    LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)      
+    LEFT JOIN tb_site ON (tb_site.id_site=tb_machine_site.ref_id_site) 
+    LEFT JOIN tb_building ON (tb_building.id_building=tb_machine_site.ref_id_building) 
+    LEFT JOIN tb_location ON (tb_location.id_location=tb_machine_site.ref_id_location)     
+    LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_machine_master.ref_id_dept) 
+      WHERE tb_machine_site.id_machine_site=".$rowData['ref_id_machine_site']." ");
+
     if($rowData['id_maintenance_request']!=$id){
       header('location:./');
     }else{
-      $include_module = "module/module_maintenance_list/view.inc.php";
+      if($rowData['ref_id_user_request']==$_SESSION['sess_id_user'] || $rowData['ref_id_dept_request']==$_SESSION['sess_id_dept'] || $_SESSION['sess_class_user']==4){#001
+        $denied_requestid = 1;
+        $include_module = "module/module_maintenance_list/view.inc.php";
+        $title_site = "".$rowData['maintenance_request_no'].""; $title_act = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no'].""; $breadcrumb_txt = "".$rowData['maintenance_request_no']."";
+        $module=="requestid" ? ($active_requestid="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestid=""); #ไฮไลท์เมนูด้านซ้าย
+      }else{
+        $denied_requestid = 0; //ไม่สิทธิ์ดูใบแจ้งซ่อมนี้ เพราะไม่มีสิทธิ์ตาม if ที่ #001
+        $include_module = "module/module_maintenance_list/view.inc.php";
+        $title_site = $warning_text[1]; $title_act = $warning_text[1]; $breadcrumb_txt = $warning_text[1];
+        $module=="requestid" ? ($active_requestid="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestid=""); #ไฮไลท์เมนูด้านซ้าย
+      }
     }
-    $title_site = "".$rowData['maintenance_request_no'].""; $title_act = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no'].""; $breadcrumb_txt = "".$rowData['maintenance_request_no']."";
-    $module=="requestid" ? ($active_requestid="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestid=""); #ไฮไลท์เมนูด้านซ้าย
   break;  
   
  
