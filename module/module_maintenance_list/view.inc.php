@@ -78,8 +78,8 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div>
                   <?PHP } ?>                  
                 <?PHP if($rowData['maintenance_request_status']==2){?>
-                <div class="ribbon-wrapper ribbon-xl">
-                  <div class="ribbon bg-danger text-xl">ยกเลิก</div>
+                <div class="ribbon-wrapper ribbon-lg">
+                  <div class="ribbon bg-danger text-lg">ยกเลิก</div>
                 </div>
                 <?PHP } ?>
               <div class="card-body box-profile">
@@ -234,11 +234,11 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <!-- /.col -->
               </div>
               
-              <div class="card-title d-block text-bold w-100 border-bottom pb-1 mt-3 mb-2"><i class="fas fa-users-cog"></i> ผู้รับผิดชอบงานซ่อม: <?PHP if($rowData['status_approved']==1){?><button type="button" class="btn btn-default btn-sm update_result" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> เปลี่ยน-เพิ่ม ผู้รับผิดชอบ</button><?PHP } ?></div><br>              
+              <div class="card-title d-block text-bold w-100 border-bottom pb-1 mt-3 mb-2"><i class="fas fa-users-cog"></i> ผู้รับผิดชอบงานซ่อม: <?PHP if($rowData['status_approved']==1){?><button type="button" class="btn btn-default btn-sm update_result" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> เปลี่ยน-เพิ่ม ผู้รับผิดชอบ</button><?PHP } ?></div><br>
               <div class="row invoice-info linehi-170">
                 <?PHP if($rowData['status_approved']!=1){?>
                   <div class="col-sm-4 invoice-col">
-                    <span class="text-gray">-</span>
+                    <span class="text-gray">- ยังไม่ระบุ</span>
                   </div>
                 <?PHP } else{ ?>
               <?PHP

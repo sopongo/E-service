@@ -4,6 +4,8 @@ session_start();
 header('Content-Type: text/html; charset=utf-8');
 date_default_timezone_set('Asia/Bangkok');	
 
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 require_once ('include/connect_db.inc.php');
 require_once ('include/function.inc.php');
 require_once ('include/setting.inc.php');
@@ -43,6 +45,12 @@ switch($module){
     $title_site = "แจ้งซ่อม"; $title_act = "แจ้งซ่อม"; $breadcrumb_txt = "แจ้งซ่อม";
     $include_module = "module/module_maintenance_list/frm_add-edit.inc.php";
     $module=="site" ? ($active_createrequest="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_createrequest=""); #ไฮไลท์เมนูด้านซ้าย
+  break;
+
+  case 'requestlist':
+    $title_site = "ใบแจ้งซ่อมทั้งหมด"; $title_act = "ใบแจ้งซ่อมทั้งหมด"; $breadcrumb_txt = "ใบแจ้งซ่อมทั้งหมด";
+    $include_module = "module/module_maintenance_list/list.inc.php";
+    $module=="requestlist" ? ($active_requestlist="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestlist=""); #ไฮไลท์เมนูด้านซ้าย    
   break;
 
   case 'requestid':
@@ -389,12 +397,14 @@ $obj = new CRUD();
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item"><a href="./" class="nav-link <?PHP echo $active_dashbord;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
-        <li class="nav-item"><a href="?module=requestid&id=1" class="nav-link <?PHP echo $active_requestid;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ใบแจ้งซ่อม</p></a></li>
+        <li class="nav-item"><a href="?module=requestlist" class="nav-link <?PHP echo $active_requestlist;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ใบแจ้งซ่อม</p></a></li>
+        <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4){ ?>
         <li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>
-        <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-wrench"></i> <p>ใบแจ้งซ่อมของคุณ</p></a></li>
+        <?PHP } ?>
+        <?PHP if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4){ ?>
         <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p></a></li>
+        <?PHP } ?>
         <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>
-
         <?PHP if($_SESSION['sess_class_user']==4){?>
         <li class="nav-item <?PHP echo $active_treeview_1; ?>"><!--ถ้าจะให้เปิดใส่คลาส menu-open-->
             <a href="#" class="nav-link"><i class="nav-icon fas fa-sitemap"></i><p>จัดการระบบ<i class="right fas fa-angle-left"></i></p></a>
