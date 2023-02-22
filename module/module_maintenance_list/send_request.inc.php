@@ -41,7 +41,9 @@
         //id_maintenance_request, maintenance_request_no, ref_id_dept, mt_request_date, ref_id_user_request, ref_id_machine_site, ref_id_mt_type, status_approved, ref_id_user_approver, allotted_date, allotted_accept_date, related_to_safty, problem_statement, ref_id_job_type, urgent_type, outsource_service_status, caused_by_os, ref_id_user_approve_os, duration_serv_start, duration_serv_end, estimate_hand_over_date, hand_over_date, ref_id_user_hand_over, cause_mt_request_cancel, maintenance_request_status
         $insertRow = [
             'maintenance_request_no' => ($maintenance_request_no),
-            'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : '',
+            'ref_id_dept_request' => $_SESSION['sess_id_dept'],
+            'ref_id_site_request' => $_SESSION['sess_ref_id_site'],
+            'ref_id_dept_responsibility' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : '',
             'mt_request_date' => (date('Y-m-d H:i:s')),
             'ref_id_user_request' => ($_SESSION['sess_id_user']),
             'ref_id_machine_site' => (!empty($_POST['ref_id_machine_site'])) ? $_POST['ref_id_machine_site'] : '',

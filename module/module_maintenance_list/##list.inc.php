@@ -47,7 +47,59 @@ for($i=14;$i<=500;$i++){
 
     <div class="card-body">
       <div class="row">
-      <div class="col-sm-12 p-0 m-0">      
+      <div class="col-sm-12 p-0 m-0">
+
+      <div class="card">
+            <div class="card-body">
+            <form id="clear">
+                <div class="row">
+
+                  
+                  <!--Job-->
+                  <div class="col-md-2 pl-1">
+                        <div class="form-group">
+                            <label>Job</label>
+                            <select name="JobID" class="form-control JobID">
+                                    <option>All</option>
+                                    <option>student</option>
+                                    <option>teacher</option>
+                                    <option>drive</option>
+                            </select>
+                            </div>
+                      </div>
+                  
+                  <!--Age-->
+                  <div class="col-md-2 pl-1">
+                        <div class="form-group" id="filter_col2" data-column="2">
+                            <label>Age</label>
+                            <input type="text" name="Age" class="form-control column_filter" id="col2_filter" placeholder="Age">
+                        </div>
+                    </div>
+                  
+                  <!--From-->
+                    <div class="col-md-2 pl-1">
+                        <div class="form-group" id="filter_col3" data-column="3">
+                            <label>From</label>
+                            <input type="text" name="From" class="form-control column_filter date-range-filter datepicker" id="col3_filter" placeholder="mm/dd/YY">
+                        </div>
+                    </div>
+                  
+                  <!--TO-->
+                  <div class="col-md-2 pl-1">
+                        <div class="form-group" id="filter_col3" data-column="3">
+                            <label>To</label>
+                            <input type="text" name="To" class="form-control column_filter" id="col3_filter" placeholder="mm/dd/YY">
+                        </div>
+                    </div>
+                </div>
+              
+                </form>
+                <div class="text-center">
+                <a class="btn btn-success btn-sm " href="#"><i class="fa fa-filter "></i> Filter</a>
+                    <Button type="button" class="btn btn-secondary btn-sm "> Clear Filter</Button>
+                </div>
+            </div>
+        </div>      
     
     <table id="example1" class="table table-bordered table-hover dataTable dtr-inline"><!---->
       <thead>
@@ -128,6 +180,26 @@ $(document).on('change','.JobID',function(){
         async: false,
         cache: false,
       },  
+
+      initComplete: function (settings, json) {
+        // Add select filter
+        $('#example1_length').append('<label>&nbsp; App ID:</label>');
+        $('#example1_length').append('<select class="form-control input-sm"  id="am_aplicacion_id"></select>');
+        am_aplicacion_ids = [{0: 'All Apps'}, {"Notebook": 'Notebook'}, {"Car Lift (รถแฮนด์ลิฟท์)": 'Car Lift (รถแฮนด์ลิฟท์)'}];
+        for (var key in am_aplicacion_ids) {
+            var obj = am_aplicacion_ids[key];
+            for (var prop in obj) {
+                if (obj.hasOwnProperty(prop)) {
+                    $('#am_aplicacion_id').append('<option value="' + prop + '">' + obj[prop] + '</option>');
+                }
+            }
+        }
+          // Filter results on select change
+          $('#am_aplicacion_id').on('change', function () {
+            //oTable.DataTable().ajax.reload();
+            //oTable.columns(5).search($(this).val()).draw();
+        });
+    },
       "paging": true,
       "lengthChange": true, //ออฟชั่นแสดงผลต่อหน้า
       "pagingType": "simple_numbers",

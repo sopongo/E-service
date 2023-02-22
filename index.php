@@ -54,12 +54,12 @@ switch($module){
   break;
 
   case 'requestid':
-    $rowData = $obj->customSelect("SELECT tb_maintenance_request.*, tb_maintenance_type.name_mt_type, tb_dept_responsibility.dept_initialname AS dept_responsibility,
+    $rowData = $obj->customSelect("SELECT tb_maintenance_request.*, tb_maintenance_type.name_mt_type, tb_maintenance_request.ref_id_dept_responsibility AS id_dept_responsibility, tb_dept_responsibility.dept_initialname AS dept_responsibility,
     tb_user_request.no_user, tb_user_request.email, tb_user_request.fullname, tb_user_request.ref_id_dept AS ref_id_dept_request, tb_user_dept_request.dept_initialname AS dept_user_request,
     tb_user_cancel.fullname AS cancel_fullname, tb_user_approved.fullname AS approved_fullname
     FROM tb_maintenance_request  
     LEFT JOIN tb_maintenance_type ON (tb_maintenance_type.id_mt_type=tb_maintenance_request.ref_id_mt_type)
-    LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept)
+    LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
     LEFT JOIN tb_user AS tb_user_request ON (tb_user_request.id_user=tb_maintenance_request.ref_id_user_request)    
     LEFT JOIN tb_user AS tb_user_cancel ON (tb_user_cancel.id_user=tb_maintenance_request.ref_id_user_cancel)    
     LEFT JOIN tb_user AS tb_user_approved ON (tb_user_approved.id_user=tb_maintenance_request.ref_id_user_approver) 
@@ -79,7 +79,8 @@ switch($module){
     if($rowData['id_maintenance_request']!=$id){
       header('location:./');
     }else{
-      if($rowData['ref_id_user_request']==$_SESSION['sess_id_user'] || $rowData['ref_id_dept_request']==$_SESSION['sess_id_dept'] || $_SESSION['sess_class_user']==4){#001
+      //|| $rowData['ref_id_dept']==$_SESSION['sess_id_dept']
+      if($rowData['ref_id_dept_request']==$_SESSION['sess_id_dept'] || $rowData['ref_id_user_request']==$_SESSION['sess_id_user'] || $_SESSION['sess_class_user']==4){#001
         $denied_requestid = 1;
         $include_module = "module/module_maintenance_list/view.inc.php";
         $title_site = "".$rowData['maintenance_request_no'].""; $title_act = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no'].""; $breadcrumb_txt = "".$rowData['maintenance_request_no']."";

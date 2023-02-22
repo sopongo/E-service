@@ -1,7 +1,5 @@
     <!-- Main content -->
     <section class="content">
-
-
     
     <?PHP 
     if($_SESSION['sess_no_user']==null || $_SESSION['sess_id_dept']==0){ ?>
@@ -32,7 +30,7 @@
 
     $Row = $obj->customSelect("SELECT * FROM tb_user WHERE id_user=".$_SESSION['sess_id_user']."");
 
-    //echo "-------------";    echo $Row['ref_dept'];    echo "-------------";
+    //echo "-------------";    echo $Row['ref_id_dept'];    echo "-------------";
     ?>
 
     <!--FORM 1-->
@@ -79,14 +77,14 @@
                                 <div class="row col-lg-12">
                                 <div class="col-sm-4 col-md-4 col-xs-12">  
                                     <div class="form-group">  
-                                        <label for="ref_dept">แผนก</label>  
-                                        <select class="custom-select" name="ref_dept" required>  
+                                        <label for="ref_id_dept">แผนก</label>  
+                                        <select class="custom-select" name="ref_id_dept" required>  
                                             <option value="" >เลือกแผนก</option>  
                                             <?PHP
                                             $rowData = $obj->fetchRows("SELECT * FROM tb_dept WHERE dept_status=1 ORDER BY id_dept ASC");
                                             if (count($rowData)!=0) {
                                                 foreach($rowData as $key => $value) {
-                                                    echo '<option '.($Row['ref_dept']==$key+1 ? "selected" : "").' value="'.($key+1).'">'.$rowData[$key]['initial_name'].'</option>';
+                                                    echo '<option '.($Row['ref_id_dept']==$key+1 ? "selected" : "").' value="'.($key+1).'">'.$rowData[$key]['dept_name'].' ('.$rowData[$key]['dept_initialname'].')</option>';
                                                 }
                                             } 
                                             ?>
@@ -107,15 +105,14 @@
                                 <div class="col-sm-5 col-md-12 col-xs-1">  
                                     <div class="form-group m-0 p-0">  
                                         <label>ไซต์งานที่ใช้</label>                                          
-                                     </div>
-
+                                     </div> 
                                       <?PHP
-                                        $rowData = $obj->fetchRows("SELECT * FROM tb_location WHERE status_location=1 ORDER BY id_location ASC");
+                                        $rowData = $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY id_site ASC");
                                         if (count($rowData)!=0) {
                                             foreach($rowData as $key => $value) {
                                               echo '<div class="form-check-inline"><div class="custom-control custom-radio ">';
-                                              echo '<input type="radio" '.($Row['ref_id_location']==$key+1 ? 'checked' : '').' class="custom-control-input" id="location_'.($key+1).'" name="ref_id_location" value="'.($key+1).'" aria-describedby="inputGroupPrepend" required>  
-                                              <label class="custom-control-label" for="location_'.($key+1).'">'.$rowData[$key]['location_short'].'</label>  ';
+                                              echo '<input type="radio" '.($Row['ref_id_site']==$key+1 ? 'checked' : '').' class="custom-control-input" id="location_'.($key+1).'" name="ref_id_site" value="'.($key+1).'" aria-describedby="inputGroupPrepend" required>  
+                                              <label class="custom-control-label" for="location_'.($key+1).'">'.$rowData[$key]['site_initialname'].'</label>  ';
                                               //if($key==1){echo '<div class="invalid-feedback">เลือกส่วนงานที่ใช้</div>';}
                                               echo '</div></div>';
                                             }

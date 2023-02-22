@@ -1,9 +1,11 @@
 <?PHP
+ob_start();
+session_start();
+header('Content-Type: text/html; charset=utf-8');
 require_once '../../include/class_crud.inc.php';
 require_once '../../include/setting.inc.php';
 require_once '../../include/function.inc.php';
 $obj = new CRUD();
-
 
 //EX.tb_maintenance_request
 //id_maintenance_request, status_approved, status_approved, id_maintenance_request
@@ -21,14 +23,14 @@ $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 
 $search = $_POST["search"]["value"];
 
-$slt_search = $_POST["slt_search"];
-$keyword = $_GET["keyword"];
+//$slt_search = $_POST["slt_search"];
+//$keyword = $_GET["keyword"];
 
 $query_search = "";
-if(!empty($search[0])){
-    $query_search = " WHERE (status_approved LIKE '%".$search."%' OR status_approved LIKE '%".$search."%') ";
+if(!empty($search)){
+    $query_search = " AND (tb_machine_master.name_machine LIKE '%".$search."%' OR tb_maintenance_request.maintenance_request_no LIKE '%".$search."%') ";
 }else{
-    $query_search = " ";
+    $query_search = "";
 }
 
 if($_POST["start"]==0){
@@ -38,14 +40,13 @@ if($_POST["start"]==0){
 }
 $start = ($_POST["start"]-1)*$_POST['length'];
 
-
 empty($_POST['order']['0']['column']) ? $_POST['order']['0']['column']=0 : $_POST['order']['0']['column'];
 //empty($_POST['order']['0']['dir']) ? $_POST['order']['0']['dir']='desc' : $_POST['order']['0']['dir']='';
 
 $colunm_sort = array( //ใช้เรียงข้อมูล
     0=> "tb_maintenance_request.id_maintenance_request",
     1=> "tb_maintenance_request.id_maintenance_request",
-    2=> "tb_maintenance_request.maintenance_request_no ",
+    2=> "tb_maintenance_request.maintenance_request_no",
     3=> "tb_maintenance_request.mt_request_date",
     4=> "tb_machine_site.code_machine_site",
     5=> "tb_machine_master.name_machine",
@@ -60,25 +61,56 @@ $orderBY = $colunm_sort[$_POST['order']['0']['column']];
 
 $arrData = array();	
 
-$numRow = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request ".$query_search." ");    //ถ้าจำนวน Row ทั้งหมด
+$_SESSION['sess_class_user']!=4 ? $query_class = ' WHERE tb_dept_responsibility.id_dept='.$_SESSION['sess_id_dept'].'' : $query_class = '';
 
-$fetchRow = $obj->fetchRows("SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
-tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine
-FROM tb_maintenance_request 
-LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
-LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
-LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)      
-LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept)
-".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
+//AND tb_dept_responsibility.id_dept= '.$_SESSION['sess_id_dept']
+switch($_SESSION['sess_class_user']){
+    case 1: ##ถ้าระดับผู้ใช้งานเท่ากับ 0,1 (ผู้ใช้ระบบ) จะดูได้แค่ใบแจ้งซ่อมของตัวเอง และของแผนกตัวเอง
+    case 0:
+    default:
+        $sql_fetchRow = "SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
+        tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine FROM tb_maintenance_request 
+        LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
+        LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+        LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)             
+        LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) WHERE tb_maintenance_request.ref_id_dept_request=".$_SESSION['sess_id_dept']." ".$query_search;
+        //$query_class.' '.$query_search ".$query_class.' '.$query_search." 
+        //$sql_numRow = "SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request ";
+        $fetchRow = $obj->fetchRows($sql_fetchRow." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."");
+        $numRow = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
+        LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
+        LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+        LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)             
+        LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) WHERE tb_maintenance_request.ref_id_dept_request=".$_SESSION['sess_id_dept']." ".$query_search);    //ถ้าจำนวน Row ทั้งหมด
+    break;
+    case 2: ##ถ้าระดับผู้ใช้งานเท่ากับ 2 (ช่างซ่อม) จะดูได้แค่ 1.ใบแจ้งซ่อมของตัวเอง 2.ใบแจ้งซ่อมของแผนกตัวเอง 
+    break;
+    case 3: ##ถ้าระดับผู้ใช้งานเท่ากับ 3 (หัวหน้าช่างซ่อม) จะดูได้แค่ 1.ใบแจ้งซ่อมของตัวเอง 2.ใบแจ้งซ่อมของแผนกตัวเอง 
+    break;
+    case 4: ##ถ้าระดับผู้ใช้งานเท่ากับ 4 (ผู้จัดการระบบ) ดูได้ทั้งหมด
+        $sql_fetchRow = "SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
+        tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine FROM tb_maintenance_request 
+        LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
+        LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+        LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)             
+        LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) WHERE tb_maintenance_request.maintenance_request_status!=0 $query_search ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ";
+        //$query_class.' '.$query_search
+        $fetchRow = $obj->fetchRows($sql_fetchRow);
+        //$sql_numRow = "SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request ";
+        //$numRow = $obj->getCount($sql_numRow);    //ถ้าจำนวน Row ทั้งหมด
+        $numRow = count($fetchRow);
+    break;
+}
 
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
-
+//ref_id_user_request
 //id_maintenance_request, status_approved, status_approved, id_maintenance_request
 if (count($fetchRow)>0) {
     $No = ($numRow-$_POST['start']);
     foreach($fetchRow as $key=>$value){
         $dataRow = array();
         $dataRow[] = $No.'.';
+        //$dataRow[] = $No.'.'.(count($fetchRow)).'---'.$search.'--------'.$query_class.'-------------'.$query_search.$fetchRow[$key]['dept_request'];
         $dataRow[] = ($fetchRow[$key]['maintenance_request_no']=='' ? '-' : $fetchRow[$key]['maintenance_request_no']); //.'----'.$slt_search.'-------'.$keyword
         $dataRow[] = ($fetchRow[$key]['mt_request_date']=='' ? '-' : shortDateEN($fetchRow[$key]['mt_request_date']));
         $dataRow[] = ($fetchRow[$key]['code_machine_site']=='' ? '-' : $fetchRow[$key]['code_machine_site']);
@@ -88,8 +120,7 @@ if (count($fetchRow)>0) {
         $dataRow[] = ($fetchRow[$key]['ref_id_job_type']=='' ? '-' : $ref_id_job_typeArr[$fetchRow[$key]['ref_id_job_type']]);
         $dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : mb_substr($fetchRow[$key]['problem_statement'],0,30,"utf8"));
         $dataRow[] = ($fetchRow[$key]['status_approved']=='' ? '-' : $fetchRow[$key]['status_approved']);
-        $dataRow[] = '<button type="button" class="btn btn-success btn-sm view-data" data-id="'.$fetchRow[$key]['id_maintenance_request'].'" data-toggle="modal"  id="viewData" data-backdrop="static" data-keyboard="false" title="ดูข้อมูล"><i class="fa fa-file-alt"></i></button>
-        <button type="button" class="btn btn-warning btn-sm edit-data" data-id="'.$fetchRow[$key]['id_maintenance_request'].'" data-toggle="modal" id="edit-data" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button>';
+        $dataRow[] = '<a class="btn btn-success btn-sm" href="?module=requestid&id='.$fetchRow[$key]['id_maintenance_request'].'" id="viewData"  title="ดูข้อมูล" target="_blank"><i class="fa fa-file-alt"></i></a> '; //<a class="btn btn-warning btn-sm" href="?module=requestedit&id='.$fetchRow[$key]['id_maintenance_request'].'" id="viewData"  title="แก้ไขข้อมูล" target="bank"><i class="fa fa-pencil-alt"></i></a>
         $arrData[] = $dataRow;
         $No--;
     }

@@ -18,7 +18,6 @@
     echo "<pre>";    print_r($_FILES);    echo "</pre>";
     die();
 */
-
     if ($action=='update-result') {    
     ?>
 <form id="needs-validation" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
@@ -73,6 +72,43 @@
 sa asd sdsfad sfad fsda sfdasfad fsda fsd fsdaasfd
 <?PHP 
     } 
+    if ($action=='update_problem_statement') {
+        $Row = $obj->customSelect("SELECT * FROM tb_maintenance_request WHERE id_maintenance_request=".$ref_id."");
+?>
+    <form id="needs-validation_2" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+    <div class="container">
+        <div class="row">
+        <div class="offset-md-0 col-md-12 offset-md-0">  
+            <div class="card">  
+                <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p> <span class="float-right editby"></span></div>
+                <div class="card-body p-3">
+                    <!--ajax data hear-->
+                    <div class="row row-4">
+                        <div class="col-sm-12 col-md-12 col-xs-12">  
+                            <div class="form-group">  
+                                <label for="problem_statement"><span class="text-red font-size-sm"></span> ผู้อัพเดท:</label> <?PHP echo $_SESSION['sess_fullname']; ?>
+                            </div>
+                        </div>
+                    </div><!--row-4-->
+                    <div class="row row-5">
+                        <div class="col-sm-12 col-md-12 col-xs-12">  
+                            <div class="form-group">  
+                                <label for="problem_statement">อาการเสีย/ปัญหาที่พบ:<span class="text-red font-size-sm">**</span></label>  
+                                <textarea class="form-control" rows="5" id="problem_statement" name="problem_statement" placeholder="Enter ..." required><?PHP echo $Row['problem_statement'];?></textarea>
+                                <input type="hidden" name="action" id="action" value="xxxxxxxxxxxxxx" />
+                                <input type="hidden" name="ref_id" id="ref_id" value="<?PHP echo $ref_id; ?>" />
+                                <div class="invalid-feedback">กรอกสาเหตุการยกเลิก</div>
+                            </div>
+                        </div>
+                    </div><!--row-5-->
+                </div><!--card-body-->
+            </div><!--card-->
+        </div>                
+        </div><!--row-->
+    </div><!--container-->
+    </form><!--FORM 1-->
+<?PHP
+    }    
     if($action=='approved'){
 ?>
 
@@ -99,10 +135,10 @@ sa asd sdsfad sfad fsda sfdasfad fsda fsd fsdaasfd
 <!-- Select2 -->
 <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
 <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">                            
-            <label>ผู้รับผิดชอบงานซ่อม:</label>
+            <label>ผู้รับผิดชอบงานซ่อม<?PHP echo $_POST['id_dept_responsibility'];?>:</label>
             <select class="select2_mechanic" name="slt_select2_mechanic" id="slt_select2_mechanic" multiple="multiple" data-placeholder="Select a State" style="width: 100%;">
             <?PHP
-                $rowMechanic = $obj->fetchRows("SELECT id_user, fullname FROM tb_user WHERE ref_id_dept=13 ORDER BY fullname ASC");
+                $rowMechanic = $obj->fetchRows("SELECT id_user, fullname FROM tb_user WHERE ref_id_dept=".$_POST['id_dept_responsibility']." AND (class_user=2 OR class_user=3 OR class_user=4) ORDER BY fullname ASC");
                 if (count($rowMechanic)!=0) {
                     foreach($rowMechanic as $key => $value) {
                         echo '<option value="'.$rowMechanic[$key]['id_user'].'">'.$rowMechanic[$key]['fullname'].'</option>';

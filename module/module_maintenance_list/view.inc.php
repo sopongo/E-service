@@ -33,7 +33,8 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
   include_once 'module/module_maintenance_list/frm_approved.inc.php'; #หน้าอนุมัติ,จ่ายงานซ่อม
   include_once 'module/module_maintenance_list/frm_update_result.inc.php'; #หน้าอัพเดทผลการซ่อม
   include_once 'module/module_maintenance_list/frm_cancel.inc.php'; #หน้ายกเลิกใบแจ้งซ่อม
-  include_once 'module/module_maintenance_list/frm_maintenance_type.inc.php'; #หน้ายกเลิกใบแจ้งซ่อม
+  include_once 'module/module_maintenance_list/frm_maintenance_type.inc.php'; #อัพเดทประเภทใบแจ้งซ่อม
+  include_once 'module/module_maintenance_list/frm_problem_statement.inc.php'; #อัพเดทประเภทใบแจ้งซ่อม
 
   
   ##ลิงค์โค๊ดส่วนที่ 1
@@ -234,7 +235,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <!-- /.col -->
               </div>
               
-              <div class="card-title d-block text-bold w-100 border-bottom pb-1 mt-3 mb-2"><i class="fas fa-users-cog"></i> ผู้รับผิดชอบงานซ่อม: <?PHP if($rowData['status_approved']==1){?><button type="button" class="btn btn-default btn-sm update_result" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> เปลี่ยน-เพิ่ม ผู้รับผิดชอบ</button><?PHP } ?></div><br>
+              <div class="card-title d-block text-bold w-100 border-bottom pb-1 mt-3 mb-2"><i class="fas fa-users-cog"></i> ผู้รับผิดชอบงานซ่อม: <?PHP if($rowData['status_approved']==1){?><button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> เปลี่ยน-เพิ่ม ผู้รับผิดชอบ</button><?PHP } ?></div><br>
               <div class="row invoice-info linehi-170">
                 <?PHP if($rowData['status_approved']!=1){?>
                   <div class="col-sm-4 invoice-col">
@@ -275,7 +276,9 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div><!-- /.col -->                
 
                 <div class="col-sm-12 mt-3 ">
-                <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2 text-red"><i class="fas fa-info-circle"></i> อาการเสีย/ปัญหาที่พบ: <button type="button" class="btn btn-default btn-sm update_result" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button></div><br>
+                <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2 text-red"><i class="fas fa-info-circle"></i> อาการเสีย/ปัญหาที่พบ: 
+                <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1){ ?>
+                <button type="button" class="btn btn-default btn-sm btn-problem_statement"  data-toggle="modal" data-target="#modal-problem_statement" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>
                     <p class="problem_statement"><?PHP echo $rowData['problem_statement'];?></p>
                 </div><!-- /.col -->                
               </div><!-- /.row -->
@@ -293,7 +296,8 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div>
               </div><!-- /.row -->
               
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-clipboard-check"></i> สรุปผลการซ่อม: <button type="button" class="btn btn-default btn-sm update_result" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-clipboard-check"></i> สรุปผลการซ่อม: 
+              <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1){ ?><button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">รหัสอาการเสีย:</strong> MySQL_Val<br>
@@ -305,8 +309,8 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div><!-- /.col -->
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i>
- อัพเดท</button></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1){ ?><button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i>
+ อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">สาเหตุที่ส่งซ่อม:</strong> MySQL_Val<br>
@@ -318,8 +322,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div><!-- /.col -->                
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i>
- อัพเดท</button></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1){ ?><button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
                 <!-- Table row -->
                 <div class="row">
                 <div class="col-12 table-responsive">
@@ -350,8 +353,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               </div>                
                 <!-- /Table row -->
               
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i>
- อัพเดท</button></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1){ ?><button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
               <div class="row invoice-info">
               <div class="row">
                 <?PHP for($i=1; $i<=6; $i++){?>
@@ -364,8 +366,8 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div>
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-chart-bar"></i> ประเมินผลการซ่อม (จป., ผู้แจ้งซ่อม): <button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i>
- อัพเดท</button></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-chart-bar"></i> ประเมินผลการซ่อม (จป., ผู้แจ้งซ่อม): <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1){ ?><button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i>
+ อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-4 invoice-col">
                     <strong class="d-inline-block w-50">Title_Wait:</strong> MySQL_Val<br>
@@ -535,12 +537,32 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 
 <script>
 
+$(document).on("click", ".btn-problem_statement", function (e){ 
+  e.stopPropagation();
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"update_problem_statement","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>},
+      beforeSend: function () {
+      },
+      success: function (data) {
+          $(".modal-update_problem_statement").html(data);
+          console.log(data);
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });
+});
+
 $(document).on("click", ".btn-update-type", function (e){ 
   e.stopPropagation();
   $.ajax({
       url: "module/module_maintenance_list/update_result.inc.php",
       type: "POST",
-      data:{"action":"update_type","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>, "ref_mt_type":<?PHP echo $rowData['ref_id_mt_type']; ?>, "ref_id_dept":<?PHP echo $rowData['ref_id_dept']; ?>},
+      data:{"action":"update_type","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>, "ref_mt_type":<?PHP echo $rowData['ref_id_mt_type']; ?>, "ref_id_dept":<?PHP echo $rowData['ref_id_dept_responsibility']; ?>},
       beforeSend: function () {
       },
       success: function (data) {
@@ -555,13 +577,12 @@ $(document).on("click", ".btn-update-type", function (e){
   });
 });
 
-
 $(document).on("click", ".btn-approved", function (e){
     e.stopPropagation();
   $.ajax({
       url: "module/module_maintenance_list/update_result.inc.php",
       type: "POST",
-      data:{"action":"approved","ref_id":<?PHP echo $rowData['id_maintenance_request']?>},
+      data:{"action":"approved","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"id_dept_responsibility":<?PHP echo $rowData['id_dept_responsibility']?>},
       beforeSend: function () {
       },
       success: function (data) {

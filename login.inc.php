@@ -211,7 +211,7 @@ $(document).ready(function () { //When the page has loaded
       $_SESSION['sess_id_user'] = $fetchRow[0]['id_user'];
       $_SESSION['sess_no_user'] = $fetchRow[0]['no_user'];
       $_SESSION['sess_email'] = $fetchRow[0]['email'];
-      $_SESSION['sess_id_location'] = $fetchRow[0]['ref_id_location'];
+      $_SESSION['sess_ref_id_site'] = $fetchRow[0]['ref_id_site'];
       $_SESSION['sess_location_name'] = $fetchRow[0]['location_name'];
       $_SESSION['sess_fullname'] = $fetchRow[0]['fullname'];
       $_SESSION['sess_class_user'] = $fetchRow[0]['class_user'];
@@ -221,6 +221,13 @@ $(document).ready(function () { //When the page has loaded
       //$_SESSION['sess_dept_initialname'] = 'PCS';
       $_SESSION['sess_status_user'] = $fetchRow[0]['status_user'];
       $_SESSION['sess_popup_howto'] = 0;
+
+      $fetchPermission= $obj->fetchRows("SELECT tb_permission.* FROM tb_permission WHERE ref_class_user=".$fetchRow[0]['class_user']."");
+      foreach($fetchPermission as $key=>$value){
+        $_SESSION['module_access'] =  $fetchPermission[$key]['module_name'].'-'.$fetchPermission[$key]['accept_denied'];
+        //$fetchPermission[$key]['module_name']
+      }
+
     ?>
     <script type="text/javascript">
       //$.cookie("showHowto", "show");    

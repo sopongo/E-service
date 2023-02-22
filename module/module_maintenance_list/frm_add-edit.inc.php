@@ -129,7 +129,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                                     </div>
                                     <div class="ml-5 icheck-success d-inline">
                                     <input type="radio" id="radioPrimary2" name="ref_id_job_type" value="2">
-                                    <label for="radioPrimary2">ช่างซ่อมเอง</label>
+                                    <label for="radioPrimary2">ช่างแจ้งซ่อมเอง</label>
                                     </div>
                             </div>
                         </div><!--row-7-->
