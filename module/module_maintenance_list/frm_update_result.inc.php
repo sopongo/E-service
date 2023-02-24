@@ -8,7 +8,9 @@
         </button>
     </div>
     <div class="modal-body-update-result p-0 py-2">
-
+    <?PHP
+    
+    ?>
     </div><!--modal-body-->
     <div class="modal-footer justify-content-between">
         <!--<input type="submit" class="btn btn-primary btn-submit btn-success" value="อัพเดท" />-->

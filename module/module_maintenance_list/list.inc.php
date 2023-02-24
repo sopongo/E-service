@@ -25,6 +25,7 @@ for($i=14;$i<=500;$i++){
 .dropdown-menu{  /*left:-70px;*/}
 .dropdown-menu a.dropdown-item{  font-size:0.85rem; /* 40px/16=2.5em */ }
 
+
 </style>
 
 <!-- Main content -->

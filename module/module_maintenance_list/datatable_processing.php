@@ -83,10 +83,28 @@ switch($_SESSION['sess_class_user']){
         LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)             
         LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) WHERE tb_maintenance_request.ref_id_dept_request=".$_SESSION['sess_id_dept']." ".$query_search);    //ถ้าจำนวน Row ทั้งหมด
     break;
+
     case 2: ##ถ้าระดับผู้ใช้งานเท่ากับ 2 (ช่างซ่อม) จะดูได้แค่ 1.ใบแจ้งซ่อมของตัวเอง 2.ใบแจ้งซ่อมของแผนกตัวเอง 
     break;
+
     case 3: ##ถ้าระดับผู้ใช้งานเท่ากับ 3 (หัวหน้าช่างซ่อม) จะดูได้แค่ 1.ใบแจ้งซ่อมของตัวเอง 2.ใบแจ้งซ่อมของแผนกตัวเอง 
+        $sql_fetchRow = "SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
+        tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine FROM tb_maintenance_request 
+        LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
+        LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+        LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)             
+        LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) WHERE tb_maintenance_request.ref_id_dept_request=".$_SESSION['sess_id_dept']." ".$query_search;
+        //$query_class.' '.$query_search ".$query_class.' '.$query_search." 
+        //$sql_numRow = "SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request ";
+        $fetchRow = $obj->fetchRows($sql_fetchRow." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."");
+        $numRow = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
+        LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
+        LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+        LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)
+        LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) WHERE tb_maintenance_request.ref_id_dept_request=".$_SESSION['sess_id_dept']." ".$query_search);    //ถ้าจำนวน Row ทั้งหมด
+
     break;
+
     case 4: ##ถ้าระดับผู้ใช้งานเท่ากับ 4 (ผู้จัดการระบบ) ดูได้ทั้งหมด
         $sql_fetchRow = "SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
         tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine FROM tb_maintenance_request 

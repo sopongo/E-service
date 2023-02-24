@@ -387,7 +387,7 @@ $obj = new CRUD();
         </div>
         <div class="info">
           <a href="#" class="d-block"><?PHP echo $_SESSION['sess_fullname'];?></a>
-          <span class="text-white">ระดับ: <?PHP echo $classUserArr[$_SESSION['sess_class_user']]; ?></span>
+          <span class="text-white">ระดับ: <?PHP echo $classArr[$_SESSION['sess_class_user']]; ?></span>
           <a href="?module=profile" class="d-block text-yellow">[แก้ไขข้อมูลส่วนตัว]</a>
         </div>
       </div>
@@ -427,7 +427,7 @@ $obj = new CRUD();
           <li class="nav-item"><a href="?module=system-setting" class="nav-link"><i class="nav-icon fas fa-cog"></i> <p>ตั้งค่าระบบ</p></a></li>
           
           <!--<li class="nav-item"><a href="?module=tabview" class="nav-link <?PHP echo $active_tabview; ?>"><i class="fas fa fa-bars nav-icon"></i> <p> TAB View</p></a></li>-->
-          <li class="nav-item"><a href="?module=qrscaner" class="nav-link <?PHP echo $active_qrscaner; ?>"><i class="fas fa fa-qrcode nav-icon"></i> <p> QR Scanner</p></a></li>
+          <!--<li class="nav-item"><a href="?module=qrscaner" class="nav-link <?PHP echo $active_qrscaner; ?>"><i class="fas fa fa-qrcode nav-icon"></i> <p> QR Scanner</p></a></li>-->
           <!--<li class="nav-item"><a href="?module=datatable" class="nav-link <?PHP echo $active_datatable; ?>"><i class="fas fa fa-table nav-icon"></i> <p> Datatable</p></a></li>-->
         <?PHP } ?>
           <li class="nav-item"><a href="?module=logout" class="nav-link"><i class="nav-icon fas fa-sign-out-alt"></i><p> ออกจากระบบ</p></a></li>          

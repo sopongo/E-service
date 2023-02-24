@@ -3,6 +3,8 @@ switch($denied_requestid){
   case 1:
 ?>
 <style type="text/css">
+.btn-gray {    color: #333;    background-color: #e7e7e7;    border-color: #e3e3e3;    box-shadow: none;}
+.btn-gray:hover {    background-color: #cccccc;}
 .bg-pcs{ background-color:#00387C;} 
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {    background-color: #00387C;}
@@ -43,8 +45,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
     LEFT JOIN tb_user ON (tb_user.id_user=tb_ref_repairer.ref_id_user_repairer) WHERE tb_ref_repairer.ref_id_maintenance_request=".$rowData['id_maintenance_request']." ORDER BY tb_ref_repairer.id_ref_repairer ASC");
     ##เช็คว่าไอดีใน $_SESSION['sess_id_user'] ตรงกับ $rowMechanic ถ้าตรงจะแสดงปุ่มรับงาน-ปฏิเสธ
     $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user'));
-  }
-  
+  }  
 ?>
 
 <!-- Main content -->
@@ -73,11 +74,16 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
             <!-- Profile Image -->
             <div class="card card-main card-primary card-outline position-relative ">
 
-                <?PHP if($rowData['status_approved']==NULL && $rowData['maintenance_request_status']!==2 && $_SESSION['sess_class_user']==1){?>
+                <?PHP if($rowData['status_approved']==NULL && $rowData['maintenance_request_status']!==2){?>
                   <div class="ribbon-wrapper ribbon-lg">
                   <div class="ribbon bg-warning text-lg">รออนุมัติ</div>
                 </div>
-                  <?PHP } ?>                  
+                  <?PHP } ?>
+                  <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']==''){?>
+                  <div class="ribbon-wrapper ribbon-lg">
+                  <div class="ribbon bg-warning text-lg">รอรับงาน</div>
+                </div>
+                  <?PHP } ?>
                 <?PHP if($rowData['maintenance_request_status']==2){?>
                 <div class="ribbon-wrapper ribbon-lg">
                   <div class="ribbon bg-danger text-lg">ยกเลิก</div>
@@ -86,10 +92,10 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               <div class="card-body box-profile">
 
                 <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle" src="dist/img/mt_request/repair-workshop-icon-png-2907.png" alt="User profile picture">
+                  <img class="profile-user-img img-fluid img-circle" src="dist/img/mt_request/icon_view.png" alt="User profile picture">
                 </div>
-                <h3 class="profile-username text-center">ผู้ซ่อม: Fullname</h3>
-                <p class="text-muted text-center">ตำแหน่ง: (Class User)</p>
+                <h3 class="profile-username text-center">สถานะการซ่อม: ???</h3>
+                <p class="text-muted text-center">วันที่อัพเดท: 00/00/0000</p>
 
                 <ul class="list-group list-group-unbordered mb-1">
                 <?PHP if($rowData['maintenance_request_status']==2){?>
