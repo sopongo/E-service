@@ -111,7 +111,6 @@ sa asd sdsfad sfad fsda sfdasfad fsda fsd fsdaasfd
     }    
     if($action=='approved'){
 ?>
-
     <form id="needs-validation_3" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
     <div class="container">
         <div class="row">
@@ -131,14 +130,15 @@ sa asd sdsfad sfad fsda sfdasfad fsda fsd fsdaasfd
                         <div class="col-sm-12 col-md-12 col-xs-12">  
                             <div class="form-group">
 
-
 <!-- Select2 -->
 <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
 <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">                            
-            <label>ผู้รับผิดชอบงานซ่อม<?PHP echo $_POST['id_dept_responsibility'];?>:</label>
+            <label>ผู้รับผิดชอบงานซ่อม<?PHP echo $ref_id;?> / <?PHP echo $_POST['id_dept_responsibility'];?>:</label>
             <select class="select2_mechanic" name="slt_select2_mechanic" id="slt_select2_mechanic" multiple="multiple" data-placeholder="Select a State" style="width: 100%;">
             <?PHP
-                $rowMechanic = $obj->fetchRows("SELECT id_user, fullname FROM tb_user WHERE ref_id_dept=".$_POST['id_dept_responsibility']." AND (class_user=2 OR class_user=3 OR class_user=4) ORDER BY fullname ASC");
+                ##เช็คว่ามีช่างซ่อม $ref_id นี้หรือยัง
+                //$chk_repairer = $obj->customSelect("SELECT * FROM tb_ref_repairer WHERE ref_id_maintenance_request=".$ref_id."");
+                $rowMechanic = $obj->fetchRows("SELECT id_user, fullname FROM tb_user WHERE ref_id_dept=".$_POST['id_dept_responsibility']." AND (class_user=2 OR class_user=3) ORDER BY fullname ASC");
                 if (count($rowMechanic)!=0) {
                     foreach($rowMechanic as $key => $value) {
                         echo '<option value="'.$rowMechanic[$key]['id_user'].'">'.$rowMechanic[$key]['fullname'].'</option>';
@@ -155,14 +155,28 @@ sa asd sdsfad sfad fsda sfdasfad fsda fsd fsdaasfd
 $(function () {
     //Initialize Select2 Elements
     $('.select2_mechanic').select2({
+        //tags: ["red", "green", "blue"],
+        /*data:[
+        {id:0,text:"enhancement"},
+        {id:1,text:"bug"},
+        {id:2,text:"duplicate"},
+        {id:3,text:"invalid"},
+        {id:4,text:"wontfix"},
+        {id:5,text:"thawatchai srichandaeng"},
+        ],*/
         theme: 'bootstrap4'
     });
+
+    //$('.select2_mechanic').val(['120','เอกนรินทร์ ทิชาชาติ']).trigger('change');
+    //$('.select2_mechanic').val(['green','blue']).trigger('change');
 
     //Initialize Select2 Elements
     $('.select2bs4').select2({
       theme: 'bootstrap4'
     });
 });    
+/*select2-selection__rendered select2-selection select2-selection--multiple*/
+//$('.select2').append('sdfsdfsfd')
 </script>
                             </div>
                         </div>
@@ -176,6 +190,123 @@ $(function () {
 <?PHP
         exit();
     }
+    if($action=='change-approved'){
+?>
+   <form id="needs-validation_3" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+    <div class="container">
+        <div class="row">
+        <div class="offset-md-0 col-md-12 offset-md-0">  
+            <div class="card">  
+                <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p> <span class="float-right editby"></span></div>
+                <div class="card-body p-3">
+                    <!--ajax data hear-->
+                    <div class="row row-4">
+                        <div class="col-sm-12 col-md-12 col-xs-12">  
+                            <div class="form-group">
+                                <label for="problem_statement"><span class="text-red font-size-sm"></span> ผู้แก้ไข:</label> <?PHP echo $_SESSION['sess_fullname']; ?>
+                            </div>
+                        </div>
+                    </div><!--row-4-->
+                    <div class="row row-5">
+                        <div class="col-sm-12 col-md-12 col-xs-12">  
+                            <div class="form-group">
+
+<!-- Select2 -->
+<link rel="stylesheet" href="plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">                            
+            <label>ผู้รับผิดชอบงานซ่อม<?PHP echo $ref_id;?> / <?PHP echo $_POST['id_dept_responsibility'];?>:</label>
+            <select class="select2_mechanic" name="slt_select2_mechanic" id="slt_select2_mechanic" multiple="multiple" data-placeholder="Select a State" style="width: 100%;">
+            <?PHP
+                ##เช็คว่ามีช่างซ่อม $ref_id นี้หรือยัง
+                $rowMechanic = $obj->fetchRows("SELECT tb_ref_repairer.*, tb_user.id_user, tb_user.fullname FROM tb_ref_repairer 
+                LEFT JOIN tb_user ON (tb_user.id_user=tb_ref_repairer.ref_id_user_repairer) WHERE tb_ref_repairer.ref_id_maintenance_request=".$ref_id." ");               
+                if (count($rowMechanic)!=0){
+                    $Mechanic = "";
+                    $id_user = array();
+                    $key = 0;
+                    foreach($rowMechanic as $key => $value) {
+                        $Mechanic.='"'.$rowMechanic[$key]['fullname'].'", ';
+                        $id_user[$key] = $rowMechanic[$key]['id_user'];
+                    }
+                }
+                ##คิวรี่ยูเซอร์ ช่าง,หัวหน้าช่างมาแสดง
+                $rowMechanic = $obj->fetchRows("SELECT id_user, fullname FROM tb_user WHERE ref_id_dept=".$_POST['id_dept_responsibility']." AND (class_user=2 OR class_user=3) ORDER BY fullname ASC");
+                if (count($rowMechanic)!=0) {
+                    foreach($rowMechanic as $key => $value) {
+                        if($rowMechanic[$key]['id_user'])
+                        //$xxxxxx = array_search($rowMechanic[$key]['id_user'],$id_user);
+                        echo '<option '.(array_search($rowMechanic[$key]['id_user'],$id_user)==true ? 'selected' : '').' value="'.$rowMechanic[$key]['id_user'].'">'.$rowMechanic[$key]['fullname'].'</optionvalue=>';
+                    }
+                }
+            ?>
+            </select>
+            <span class="text-red pt-2 d-block">** พิมพ์ชื่อผู้รับผิดชอบและเลือกอย่างน้อย 1 คน</span>
+            <?PHP //print_r($id_user); echo count($id_user);?>
+          <!-- /.form-group -->
+
+<!-- Select2 -->
+<script src="plugins/select2/js/select2.full.min.js"></script>
+<script>
+$(function () {
+    //Initialize Select2 Elements
+    $('.select2_mechanic').select2({
+       //tags: [<?PHP echo $Mechanic;?>],
+        theme: 'bootstrap4'
+    });
+
+    $('.select2_mechanic').val([<?PHP foreach ($id_user as $value) { echo $value.', ';} ?>]).trigger('change');
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({      theme: 'bootstrap4'    });
+});    
+
+$('.select2_mechanic').on('select2:unselecting', function (e) {
+    /*
+    if (confirm("Are you sure?")) {
+     $("#type option:selected").remove();
+   }
+   return false;    
+   */
+   swal({
+    title: "ลบช่างซ่อม!",
+    text: "คุณต้องลบ'++'หรือไม่ ?",
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#DD6B55",
+    confirmButtonText: "ใช่, ลบรายการ!",
+    cancelButtonText: "ไม่, ยกเลิก!",
+    closeOnConfirm: false,
+    closeOnCancel: true
+   },
+    function (isConfirm) {
+      if (isConfirm) {
+        //$('.select2_mechanic').empty().trigger("change");
+        swal("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว.", "success");
+        //$(".select2_mechanic option:selected").remove();
+      } else {
+        return true;
+        //swal("Cancelled", "Your imaginary file is safe :)", "error");
+      }
+    });
+    return false;   
+    
+
+});
+
+</script>
+                            </div>
+                        </div>
+                    </div><!--row-5-->
+                </div><!--card-body-->
+            </div><!--card-->
+        </div>                
+        </div><!--row-->
+    </div><!--container-->
+    </form><!--FORM 1-->
+<?PHP
+    }
+?>
+<?PHP
     if($action=='cancel'){
 ?>
     <form id="needs-validation_2" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
@@ -222,12 +353,15 @@ $(function () {
         echo "\r\n";
         echo $ref_id; exit();
         */
+
         for($i=0;$i<count($_POST['slt_select2_mechanic']);$i++){
             $insertRow = [
                 'ref_id_maintenance_request' => $ref_id,
                 'ref_id_user_repairer' => (!empty($_POST['slt_select2_mechanic'][$i])) ? $_POST['slt_select2_mechanic'][$i] : NULL,
             ];
-            $rowID = $obj->addRow($insertRow, "tb_ref_repairer");
+            if($obj->countAll("SELECT ref_id_user_repairer FROM tb_ref_repairer WHERE ref_id_user_repairer=".$_POST['slt_select2_mechanic'][$i]." ")==0){
+                $rowID = $obj->addRow($insertRow, "tb_ref_repairer");
+            }
         }
         //echo json_encode($rowID);
         $updateRow = [

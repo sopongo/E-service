@@ -170,13 +170,22 @@ class CRUD extends Database
         }
     }
 
+    public function countAll($sql){
+        //$sql = "SELECT * FROM  `$table`";
+        $stmt = $this->conn->prepare($sql);
+         try { $stmt->execute();}
+         catch(PDOException $e){echo $e->getMessage();}
+     return $stmt->rowCount();
+    }    
+
     public function getCount($txt_query)
     {
         $sql = $txt_query;
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total_row'];
+        //return $result['total_row'];
+        return $result;
     }
 
     

@@ -137,7 +137,7 @@ if (count($fetchRow)>0) {
         $dataRow[] = ($fetchRow[$key]['dept_responsibility']=='' ? '-' : $fetchRow[$key]['dept_responsibility']);        
         $dataRow[] = ($fetchRow[$key]['ref_id_job_type']=='' ? '-' : $ref_id_job_typeArr[$fetchRow[$key]['ref_id_job_type']]);
         $dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : mb_substr($fetchRow[$key]['problem_statement'],0,30,"utf8"));
-        $dataRow[] = ($fetchRow[$key]['status_approved']=='' ? '-' : $fetchRow[$key]['status_approved']);
+        $dataRow[] = ($fetchRow[$key]['maintenance_request_status']=='' ? '-' : $fetchRow[$key]['maintenance_request_status']);
         $dataRow[] = '<a class="btn btn-success btn-sm" href="?module=requestid&id='.$fetchRow[$key]['id_maintenance_request'].'" id="viewData"  title="ดูข้อมูล" target="_blank"><i class="fa fa-file-alt"></i></a> '; //<a class="btn btn-warning btn-sm" href="?module=requestedit&id='.$fetchRow[$key]['id_maintenance_request'].'" id="viewData"  title="แก้ไขข้อมูล" target="bank"><i class="fa fa-pencil-alt"></i></a>
         $arrData[] = $dataRow;
         $No--;

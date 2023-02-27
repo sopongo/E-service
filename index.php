@@ -387,7 +387,7 @@ $obj = new CRUD();
         </div>
         <div class="info">
           <a href="#" class="d-block"><?PHP echo $_SESSION['sess_fullname'];?></a>
-          <span class="text-white">ระดับ: <?PHP echo $classArr[$_SESSION['sess_class_user']]; ?></span>
+          <span class="text-white">ระดับ: <?PHP echo $classArr[$_SESSION['sess_class_user']]; ?> / <?PHP echo $_SESSION['sess_dept_initialname'];?></span>
           <a href="?module=profile" class="d-block text-yellow">[แก้ไขข้อมูลส่วนตัว]</a>
         </div>
       </div>
