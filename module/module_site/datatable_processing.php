@@ -4,6 +4,7 @@ require_once '../../include/setting.inc.php';
 $obj = new CRUD();
 
 
+
 //EX.tb_site
 //id_site, site_initialname, site_name, site_status
 /*
@@ -16,14 +17,12 @@ $_POST['start']
 $_POST['length']
 */
 
-
-
 $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 
 $search = $_POST["search"]["value"];
 $query_search = "";
 if(!empty($search[0])){
-    $query_search = " WHERE site_initialname LIKE '%".$search."%' OR site_name LIKE '%".$search."%' ";
+    //$query_search = " WHERE site_initialname LIKE '%".$search."%' OR site_name LIKE '%".$search."%' ";
 }
 
 if($_POST["start"]==0){
@@ -52,7 +51,6 @@ $arrData = array();
 $numRow = $obj->getCount("SELECT count(id_site) AS total_row FROM tb_site ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
 
 $fetchRow = $obj->fetchRows("SELECT * FROM tb_site ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
-
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
 
 //id_site, site_initialname, site_name, site_status

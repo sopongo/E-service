@@ -25,11 +25,16 @@ for($i=14;$i<=500;$i++){
 .dropdown-menu{  /*left:-70px;*/}
 .dropdown-menu a.dropdown-item{  font-size:0.85rem; /* 40px/16=2.5em */ }
 
+div.dataTables_wrapper {
+        width:100%;
+        /*background-color:#FCC;*/
+        margin:0 auto;
+    }
 
+.dataTables_scrollBody{ margin-bottom:5px;}
 </style>
 
 <!-- Main content -->
-<div class="chk_chk"></div>
 <section class="content">
 
     <!-- Default box -->
@@ -46,24 +51,27 @@ for($i=14;$i<=500;$i++){
     </div>
 
 
-    <div class="card-body">
+    <div class="card-body" >
       <div class="row">
-      <div class="col-sm-12 p-0 m-0">      
+      <div class="col-sm-12 p-0 m-0" >
     
-    <table id="example1" class="table table-bordered table-hover dataTable dtr-inline"><!---->
+    <table id="example1" class="table table-bordered table-hover dataTable dtr-inline display nowrap" style="width:1000px"><!-- dataTable dtr-inline -->
+    <!--<table id="example1" class="display nowrap" style="width:100%">-->
       <thead>
       <tr class="bg-light">
         <th scope="col" class="sorting_disabled">No</th>
+        <th scope="col">จัดการ</th>
         <th scope="col">เลขที่ใบแจ้งซ่อม</th>
         <th scope="col">วันที่แจ้งซ่อม</th>
+        <th scope="col">สถานะ</th>
         <th scope="col">รหัสเครื่องจักร-อุปกรณ์</th>
         <th scope="col">ชื่อเครื่องจักร-อุปกรณ์</th>
         <th scope="col">ประเภทเครื่องจักร-อุปกรณ์</th>
+        <th scope="col">อาการเสีย/ปัญหาที่พบ</th>
+        <th scope="col">ภาพแจ้งซ่อม</th>
         <th scope="col">แผนกที่รับผิดชอบ</th>
         <th scope="col">ประเภทงานซ่อม</th>
-        <th scope="col">อาการเสีย/ปัญหาที่พบ</th>
-        <th scope="col">สถานะ</th>
-        <th scope="col">จัดการ</th>
+        <th scope="col">เกี่ยวกับความปลอดภัย</th>
       </tr>
       </thead>
       <tbody>
@@ -112,12 +120,13 @@ $(document).on('change','.JobID',function(){
 
 
     var oTable = $('#example1').DataTable({
+      "scrollX": true,
       "processing": true,
       "serverSide": true,
       "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
       "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0, 7, 8, 9, 10] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
-        { "bSearchable": false, "aTargets": [0, 7, 8, 9, 10] } //คอลัมน์ที่าจะไม่ให้เสริท
+        { "bSortable": false, "aTargets": [0, 1, 4, 7, 8, 9, 10,11,12] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+        { "bSearchable": false, "aTargets": [0, 1, 4, 7, 8, 9, 10,11,12] } //คอลัมน์ที่าจะไม่ให้เสริท
       ], 
       ajax: {
         beforeSend: function () {
@@ -136,8 +145,8 @@ $(document).on('change','.JobID',function(){
       "searching": true,
       "ordering": true,
       "info": true,
-      "autoWidth": false,
-      "responsive": true,
+      //"autoWidth": false,
+      //"responsive": true,
       "buttons": ["csv", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 

@@ -46,15 +46,18 @@ empty($_POST['order']['0']['column']) ? $_POST['order']['0']['column']=0 : $_POS
 $colunm_sort = array( //ใช้เรียงข้อมูล
     0=> "tb_maintenance_request.id_maintenance_request",
     1=> "tb_maintenance_request.id_maintenance_request",
-    2=> "tb_maintenance_request.maintenance_request_no",
-    3=> "tb_maintenance_request.mt_request_date",
-    4=> "tb_machine_site.code_machine_site",
-    5=> "tb_machine_master.name_machine",
-    6=> "tb_category.name_menu",
-    7=> "tb_dept_responsibility.dept_initialname",
-    8=> "tb_maintenance_request.ref_id_job_type",
-    9=> "tb_maintenance_request.status_approved",
-    10=> "tb_maintenance_request.status_approved"
+    2=> "tb_maintenance_request.id_maintenance_request",    
+    3=> "tb_maintenance_request.maintenance_request_no",
+    4=> "tb_maintenance_request.mt_request_date",
+    5=> "tb_machine_site.status_approved",
+    6=> "tb_machine_site.code_machine_site",
+    7=> "tb_machine_master.name_machine",
+    8=> "tb_category.name_menu",
+    9=> "tb_maintenance_request.problem_statement",
+    10=> "tb_maintenance_request.problem_statement",
+    11=> "tb_dept_responsibility.dept_initialname",
+    12=> "tb_maintenance_request.ref_id_job_type",
+    13=> "tb_maintenance_request.related_to_safty"
 );
 
 $orderBY = $colunm_sort[$_POST['order']['0']['column']];
@@ -74,6 +77,7 @@ switch($_SESSION['sess_class_user']){
         LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
         LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)             
         LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) WHERE tb_maintenance_request.ref_id_dept_request=".$_SESSION['sess_id_dept']." ".$query_search;
+        
         //$query_class.' '.$query_search ".$query_class.' '.$query_search." 
         //$sql_numRow = "SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request ";
         $fetchRow = $obj->fetchRows($sql_fetchRow." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."");
@@ -126,19 +130,28 @@ switch($_SESSION['sess_class_user']){
 if (count($fetchRow)>0) {
     $No = ($numRow-$_POST['start']);
     foreach($fetchRow as $key=>$value){
+
+        if($fetchRow[$key]['status_approved']==NULL && $fetchRow[$key]['maintenance_request_status']==1){
+            $req_textstatus = 'รออนุมัติ/จ่ายงาน';
+        }else{
+            $req_textstatus = '-';
+        }
         $dataRow = array();
         $dataRow[] = $No.'.';
         //$dataRow[] = $No.'.'.(count($fetchRow)).'---'.$search.'--------'.$query_class.'-------------'.$query_search.$fetchRow[$key]['dept_request'];
+        $dataRow[] = '<a class="btn btn-success btn-sm" href="?module=requestid&id='.$fetchRow[$key]['id_maintenance_request'].'" id="viewData"  title="ดูข้อมูล" target="_blank"><i class="fa fa-file-alt"></i></a> ';
         $dataRow[] = ($fetchRow[$key]['maintenance_request_no']=='' ? '-' : $fetchRow[$key]['maintenance_request_no']); //.'----'.$slt_search.'-------'.$keyword
         $dataRow[] = ($fetchRow[$key]['mt_request_date']=='' ? '-' : shortDateEN($fetchRow[$key]['mt_request_date']));
+        $dataRow[] = $req_textstatus;
         $dataRow[] = ($fetchRow[$key]['code_machine_site']=='' ? '-' : $fetchRow[$key]['code_machine_site']);
         $dataRow[] = ($fetchRow[$key]['name_machine']=='' ? '-' : $fetchRow[$key]['name_machine']);
         $dataRow[] = ($fetchRow[$key]['name_menu']=='' ? '-' : $fetchRow[$key]['name_menu']);
+        $dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : $fetchRow[$key]['problem_statement']);
+        $dataRow[] = ($fetchRow[$key]['related_to_safty']=='' ? '-' : '<a class="text-info"><i class="fas fa-images"></i> คลิกดูภาพ</a>');
         $dataRow[] = ($fetchRow[$key]['dept_responsibility']=='' ? '-' : $fetchRow[$key]['dept_responsibility']);        
         $dataRow[] = ($fetchRow[$key]['ref_id_job_type']=='' ? '-' : $ref_id_job_typeArr[$fetchRow[$key]['ref_id_job_type']]);
-        $dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : mb_substr($fetchRow[$key]['problem_statement'],0,30,"utf8"));
-        $dataRow[] = ($fetchRow[$key]['maintenance_request_status']=='' ? '-' : $fetchRow[$key]['maintenance_request_status']);
-        $dataRow[] = '<a class="btn btn-success btn-sm" href="?module=requestid&id='.$fetchRow[$key]['id_maintenance_request'].'" id="viewData"  title="ดูข้อมูล" target="_blank"><i class="fa fa-file-alt"></i></a> '; //<a class="btn btn-warning btn-sm" href="?module=requestedit&id='.$fetchRow[$key]['id_maintenance_request'].'" id="viewData"  title="แก้ไขข้อมูล" target="bank"><i class="fa fa-pencil-alt"></i></a>
+        $dataRow[] = ($fetchRow[$key]['related_to_safty']==1 ? '<i class="fas fa-times text-danger"></i>' : '<i class="fas fa-check text-success"></i>');
+        //$dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : mb_substr($fetchRow[$key]['problem_statement'],0,30,"utf8"));
         $arrData[] = $dataRow;
         $No--;
     }

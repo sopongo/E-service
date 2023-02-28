@@ -53,7 +53,7 @@
             'detail_note_approved' => (NULL),
             'allotted_date' => (NULL),
             'allotted_accept_date' => (NULL),
-            'related_to_safty' => (!empty($_POST['related_to_safty'])) ? $_POST['related_to_safty'] : NULL,
+            'related_to_safty' => (!empty($_POST['related_to_safty'])) ? $_POST['related_to_safty'] : 1,
             'problem_statement' => (!empty($_POST['problem_statement'])) ? $_POST['problem_statement'] : '',
             'ref_id_job_type' => (!empty($_POST['ref_id_job_type'])) ? $_POST['ref_id_job_type'] : '',
             'urgent_type' => (!empty($_POST['urgent_type'])) ? $_POST['urgent_type'] : '',
@@ -87,6 +87,31 @@
         exit();
     }
 
+    if ($action=='change_mechanic') {
+        echo count($_POST['slt_select2_mechanic']);
+        print_r($_POST['slt_select2_mechanic']);
+        echo "\r\n";
+        echo $ref_id; exit();
+
+        $holdRow = [
+            'status_repairer' => 2,
+        ];        
+        $resultUpdate = $obj->update($insertRow, "ref_id_maintenance_request=".$ref_id."", "tb_ref_repairer");
+        
+        for($i=0;$i<count($_POST['slt_select2_mechanic']);$i++){
+            $insertRow = [
+                'ref_id_maintenance_request' => $ref_id,
+                'ref_id_user_repairer' => (!empty($_POST['slt_select2_mechanic'][$i])) ? $_POST['slt_select2_mechanic'][$i] : NULL,
+                'status_repairer' => 1,
+            ];
+            if($obj->countAll("SELECT ref_id_user_repairer FROM tb_ref_repairer WHERE ref_id_maintenance_request=".$ref_id." AND ref_id_user_repairer=".$_POST['slt_select2_mechanic'][$i]." ")==0){
+                $rowID = $obj->addRow($insertRow, "tb_ref_repairer");
+            }
+        }
+        echo json_encode($rowID);
+        exit();        
+    }
+    
 
 
 

@@ -41,16 +41,16 @@ $(document).ready(function(){
             }
         });
     }
-    $.ajax({
-        url: "module/module_maintenance_list/update_result.inc.php",
+        $.ajax({
+        url: "module/module_maintenance_list/send_request.inc.php",
         type: "POST",
-        data:{"action":"add_mechanic","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>, "slt_select2_mechanic":slt_select2_mechanic},
+        data:{"action":"change_mechanic","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>, "slt_select2_mechanic":slt_select2_mechanic},
         beforeSend: function () {
         },
         success: function (data) {
             console.log(data);
-            //return false;
-            window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+            return false;
+            //window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
             if(data="Success"){
                 return false;
                 //$(".modal-body-update-type").html(data);

@@ -85,7 +85,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                         </div><!--row-2-->
 
                     <div class="row row-2">
-                            <div class="col-sm-5 col-md- col-xs-5">  
+                            <div class="col-sm-4 col-md-4 col-xs-4">  
                                 <div class="form-group">
                                 <label for="slt_machine"><span class="text-red font-size-sm">**</span> เครื่องจักร/อุปกรณ์ (ใส่รหัสหรือชื่อเครื่องจักร)</label>  
                                 <select id="slt_machine" class="select2 custom-select pb-5" style="width: 100%;" required>
@@ -100,7 +100,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                             <div class="col-sm-4 col-md-4 col-xs-4">  
                                 <div class="form-group">  
                                     <label for="problem_statement"><span class="text-red font-size-sm">**</span> อาการเสีย/ปัญหาที่พบ:</label>  
-                                    <textarea class="form-control" rows="5" id="problem_statement" name="problem_statement" placeholder="Enter ..." required> test test test test test test</textarea>
+                                    <textarea class="form-control" rows="5" id="problem_statement" name="problem_statement" placeholder="Enter ..." required></textarea>
                                     <div class="invalid-feedback">กรอกอาการเสีย/ปัญหาที่พบ</div>
                                 </div>
                             </div>
@@ -121,13 +121,21 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                         </div><!--row-4-->                        
 
                         <div class="row row-7 mt-2">
-                            <div class="col-sm-5 col-md-5 col-xs-5">
+                            <div class="col-sm-12 col-md-12 col-xs-12">
                                     <label for="ref_id_job_type">ประเภทงานซ่อม:</label>  <br />
                                     <div class="icheck-danger d-inline">
                                     <input type="radio" id="radioPrimary1" name="ref_id_job_type" value="1" checked>
                                     <label for="radioPrimary1">แจ้งช่างซ่อม</label>
                                     </div>
-                                    <div class="ml-5 icheck-success d-inline">
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-xs-12 mt-2">
+                            <div class="icheck-info d-inline">
+                                    <input type="radio" id="radioPrimary3" name="ref_id_job_type" value="4">
+                                    <label for="radioPrimary3">แจ้งช่างสร้าง</label>
+                                    </div>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-xs-12 mt-2">
+                            <div class="icheck-success d-inline">
                                     <input type="radio" id="radioPrimary2" name="ref_id_job_type" value="2">
                                     <label for="radioPrimary2">ช่างแจ้งซ่อมเอง</label>
                                     </div>

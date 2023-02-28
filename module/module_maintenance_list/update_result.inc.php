@@ -260,39 +260,6 @@ $(function () {
     $('.select2bs4').select2({      theme: 'bootstrap4'    });
 });    
 
-$('.select2_mechanic').on('select2:unselecting', function (e) {
-    /*
-    if (confirm("Are you sure?")) {
-     $("#type option:selected").remove();
-   }
-   return false;    
-   */
-   swal({
-    title: "ลบช่างซ่อม!",
-    text: "คุณต้องลบ'++'หรือไม่ ?",
-    type: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#DD6B55",
-    confirmButtonText: "ใช่, ลบรายการ!",
-    cancelButtonText: "ไม่, ยกเลิก!",
-    closeOnConfirm: false,
-    closeOnCancel: true
-   },
-    function (isConfirm) {
-      if (isConfirm) {
-        //$('.select2_mechanic').empty().trigger("change");
-        swal("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว.", "success");
-        //$(".select2_mechanic option:selected").remove();
-      } else {
-        return true;
-        //swal("Cancelled", "Your imaginary file is safe :)", "error");
-      }
-    });
-    return false;   
-    
-
-});
-
 </script>
                             </div>
                         </div>
