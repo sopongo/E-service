@@ -7,7 +7,7 @@
         <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body-cancel p-0 py-0">
+    <div class="modal-body-cancel p-0 py-1">
 
     </div><!--modal-body-->
     <div class="modal-footer justify-content-between">

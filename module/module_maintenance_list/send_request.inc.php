@@ -75,6 +75,19 @@
         exit();
     }
 
+    if ($action=='report_result') {
+        $insertRow = [
+            'cause_mt_request_cancel' => (!empty($_POST['cancel_statement'])) ? $_POST['cancel_statement'] : '',
+            'maintenance_request_status' => 2,
+            'date_mt_request_cancel' => (date('Y-m-d H:i:s')),
+            'ref_id_user_cancel' => ($_SESSION['sess_id_user']),
+        ];
+        //$resultUpdate = $obj->update($insertRow, "id_maintenance_request=".$ref_id."", "tb_maintenance_request");
+        echo json_encode("xxxxxxxxxxxxx");
+        exit();
+    }
+
+
     if ($action=='cancel-req') {
         $insertRow = [
             'cause_mt_request_cancel' => (!empty($_POST['cancel_statement'])) ? $_POST['cancel_statement'] : '',

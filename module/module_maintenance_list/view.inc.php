@@ -12,6 +12,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 .w-30{ width: 30%;}
 .linehi-170{ line-height:1.60rem;}
 .text-size-1{ font-size:0.90rem;}
+.text-size-2{ font-size:0.80rem; cursor: pointer;}
 .list-group li{ line-height:0.75rem; }
 .list-group li span{ line-height:1.2rem; }
 .select2-container .select2-selection--single {
@@ -25,6 +26,8 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 .card-title{ font-size:1rem;}
 .select2-selection__choice{ font-size:1rem; background-color: #ffc107; color:#000;}
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove {    color:#000;}
+
+.hv:hover{ background-color:#eaeaea;}
 </style>
 
 <!-- Select2 -->
@@ -307,7 +310,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               </div><!-- /.row -->
               
               <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-clipboard-check"></i> สรุปผลการซ่อม: 
-              <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
+              <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-repair_results" data-toggle="modal" data-target="#modal-repair_results" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">รหัสอาการเสีย:</strong> MySQL_Val<br>
@@ -607,6 +610,27 @@ $(document).on("click", ".btn-change-approved", function (e){
   });  
 });
 
+
+$(document).on("click", ".btn-repair_results", function (e){
+  e.stopPropagation();
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"repair_results","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"id_dept_responsibility":<?PHP echo $rowData['id_dept_responsibility']?>},
+      beforeSend: function () {
+      },
+      success: function (data) {
+          $(".modal-body-update-result").html(data);
+          console.log(data);
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });  
+});
+
 $(document).on("click", ".btn-approved", function (e){
   e.stopPropagation();
   $.ajax({
@@ -616,7 +640,7 @@ $(document).on("click", ".btn-approved", function (e){
       beforeSend: function () {
       },
       success: function (data) {
-          $(".modal-body-approved ").html(data);
+          $(".modal-body-approved").html(data);
           console.log(data);
       },
           error: function (jXHR, textStatus, errorThrown) {

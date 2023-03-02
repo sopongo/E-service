@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="dataformLabel" aria-hidden="true">
+<div class="modal fade" id="modal-repair_results" tabindex="-1" role="dialog" aria-labelledby="dataformLabel" aria-hidden="true">
 <div class="modal-dialog modal-md">
     <div class="modal-content">
     <div class="modal-header">
@@ -7,15 +7,14 @@
         <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body-update-result p-0 py-2">
+    <div class="modal-body-update-result p-0 py-1">
     <?PHP
     
     ?>
     </div><!--modal-body-->
     <div class="modal-footer justify-content-between">
-        <!--<input type="submit" class="btn btn-primary btn-submit btn-success" value="อัพเดท" />-->
-        <button type="button" class="btn btn-block btn-success btn-md w-auto btn_test">อัพเดท</button>
-        <input type="reset" class="btn btn-cancel btn-danger" data-dismiss="modal" value="ยกเลิก" />
+        <button type="button" class="btn btn-block btn-success btn-md w-auto btn_report_result">อัพเดท</button>
+        <input type="reset" class="btn btn-approved btn-danger" data-dismiss="modal" value="ยกเลิก" />
     </div>
     </div>
     <!-- /.modal-content -->
@@ -23,3 +22,7 @@
 <!-- /.modal-dialog -->
 </div>
 <!-- /.modal-default -->
+
+<script>
+
+</script>
