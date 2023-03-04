@@ -72,13 +72,18 @@
 ?>
 <?PHP        
 if ($action=='repair_results') {    
+        $editData = $obj->customSelect("SELECT tb_repair_result.*, tb_failure_code.failure_code_th_name, tb_repair_code.repair_code_name
+        FROM tb_repair_result
+        LEFT JOIN tb_failure_code ON (tb_failure_code.id_failure_code=tb_repair_result.ref_id_failure_code)   
+        LEFT JOIN tb_repair_code ON (tb_repair_code.id_repair_code=tb_repair_result.ref_id_repair_code)   
+        WHERE tb_repair_result.ref_id_maintenance_request=".$ref_id." ");
 ?>
-    <form id="needs-validation_2" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+    <form id="needs-validation8" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
     <div class="container">
         <div class="row">
         <div class="offset-md-0 col-md-12 offset-md-0">  
             <div class="card">  
-                <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p> <span class="float-right editby"></span></div>
+                <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1"><?PHP echo  $ref_id; ?>กรอกรายละเอียด</p> <span class="float-right editby"></span></div>
                 <div class="card-body p-3">
                     <!--ajax data hear-->
                     <div class="row row-4">
@@ -90,34 +95,44 @@ if ($action=='repair_results') {
                     </div><!--row-4-->
 
                     <div class="row row-5 hv p-1 pb-0">
-                        <div class="col-sm-12 col-md-12 col-xs-12">  
-                            <div class="form-group">  
+                        <div class="col-sm-12 col-md-12 col-xs-12"> 
+                            <div class="form-group">
                                 <label for="slt_failure_code"><i class="fas fa-angle-double-right"></i>  รหัสอาการเสีย:<span class="text-red font-size-sm">**</span></label>   <?PHP echo $ref_id;?> / <?PHP echo $_POST['id_dept_responsibility'];?>
-                                <a class="chk_failure_code d-none text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
-            <select class="custom-select d-block" name="slt_failure_code" id="slt_failure_code" style="width: 100%;">
+                                <?PHP 
+                                            if(isset($editData['ref_id_failure_code'])){
+                                                if(preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $editData['ref_id_failure_code'])){//ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
+                                                    $chk_show_failure_code = 'd-none'; $chk_slt_failure_code = 'd-block'; $chk_txt_failure_code = 'd-none';
+                                                }else{
+                                                    $chk_show_failure_code = 'd-inline'; $chk_slt_failure_code = 'd-none'; $chk_txt_failure_code = 'd-block';
+                                                }
+                                            }else{
+                                                    $chk_show_failure_code = 'd-none'; $chk_slt_failure_code = 'd-block'; $chk_txt_failure_code = 'd-none';
+                                            }
+                                 ?>
+                                <a class="chk_failure_code <?PHP echo $chk_show_failure_code; ?> text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
+            <select class="custom-select <?PHP echo $chk_slt_failure_code; ?>" name="slt_failure_code" id="slt_failure_code" style="width: 100%;" required>
             <?PHP  
                 $rowMechanic = $obj->fetchRows("SELECT * FROM tb_failure_code WHERE ref_id_dept=".$_POST['id_dept_responsibility']." AND failure_code_status=1 ORDER BY failure_code ASC");
                 echo '<option value="">เลือกรหัสอาการเสีย</option>';
+                echo '<option value="custom">0000 - พิมพ์ระบุเอง</option>';
                 if (count($rowMechanic)!=0) {
                     foreach($rowMechanic as $key => $value) {
-                        echo '<option value="'.$rowMechanic[$key]['id_failure_code'].'">'.$rowMechanic[$key]['failure_code'].' - '.$rowMechanic[$key]['failure_code_th_name'].'</option>';
+                        echo '<option value="'.$rowMechanic[$key]['id_failure_code'].'" '.($rowMechanic[$key]['id_failure_code']==$editData['ref_id_failure_code'] ? 'selected' : '').'>'.$rowMechanic[$key]['failure_code'].' - '.$rowMechanic[$key]['failure_code_th_name'].'</option>';
                     }
-                    echo '<option value="custom">0000 - พิมพ์ระบุเอง</option>';
                 }
             ?>
-            </select>
-            <textarea class="form-control d-none" rows="2" id="txt_failure_code" name="txt_failure_code" placeholder="Enter ..." required></textarea>
-                                <div class="invalid-feedback">กรอกสาเหตุการยกเลิก</div>
+            </select><div class="invalid-feedback">ระบุรหัสอาการเสีย</div>
+            <div><textarea class="form-control <?PHP echo $chk_txt_failure_code; ?>" rows="2" id="txt_failure_code" name="txt_failure_code" placeholder="" ><?PHP echo isset($editData['ref_id_failure_code']) ? $editData['ref_id_failure_code'] : '';?></textarea></div>
                             </div>
                         </div>
-                    </div><!--row-5-->
+                    </div><!--row-5 required-->
 
                     <div class="row row-5 hv p-1 pb-0">
                         <div class="col-sm-12 col-md-12 col-xs-12">  
                             <div class="form-group">  
                                 <label for="txt_caused_by"><i class="fas fa-angle-double-right"></i>  สาเหตุของปัญหา:<span class="text-red font-size-sm">**</span></label>  
-                                <textarea class="form-control" rows="2" id="txt_caused_by" name="txt_caused_by" placeholder="Enter ..." required></textarea>
-                                <div class="invalid-feedback">กรอกสาเหตุการยกเลิก</div>
+                                <textarea class="form-control" rows="2" id="txt_caused_by" name="txt_caused_by" placeholder="" required ><?PHP echo isset($editData['txt_caused_by']) ? $editData['txt_caused_by'] : '';?></textarea>
+                                <div class="invalid-feedback">ระบุสาเหตุของปัญหา</div>
                             </div>
                         </div>
                     </div><!--row-5-->
@@ -126,20 +141,20 @@ if ($action=='repair_results') {
                         <div class="col-sm-12 col-md-12 col-xs-12">  
                             <div class="form-group">  
                                 <label for="slt_repair_code"><i class="fas fa-angle-double-right"></i>  รหัสซ่อม:<span class="text-red font-size-sm">**</span></label>  <a class="chk_repair_code d-none text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
-                                <select class="custom-select d-block" name="slt_repair_code" id="slt_repair_code" style="width: 100%;">
+                                <select class="custom-select d-block" name="slt_repair_code" id="slt_repair_code" style="width: 100%;" required>
                                 <?PHP  
                                     $rowMechanic = $obj->fetchRows("SELECT * FROM tb_repair_code WHERE ref_id_dept=".$_POST['id_dept_responsibility']." AND repair_code_status=1 ORDER BY repair_code ASC");
                                     echo '<option value="">เลือกรหัสอาการเสีย</option>';
+                                    echo '<option value="custom">0000 - พิมพ์ระบุเอง</option>';
                                     if (count($rowMechanic)!=0) {
                                         foreach($rowMechanic as $key => $value) {
-                                        echo '<option value="'.$rowMechanic[$key]['id_repair_code'].'">'.$rowMechanic[$key]['repair_code'].' - '.$rowMechanic[$key]['repair_code_name'].'</option>';
+                                        echo '<option value="'.$rowMechanic[$key]['id_repair_code'].'" '.($rowMechanic[$key]['id_repair_code']==$editData['ref_id_repair_code'] ? 'selected' : '').'>'.$rowMechanic[$key]['repair_code'].' - '.$rowMechanic[$key]['repair_code_name'].'</option>';
                                     }
-                                        echo '<option value="custom">0000 - พิมพ์ระบุเอง</option>';
                                     }
                                 ?>
                                 </select>
-                                <textarea class="form-control d-none" rows="2" id="txt_repair_code" name="txt_repair_code" placeholder="Enter ..." required></textarea>
-                                <div class="invalid-feedback">กรอกสาเหตุการยกเลิก</div>
+                                <textarea class="form-control d-none" rows="2" id="txt_repair_code" name="txt_repair_code" placeholder="" ><?PHP echo isset($editData['txt_repair_code']) ? $editData['txt_repair_code'] : '';?></textarea>
+                                <div class="invalid-feedback">ระบุรหัสซ่อม</div>
                             </div>
                         </div>
                     </div><!--row-5-->
@@ -148,8 +163,8 @@ if ($action=='repair_results') {
                         <div class="col-sm-12 col-md-12 col-xs-12">  
                             <div class="form-group">  
                                 <label for="txt_solution"><i class="fas fa-angle-double-right"></i> วิธีการแก้ไข/ป้องกันเกิดปัญหาซ้ำ:<span class="text-red font-size-sm">**</span></label>  
-                                <textarea class="form-control" rows="2" id="txt_solution" name="txt_solution" placeholder="Enter ..." required></textarea>
-                                <div class="invalid-feedback">กรอกสาเหตุการยกเลิก</div>
+                                <textarea class="form-control" rows="2" id="txt_solution" name="txt_solution" placeholder="Enter ..." required><?PHP echo isset($editData['txt_solution']) ? $editData['txt_solution'] : '';?></textarea>
+                                <div class="invalid-feedback">ระบุวิธีการแก้ไข/ป้องกันเกิดปัญหาซ้ำ</div>
                             </div>
                         </div>
                     </div><!--row-5-->                    
@@ -163,66 +178,7 @@ if ($action=='repair_results') {
     </form><!--FORM 1-->
 
 <script>
-$(document).on("click", ".chk_failure_code", function (){ 
-    $('#txt_failure_code').val("").toggleClass('d-none d-block');
-    $('#slt_failure_code').toggleClass('d-none d-block');
-    $('.chk_failure_code').toggleClass('d-none d-inline');
-});    
 
-$(document).on("change", "#slt_failure_code", function (){ 
-    var ref_id = $(this).val();
-    if(ref_id=='custom'){
-        $("#slt_failure_code option[value=''").attr("selected","selected");
-        $('#txt_failure_code').val("").toggleClass('d-none d-block');
-        $('#slt_failure_code').toggleClass('d-none d-block');
-        $('.chk_failure_code').toggleClass('d-none d-inline');        
-        //txt_failure_code     
-    }
-});    
-
-$(document).on("click", ".chk_repair_code", function (){ 
-    $('#txt_repair_code').val("").toggleClass('d-none d-block');
-    $('#slt_repair_code').toggleClass('d-none d-block');
-    $('.chk_repair_code').toggleClass('d-none d-inline');
-});     
-
-$(document).on("change", "#slt_repair_code", function (){ 
-    var ref_id = $(this).val();
-    if(ref_id=='custom'){
-        $("#slt_repair_code option[value=''").attr("selected","selected");
-        $('#txt_repair_code').val("").toggleClass('d-none d-block');
-        $('#slt_repair_code').toggleClass('d-none d-block');
-        $('.chk_repair_code').toggleClass('d-none d-inline');        
-    }
-});    
-
-$(document).ready(function(){
-
-$(document).on("click", ".btn_report_result", function (e){ 
-e.stopPropagation();
-var slt_maintenance_type = $("#slt_maintenance_type option:selected" ).val();       
-$.ajax({
-    url: "module/module_maintenance_list/send_request.inc.php",
-    type: "POST",
-    data:{"action":"report_result","ref_id":<?PHP echo $ref_id;?>},
-    beforeSend: function () {
-    },
-    success: function (data) {
-        console.log(data);
-        if(data="Success"){
-            $('#modal-repair_results').modal('toggle');
-            swal("สำเร็จ!", "บันทึกข้อมูลเรียบร้อย", "success");
-        }
-    },
-        error: function (jXHR, textStatus, errorThrown) {
-        console.log(data);
-        //alert(errorThrown);
-        swal("Error!", ""+errorThrown+"", "error");
-    }
-});
-});
-
-});
 </script>
 <?PHP 
     exit();

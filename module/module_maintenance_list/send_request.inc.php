@@ -13,6 +13,7 @@
         $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเรียกใช้งานคลาส,ฟังก์ชั่นต่างๆ
     } 
 
+    
     /*
         <pre>Array
         (
@@ -76,14 +77,41 @@
     }
 
     if ($action=='report_result') {
-        $insertRow = [
-            'cause_mt_request_cancel' => (!empty($_POST['cancel_statement'])) ? $_POST['cancel_statement'] : '',
-            'maintenance_request_status' => 2,
-            'date_mt_request_cancel' => (date('Y-m-d H:i:s')),
-            'ref_id_user_cancel' => ($_SESSION['sess_id_user']),
-        ];
-        //$resultUpdate = $obj->update($insertRow, "id_maintenance_request=".$ref_id."", "tb_maintenance_request");
-        echo json_encode("xxxxxxxxxxxxx");
+        //echo "<pre>";    print_r($_POST);    echo "</pre>";
+        //echo $_POST['data'];        echo "\r\n\r\n";        echo $_POST['action'];        echo "\r\n\r\n";        echo $_POST['ref_id'];                echo "\r\n\r\n";
+        if(isset($_POST['data'])){
+            ##"slt_failure_code=3&txt_failure_code=xxxx&txt_caused_by=xxxxxxx&slt_repair_code=6&txt_repair_code=xxxx&txt_solution=xxxxxx
+            parse_str($_POST['data'], $output); //$output['period']
+            //echo $output['slt_failure_code'];                echo "\r\n\r\n";            
+        }
+        $chkID = $obj->customSelect("SELECT count(id_repair_result) AS total_row FROM tb_repair_result WHERE ref_id_maintenance_request=".$_POST['ref_id']." ");
+        //#tb_repair_result     id_repair_result, ref_id_maintenance_request, ref_id_failure_code, ref_id_repair_code, txt_caused_by, txt_solution, ref_id_user_report, report_date, edit_report_date
+        if($chkID['total_row']==1){
+            $insertRow = [
+                'ref_id_failure_code' => ($output['slt_failure_code']=='custom' ? $output['txt_failure_code'] : $output['slt_failure_code']),
+                'ref_id_repair_code' => ($output['slt_repair_code']=='custom' ? $output['txt_repair_code'] : $output['slt_repair_code']),
+                'txt_caused_by' => (!empty($output['txt_caused_by'])) ? $output['txt_caused_by'] : '',
+                'txt_solution' => (!empty($output['txt_solution'])) ? $output['txt_solution'] : '',
+                'edit_report_date' => (date('Y-m-d H:i:s')),
+                'ref_id_user_edit' => ($_SESSION['sess_id_user']),
+            ];
+            $rowID = $obj->update($insertRow, "ref_id_maintenance_request=".$_POST['ref_id']."", "tb_repair_result");
+        }else{
+            $insertRow = [
+                'ref_id_maintenance_request' => $_POST['ref_id'],
+                'ref_id_failure_code' => ($output['slt_failure_code']=='custom' ? $output['txt_failure_code'] : $output['slt_failure_code']),
+                'ref_id_repair_code' => ($output['slt_repair_code']=='custom' ? $output['txt_repair_code'] : $output['slt_repair_code']),
+                'txt_caused_by' => (!empty($output['txt_caused_by'])) ? $output['txt_caused_by'] : '',
+                'txt_solution' => (!empty($output['txt_solution'])) ? $output['txt_solution'] : '',
+                'ref_id_user_report' => ($_SESSION['sess_id_user']),
+                'report_date' => (date('Y-m-d H:i:s')),
+            ];
+            $rowID = $obj->addRow($insertRow, "tb_repair_result");
+        }
+        ############# บันทึกLog ################
+        /*รอเขียนโค๊ด Log เพื่อทำ Timeline*/
+        ############# จบบันทึก Log #############
+        echo json_encode($rowID);
         exit();
     }
 

@@ -313,12 +313,12 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-repair_results" data-toggle="modal" data-target="#modal-repair_results" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
-                    <strong class="d-inline-block w-25">รหัสอาการเสีย:</strong> MySQL_Val<br>
-                    <strong class="d-inline-block w-25">สาเหตุของปัญหา:</strong> MySQL_Val<br>
+                    <strong class="d-inline-block w-25">รหัสอาการเสีย:</strong> <?PHP echo $rowData['failure_code_th_name']=='' ? ($rowData['ref_id_failure_code']=='' ? '-' : $rowData['ref_id_failure_code']) : $rowData['failure_code_th_name'];?><br>
+                    <strong class="d-inline-block w-25">สาเหตุของปัญหา:</strong> <?PHP echo $rowData['txt_caused_by']=='' ? '-' : $rowData['txt_caused_by'];?><br>
                 </div><!-- /.col -->
                 <div class="col-sm-6 invoice-col">
-                    <strong class="d-inline-block w-25">รหัสซ่อม:</strong> MySQL_Val<br>
-                    <strong class="d-inline-block w-25">วิธีการแก้ไข:</strong> MySQL_Val<br>
+                    <strong class="d-inline-block w-25">รหัสซ่อม:</strong> <?PHP echo $rowData['repair_code_name']=='' ? ($rowData['ref_id_repair_code']=='' ? '-' : $rowData['ref_id_repair_code']) : $rowData['repair_code_name'];?><br>
+                    <strong class="d-inline-block w-25">วิธีการแก้ไข:</strong> <?PHP echo $rowData['txt_solution']=='' ? '-' : $rowData['txt_solution'];?><br>
                 </div><!-- /.col -->
               </div><!-- /.row -->
 
@@ -337,7 +337,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 
               <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
                 <!-- Table row -->
-                <div class="row">
+                <div class="row"> 
                 <div class="col-12 table-responsive">
                   <table class="table table-striped">
                     <thead>
@@ -542,13 +542,74 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
     </section>
 <!-- end Main content -->
 
-
 </div><!-- /.card -->
 
 </section>
 <!-- /.content -->
 
 <script>
+
+$(document).on("click", ".btn-submitxxx", function (event){ 
+    var formAdd = document.getElementById('needs-validation8');  
+    var frmData = $("form#needs-validation8").serialize();
+
+    slt_failure_code = $("#slt_failure_code option:selected" ).val();
+    txt_failure_code = $('#txt_failure_code').val();
+    slt_repair_code = $("#slt_repair_code option:selected" ).val();
+    txt_repair_code = $('#txt_repair_code').val();
+    txt_solution = $('#txt_solution').val();
+    txt_caused_by = $('#txt_caused_by').val();
+
+if(slt_failure_code=='' && txt_failure_code==''){    swal("ผิดพลาด!", "ระบุรหัสอาการเสีย", "error");    return false;}
+if(slt_failure_code=='custom' && txt_failure_code==''){    swal("ผิดพลาด!", "กรอกอาการเสีย", "error");    return false;}
+if(txt_caused_by==''){    swal("ผิดพลาด!", "ระบุสาเหตุของปัญหา", "error");    return false;}
+if(slt_repair_code=='' && txt_repair_code==''){    swal("ผิดพลาด!", "ระบุรหัสซ่อม", "error");    return false;}
+if(slt_repair_code=='custom' && txt_repair_code==''){    swal("ผิดพลาด!", "กรอกรหัสซ่อม", "error");    return false;}
+if(txt_solution==''){    swal("ผิดพลาด!", "ระบุวิธีการแก้ไข/ป้องกันเกิดปัญหาซ้ำ", "error");    return false;}
+
+    if(formAdd.checkValidity()===false) {  
+        event.preventDefault();  
+        event.stopPropagation();
+    }else{
+        //alert('Send Ajax'); return false;
+        $.ajax({
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            data:{"data":frmData, "action":"report_result",  "ref_id":<?PHP echo $id; ?>},
+            beforeSend: function () {
+            },
+            success: function (data) {
+            //console.log(data);
+            if(data==''){
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+                return false;
+            }else{
+              swal({
+                    title: "สำเร็จ!",
+                    text: "บันทึกข้อมูลเรียบร้อยแล้ว",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //return false();
+                    //alert(ref_id);
+                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                })
+                //sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
+            }   
+                event.preventDefault();
+            },
+                error: function (jXHR, textStatus, errorThrown) {
+                //console.log(data);
+                //alert(errorThrown);
+            }
+        });    
+        event.preventDefault();    
+    }
+    //alert('Ajax'); return false;
+    formAdd.classList.add('was-validated');      
+    return false;
+});
 
 $(document).on("click", ".btn-problem_statement", function (e){ 
   e.stopPropagation();

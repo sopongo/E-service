@@ -258,8 +258,8 @@ $(document).ready(function(){
         $.ajax({
             url: "module/module_maintenance_list/send_request.inc.php",
             type: "POST",
-            dataType: "json",
             //data:{ "action":"send-req"},
+            dataType: "json",
             processData: false,
             contentType: false,
             data: frm_Data, 
