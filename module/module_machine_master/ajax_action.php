@@ -90,14 +90,15 @@
             }
 
             $imagename = '';
-            //id_attachment, ref_id_machine, attachment_sort, attachment_name, attachment_type
+            //id_attachment, ref_id_used, attachment_sort, attachment_name, attachment_type
             if (!empty($_FILES['photo']['name'])){ ##ถ้ามีแนบไฟล์รูปมาให้อัพโหลดรูปก่อน
                 $imagename = $obj->uploadPhoto($_FILES['photo'], $path_machine);
                 $insertPhoto = [
-                    'ref_id_machine' => $rowID,
+                    'ref_id_used' => $rowID,
                     'attachment_sort' => null,
                     'path_attachment_name' => $imagename,
-                    'attachment_type' => 1
+                    'attachment_type' => 1,
+                    'image_cate' => 2
                 ];    
                 $rowID = $obj->addRow($insertPhoto, "tb_attachment");        
             }
@@ -122,7 +123,7 @@
             $rowData = $obj->customSelect("SELECT tb_machine_master.*, tb_attachment.path_attachment_name, userAdd.fullname AS userAdd_name,
             userEdit.fullname AS userEdit_name, mainCate.name_menu AS mainCate_name, subCate.name_menu AS subCate_name , tb_dept.dept_initialname, tb_dept.dept_name 
             FROM tb_machine_master 
-            LEFT JOIN tb_attachment ON (tb_attachment.ref_id_machine=tb_machine_master.id_machine AND tb_attachment.attachment_type=1) 
+            LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine AND tb_attachment.attachment_type=1) 
             LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_machine_master.ref_id_dept) 
             LEFT JOIN tb_category AS mainCate ON (tb_machine_master.ref_id_menu=mainCate.id_menu) 
             LEFT JOIN tb_category AS subCate ON (tb_machine_master.ref_id_sub_menu=subCate.id_menu) 
@@ -157,7 +158,7 @@
         $rowID = (!empty($_POST['id_row'])) ? $_POST['id_row'] : '';
         if (!empty($rowID)) {        
             $rowData = $obj->customSelect("SELECT tb_machine_master.*, tb_attachment.path_attachment_name, tb_user.fullname FROM tb_machine_master 
-            LEFT JOIN tb_attachment ON (tb_attachment.ref_id_machine=tb_machine_master.id_machine) 
+            LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine) 
             LEFT JOIN tb_user ON (tb_user.id_user=tb_machine_master.ref_id_user_edit) WHERE tb_machine_master.id_machine=".$rowID."");         
             $slt_ref_id_menu= '';
             $ref_id_sub_menu= '';

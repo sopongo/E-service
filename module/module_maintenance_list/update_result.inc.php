@@ -99,15 +99,17 @@ if ($action=='repair_results') {
                             <div class="form-group">
                                 <label for="slt_failure_code"><i class="fas fa-angle-double-right"></i>  รหัสอาการเสีย:<span class="text-red font-size-sm">**</span></label>   <?PHP echo $ref_id;?> / <?PHP echo $_POST['id_dept_responsibility'];?>
                                 <?PHP 
-                                            if(isset($editData['ref_id_failure_code'])){
+                                            if(isset($editData['ref_id_failure_code'])){/*เช็คการแสดงผล รหัสอาการเสีย*/
                                                 if(preg_match('/[A-Za-z].*[0-9]|[0-9].*[A-Za-z]/', $editData['ref_id_failure_code'])){//ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
                                                     $chk_show_failure_code = 'd-none'; $chk_slt_failure_code = 'd-block'; $chk_txt_failure_code = 'd-none';
+                                                    echo "ปน";
                                                 }else{
-                                                    $chk_show_failure_code = 'd-inline'; $chk_slt_failure_code = 'd-none'; $chk_txt_failure_code = 'd-block';
+                                                    $chk_show_failure_code = 'd-none'; $chk_slt_failure_code = 'd-block'; $chk_txt_failure_code = 'd-none';
+                                                    echo "ไม่ปน";
                                                 }
                                             }else{
                                                     $chk_show_failure_code = 'd-none'; $chk_slt_failure_code = 'd-block'; $chk_txt_failure_code = 'd-none';
-                                            }
+                                            }                                      
                                  ?>
                                 <a class="chk_failure_code <?PHP echo $chk_show_failure_code; ?> text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
             <select class="custom-select <?PHP echo $chk_slt_failure_code; ?>" name="slt_failure_code" id="slt_failure_code" style="width: 100%;" required>
@@ -140,11 +142,30 @@ if ($action=='repair_results') {
                     <div class="row row-5 hv p-1 pb-0">
                         <div class="col-sm-12 col-md-12 col-xs-12">  
                             <div class="form-group">  
-                                <label for="slt_repair_code"><i class="fas fa-angle-double-right"></i>  รหัสซ่อม:<span class="text-red font-size-sm">**</span></label>  <a class="chk_repair_code d-none text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
+                                <?PHP
+/*$myString="4444ก44444";
+if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ])', $myString)){ //ถ้าปน
+    echo('Has numbers and letters.');
+} else {
+    echo("no");
+}*/
+                                            if(isset($editData['ref_id_repair_code'])){/*เช็คการแสดงผล รหัสซ่อม*/
+                                                if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ</[^>*\][\]+>|/])', $editData['ref_id_repair_code'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
+                                                    $chk_show_repair_code = 'd-none'; $chk_slt_repair_code = 'd-block'; $chk_txt_repair_code = 'd-none';
+                                                    echo "ปนcccccccccccccccccc";
+                                                }else{
+                                                    $chk_show_repair_code = 'd-none'; $chk_slt_repair_code = 'd-block'; $chk_txt_repair_code = 'd-none';
+                                                    echo "ไม่ปนccccccccccccccccccccc";
+                                                }
+                                            }else{
+                                                    $chk_show_repair_code = 'd-none'; $chk_slt_repair_code = 'd-block'; $chk_txt_repair_code = 'd-none';
+                                            } 
+                                ?>
+                                <label for="slt_repair_code"><i class="fas fa-angle-double-right"></i>  รหัสซ่อม:<span class="text-red font-size-sm">**</span></label>  <a class="chk_repair_code <?PHP echo $chk_show_repair_code; ?> text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
                                 <select class="custom-select d-block" name="slt_repair_code" id="slt_repair_code" style="width: 100%;" required>
                                 <?PHP  
                                     $rowMechanic = $obj->fetchRows("SELECT * FROM tb_repair_code WHERE ref_id_dept=".$_POST['id_dept_responsibility']." AND repair_code_status=1 ORDER BY repair_code ASC");
-                                    echo '<option value="">เลือกรหัสอาการเสีย</option>';
+                                    echo '<option value="">เลือกรหัสซ่อม</option>';
                                     echo '<option value="custom">0000 - พิมพ์ระบุเอง</option>';
                                     if (count($rowMechanic)!=0) {
                                         foreach($rowMechanic as $key => $value) {
@@ -330,7 +351,7 @@ $(function () {
             <?PHP
                 ##เช็คว่ามีช่างซ่อม $ref_id นี้หรือยัง
                 $rowMechanic = $obj->fetchRows("SELECT tb_ref_repairer.*, tb_user.id_user, tb_user.fullname FROM tb_ref_repairer 
-                LEFT JOIN tb_user ON (tb_user.id_user=tb_ref_repairer.ref_id_user_repairer) WHERE tb_ref_repairer.ref_id_maintenance_request=".$ref_id." ");               
+                LEFT JOIN tb_user ON (tb_user.id_user=tb_ref_repairer.ref_id_user_repairer) WHERE tb_ref_repairer.ref_id_maintenance_request=".$ref_id." AND status_repairer=1");               
                 if (count($rowMechanic)!=0){
                     $Mechanic = "";
                     $id_user = array();
@@ -431,11 +452,12 @@ $(function () {
         echo "\r\n";
         echo $ref_id; exit();
         */
-
         for($i=0;$i<count($_POST['slt_select2_mechanic']);$i++){
             $insertRow = [
+                //id_ref_repairer, ref_id_maintenance_request, ref_id_user_repairer, acknowledge_date, status_repairer
                 'ref_id_maintenance_request' => $ref_id,
                 'ref_id_user_repairer' => (!empty($_POST['slt_select2_mechanic'][$i])) ? $_POST['slt_select2_mechanic'][$i] : NULL,
+                'status_repairer' => 1,
             ];
             if($obj->countAll("SELECT ref_id_user_repairer FROM tb_ref_repairer WHERE ref_id_user_repairer=".$_POST['slt_select2_mechanic'][$i]." ")==0){
                 $rowID = $obj->addRow($insertRow, "tb_ref_repairer");

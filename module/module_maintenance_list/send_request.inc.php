@@ -4,6 +4,7 @@
     header('Content-Type: text/html; charset=utf-8');
     date_default_timezone_set('Asia/Bangkok');	
     require_once ('../../include/function.inc.php');
+    require_once ('../../include/setting.inc.php');
         
     $action = $_REQUEST['action']; #รับค่า action มาจากหน้าจัดการ
     !empty($_POST['ref_id']) ? $ref_id = intval($_POST['ref_id']): '';
@@ -72,8 +73,39 @@
             'maintenance_request_status' => 1,
         ];
         $rowID = $obj->addRow($insertRow, "tb_maintenance_request");
-        echo  json_encode(trim(intval($rowID)));
+        //echo  json_encode(trim(intval($rowID)));
+
+        $imagename = '';
+        //id_attachment	ref_id_machine	attachment_sort	path_attachment_name	attachment_type
+        if (!empty($_FILES['files'])){ ##ถ้ามีแนบไฟล์รูปมาให้อัพโหลดรูปก่อน
+                for($x=1;$x<=count($_FILES['files'])+1;$x++){
+                    if(!empty($_FILES['files']['tmp_name'][$x-1])){
+                        $imagename = $obj->uploadMulti_Photo($_FILES['files'], ($x-1), $pathReq);
+                        $insertPhoto = [
+                            'ref_id_used' => $rowID,
+                            'attachment_sort' => null,
+                            'path_attachment_name' => $imagename,
+                            'attachment_type' => 1,
+                            'image_cate' => 2
+                        ];    
+                        $imgRowID = $obj->addRow($insertPhoto, "tb_attachment");                                
+                    }
+                }
+        }
+        echo json_encode($imgRowID);
         exit();
+
+
+        exit();
+    }
+
+    if ($action=='problem_statement') {
+        //echo $ref_id.'----xxx------'.$_POST['problem_statement']; exit();
+        $updateRow = [
+            'problem_statement' => (!empty($_POST['problem_statement'])) ? $_POST['problem_statement'] : '',
+        ];
+        echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+        exit();        
     }
 
     if ($action=='report_result') {
@@ -129,15 +161,27 @@
     }
 
     if ($action=='change_mechanic') {
-        echo count($_POST['slt_select2_mechanic']);
+        /*echo count($_POST['slt_select2_mechanic']);
         print_r($_POST['slt_select2_mechanic']);
         echo "\r\n";
-        echo $ref_id; exit();
+        echo $ref_id; */
+        #สเต็ปการเปลี่ยนช่างซ่อม
+        /*
+        1.ให้ UPDATE status_repairer=2 ที่ไอดีใบแจ้งซ่อม = X
+        2.
+        */                
+        $query_1 = '';
+        $query_1.='ref_id_maintenance_request='.$ref_id.' AND (';
+        for($i=0;$i<count($_POST['slt_select2_mechanic']);$i++){           
+                $query_1.='ref_id_user_repairer!='.$_POST['slt_select2_mechanic'][$i].' AND ';
+        }
+        $query_1.=') AND status_repairer=1';
+        $query_1 = str_replace("AND )", ")", $query_1);
 
         $holdRow = [
             'status_repairer' => 2,
-        ];        
-        $resultUpdate = $obj->update($insertRow, "ref_id_maintenance_request=".$ref_id."", "tb_ref_repairer");
+        ];
+        $updRepairer = $obj->update($holdRow, $query_1, "tb_ref_repairer");        
         
         for($i=0;$i<count($_POST['slt_select2_mechanic']);$i++){
             $insertRow = [
@@ -145,7 +189,7 @@
                 'ref_id_user_repairer' => (!empty($_POST['slt_select2_mechanic'][$i])) ? $_POST['slt_select2_mechanic'][$i] : NULL,
                 'status_repairer' => 1,
             ];
-            if($obj->countAll("SELECT ref_id_user_repairer FROM tb_ref_repairer WHERE ref_id_maintenance_request=".$ref_id." AND ref_id_user_repairer=".$_POST['slt_select2_mechanic'][$i]." ")==0){
+            if($obj->countAll("SELECT ref_id_user_repairer FROM tb_ref_repairer WHERE ref_id_maintenance_request=".$ref_id." AND ref_id_user_repairer=".$_POST['slt_select2_mechanic'][$i]." AND status_repairer=1")==0){
                 $rowID = $obj->addRow($insertRow, "tb_ref_repairer");
             }
         }

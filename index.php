@@ -498,4 +498,6 @@ if ( window.history.replaceState ) {
 <a href="#" class="scrollup"><i class="fas fa-angle-double-up"></i> เลื่อนขึ้น</a>
 </body>
 </html>
-<?PHP //$text;?>
+<?PHP 
+//$text;
+?>

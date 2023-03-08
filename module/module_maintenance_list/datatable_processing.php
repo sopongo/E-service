@@ -106,7 +106,6 @@ switch($_SESSION['sess_class_user']){
         LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
         LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)
         LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) WHERE tb_maintenance_request.ref_id_dept_request=".$_SESSION['sess_id_dept']." ".$query_search);    //ถ้าจำนวน Row ทั้งหมด
-
     break;
 
     case 4: ##ถ้าระดับผู้ใช้งานเท่ากับ 4 (ผู้จัดการระบบ) ดูได้ทั้งหมด
@@ -120,7 +119,9 @@ switch($_SESSION['sess_class_user']){
         $fetchRow = $obj->fetchRows($sql_fetchRow);
         //$sql_numRow = "SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request ";
         //$numRow = $obj->getCount($sql_numRow);    //ถ้าจำนวน Row ทั้งหมด
-        $numRow = count($fetchRow);
+        //$numRow = count($fetchRow);
+        $numRow = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
+        WHERE tb_maintenance_request.maintenance_request_status!=0 $query_search ORDER BY ".$orderBY."");    //ถ้าจำนวน Row ทั้งหมด        
     break;
 }
 
@@ -146,12 +147,12 @@ if (count($fetchRow)>0) {
         $dataRow[] = ($fetchRow[$key]['code_machine_site']=='' ? '-' : $fetchRow[$key]['code_machine_site']);
         $dataRow[] = ($fetchRow[$key]['name_machine']=='' ? '-' : $fetchRow[$key]['name_machine']);
         $dataRow[] = ($fetchRow[$key]['name_menu']=='' ? '-' : $fetchRow[$key]['name_menu']);
-        $dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : $fetchRow[$key]['problem_statement']);
+        //$dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : $fetchRow[$key]['problem_statement']);
+        $dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : mb_substr($fetchRow[$key]['problem_statement'],0,50,"utf8"));
         $dataRow[] = ($fetchRow[$key]['related_to_safty']=='' ? '-' : '<a class="text-info"><i class="fas fa-images"></i> คลิกดูภาพ</a>');
         $dataRow[] = ($fetchRow[$key]['dept_responsibility']=='' ? '-' : $fetchRow[$key]['dept_responsibility']);        
         $dataRow[] = ($fetchRow[$key]['ref_id_job_type']=='' ? '-' : $ref_id_job_typeArr[$fetchRow[$key]['ref_id_job_type']]);
         $dataRow[] = ($fetchRow[$key]['related_to_safty']==1 ? '<i class="fas fa-times text-danger"></i>' : '<i class="fas fa-check text-success"></i>');
-        //$dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : mb_substr($fetchRow[$key]['problem_statement'],0,30,"utf8"));
         $arrData[] = $dataRow;
         $No--;
     }

@@ -23,6 +23,7 @@ $path_machine_Default = "uploads-asset/default.png";
 $pathUser= "uploads-user/";
 $pathUserDefault = "uploads-user/default.png";
 
+$pathReq= "upload-pic-req/";
 /*
 * @return array $branchArr
 * รายชื่อส่วนงาน

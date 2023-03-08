@@ -258,6 +258,26 @@ class CRUD extends Database
         }
     }    
 
+    public function uploadMulti_Photo($file, $num, $path){
+        if (!empty($file)) {
+            $fileTempPath = $file['tmp_name'][$num];
+            $fileName = $file['name'][$num];
+            $fileSize = $file['size'][$num];
+            $fileType = $file['type'][$num];
+            $fileNameCmps = explode('.', $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+            $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+            $allowedExtn = ["jpg", "png", "gif", "jpeg"];
+            if (in_array($fileExtension, $allowedExtn)) {
+                $uploadFileDir = getcwd() . '../../../'.$path.'';
+                $destFilePath = $uploadFileDir . $newFileName;
+                if (move_uploaded_file($fileTempPath, $destFilePath)) {
+                    return $newFileName;
+                }
+            }
+        }
+    }        
+
     public function customSelect($sql) {
         try {
             $stmt = $this->conn->prepare($sql);

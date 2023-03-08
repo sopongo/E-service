@@ -104,9 +104,7 @@ div.dataTables_wrapper {
 <script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
-
 <script type="text/javascript"> 
-
     
 $(document).on('change','.JobID',function(){   
     //alert('sdsd');

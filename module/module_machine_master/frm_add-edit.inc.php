@@ -122,7 +122,7 @@
                         <div class="row">  
                                 <div class="col-sm-6 col-md-6 col-xs-6">  
                                     <div class="form-group">  
-                                        <label>เครื่องจักร-อุปกรณ์ (ถ้ามี): <br /><span class="text-red font-11">**ขนาดไฟล์ไม่เกิน 5MB. ขนาดกว้างxสูง 800x800 Pixel</span></label>  
+                                        <label>รูปเครื่องจักร-อุปกรณ์ (ถ้ามี): <br /><span class="text-red font-11">**ขนาดไฟล์ไม่เกิน 5MB. ขนาดกว้างxสูง 800x800 Pixel</span></label>  
                                         <div class="custom-file">  <input type="file" class="custom-file-input" id="photo" name="photo"><label class="custom-file-label" for="validatedCustomFile">Choose file...</label>  </div>  
                                     </div>                                  
                                 </div>  

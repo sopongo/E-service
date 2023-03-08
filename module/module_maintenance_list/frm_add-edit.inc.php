@@ -111,7 +111,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                                 <div class="form-group">  
                                     <label for="machine_image"><span class="text-red font-size-sm">**</span> ภาพถ่ายอาการเสีย / ปัญหาที่พบ:</label>  
 			<div class="row-fluid">
-				<div class="col-md-12">
+				<div class="col-md-8">
 					<input name="files[]" type="file" multiple="multiple" data-maxsize="6000" maxlength="6" id="our-test" class="border  p-1 multi with-preview w-auto" />
                     <span class="text-red font-size-sm mt-2 d-block w-100">** ไม่เกิน 6 รูป / ไฟล์ไซต์ไม่เกิน 6 เมกะไบต์ต่อรูป</span> 
 				</div>
@@ -209,7 +209,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
     $('#our-test').MultiFile({
         max: 6,
         onFileChange: function(){
-            console.log('TEST CHANGE:', this, arguments);
+            //console.log('TEST CHANGE:', this, arguments);
         }
     });
 
@@ -238,7 +238,8 @@ $(document).ready(function(){
             return false;
         }
     //$(document).on("submit", "form#needs-validation", function(event){
-    event.preventDefault();
+    //event.preventDefault();
+    event.stopPropagation();    
     var formAdd = document.getElementById('needs-validation');  
     //var frmData = $("form#needs-validation").serialize();
     var frm_Data= new FormData($('form#needs-validation')[0]);
@@ -278,9 +279,11 @@ $(document).ready(function(){
                     //timer: 3000
                 }, 
                 function(){
+                    console.log(data);
+                    event.stopPropagation();
                     //return false();
                     //alert(ref_id);
-                    window.location.href = '?module=requestid&id='+data+'';
+                    //window.location.href = '?module=requestid&id='+data+'';
                 })
             },error: function (data) {
                 console.log(data);
@@ -288,7 +291,8 @@ $(document).ready(function(){
             }
         });
     });
-        event.preventDefault();    
+        //event.preventDefault();    
+        event.stopPropagation();        
     }
     //alert('Ajax'); return false;
     formAdd.classList.add('was-validated');      

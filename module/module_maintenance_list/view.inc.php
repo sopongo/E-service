@@ -49,7 +49,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
   ##ลิงค์โค๊ดส่วนที่ 1
   if($rowData['status_approved']==1){//ถ้าอนุมัติแล้ว จะคิวรี่ผู้รับผิดชอบมารอไว้
     $rowMechanic = $obj->fetchRows("SELECT tb_user.id_user, tb_user.fullname, tb_ref_repairer.* FROM tb_ref_repairer 
-    LEFT JOIN tb_user ON (tb_user.id_user=tb_ref_repairer.ref_id_user_repairer) WHERE tb_ref_repairer.ref_id_maintenance_request=".$rowData['id_maintenance_request']." ORDER BY tb_ref_repairer.id_ref_repairer ASC");
+    LEFT JOIN tb_user ON (tb_user.id_user=tb_ref_repairer.ref_id_user_repairer) WHERE tb_ref_repairer.ref_id_maintenance_request=".$rowData['id_maintenance_request']." AND tb_ref_repairer.status_repairer=1 ORDER BY tb_ref_repairer.id_ref_repairer ASC");
     ##เช็คว่าไอดีใน $_SESSION['sess_id_user'] ตรงกับ $rowMechanic ถ้าตรงจะแสดงปุ่มรับงาน-ปฏิเสธ
     $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user'));
   }  
@@ -299,18 +299,21 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายอาการเสีย / ปัญหาที่พบ: </div><br>  
               <div class="row invoice-info">
               <div class="row">
-                <?PHP for($i=1; $i<=6; $i++){?>
-                  <div class="col-sm-2">
-                    <div class="position-relative">
-                      <img src="upload-pic-req/idmt-req/<?PHP echo $i; ?>.jpg" alt="Photo 1" class="img-fluid">
-                    </div>
-                  </div>
-                  <?PHP } ?>
+                <?PHP
+                  $rowImg= $obj->fetchRows("SELECT * FROM tb_attachment WHERE ref_id_used=".$rowData['id_maintenance_request']." AND attachment_type=1 AND image_cate=2");                 
+                  if (count($rowImg)>0) {
+                    $i = 1;
+                    foreach($rowImg as $key => $value) {
+                        echo '<div class="col-sm-2"><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid" alt="xxxx"></a>').'</div></div>';
+                        $i++;
+                    }
+                  }                  
+                ?>
                 </div>
               </div><!-- /.row -->
               
               <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-clipboard-check"></i> สรุปผลการซ่อม: 
-              <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-repair_results" data-toggle="modal" data-target="#modal-repair_results" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
+              <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-repair_results" data-toggle="modal" data-target="#modal-repair_results" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?><div class="ml-5 p-1 d-inline-block" style="color:#FFF; background-color: #B42121;">อัพเดทได้/แก้ไขยังไม่เสร็จ</div></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">รหัสอาการเสีย:</strong> <?PHP echo $rowData['failure_code_th_name']=='' ? ($rowData['ref_id_failure_code']=='' ? '-' : $rowData['ref_id_failure_code']) : $rowData['failure_code_th_name'];?><br>
@@ -547,7 +550,18 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 </section>
 <!-- /.content -->
 
-<script>
+<!-- Ekko Lightbox -->
+<script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>  
+  <!-- Ekko Lightbox -->
+  <link rel="stylesheet" href="plugins/ekko-lightbox/ekko-lightbox.css">
+
+<script type="text/javascript"> 
+$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+      event.preventDefault();
+      $(this).ekkoLightbox({
+        alwaysShowClose: true
+      });
+});
 
 $(document).on("click", ".btn-submitxxx", function (event){ 
     var formAdd = document.getElementById('needs-validation8');  

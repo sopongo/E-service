@@ -49,8 +49,8 @@ $(document).ready(function(){
         },
         success: function (data) {
             console.log(data);
-            return false;
-            //window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+            //return false;
+            window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
             if(data="Success"){
                 return false;
                 //$(".modal-body-update-type").html(data);

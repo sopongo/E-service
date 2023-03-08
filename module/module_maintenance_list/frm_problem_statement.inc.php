@@ -26,23 +26,28 @@
 <script>
 $(document).ready(function(){
 
-    $(document).on("click", ".btn_update_mt_type", function (e){ 
+    $(document).on("click", ".btn_update_problem_statement", function (e){ 
     e.stopPropagation();
-    var slt_maintenance_type = $("#slt_maintenance_type option:selected" ).val();       
+    var problem_statement = $("#problem_statement" ).val();       
+    if(problem_statement.length<10){
+        swal("แจ้งเตือน!", "รายละเอียดอาการเสีย/ปัญหาที่พบสั้นเกินไป", "warning");
+        return false();
+    }
     $.ajax({
-        url: "module/module_maintenance_list/update_result.inc.php",
+        url: "module/module_maintenance_list/send_request.inc.php",
         type: "POST",
-        data:{"action":"problem_statement","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>, "slt_maintenance_type":slt_maintenance_type},
+        data:{"action":"problem_statement","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>, "problem_statement":problem_statement},
         beforeSend: function () {
         },
         success: function (data) {
             console.log(data);
             if(data="Success"){
                 //$(".modal-body-update-type").html(data);
-                var txt_slt_maintenance_type = $("#slt_maintenance_type option:selected" ).text();   
-                $('.span_mt_type').html('- '+txt_slt_maintenance_type);
-                $('#modal-maintenance_type').modal('toggle');
-                swal("สำเร็จ!", "อัพเดทประเภทใบแจ้งซ่อมแล้ว", "success");
+                //var txt_slt_maintenance_type = $("#slt_maintenance_type option:selected" ).text();   
+                //$('.span_mt_type').html('- '+txt_slt_maintenance_type);
+                $('#modal-problem_statement').modal('toggle');
+                $(".problem_statement").html(problem_statement);
+                swal("สำเร็จ!", "อัพเดทอาการเสีย/ปัญหาที่พบแล้ว", "success");
             }
         },
             error: function (jXHR, textStatus, errorThrown) {

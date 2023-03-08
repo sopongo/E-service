@@ -57,12 +57,12 @@ tb_category.name_menu, tb_dept.dept_initialname, tb_attachment.path_attachment_n
  FROM tb_machine_master 
  LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_machine_master.ref_id_dept) 
  LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu) 
- LEFT JOIN tb_attachment ON (tb_attachment.ref_id_machine=tb_machine_master.id_machine) ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
+ LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine) ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
 //EX.tb_machine_master
 //tb_category	id_menu, menu_code, level_menu, sort_menu, ref_id_menu, ref_id_sub, ref_id_dept, name_menu, desc_menu, menu_adddate, ref_id_user_add, menu_editdate, ref_id_user_edit, status_menu
-//tb_attachment 	id_attachment, ref_id_machine, attachment_sort, path_attachment_name, attachment_type
+//tb_attachment 	id_attachment, ref_id_used, attachment_sort, path_attachment_name, attachment_type
 //tb_machine_master     id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine
 //tb_dept	id_dept, dept_initialname, mt_request_manage, dept_name, dept_status
 if (count($fetchRow)>0) {
