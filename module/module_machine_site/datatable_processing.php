@@ -54,20 +54,20 @@ $orderBY = $colunm_sort[$_POST['order']['0']['column']];
 $arrData = array();	
 
 $numRow = $obj->getCount("SELECT count(tb_machine_site.id_machine_site) AS total_row FROM tb_machine_site 
-LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_used_master) ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
+LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master) ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
 
 $fetchRow = $obj->fetchRows("SELECT tb_machine_master.id_machine, tb_machine_master.machine_code, tb_machine_master.model_name, tb_machine_master.name_machine, tb_machine_master.status_machine,  
 tb_category.name_menu, tb_dept.dept_initialname, tb_attachment.path_attachment_name, 
 tb_machine_site.serial_number, tb_machine_site.code_machine_site, tb_machine_site.id_machine_site, tb_machine_site.status_work,
 tb_site.site_initialname, tb_building.building_name, tb_location.location_name
  FROM tb_machine_site
- LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_used_master) 
+ LEFT JOIN tb_machine_master ON (tb_machine_site.ref_id_machine_master=tb_machine_master.id_machine) 
  LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_machine_master.ref_id_dept) 
  LEFT JOIN tb_building ON (tb_building.id_building=tb_machine_site.ref_id_building) 
  LEFT JOIN tb_location ON (tb_location.id_location=tb_machine_site.ref_id_location) 
  LEFT JOIN tb_site ON (tb_site.id_site=tb_machine_site.ref_id_site)  
  LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu) 
-  LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine AND tb_attachment.image_cate==1) ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
+  LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine AND tb_attachment.image_cate=1) ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
 //EX.tb_machine_master

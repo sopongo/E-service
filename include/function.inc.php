@@ -115,7 +115,114 @@ function shortDateEN($date){
 //00:00:00
 function nowTime($date){ $h = substr($date, -8, -6); $m = substr($date, -5, -3); $s = substr($date, -2, 2);  return $h.':'.$m.':'.$s.' น.'; }	
 
+function timeAgo($time_ago)
+{
+    $time_ago = strtotime($time_ago);
+    $cur_time   = time();
+    $time_elapsed   = $cur_time - $time_ago;
+    $seconds    = $time_elapsed ;
+    $minutes    = round($time_elapsed / 60 );
+    $hours      = round($time_elapsed / 3600);
+    $days       = round($time_elapsed / 86400 );
+    $weeks      = round($time_elapsed / 604800);
+    $months     = round($time_elapsed / 2600640 );
+    $years      = round($time_elapsed / 31207680 );
+    // Seconds
+    if($seconds <= 60){
+        return "เมื่อสักครู่นี้";
+    }
+    //Minutes
+    else if($minutes <=60){
+        if($minutes==1){
+            return "ประมาณ 1 นาทีที่ผ่านมา";
+        }
+        else{
+            return "ประมาณ $minutes นาที";
+        }
+    }
+    //Hours
+    else if($hours <=24){
+        if($hours==1){
+            return "ประมาณ 1 ชั่วโมง";
+        }else{
+            return "ประมาณ $hours ชั่วโมง";
+        }
+    }
+    //Days
+    else if($days <= 7){
+        if($days==1){
+            return "ประมาณ 1 วัน";
+        }else{
+            return "ประมาณ $days วัน";
+        }
+    }
+    //Weeks
+    else if($weeks <= 4.3){
+        if($weeks==1){
+            return "1 อาทิตย์";
+        }else{
+            return "$weeks อาทิตย์ที่ผ่านมา";
+        }
+    }
+    //Months
+    else if($months <=12){
+        if($months==1){
+            return "ประมาณ 1 เดือน";
+        }else{
+            return "$months เดือน";
+        }
+    }
+    //Years
+    else{
+        if($years==1){
+            return "one year ago";
+        }else{
+            return "$years years ago";
+        }
+    }
+}
 
+function fb_date($timestamp){	
+/*ถ้าเก็บเวลาในรูปแบบ timestamp (ตัวอย่าง 1300950558)
+$date_you=1300950558;
+echo fb_date($date_you);
+ถ้าเก็บเวลาในรูปแบบ  datetime (ตัวอย่าง 2011-03-24 15:30:50)
+$date_you="2011-03-24 15:30:50";
+echo fb_date(strtotime($date_you));
+*/
+$difference = time() - $timestamp;
+$periods = array("วินาที", "นาที", "ชั่วโมง");
+$ending="ผ่านมา";
+if($difference<60){
+$j=0;
+$periods[$j].=($difference != 1)?"":"";
+	$difference=($difference==3 || $difference==4)?"ไม่กี่":$difference;
+	$text = "$difference $periods[$j] $ending";
+	}elseif($difference<3600){
+	$j=1;
+	$difference=round($difference/60);
+	$periods[$j].=($difference != 1)?"":"";
+	$difference=($difference==3 || $difference==4)?"ไม่กี่":$difference;
+	$text = "$difference $periods[$j] $ending"; 
+	}elseif($difference<86400){
+	$j=2;
+	$difference=round($difference/3600);
+	$periods[$j].=($difference != 1)?"":"";
+	$difference=($difference != 1)?$difference:"ประมาณ";
+	$text = "$difference $periods[$j] $ending"; 
+	}elseif($difference<172800){
+	$difference=round($difference/86400);
+	$periods[$j].=($difference != 1)? " ":" ";
+	$text = "เมื่อวานนี้ ".date("g:ia",$timestamp); 
+	}else{
+	if($timestamp<strtotime(date("Y-01-01 00:00:00"))){
+	$text = date("l j, Y",$timestamp)." เมื่อxx ".date("g:ia",$timestamp); 
+	}else{
+	$text = date("l j",$timestamp)." เมื่อzz ".date("g:ia",$timestamp); 
+	}
+	}
+	return $text;
+	}
 
 /*
 $big_array = array();

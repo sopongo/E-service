@@ -14,7 +14,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 .text-size-1{ font-size:0.90rem;}
 .text-size-2{ font-size:0.80rem; cursor: pointer;}
 .list-group li{ line-height:0.75rem; }
-.list-group li span{ line-height:1.2rem; }
+.list-group li span{ line-height:1.0rem; }
 .select2-container .select2-selection--single {
     height: 38px;
     border: 1px solid #ced4da;
@@ -43,9 +43,9 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
   include_once 'module/module_maintenance_list/frm_update_result.inc.php'; #หน้าอัพเดทผลการซ่อม
   include_once 'module/module_maintenance_list/frm_cancel.inc.php'; #หน้ายกเลิกใบแจ้งซ่อม
   include_once 'module/module_maintenance_list/frm_maintenance_type.inc.php'; #อัพเดทประเภทใบแจ้งซ่อม
-  include_once 'module/module_maintenance_list/frm_problem_statement.inc.php'; #อัพเดทประเภทใบแจ้งซ่อม
-
-  
+  include_once 'module/module_maintenance_list/frm_problem_statement.inc.php'; #อัพเดทอาการเสีย/ปัญหาที่พบ
+  include_once 'module/module_maintenance_list/frm_outsite_repair.inc.php'; #อัพเดทส่งซ่อมภายนอก
+    
   ##ลิงค์โค๊ดส่วนที่ 1
   if($rowData['status_approved']==1){//ถ้าอนุมัติแล้ว จะคิวรี่ผู้รับผิดชอบมารอไว้
     $rowMechanic = $obj->fetchRows("SELECT tb_user.id_user, tb_user.fullname, tb_ref_repairer.* FROM tb_ref_repairer 
@@ -91,6 +91,16 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                   <div class="ribbon bg-warning text-lg">รอรับงาน</div>
                 </div>
                   <?PHP } ?>
+                  <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']=='' ){?>
+                  <div class="ribbon-wrapper ribbon-lg">
+                  <div class="ribbon bg-warning text-lg">รอซ่อม</div>
+                </div>
+                  <?PHP } ?>
+                  <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL ){?>
+                  <div class="ribbon-wrapper ribbon-lg">
+                  <div class="ribbon bg-warning text-lg">กำลังซ่อม</div>
+                </div>
+                  <?PHP } ?>                  
                 <?PHP if($rowData['maintenance_request_status']==2){?>
                 <div class="ribbon-wrapper ribbon-lg">
                   <div class="ribbon bg-danger text-lg">ยกเลิก</div>
@@ -148,11 +158,19 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                     <b>อนุมัติและจ่ายงานเมื่อ</b> <span class="float-right text-right"> <?PHP echo $rowData['allotted_date'];?><br/> โดย: <?PHP echo $rowData['approved_fullname'];?></span>
                   </li>
                 <?PHP }?>
+                <?PHP if($rowData['allotted_accept_date']!=''){?>
                   <li class="list-group-item">
-                    <b>วันที่ปิดงาน</b> <a class="float-right"><?PHP echo $rowData['hand_over_date']!='' ? $rowData['hand_over_date'] : '-';?></a>
+                    <b>รับทราบ,รับงานซ่อมเมื่อ</b> <span class="float-right text-right"> <?PHP echo $rowData['allotted_accept_date'];?><br/> โดย: <?PHP echo $rowData['approved_fullname'];?></span>
+                  </li>
+                <?PHP }?>
+                <li class="list-group-item">
+                    <b>วันที่เริ่มซ่อม</b> <span class="float-right text-right"><?PHP echo $rowData['duration_serv_start']!='' ? $rowData['duration_serv_start'] : '-';?></span>
                   </li>
                   <li class="list-group-item">
-                    <b>รวมเวลาซ่อม</b> <a class="float-right"><?PHP echo $rowData['hand_over_date']!='' ? $rowData['hand_over_date'] : '-';?></a>
+                    <b>วันที่ปิดงาน</b> <span class="float-right text-right"><?PHP echo $rowData['hand_over_date']!='' ? $rowData['hand_over_date'] : '-';?></span>
+                  </li>
+                  <li class="list-group-item"><?PHP //echo $time_elapsed = timeAgo('2023-03-09 14:00:22'); //The argument $time_ago is in timestamp (Y-m-d H:i:s)format.?>
+                    <b>ใช้เวลาซ่อมไปแล้ว</b> <span class="float-right text-right"><?PHP echo $rowData['duration_serv_start']!='' ? timeAgo($rowData['duration_serv_start']) : '-';?></span>
                   </li>
                 </ul>
 
@@ -162,12 +180,12 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <?PHP }?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']==NULL && $rowData['maintenance_request_status']==1){ ?>
                     <?PHP if(($chk_id_result == $_SESSION['sess_id_user'] && $rowData['status_approved']==1) || $_SESSION['sess_class_user']==4){ ##เช็คว่าคนที่เปิดดูหน้านี้ใช้ผู้รับผิดชอบหรือไม่ ?>
-                      <a href="#" class="btn btn-success btn-block"><b>รับทราบ</b></a>
+                      <a href="#" class="btn btn-success btn-block btn-accept_date"><b>รับทราบ, รับงานซ่อม</b></a>
                       <a href="#" class="btn btn-warning btn-block"><b>ปฎิเสธรับงาน</b></a>
                       <?PHP } ?>
                 <?PHP } ?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1){?>
-                    <a href="#" class="btn btn-warning btn-block"><b>เริ่มซ่อม</b></a>
+                    <a href="#" class="btn btn-warning btn-block btn-start_repair"><b>เริ่มซ่อม</b></a>
                 <?PHP } ?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['maintenance_request_status']==1){?>
                     <a href="#" class="btn btn-success btn-block"><b>ปิดงาน</b></a>
@@ -313,7 +331,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               </div><!-- /.row -->
               
               <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-clipboard-check"></i> สรุปผลการซ่อม: 
-              <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-repair_results" data-toggle="modal" data-target="#modal-repair_results" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?><div class="ml-5 p-1 d-inline-block" style="color:#FFF; background-color: #B42121;">อัพเดทได้/แก้ไขยังไม่เสร็จ</div></div><br>  
+              <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-repair_results" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">รหัสอาการเสีย:</strong> <?PHP echo $rowData['failure_code_th_name']=='' ? ($rowData['ref_id_failure_code']=='' ? '-' : $rowData['ref_id_failure_code']) : $rowData['failure_code_th_name'];?><br>
@@ -325,8 +343,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div><!-- /.col -->
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i>
- อัพเดท</button><?PHP } ?></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-update_outsite" data-toggle="modal" data-target="#modal-outsite_repair" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">สาเหตุที่ส่งซ่อม:</strong> MySQL_Val<br>
@@ -563,6 +580,148 @@ $(document).on('click', '[data-toggle="lightbox"]', function(event) {
       });
 });
 
+
+$(document).on("click", ".btn-update_outsite", function (e){ 
+  e.stopPropagation();
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"update_outsite","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>},
+      beforeSend: function () {
+      },
+      success: function (data) {
+          $(".modal-body-outsite_repair").html(data);
+          console.log(data);
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });
+});
+
+
+$(document).on("click", ".btn-problem_statement", function (e){ 
+  e.stopPropagation();
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"update_problem_statement","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>},
+      beforeSend: function () {
+      },
+      success: function (data) {
+          $(".modal-update_problem_statement").html(data);
+          console.log(data);
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });
+});
+
+
+$(document).on("click", ".btn-start_repair", function (event){ 
+  swal({
+        title: "ยืนยันเริ่มซ่อมใบงานนี้ ?",   text: "ใบแจ้งซ่อมเลขที่: <?PHP echo $breadcrumb_txt;?>",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "ตกลง",
+        cancelButtonText: "ไม่, ยกเลิก",        
+        closeOnConfirm: false 
+      }, function(){   
+        $.ajax({
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            data:{ "action":"start_repair", ref_id:<?PHP echo $rowData['id_maintenance_request']; ?>},
+            /*dataType: "json",
+            processData: false,
+            contentType: false,
+            data: frm_Data, */
+            beforeSend: function () {
+            },success: function (data) {
+                console.log(data); //return false;
+                event.stopPropagation();
+                if(data.error=='over_req'){
+                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+                    return false;
+                }
+                swal({
+                    title: "เริ่มบันทึกระยะเวลาซ่อมแล้ว.",
+                    text: "หากซ่อมงานเรียบร้อยแล้วคลิกที่ปุ่ม \"ปิดงาน\"",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //console.log(data);
+                    //event.stopPropagation();
+                    //return false();
+                    //alert(ref_id);
+                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                })
+            },error: function (data) {
+                console.log(data);
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+            }
+        });
+    });
+    event.preventDefault();    
+    event.stopPropagation();
+});
+
+
+$(document).on("click", ".btn-accept_date", function (event){ 
+  swal({
+        title: "ยืนยันรับทราบ, รับงานซ่อม ?",   text: "ใบแจ้งซ่อมเลขที่: <?PHP echo $breadcrumb_txt;?>",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "ตกลง",
+        cancelButtonText: "ไม่, ยกเลิก",        
+        closeOnConfirm: false 
+      }, function(){   
+        $.ajax({
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            data:{ "action":"accept_request", ref_id:<?PHP echo $rowData['id_maintenance_request']; ?>},
+            /*dataType: "json",
+            processData: false,
+            contentType: false,
+            data: frm_Data, */
+            beforeSend: function () {
+            },success: function (data) {
+                console.log(data); //return false;
+                event.stopPropagation();
+                if(data.error=='over_req'){
+                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+                    return false;
+                }
+                swal({
+                    title: "รับงานซ่อมนี้เรียบร้อย.",
+                    text: "หากต้องต้องซ่อมงานนี้ทันที ให้คลิกที่ปุ่ม \"เริ่มซ่อม\"",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //console.log(data);
+                    //event.stopPropagation();
+                    //return false();
+                    //alert(ref_id);
+                    //window.location.href = '?module=requestid&id='+data+'';
+                })
+            },error: function (data) {
+                console.log(data);
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+            }
+        });
+    });
+    event.preventDefault();    
+    event.stopPropagation();
+});
+
 $(document).on("click", ".btn-submitxxx", function (event){ 
     var formAdd = document.getElementById('needs-validation8');  
     var frmData = $("form#needs-validation8").serialize();
@@ -581,6 +740,9 @@ if(slt_repair_code=='' && txt_repair_code==''){    swal("ผิดพลาด!"
 if(slt_repair_code=='custom' && txt_repair_code==''){    swal("ผิดพลาด!", "กรอกรหัสซ่อม", "error");    return false;}
 if(txt_solution==''){    swal("ผิดพลาด!", "ระบุวิธีการแก้ไข/ป้องกันเกิดปัญหาซ้ำ", "error");    return false;}
 
+if(txt_failure_code!=''){  $("#slt_failure_code option[value=custom]").attr("selected","selected");}
+if(txt_repair_code!=''){  $("#slt_repair_code option[value=custom]").attr("selected","selected");}
+
     if(formAdd.checkValidity()===false) {  
         event.preventDefault();  
         event.stopPropagation();
@@ -593,7 +755,7 @@ if(txt_solution==''){    swal("ผิดพลาด!", "ระบุวิธ�
             beforeSend: function () {
             },
             success: function (data) {
-            //console.log(data);
+            console.log(data);
             if(data==''){
                 sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
                 return false;
@@ -623,26 +785,6 @@ if(txt_solution==''){    swal("ผิดพลาด!", "ระบุวิธ�
     //alert('Ajax'); return false;
     formAdd.classList.add('was-validated');      
     return false;
-});
-
-$(document).on("click", ".btn-problem_statement", function (e){ 
-  e.stopPropagation();
-  $.ajax({
-      url: "module/module_maintenance_list/update_result.inc.php",
-      type: "POST",
-      data:{"action":"update_problem_statement","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>},
-      beforeSend: function () {
-      },
-      success: function (data) {
-          $(".modal-update_problem_statement").html(data);
-          console.log(data);
-      },
-          error: function (jXHR, textStatus, errorThrown) {
-          console.log(data);
-          //alert(errorThrown);
-          swal("Error!", ""+errorThrown+"", "error");
-      }
-  });
 });
 
 $(document).on("click", ".btn-update-type", function (e){ 
@@ -685,10 +827,14 @@ $(document).on("click", ".btn-change-approved", function (e){
   });  
 });
 
-
 $(document).on("click", ".btn-repair_results", function (e){
   e.stopPropagation();
-  $.ajax({
+  var chk_allotted_date = '<?PHP echo $rowData['allotted_accept_date']; ?>';
+  if(chk_allotted_date==''){
+    swal("ผิดพลาด!", "ต้องให้ผู้ซ่อม(ช่าง) กดรับงานก่อน\r\nถึงจะสรุปผลการซ่อมได้", "error");    
+    return false;
+  }else{
+    $.ajax({
       url: "module/module_maintenance_list/update_result.inc.php",
       type: "POST",
       data:{"action":"repair_results","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"id_dept_responsibility":<?PHP echo $rowData['id_dept_responsibility']?>},
@@ -696,6 +842,7 @@ $(document).on("click", ".btn-repair_results", function (e){
       },
       success: function (data) {
           $(".modal-body-update-result").html(data);
+          $('#modal-repair_results').modal('show');
           console.log(data);
       },
           error: function (jXHR, textStatus, errorThrown) {
@@ -704,6 +851,7 @@ $(document).on("click", ".btn-repair_results", function (e){
           swal("Error!", ""+errorThrown+"", "error");
       }
   });  
+  }
 });
 
 $(document).on("click", ".btn-approved", function (e){

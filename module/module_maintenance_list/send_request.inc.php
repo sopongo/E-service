@@ -55,6 +55,7 @@
             'detail_note_approved' => (NULL),
             'allotted_date' => (NULL),
             'allotted_accept_date' => (NULL),
+            'ref_user_id_accept_request' => (NULL),
             'related_to_safty' => (!empty($_POST['related_to_safty'])) ? $_POST['related_to_safty'] : 1,
             'problem_statement' => (!empty($_POST['problem_statement'])) ? $_POST['problem_statement'] : '',
             'ref_id_job_type' => (!empty($_POST['ref_id_job_type'])) ? $_POST['ref_id_job_type'] : '',
@@ -107,6 +108,31 @@
         echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
         exit();        
     }
+
+    if ($action=='start_repair') {
+        //echo $ref_id.'----xxx------'.$action;
+        $updateRow = [
+            'duration_serv_start' => (date('Y-m-d H:i:s')),
+        ];
+        ######### รอใส่โค๊ด Update Timeline ###########
+        ##                                                                           ##
+        ######### รอใส่โค๊ด Update Timeline ###########
+        echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+        exit();        
+    }    
+
+    if ($action=='accept_request') {
+        //echo $ref_id.'----xxx------'.$action;
+        $updateRow = [
+            'allotted_accept_date' => (date('Y-m-d H:i:s')),
+            'ref_user_id_accept_request' => ($_SESSION['sess_id_user']),
+        ];
+        ######### รอใส่โค๊ด Update Timeline ###########
+        ##                                                                           ##
+        ######### รอใส่โค๊ด Update Timeline ###########
+        echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+        exit();        
+    }    
 
     if ($action=='report_result') {
         //echo "<pre>";    print_r($_POST);    echo "</pre>";
