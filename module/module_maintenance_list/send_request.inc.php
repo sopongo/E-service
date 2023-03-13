@@ -134,13 +134,52 @@
         exit();        
     }    
 
+    
+    if ($action=='outsite_repair') {
+        //echo "<pre>";    print_r($_POST);    echo "</pre>"; //exit();
+        if(isset($_POST['data'])){
+            ##"slt_failure_code=3&txt_failure_code=xxxx&txt_caused_by=xxxxxxx&slt_repair_code=6&txt_repair_code=xxxx&txt_solution=xxxxxx
+            parse_str($_POST['data'], $output); //$output['period']
+            //echo $output['slt_failure_code'];                echo "\r\n\r\n";            
+            print_r($output); //exit();
+        }
+        //#tb_outsite_repair id_outsite_repair, ref_id_maintenance_request, caused_outsite_repair, ref_id_supplier, datesent_repair, dateresive_repair, ref_id_user_update, date_outsite_repair        
+        $chkID = $obj->customSelect("SELECT count(id_outsite_repair) AS total_row FROM tb_outsite_repair WHERE ref_id_maintenance_request=".$_POST['ref_id']." ");        
+        isset($output['empty_dateresive']) && $output['empty_dateresive']=='on' ? $output['dateresive_repair'] = '' : $output['dateresive_repair'] = $output['dateresive_repair'];
+        if($chkID['total_row']==1){
+            $insertRow = [
+                'caused_outsite_repair' => (!empty($output['caused_outsite_repair'])) ? $output['caused_outsite_repair'] : '',
+                'ref_id_supplier' => ($output['ref_id_supplier']=='custom' ? $output['txt_ref_id_supplier'] : $output['ref_id_supplier']),
+                'datesent_repair' => ((!empty(str_replace("/","-",$output['datesent_repair']))) ? $output['datesent_repair'] : ''),
+                'dateresive_repair' => ((!empty(str_replace("/","-",$output['dateresive_repair']))) ? $output['dateresive_repair'] : NULL),
+                'datetime_update' => (date('Y-m-d H:i:s')),
+                'ref_id_user_update' => ($_SESSION['sess_id_user']),
+            ];
+            $rowID = $obj->update($insertRow, "ref_id_maintenance_request=".$_POST['ref_id']."", "tb_outsite_repair");
+        }else{
+            $insertRow = [
+                'ref_id_maintenance_request' => $_POST['ref_id'],
+                'caused_outsite_repair' => (!empty($output['caused_outsite_repair'])) ? $output['caused_outsite_repair'] : '',
+                'ref_id_supplier' => ($output['ref_id_supplier']=='custom' ? $output['txt_ref_id_supplier'] : $output['ref_id_supplier']),
+                'datesent_repair' => ((!empty(str_replace("/","-",$output['datesent_repair']))) ? $output['datesent_repair'] : ''),
+                'dateresive_repair' => ((!empty(str_replace("/","-",$output['dateresive_repair']))) ? $output['dateresive_repair'] : NULL),
+                'datetime_update' => (date('Y-m-d H:i:s')),
+                'ref_id_user_update' => ($_SESSION['sess_id_user']),
+            ];
+            $rowID = $obj->addRow($insertRow, "tb_outsite_repair");
+        }
+        echo json_encode($rowID);
+        exit();
+    }
+
     if ($action=='report_result') {
-        //echo "<pre>";    print_r($_POST);    echo "</pre>";
+        //echo "<pre>";    print_r($_POST);    echo "</pre>"; //exit();
         //echo $_POST['data'];        echo "\r\n\r\n";        echo $_POST['action'];        echo "\r\n\r\n";        echo $_POST['ref_id'];                echo "\r\n\r\n";
         if(isset($_POST['data'])){
             ##"slt_failure_code=3&txt_failure_code=xxxx&txt_caused_by=xxxxxxx&slt_repair_code=6&txt_repair_code=xxxx&txt_solution=xxxxxx
             parse_str($_POST['data'], $output); //$output['period']
             //echo $output['slt_failure_code'];                echo "\r\n\r\n";            
+            //print_r($output);
         }
         $chkID = $obj->customSelect("SELECT count(id_repair_result) AS total_row FROM tb_repair_result WHERE ref_id_maintenance_request=".$_POST['ref_id']." ");
         //#tb_repair_result     id_repair_result, ref_id_maintenance_request, ref_id_failure_code, ref_id_repair_code, txt_caused_by, txt_solution, ref_id_user_report, report_date, edit_report_date

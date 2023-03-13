@@ -100,9 +100,9 @@ if ($action=='repair_results') {
                                 <label for="slt_failure_code"><i class="fas fa-angle-double-right"></i>  รหัสอาการเสีย:<span class="text-red font-size-sm">**</span></label>   <?PHP //echo $ref_id;?> / <?PHP //echo $_POST['id_dept_responsibility'];?>
                                 <?PHP 
                                             if(isset($editData['ref_id_failure_code'])){/*เช็คการแสดงผล รหัสอาการเสีย*/
-                                                if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ</[^>*\][\]+>|/])', $editData['ref_id_failure_code'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง                                                    
+                                                if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ</[^>*\][\]+>|/])', $editData['ref_id_failure_code'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
                                                     $chk_show_failure_code = 'd-line'; $chk_slt_failure_code = 'd-none'; $chk_txt_failure_code = 'd-block';
-                                                    //echo "ปน";
+                                                    //echo "ปปปปปปปปปปปปปปปปปปปปปน";
                                                 }else{
                                                     $chk_show_failure_code = 'd-none'; $chk_slt_failure_code = 'd-block'; $chk_txt_failure_code = 'd-none';
                                                     //echo "ไม่ปนccccccccccccccccccccc";
@@ -532,13 +532,13 @@ $(function () {
         exit();
     }
     if($action=='update_outsite'){
-        $rowData = $obj->customSelect("SELECT tb_supplier.*, tb_maintenance_request.id_maintenance_request, tb_machine_site.id_machine_site
-        FROM tb_maintenance_request 
-		LEFT JOIN tb_machine_site ON (tb_maintenance_request.ref_id_machine_site=tb_machine_site.id_machine_site)
-		LEFT JOIN tb_supplier ON (tb_supplier.id_supplier=tb_machine_site.ref_id_supplier)        
-        WHERE tb_maintenance_request.id_maintenance_request=".$ref_id." ");
+        $rowData = $obj->customSelect("SELECT tb_supplier.*, tb_outsite_repair.*, tb_user.fullname
+        FROM tb_outsite_repair 
+		LEFT JOIN tb_supplier ON (tb_supplier.id_supplier=tb_outsite_repair.ref_id_supplier)
+		LEFT JOIN tb_user ON (tb_user.id_user=tb_outsite_repair.ref_id_user_update)
+        WHERE tb_outsite_repair.ref_id_maintenance_request=".$ref_id." ");
 ?>
-    <form id="needs-validation8" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+    <form id="needs-validation9" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
     <div class="container">
         <div class="row">
         <div class="offset-md-0 col-md-12 offset-md-0">  
@@ -549,7 +549,7 @@ $(function () {
                     <div class="row row-4">
                         <div class="col-sm-12 col-md-12 col-xs-12">  
                             <div class="form-group">  
-                                <label for="problem_statement"><span class="text-red font-size-sm"></span> ผู้อัพเดท:</label> <?PHP echo $_SESSION['sess_fullname']; ?>
+                                <label for="problem_statement"><span class="text-red font-size-sm"></span> ผู้อัพเดท:</label> <?PHP echo !isset($rowData['fullname']) ? '-' : $rowData['fullname'];?>
                             </div>
                         </div>
                     </div><!--row-4-->
@@ -557,40 +557,77 @@ $(function () {
                     <div class="row row-5 hv p-1 pb-0">
                         <div class="col-sm-12 col-md-12 col-xs-12"> 
                             <div class="form-group">
-                                <label for="slt_failure_code"><i class="fas fa-angle-double-right"></i>  สาเหตุที่ส่งซ่อม:<span class="text-red font-size-sm">**</span></label>   
-                                    <div><textarea class="form-control <?PHP echo $chk_txt_failure_code; ?>" rows="2" id="txt_failure_code" name="txt_failure_code" placeholder="" ><?PHP echo isset($editData['ref_id_failure_code']) ? $editData['ref_id_failure_code'] : '';?></textarea></div>
+                                <label for="caused_outsite_repair"><i class="fas fa-angle-double-right"></i>  สาเหตุที่ส่งซ่อม:<span class="text-red font-size-sm">**</span></label>   
+                                    <div><textarea class="form-control" rows="2" id="caused_outsite_repair" name="caused_outsite_repair" placeholder="" ><?PHP echo !isset($rowData['caused_outsite_repair']) ? '-' : $rowData['caused_outsite_repair'];?></textarea></div>
                             </div>
                         </div>
-                        
-                        <div class="row row-5 hv p-1 pb-0">
-                        <div class="col-sm-12 col-md-12 col-xs-12">  
-                            <div class="form-group">  
+                    </div><!--row-5 required-->
+
+                    <div class="row row-6 hv p-1 pb-0">
+                        <div class="col-sm-12 col-md-12 col-xs-12"> 
+                            <div class="form-group">
                                 <?PHP
-                                    if(isset($editData['ref_id_repair_code'])){/*เช็คการแสดงผล รหัสซ่อม*/
-                                        if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ</[^>*\][\]+>|/])', $editData['ref_id_repair_code'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
-                                            $chk_show_repair_code = 'd-inline'; $chk_slt_repair_code = 'd-none'; $chk_txt_repair_code = 'd-block';
+                                    if(isset($editData['ref_id_supplier'])){/*เช็คการแสดงผล รหัสซ่อม*/
+                                        if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ</[^>*\][\]+>|/])', $editData['ref_id_supplier'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
+                                            $chk_show_id_supplier = 'd-inline'; $chk_slt_id_supplier = 'd-none'; $chk_txt_id_supplier = 'd-block';
                                             //echo "ปนcccccccccccccccccc";
                                         }else{
-                                            $chk_show_repair_code = 'd-none'; $chk_slt_repair_code = 'd-block'; $chk_txt_repair_code = 'd-none';
+                                            $chk_show_id_supplier = 'd-none'; $chk_slt_id_supplier = 'd-block'; $chk_txt_id_supplier = 'd-none';
                                             //echo "ไม่ปนccccccccccccccccccccc";
                                         }
                                     }else{
-                                            $chk_show_repair_code = 'd-none'; $chk_slt_repair_code = 'd-block'; $chk_txt_repair_code = 'd-none';
+                                            $chk_show_id_supplier = 'd-none'; $chk_slt_id_supplier = 'd-block'; $chk_txt_id_supplier = 'd-none';
                                     } 
                                 ?>
-                                <label for="slt_repair_code"><i class="fas fa-angle-double-right"></i>  ซัพพลายเออร์:<span class="text-red font-size-sm">**</span></label>  <a class="chk_repair_code <?PHP echo $chk_show_repair_code; ?> text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
-                                <select class="custom-select <?PHP echo $chk_slt_repair_code;?>" name="slt_repair_code" id="slt_repair_code" style="width: 100%;" >
+                                <label for="ref_id_supplier"><i class="fas fa-angle-double-right"></i>  ซัพพลายเออร์:<span class="text-red font-size-sm">**</span></label>  <a class="chk_id_supplier <?PHP echo $chk_show_id_supplier; ?> text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
+                                <select class="custom-select <?PHP echo $chk_slt_id_supplier;?>" name="ref_id_supplier" id="ref_id_supplier" style="width: 100%;" >
                                 <?PHP  
                                     echo '<option value="">เลือกซัพพลายเออร์</option>';
-                                    echo '<option value="custom">0000 - พิมพ์ระบุเอง</option>';
+                                    echo '<option value="custom">???? - พิมพ์ระบุเอง</option>';
                                     echo '<option value="'.$rowData['id_supplier'].'">'.$rowData['supplier_name'].'</option>';
                                 ?>
                                 </select>
-                                <textarea class="form-control <?PHP echo $chk_txt_repair_code;?>" rows="2" id="txt_repair_code" name="txt_repair_code" placeholder="" ><?PHP echo isset($editData['ref_id_repair_code']) ? $editData['ref_id_repair_code'] : '';?></textarea>
-                                <div class="invalid-feedback">ระบุรหัสซ่อม</div>
+                                <textarea class="form-control <?PHP echo $chk_txt_id_supplier;?>" rows="2" id="txt_ref_id_supplier" name="txt_ref_id_supplier" placeholder="" ><?PHP echo isset($editData['ref_id_supplier']) ? $editData['ref_id_supplier'] : '';?></textarea>
+                                <div class="invalid-feedback">ระบุซัพพลายเออร์</div>
                             </div>
-                        </div>                        
-                    </div><!--row-5 required-->
+                        </div>
+                    </div><!--row-6 required-->
+
+                    <div class="row row-7 hv p-1 pb-0">
+                        <div class="col-sm-12 col-md-12 col-xs-12"> 
+                            <div class="form-group">
+                                <label for="datesent_repair"><i class="fas fa-angle-double-right"></i>  วันที่ส่งซ่อม:<span class="text-red font-size-sm">**</span></label>  
+                                <div class="input-group date" id="div_datesent_repair" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input input-md mr-0" id="datesent_repair" name="datesent_repair" value="<?PHP echo date('Y/m/d');?>" readonly data-target="#datesent_repair" required />
+                                  <div class="input-group-append" data-target="#datesent_repair" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    <div class="invalid-feedback">เลือกวันที่รับเข้า</div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--row-7 required-->
+
+                    <div class="row row-8 hv p-1 pb-0">
+                        <div class="col-sm-12 col-md-12 col-xs-12"> 
+                            <div class="form-group">
+                                <label for="slt_id_supplier"><i class="fas fa-angle-double-right"></i>  วันที่รับคืน:<span class="text-red font-size-sm">**</span></label>  
+                                <div class="input-group date" id="div_dateresive_repair" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input input-md mr-0" id="dateresive_repair" name="dateresive_repair" value="<?PHP echo date('Y/m/d');?>" readonly data-target="#dateresive_repair" required />
+                                  <div class="input-group-append" data-target="#dateresive_repair" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    <div class="invalid-feedback">เลือกวันที่รับคืน</div>
+                                  </div>
+                                </div>
+
+                    <div class="icheck-danger d-inline-block pt-1">
+                        <input type="checkbox" id="checkboxDanger1" name="empty_dateresive">
+                        <label for="checkboxDanger1" class="text-red">คลิกที่นี่หากยังไม่ระบุวันรับคืน</label>
+                      </div>                                
+
+                            </div>
+                        </div>
+                    </div><!--row-8 required-->                    
 
 
                 </div><!--card-body-->
@@ -602,6 +639,25 @@ $(function () {
 
 <script>
 
+//checkboxDanger1
+
+$("#checkboxDanger1").change(function() {
+    //$("input[readonly]").prop("disabled", true);
+    $("#dateresive_repair").val("").prop('disabled', function (_, val) { return ! val; });
+});
+
+//Date picker
+$('#datesent_repair').datetimepicker({
+        //format: 'L',
+        format: 'YYYY/MM/DD',
+        maxDate: new Date(),
+    });
+
+$('#dateresive_repair').datetimepicker({
+        //format: 'L',
+        format: 'YYYY/MM/DD',
+        maxDate: new Date(),
+    });
 </script>
 <?PHP
     }

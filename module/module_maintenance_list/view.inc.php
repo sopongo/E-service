@@ -346,12 +346,12 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-update_outsite" data-toggle="modal" data-target="#modal-outsite_repair" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
-                    <strong class="d-inline-block w-25">สาเหตุที่ส่งซ่อม:</strong> MySQL_Val<br>
-                    <strong class="d-inline-block w-25">ซัพพลายเออร์:</strong> MySQL_Val<br>
+                    <strong class="d-inline-block w-25">สาเหตุที่ส่งซ่อม:</strong> <?PHP echo $rowData['caused_outsite_repair']=='' ? '-' : $rowData['caused_outsite_repair'];?><br>
+                    <strong class="d-inline-block w-25">ซัพพลายเออร์:</strong> <?PHP echo $rowData['supplier_name']=='' ? $rowData['ref_id_supplier'] : $rowData['supplier_name'];?><br>
                 </div><!-- /.col -->
                 <div class="col-sm-6 invoice-col">
-                    <strong class="d-inline-block w-25">วันที่ส่งซ่อม:</strong> MySQL_Val<br>
-                    <strong class="d-inline-block w-25">วันที่ส่งคืน:</strong> MySQL_Val<br>
+                    <strong class="d-inline-block w-25">วันที่ส่งซ่อม:</strong> <?PHP echo $rowData['datesent_repair']=='' ? '-' : nowDateShort($rowData['datesent_repair']);?><br>
+                    <strong class="d-inline-block w-25">วันที่ส่งคืน:</strong> <?PHP echo $rowData['dateresive_repair']=='' ? '-' : nowDateShort($rowData['dateresive_repair']);?><br>
                 </div><!-- /.col -->                
               </div><!-- /.row -->
 
@@ -567,10 +567,24 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 </section>
 <!-- /.content -->
 
+
+<!-- iCheck for checkboxes and radio inputs -->
+<link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+
+
 <!-- Ekko Lightbox -->
 <script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>  
   <!-- Ekko Lightbox -->
   <link rel="stylesheet" href="plugins/ekko-lightbox/ekko-lightbox.css">
+
+  <!-- daterange picker -->
+<link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+<!-- InputMask -->
+<script src="plugins/moment/moment.min.js"></script>
+<script src="plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="plugins/daterangepicker/daterangepicker.js"></script>
+<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 
 <script type="text/javascript"> 
 $(document).on('click', '[data-toggle="lightbox"]', function(event) {
@@ -621,7 +635,6 @@ $(document).on("click", ".btn-problem_statement", function (e){
       }
   });
 });
-
 
 $(document).on("click", ".btn-start_repair", function (event){ 
   swal({
@@ -722,7 +735,7 @@ $(document).on("click", ".btn-accept_date", function (event){
     event.stopPropagation();
 });
 
-$(document).on("click", ".btn-submitxxx", function (event){ 
+$(document).on("click", ".btn-submit_result", function (event){ 
     var formAdd = document.getElementById('needs-validation8');  
     var frmData = $("form#needs-validation8").serialize();
 
@@ -756,6 +769,7 @@ if(txt_repair_code!=''){  $("#slt_repair_code option[value=custom]").attr("selec
             },
             success: function (data) {
             console.log(data);
+            return false;
             if(data==''){
                 sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
                 return false;
@@ -767,9 +781,10 @@ if(txt_repair_code!=''){  $("#slt_repair_code option[value=custom]").attr("selec
                     //timer: 3000
                 }, 
                 function(){
-                    //return false();
+                    //console.log(data);
+                    return false;
                     //alert(ref_id);
-                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                    //window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
                 })
                 //sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
             }   

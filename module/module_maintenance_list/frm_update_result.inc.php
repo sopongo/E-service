@@ -13,7 +13,7 @@
     ?>
     </div><!--modal-body-->
     <div class="modal-footer justify-content-between">
-        <input type="submit" class="btn btn-primary btn-submitxxx btn-success" value="บันทึก" />
+        <input type="submit" class="btn btn-primary btn-submit_result btn-success" value="บันทึก" />
         <input type="reset" class="btn btn-cancel btn-danger" data-dismiss="modal" value="ยกเลิก" />
 
         <!--<input type="submit" class="btn btn-block btn-success btn-md w-auto btn_report_result" value="บันทึก" />
