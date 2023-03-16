@@ -2,7 +2,14 @@
 switch($denied_requestid){
   case 1:
 ?>
+<script src='plugins/multifile/jquery.MultiFile.js'></script><!--ใช้กับหน้า update_result.inc.php / $action=img_after_repair  -->
 <style type="text/css">
+
+  
+@media only screen and (max-width:640px) {
+    .card-title{ width:100%;  background-color: #000; padding-bottom:50px ;}
+}
+
 .btn-gray {    color: #333;    background-color: #e7e7e7;    border-color: #e3e3e3;    box-shadow: none;}
 .btn-gray:hover {    background-color: #cccccc;}
 .bg-pcs{ background-color:#00387C;} 
@@ -21,6 +28,11 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
     border-radius: 0.25rem;
     box-shadow: inset 0 1px 2px rgb(0 0 0 / 8%);
     width:100%;
+}
+
+.doubleUnderline {
+    text-decoration:underline;
+    border-bottom: 1px solid #000;
 }
 
 .card-title{ font-size:1rem;}
@@ -45,7 +57,9 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
   include_once 'module/module_maintenance_list/frm_maintenance_type.inc.php'; #อัพเดทประเภทใบแจ้งซ่อม
   include_once 'module/module_maintenance_list/frm_problem_statement.inc.php'; #อัพเดทอาการเสีย/ปัญหาที่พบ
   include_once 'module/module_maintenance_list/frm_outsite_repair.inc.php'; #อัพเดทส่งซ่อมภายนอก
-    
+  include_once 'module/module_maintenance_list/frm_change_parts.inc.php';#อัพเดทรายการอะไหล่ที่เปลี่ยน
+  include_once 'module/module_maintenance_list/frm_img_after_repair.inc.php';#อัพเดทรูปหลังซ่อม
+      
   ##ลิงค์โค๊ดส่วนที่ 1
   if($rowData['status_approved']==1){//ถ้าอนุมัติแล้ว จะคิวรี่ผู้รับผิดชอบมารอไว้
     $rowMechanic = $obj->fetchRows("SELECT tb_user.id_user, tb_user.fullname, tb_ref_repairer.* FROM tb_ref_repairer 
@@ -269,9 +283,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               <div class="card-title d-block text-bold w-100 border-bottom pb-1 mt-3 mb-2"><i class="fas fa-users-cog"></i> ผู้รับผิดชอบงานซ่อม: <?PHP if($rowData['status_approved']==1 && $rowData['maintenance_request_status']!=2){?><button type="button" class="btn btn-default btn-sm btn-change-approved" data-toggle="modal" data-target="#modal-change-approved" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> เปลี่ยน-เพิ่ม ผู้รับผิดชอบ</button><?PHP } ?></div><br>
               <div class="row invoice-info linehi-170">
                 <?PHP if($rowData['status_approved']!=1){?>
-                  <div class="col-sm-4 invoice-col">
-                    <span class="text-gray">- ยังไม่ระบุ</span>
-                  </div>
+                        <div class="m-auto d-block pt-3 pb-3 text-center text-gray">ยังไม่กำหนดผู้รับผิดชอบ</div>
                 <?PHP } else{ ?>
               <?PHP
                 ##ลิงค์โค๊ดส่วนที่ 1
@@ -314,8 +326,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div><!-- /.col -->                
               </div><!-- /.row -->
 
-              <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายอาการเสีย / ปัญหาที่พบ: </div><br>  
-              <div class="row invoice-info">
+              <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายอาการเสีย / ปัญหาที่พบ: </div><br />  
               <div class="row">
                 <?PHP
                   $rowImg= $obj->fetchRows("SELECT * FROM tb_attachment WHERE ref_id_used=".$rowData['id_maintenance_request']." AND attachment_type=1 AND image_cate=2");                 
@@ -325,9 +336,10 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                         echo '<div class="col-sm-2"><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid" alt="xxxx"></a>').'</div></div>';
                         $i++;
                     }
-                  }                  
+                  }else{
+                      echo '<div class="m-auto d-block pt-3 pb-3 text-center text-gray">ไม่มีรูปภาพ</div>';
+                  }
                 ?>
-                </div>
               </div><!-- /.row -->
               
               <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-clipboard-check"></i> สรุปผลการซ่อม: 
@@ -355,30 +367,53 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div><!-- /.col -->                
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-change_parts" data-toggle="modal" data-target="#modal-change_parts" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
                 <!-- Table row -->
-                <div class="row"> 
+                <div class="row">
                 <div class="col-12 table-responsive">
                   <table class="table table-striped">
                     <thead>
-                    <tr>
-                      <th>Qty</th>
-                      <th>Product</th>
-                      <th>Serial #</th>
-                      <th>Description</th>
-                      <th>Subtotal</th>
+                    <tr class="bg-light">
+                      <th>#</th>
+                      <th>S/N No.</th>
+                      <th>ชื่ออะไหล่</th>
+                      <th>รายละเอียด</th>
+                      <th class="text-right">จำนวน/ชิ้น</th>
+                      <th class="text-right">ราคาบาท/ชิ้น</th>
+                      <th class="text-right">รวม/บาท</th>
+                      <th>#</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?PHP for($i=1; $i<=3; $i++){?>
-                    <tr>
-                      <td>1</td>
-                      <td>Spare Parts Name</td>
-                      <td>455-981-221</td>
-                      <td>Spare Parts Detail</td>
-                      <td>฿<?PHP echo $i; ?>4.50</td>
-                    </tr>
-                    <?PHP } ?>
+                    <?PHP
+                            $grand_total = 0;
+                          $rowParts = $obj->fetchRows("SELECT * FROM tb_change_parts WHERE ref_id_maintenance_request=".$rowData['id_maintenance_request']." ORDER BY id_parts ASC");
+                          if (count($rowParts)!=0) {
+                            $i = 1;
+                              foreach($rowParts as $key => $value) {
+                                  echo '<tr>';
+                                  echo '<td>'.$i.'.</td>';
+                                  echo '<td>'.$rowParts[$key]['parts_serialno'].'</td>';
+                                  echo '<td>'.$rowParts[$key]['parts_name'].'</td>';
+                                  echo '<td>'.$rowParts[$key]['parts_description'].'</td>';
+                                  echo '<td class="text-right">'.number_format($rowParts[$key]['parts_price'],2).'</td>';
+                                  echo '<td class="text-right">'.number_format($rowParts[$key]['parts_qty'],0).'</td>';
+                                  echo '<td class="text-right">'.(number_format(($rowParts[$key]['parts_price']*$rowParts[$key]['parts_qty']),2)).'</td>';
+                                  echo '<td><button type="button" class="btn btn-danger btn-sm view-data p-0 px-1 m-0" data-id="'.$rowParts[$key]['id_parts'].'" data-toggle="modal"  id="viewData" data-backdrop="static" data-keyboard="false" title="ดูข้อมูล"><i class="fa fa-trash-alt"></i></button>
+                                  <button type="button" class="btn btn-warning btn-sm edit-data p-0 px-1 m-0" data-id="'.$rowParts[$key]['id_parts'].'" data-toggle="modal" id="edit-data" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button></td>';
+                                  echo '</tr>';
+                                  $i++;
+                                  $grand_total+=$rowParts[$key]['parts_price']*$rowParts[$key]['parts_qty'];
+                              }
+                          } else {
+                              echo '<tr class="bg-white"><td colspan="8" class="text-center text-gray">ไม่มีรายการเปลี่ยนอะไหล่</td></tr>';
+                          }
+                    ?>
+                        <tr class="bg-light">
+                          <td colspan="6" class="text-right">รวมค่าอะไหล่ทั้งหมด(บาท):</td>
+                          <td class="text-right"><div class="doubleUnderline d-inline"><?PHP echo number_format($grand_total,2)?></div></td>
+                          <td></td>
+                        </tr>
                     </tbody>
                   </table>
                 </div>
@@ -386,16 +421,14 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               </div>                
                 <!-- /Table row -->
               
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-img_after" data-toggle="modal" data-target="#modal-img_after_repair" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
               <div class="row invoice-info">
               <div class="row">
-                <?PHP for($i=1; $i<=6; $i++){?>
-                  <div class="col-sm-2">
+                  <!--<div class="col-sm-2">
                     <div class="position-relative">
                       <img src="upload-pic-req/idmt-req/<?PHP echo $i; ?>.jpg" alt="Photo 1" class="img-fluid">
                     </div>
-                  </div>
-                  <?PHP } ?>
+                  </div>-->
                 </div>
               </div><!-- /.row -->
 
@@ -616,6 +649,27 @@ $(document).on("click", ".btn-update_outsite", function (e){
 });
 
 
+$(document).on("click", ".btn-img_after", function (e){ 
+  e.stopPropagation();
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"img_after_repair","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>},
+      beforeSend: function () {
+      },
+      success: function (data) {
+        console.log(data);
+          $(".modal-img_after_repair").html(data);
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });
+});
+
+
 $(document).on("click", ".btn-problem_statement", function (e){ 
   e.stopPropagation();
   $.ajax({
@@ -820,6 +874,26 @@ $(document).on("click", ".btn-update-type", function (e){
           swal("Error!", ""+errorThrown+"", "error");
       }
   });
+});
+
+$(document).on("click", ".btn-change_parts", function (e){
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"change-parts","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"id_dept_responsibility":<?PHP echo $rowData['id_dept_responsibility']?>},
+      beforeSend: function () {
+      },
+      success: function (data) {
+          $(".modal-body-change_parts").html(data);
+          console.log(data);
+          e.stopPropagation();
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });  
 });
 
 $(document).on("click", ".btn-change-approved", function (e){

@@ -93,10 +93,7 @@
                     }
                 }
         }
-        echo json_encode($imgRowID);
-        exit();
-
-
+        echo json_encode($rowID);
         exit();
     }
 
@@ -134,6 +131,35 @@
         exit();        
     }    
 
+    if ($action=='update_parts') {
+        //#tb_change_parts  id_parts, ref_id_maintenance_request, parts_serialno, parts_name, parts_description, parts_price, parts_qty, date_parts_change, ref_id_user_change, date_adddata
+        //echo "<pre>";    print_r($_POST);    echo "</pre>"; //exit();
+        if(isset($_POST['data'])){
+            ##"slt_failure_code=3&txt_failure_code=xxxx&txt_caused_by=xxxxxxx&slt_repair_code=6&txt_repair_code=xxxx&txt_solution=xxxxxx
+            parse_str($_POST['data'], $output); //$output['period']
+            //echo $output['slt_failure_code'];                echo "\r\n\r\n";            
+            //print_r($output); //exit();
+        }
+
+        $insertRow = [
+            'ref_id_maintenance_request' => ($ref_id),
+            'parts_serialno' => (!empty($output['parts_serialno'])) ? $output['parts_serialno'] : '',
+            'parts_name' => (!empty($output['parts_name'])) ? $output['parts_name'] : '',
+            'parts_description' => (!empty($output['parts_description'])) ? $output['parts_description'] : '',
+            'parts_price' => ((!empty($output['parts_price'])) ? intval(str_replace(",","",$output['parts_price'])) : ''),
+            'parts_qty' => ((!empty($output['parts_qty'])) ? intval(str_replace(",","",$output['parts_qty'])) : ''),                        
+            'date_parts_change' => ((!empty(str_replace("/","-",$output['date_parts_change']))) ? $output['date_parts_change'] : ''),
+            'date_adddata' => (date('Y-m-d H:i:s')),
+            'ref_id_user_change' => ($_SESSION['sess_id_user']),
+        ];
+        ######### รอใส่โค๊ด Update Timeline ###########
+        ##                                                                           ##
+        ######### รอใส่โค๊ด Update Timeline ###########
+        $rowID = $obj->addRow($insertRow, "tb_change_parts");
+        echo json_encode($rowID);
+        exit();        
+    }        
+
     
     if ($action=='outsite_repair') {
         //echo "<pre>";    print_r($_POST);    echo "</pre>"; //exit();
@@ -141,7 +167,7 @@
             ##"slt_failure_code=3&txt_failure_code=xxxx&txt_caused_by=xxxxxxx&slt_repair_code=6&txt_repair_code=xxxx&txt_solution=xxxxxx
             parse_str($_POST['data'], $output); //$output['period']
             //echo $output['slt_failure_code'];                echo "\r\n\r\n";            
-            print_r($output); //exit();
+            //print_r($output); //exit();
         }
         //#tb_outsite_repair id_outsite_repair, ref_id_maintenance_request, caused_outsite_repair, ref_id_supplier, datesent_repair, dateresive_repair, ref_id_user_update, date_outsite_repair        
         $chkID = $obj->customSelect("SELECT count(id_outsite_repair) AS total_row FROM tb_outsite_repair WHERE ref_id_maintenance_request=".$_POST['ref_id']." ");        
@@ -149,7 +175,7 @@
         if($chkID['total_row']==1){
             $insertRow = [
                 'caused_outsite_repair' => (!empty($output['caused_outsite_repair'])) ? $output['caused_outsite_repair'] : '',
-                'ref_id_supplier' => ($output['ref_id_supplier']=='custom' ? $output['txt_ref_id_supplier'] : $output['ref_id_supplier']),
+                'ref_id_supplier' => ($output['slt_ref_id_supplier_2']=='custom' ? $output['txt_ref_id_supplier_2'] : $output['slt_ref_id_supplier_2']),
                 'datesent_repair' => ((!empty(str_replace("/","-",$output['datesent_repair']))) ? $output['datesent_repair'] : ''),
                 'dateresive_repair' => ((!empty(str_replace("/","-",$output['dateresive_repair']))) ? $output['dateresive_repair'] : NULL),
                 'datetime_update' => (date('Y-m-d H:i:s')),
@@ -160,7 +186,7 @@
             $insertRow = [
                 'ref_id_maintenance_request' => $_POST['ref_id'],
                 'caused_outsite_repair' => (!empty($output['caused_outsite_repair'])) ? $output['caused_outsite_repair'] : '',
-                'ref_id_supplier' => ($output['ref_id_supplier']=='custom' ? $output['txt_ref_id_supplier'] : $output['ref_id_supplier']),
+                'ref_id_supplier' => ($output['slt_ref_id_supplier_2']=='custom' ? $output['txt_ref_id_supplier_2'] : $output['slt_ref_id_supplier_2']),
                 'datesent_repair' => ((!empty(str_replace("/","-",$output['datesent_repair']))) ? $output['datesent_repair'] : ''),
                 'dateresive_repair' => ((!empty(str_replace("/","-",$output['dateresive_repair']))) ? $output['dateresive_repair'] : NULL),
                 'datetime_update' => (date('Y-m-d H:i:s')),

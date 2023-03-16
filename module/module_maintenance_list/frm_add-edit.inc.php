@@ -280,7 +280,7 @@ $(document).ready(function(){
                 }, 
                 function(){
                     console.log(data);
-                    //event.stopPropagation();
+                    event.stopPropagation();
                     //return false();
                     //alert(ref_id);
                     window.location.href = '?module=requestid&id='+data+'';

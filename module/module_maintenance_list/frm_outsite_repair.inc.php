@@ -82,7 +82,8 @@ $(document).on("click", ".btn-outsite_repair", function (event){
             beforeSend: function () {
             },success: function (data) {
                 console.log(data); //return false;
-                event.stopPropagation();
+                //event.stopPropagation();
+                $(".modal").hide().fadeOut();
                 if(data.error=='over_req'){
                     sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
                     return false;
@@ -94,7 +95,7 @@ $(document).on("click", ".btn-outsite_repair", function (event){
                     //timer: 3000
                 }, 
                 function(){
-                    //console.log(data);
+                    console.log(data);
                     //event.stopPropagation();
                     //return false();
                     //alert(ref_id);

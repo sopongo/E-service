@@ -490,6 +490,46 @@ $(function () {
     }
 ?>
 <?PHP 
+    if($action=='img_after_repair'){
+?>
+    <form id="needs-validation_11" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+    <div class="container">
+        <div class="row">
+        <div class="offset-md-0 col-md-12 offset-md-0">  
+            <div class="card">  
+                <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p> <span class="float-right editby"></span></div>
+                <div class="card-body p-3">
+                    <!--ajax data hear-->
+                    <div class="row row-5">
+                        <div class="col-sm-12">
+                        <!-- select -->
+                        <div class="form-group">
+                            <label>เลือกรูปถ่าย:</label>
+			<div class="row-fluid">
+				<div class="col-md-12">
+					<input name="files[]" type="file" multiple="multiple" data-maxsize="6000" maxlength="6" id="our-test" accept="gif|jpg|png|jpeg" class="border  p-1 multi with-preview w-auto" />
+                    <span class="text-red font-size-sm mt-2 d-block w-100">** ไม่เกิน 6 รูป / ไฟล์ไซต์ไม่เกิน 6 เมกะไบต์ต่อรูป</span> 
+				</div>
+			</div>
+                        </div>
+                        </div>
+                    </div><!--row-5-->
+                </div><!--card-body-->
+            </div><!--card-->
+        </div>                
+        </div><!--row-->
+    </div><!--container-->
+    </form><!--FORM 1-->
+    <script>
+        $('#our-test').MultiFile({
+            max: 6,
+            onFileChange: function(){
+                console.log('TEST CHANGE:', this, arguments);
+            }
+        });
+    </script>
+<?PHP 
+    }
     if($action=='update_type'){
         $ref_mt_type = $_POST['ref_mt_type'];
         $ref_id_dept = $_POST['ref_id_dept'];
@@ -531,6 +571,94 @@ $(function () {
         //echo 'ยกเลิกใบแจ้งซ่อม';
         exit();
     }
+    if($action=='change-parts'){
+        //id_parts, ref_id_maintenance_request, parts_serialno, parts_name, parts_description, parts_price, parts_qty, date_parts_change, ref_id_user_change, date_adddata
+        #tb_change_parts
+?>
+        <script src="plugins/autoNumeric/autoNumeric.js"></script>
+        <!--FORM 1-->
+        <form id="needs-validation10" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+        <div class="container">
+            <div class="row">
+
+            <div class="offset-md-0 col-md-12 offset-md-0">  
+                <div class="card">  
+                    <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p></div>
+                    <div class="card-body p-3"> 
+
+
+                    <div class="row row-7">
+                        <div class="col-sm-4 col-md-4 col-xs-4"> 
+                            <div class="form-group">
+                                <label for="date_parts_change">วันที่เปลี่ยนอะไหล่:<span class="text-red font-size-sm">**</span></label>  
+                                <div class="input-group date" id="div_date_parts_change" data-target-input="nearest">
+                                  <input type="text" class="form-control datetimepicker-input input-md mr-0" id="date_parts_change" name="date_parts_change" value="" data-target="#date_parts_change" />
+                                  <div class="input-group-append" data-target="#date_parts_change" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    <div class="invalid-feedback">เลือกวันที่เปลี่ยน</div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--row-7 required-->                    
+
+                        <div class="row row-1">
+                        <div class="col-sm-4 col-md-4 col-xs-4">  
+                            <div class="form-group mb-2">
+                                <label>ซีเรียลนัมเบอร์อะไหล่(ถ้ามี): </label> 
+                                <input type="text" id="parts_serialno" name="parts_serialno" maxlength="30" placeholder="Serial number.(ถ้ามี)" class="form-control" aria-describedby="inputGroupPrepend"  />                          
+                            </div>
+                        </div>  
+                        <div class="col-sm-8 col-md-8 col-xs-8">  
+                            <div class="form-group mb-2">
+                                <label>ชื่ออะไหล่:<span class="text-red font-size-sm">**</span> </label> 
+                                <input type="text" id="parts_name" name="parts_name" maxlength="80" placeholder="ชื่ออะไหล่" class="form-control" aria-describedby="inputGroupPrepend" required /><div class="invalid-feedback">กรอกชื่ออะไหล่</div>                                
+                            </div>
+                        </div>  
+                        </div><!--row-1-->
+
+                        <div class="row row-4">
+                            <div class="col-sm-12 col-md-12 col-xs-12">  
+                                <div class="form-group">  
+                                    <label for="parts_description">รายละเอียดอะไหล่</label>  
+                                    <textarea class="form-control w-100" id="parts_description" name="parts_description" rows="3" placeholder="รายละเอียดอะไหล่ ..."><?PHP echo isset($rowData['ref_id_supplier']) ? $rowData['ref_id_supplier'] : '';?></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xs-6">  
+                                <div class="form-group">  
+                                    <label for="parts_price">ราคาต่อชิ้น/บาท</label>  
+                                    <input type="text" id="site_name" name="parts_price" placeholder="ราคาต่อชิ้น/บาท" class="form-control numeric" aria-describedby="inputGroupPrepend" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-xs-6">  
+                                <div class="form-group">  
+                                    <label for="parts_qty">จำนวนที่เปลี่ยน/ชิ้น</label>  
+                                    <input type="text" id="parts_qty" name="parts_qty" placeholder="จำนวนที่เปลี่ยน/ชิ้น" class="form-control numeric_nocom" aria-describedby="inputGroupPrepend" />
+                                </div>
+                            </div>                            
+                        </div><!--row-4-->
+
+                    </div><!--card-body-->
+                </div><!--card-->
+            </div>                
+
+            </div><!--row-->
+        </div><!--container-->
+        </form>
+        <!--FORM 1-->
+<script>
+$(function($) {
+    $('.numeric').autoNumeric('init');
+    $('.numeric_nocom').autoNumeric('init', {aSep:',', aDec:false, aPad: false}); 
+});
+$('#date_parts_change').datetimepicker({
+        defaultDate: new Date(),
+        format: 'YYYY/MM/DD',
+        maxDate: new Date(),
+    });
+</script>        
+<?PHP
+    }
     if($action=='update_outsite'){
         $rowData = $obj->customSelect("SELECT tb_supplier.*, tb_outsite_repair.*, tb_user.fullname
         FROM tb_outsite_repair 
@@ -558,7 +686,7 @@ $(function () {
                         <div class="col-sm-12 col-md-12 col-xs-12"> 
                             <div class="form-group">
                                 <label for="caused_outsite_repair"><i class="fas fa-angle-double-right"></i>  สาเหตุที่ส่งซ่อม:<span class="text-red font-size-sm">**</span></label>   
-                                    <div><textarea class="form-control" rows="2" id="caused_outsite_repair" name="caused_outsite_repair" placeholder="" ><?PHP echo !isset($rowData['caused_outsite_repair']) ? '-' : $rowData['caused_outsite_repair'];?></textarea></div>
+                                    <div><textarea class="form-control" rows="2" id="caused_outsite_repair" name="caused_outsite_repair" placeholder="" ><?PHP echo !isset($rowData['caused_outsite_repair']) ? '' : $rowData['caused_outsite_repair'];?></textarea></div>
                             </div>
                         </div>
                     </div><!--row-5 required-->
@@ -567,27 +695,35 @@ $(function () {
                         <div class="col-sm-12 col-md-12 col-xs-12"> 
                             <div class="form-group">
                                 <?PHP
-                                    if(isset($editData['ref_id_supplier'])){/*เช็คการแสดงผล รหัสซ่อม*/
-                                        if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ</[^>*\][\]+>|/])', $editData['ref_id_supplier'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
-                                            $chk_show_id_supplier = 'd-inline'; $chk_slt_id_supplier = 'd-none'; $chk_txt_id_supplier = 'd-block';
-                                            //echo "ปนcccccccccccccccccc";
-                                        }else{
+                                    if(isset($rowData['ref_id_supplier'])){/*เช็คการแสดงผล ซัพพลายเออร์*/
+                                        if(is_numeric($rowData['ref_id_supplier'])){
                                             $chk_show_id_supplier = 'd-none'; $chk_slt_id_supplier = 'd-block'; $chk_txt_id_supplier = 'd-none';
                                             //echo "ไม่ปนccccccccccccccccccccc";
+                                        }else{//ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
+                                            $chk_show_id_supplier = 'd-inline'; $chk_slt_id_supplier = 'd-none'; $chk_txt_id_supplier = 'd-block'; $custom_seleted = "selected";
+                                            //echo "ปนcccccccccccccccccc";
                                         }
                                     }else{
                                             $chk_show_id_supplier = 'd-none'; $chk_slt_id_supplier = 'd-block'; $chk_txt_id_supplier = 'd-none';
-                                    } 
+                                    }
                                 ?>
                                 <label for="ref_id_supplier"><i class="fas fa-angle-double-right"></i>  ซัพพลายเออร์:<span class="text-red font-size-sm">**</span></label>  <a class="chk_id_supplier <?PHP echo $chk_show_id_supplier; ?> text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
-                                <select class="custom-select <?PHP echo $chk_slt_id_supplier;?>" name="ref_id_supplier" id="ref_id_supplier" style="width: 100%;" >
+                                <select class="custom-select <?PHP echo $chk_slt_id_supplier;?>" name="slt_ref_id_supplier_2" id="slt_ref_id_supplier_2" style="width: 100%;" >
                                 <?PHP  
                                     echo '<option value="">เลือกซัพพลายเออร์</option>';
-                                    echo '<option value="custom">???? - พิมพ์ระบุเอง</option>';
-                                    echo '<option value="'.$rowData['id_supplier'].'">'.$rowData['supplier_name'].'</option>';
+                                    echo '<option value="custom" '.$custom_seleted.'>???? - พิมพ์ระบุเอง</option>';
+                                    $fetch_supplier = $obj->fetchRows("SELECT * FROM tb_supplier WHERE ref_id_dept=".$_SESSION['sess_id_dept']." AND supplier_status=1 ORDER BY supplier_name DESC ");
+                                    if (count($fetch_supplier)>0) {
+                                        //id_supplier, ref_id_dept, supplier_name, supplier_phone, supplier_remark, supplier_status                
+                                        foreach($fetch_supplier as $key=>$value) {
+                                            echo '<option '.($rowData['id_supplier']==$fetch_supplier[$key]['id_supplier'] ? 'selected' : '').' value="'.$fetch_supplier[$key]['id_supplier'].'">'.$fetch_supplier[$key]['supplier_name'].'</option>';
+                                        }
+                                    }else{
+                                            echo '<option value="">ไม่มีข้อมูล</option>';
+                                    }
                                 ?>
                                 </select>
-                                <textarea class="form-control <?PHP echo $chk_txt_id_supplier;?>" rows="2" id="txt_ref_id_supplier" name="txt_ref_id_supplier" placeholder="" ><?PHP echo isset($editData['ref_id_supplier']) ? $editData['ref_id_supplier'] : '';?></textarea>
+                                <textarea class="form-control <?PHP echo $chk_txt_id_supplier;?>" rows="2" id="txt_ref_id_supplier_2" name="txt_ref_id_supplier_2" placeholder="" ><?PHP echo isset($rowData['ref_id_supplier']) ? $rowData['ref_id_supplier'] : '';?></textarea>
                                 <div class="invalid-feedback">ระบุซัพพลายเออร์</div>
                             </div>
                         </div>
@@ -598,10 +734,10 @@ $(function () {
                             <div class="form-group">
                                 <label for="datesent_repair"><i class="fas fa-angle-double-right"></i>  วันที่ส่งซ่อม:<span class="text-red font-size-sm">**</span></label>  
                                 <div class="input-group date" id="div_datesent_repair" data-target-input="nearest">
-                                  <input type="text" class="form-control datetimepicker-input input-md mr-0" id="datesent_repair" name="datesent_repair" value="<?PHP echo date('Y/m/d');?>" readonly data-target="#datesent_repair" required />
+                                  <input type="text" class="form-control datetimepicker-input input-md mr-0" id="datesent_repair" name="datesent_repair" value="<?PHP echo !empty($rowData['datesent_repair']) ? str_replace("-", "/", $rowData['datesent_repair']): date('Y/m/d');?>" readonly data-target="#datesent_repair" required />
                                   <div class="input-group-append" data-target="#datesent_repair" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    <div class="invalid-feedback">เลือกวันที่รับเข้า</div>
+                                    <div class="invalid-feedback">เลือกวันที่ส่งซ่อม</div>
                                   </div>
                                 </div>
                             </div>
@@ -611,21 +747,20 @@ $(function () {
                     <div class="row row-8 hv p-1 pb-0">
                         <div class="col-sm-12 col-md-12 col-xs-12"> 
                             <div class="form-group">
-                                <label for="slt_id_supplier"><i class="fas fa-angle-double-right"></i>  วันที่รับคืน:<span class="text-red font-size-sm">**</span></label>  
+                                <label for="slt_id_supplier"><i class="fas fa-angle-double-right"></i>  วันที่ส่งคืน:<span class="text-red font-size-sm">**</span></label>  
                                 <div class="input-group date" id="div_dateresive_repair" data-target-input="nearest">
-                                  <input type="text" class="form-control datetimepicker-input input-md mr-0" id="dateresive_repair" name="dateresive_repair" value="<?PHP echo date('Y/m/d');?>" readonly data-target="#dateresive_repair" required />
+                                  <input type="text" class="form-control datetimepicker-input input-md mr-0" id="dateresive_repair" name="dateresive_repair" <?PHP echo !empty($rowData['dateresive_repair']) ? 'value="'.$rowData['dateresive_repair'].'"' : 'disabled';?>  readonly data-target="#dateresive_repair" required />
                                   <div class="input-group-append" data-target="#dateresive_repair" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                    <div class="invalid-feedback">เลือกวันที่รับคืน</div>
+                                    <div class="invalid-feedback">เลือกวันที่ส่งคืน</div>
                                   </div>
                                 </div>
 
                     <div class="icheck-danger d-inline-block pt-1">
-                        <input type="checkbox" id="checkboxDanger1" name="empty_dateresive">
+                        <input type="checkbox" id="checkboxDanger1" name="empty_dateresive" <?PHP echo !empty($rowData['dateresive_repair']) ? '' : 'checked=""';?>>
                         <label for="checkboxDanger1" class="text-red">คลิกที่นี่หากยังไม่ระบุวันรับคืน</label>
                       </div>                                
-
-                            </div>
+                                </div>
                         </div>
                     </div><!--row-8 required-->                    
 
@@ -655,6 +790,7 @@ $('#datesent_repair').datetimepicker({
 
 $('#dateresive_repair').datetimepicker({
         //format: 'L',
+        defaultDate: null,
         format: 'YYYY/MM/DD',
         maxDate: new Date(),
     });
