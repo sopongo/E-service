@@ -257,7 +257,7 @@ class CRUD extends Database
             }
         }
     }    
-
+    
     public function uploadMulti_Photo($file, $num, $path){
         if (!empty($file)) {
             $fileTempPath = $file['tmp_name'][$num];
@@ -276,7 +276,7 @@ class CRUD extends Database
                 }
             }
         }
-    }        
+    }
 
     public function customSelect($sql) {
         try {

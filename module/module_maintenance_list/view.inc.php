@@ -7,9 +7,11 @@ switch($denied_requestid){
 
   
 @media only screen and (max-width:640px) {
-    .card-title{ width:100%;  background-color: #000; padding-bottom:50px ;}
+    /*.card-title{ width:100%;  background-color: #000; padding-bottom:50px ;}*/
 }
 
+.showSweetAlert h2{ font-size:1.5rem;}
+.showSweetAlert p{ font-size:1rem;}
 .btn-gray {    color: #333;    background-color: #e7e7e7;    border-color: #e3e3e3;    box-shadow: none;}
 .btn-gray:hover {    background-color: #cccccc;}
 .bg-pcs{ background-color:#00387C;} 
@@ -30,16 +32,22 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
     width:100%;
 }
 
-.doubleUnderline {
-    text-decoration:underline;
-    border-bottom: 1px solid #000;
-}
+.img_lightbox{ overflow:hidden; display: block; z-index: 10; width:100%;}
+.doubleUnderline {    text-decoration:underline;    border-bottom: 1px solid #000;}
 
 .card-title{ font-size:1rem;}
 .select2-selection__choice{ font-size:1rem; background-color: #ffc107; color:#000;}
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove {    color:#000;}
 
 .hv:hover{ background-color:#eaeaea;}
+
+.img-wrap {    position: relative; cursor: pointer;}
+.img-wrap .close {
+    position: absolute;
+    top:-2px;
+    right:2px;
+    z-index:500; display:block; opacity:0.7; font-size:1rem;
+  }
 </style>
 
 <!-- Select2 -->
@@ -59,7 +67,8 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
   include_once 'module/module_maintenance_list/frm_outsite_repair.inc.php'; #อัพเดทส่งซ่อมภายนอก
   include_once 'module/module_maintenance_list/frm_change_parts.inc.php';#อัพเดทรายการอะไหล่ที่เปลี่ยน
   include_once 'module/module_maintenance_list/frm_img_after_repair.inc.php';#อัพเดทรูปหลังซ่อม
-      
+  include_once 'module/module_maintenance_list/frm_satisfaction_surey.inc.php';#อัพเดทรูปหลังซ่อม
+        
   ##ลิงค์โค๊ดส่วนที่ 1
   if($rowData['status_approved']==1){//ถ้าอนุมัติแล้ว จะคิวรี่ผู้รับผิดชอบมารอไว้
     $rowMechanic = $obj->fetchRows("SELECT tb_user.id_user, tb_user.fullname, tb_ref_repairer.* FROM tb_ref_repairer 
@@ -190,19 +199,19 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 
                 <?PHP if($rowData['status_approved']==NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4)){ //รออนุมัติ/หรือไม่อนุมัติ?>
                     <button type="button" class="btn btn-success btn-block btn-approved" data-toggle="modal" data-target="#modal-approved" id="addData" data-backdrop="static" data-keyboard="false"> อนุมัติ, จ่ายงานซ่อม</button>
-                    <a href="#" class="btn btn-warning btn-block btn-disapprove"><b>ไม่อนุมัติใบแจ้งซ่อม</b></a>
+                    <a href="#" class="btn btn-warning btn-block btn-disapprove">ไม่อนุมัติใบแจ้งซ่อม</a>
                 <?PHP }?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']==NULL && $rowData['maintenance_request_status']==1){ ?>
                     <?PHP if(($chk_id_result == $_SESSION['sess_id_user'] && $rowData['status_approved']==1) || $_SESSION['sess_class_user']==4){ ##เช็คว่าคนที่เปิดดูหน้านี้ใช้ผู้รับผิดชอบหรือไม่ ?>
-                      <a href="#" class="btn btn-success btn-block btn-accept_date"><b>รับทราบ, รับงานซ่อม</b></a>
-                      <a href="#" class="btn btn-warning btn-block"><b>ปฎิเสธรับงาน</b></a>
+                      <a href="#" class="btn btn-success btn-block btn-accept_date">รับทราบ, รับงานซ่อม</a>
+                      <a href="#" class="btn btn-warning btn-block">ปฎิเสธรับงาน</a>
                       <?PHP } ?>
                 <?PHP } ?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1){?>
-                    <a href="#" class="btn btn-warning btn-block btn-start_repair"><b>เริ่มซ่อม</b></a>
+                    <a href="#" class="btn btn-warning btn-block btn-start_repair">เริ่มซ่อม</a>
                 <?PHP } ?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['maintenance_request_status']==1){?>
-                    <a href="#" class="btn btn-success btn-block"><b>ปิดงาน</b></a>
+                    <a href="#" class="btn btn-success btn-block">ปิดงาน</a>
                 <?PHP } ?>
                 <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 && $rowData['maintenance_request_status']==1){?>
                 <button type="button" class="btn btn-danger btn-block btn-cancel" data-toggle="modal" data-target="#modal-cancel" id="addData" data-backdrop="static" data-keyboard="false"> ยกเลิกใบแจ้งซ่อม</button>
@@ -327,13 +336,13 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               </div><!-- /.row -->
 
               <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายอาการเสีย / ปัญหาที่พบ: </div><br />  
-              <div class="row">
+              <div class="row row_img_before">
                 <?PHP
                   $rowImg= $obj->fetchRows("SELECT * FROM tb_attachment WHERE ref_id_used=".$rowData['id_maintenance_request']." AND attachment_type=1 AND image_cate=2");                 
                   if (count($rowImg)>0) {
                     $i = 1;
                     foreach($rowImg as $key => $value) {
-                        echo '<div class="col-sm-2"><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid" alt="xxxx"></a>').'</div></div>';
+                        echo '<div class="divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                         $i++;
                     }
                   }else{
@@ -422,24 +431,93 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <!-- /Table row -->
               
               <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-img_after" data-toggle="modal" data-target="#modal-img_after_repair" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
-              <div class="row invoice-info">
               <div class="row">
-                  <!--<div class="col-sm-2">
-                    <div class="position-relative">
-                      <img src="upload-pic-req/idmt-req/<?PHP echo $i; ?>.jpg" alt="Photo 1" class="img-fluid">
-                    </div>
-                  </div>-->
-                </div>
+                  <?PHP
+                  $rowImg= $obj->fetchRows("SELECT * FROM tb_attachment WHERE ref_id_used=".$rowData['id_maintenance_request']." AND attachment_type=1 AND image_cate=3");                 
+                  if (count($rowImg)>0) {
+                    $i = 1;
+                    foreach($rowImg as $key => $value) {
+                        echo '<div class="divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_after">&times;</span></div><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
+
+                        $i++;
+                    }
+                  }else{
+                      echo '<div class="m-auto d-block pt-3 pb-3 text-center text-gray">ไม่มีรูปภาพ</div>';
+                  }
+                ?>
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-chart-bar"></i> ประเมินผลการซ่อม (จป., ผู้แจ้งซ่อม): <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm"><i class="fas fa-pencil-alt"></i>
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-chart-bar"></i> ประเมินผลการซ่อม: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-survey" data-toggle="modal" data-target="#modal-satisfaction_survey" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i>
  อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
-                <div class="col-sm-4 invoice-col">
-                    <strong class="d-inline-block w-50">Title_Wait:</strong> MySQL_Val<br>
-                    <strong class="d-inline-block w-50">Title_Wait:</strong> MySQL_Val<br>
-                    <strong class="d-inline-block w-50">Title_Wait:</strong> MySQL_Val<br>
+
+                      <div class="col col-sm-3">
+                        <!-- /.survey-1-->
+                        <strong class="d-inline-block w-100">คะแนน:</strong>
+                        <div class="project_progress">
+                          <div class="progress progress-sm">
+                              <div class="progress-bar bg-green" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                              </div>
+                          </div>
+                          <h3>
+                              8/10
+                          </h3>
+                      </div>
+                        <!-- /.survey-1-->
+                      </div>
+                      <div class="col col-sm-9">
+                            <label>ข้อเสนอแนะ:</label>
+                            <p>ข้อเสนอแนะนั้นจะต้องเป็นเนื้อหาสาระที่ได้จากผลการวิจัยเรื่องนั้น มิใช่จากความรู้สึกนึกคิดของตัวผู้วิจัยเอง ต้องเป็นเรื่องที่ใหม่ ไม่ใช่เรื่องที่รู้ ๆ กันอยู่แล้ว กรณีเป็นเรื่องเดิม ต้องยืนยันให้เห็นความสำคัญ </p>
+                      </div>
+
+                <?PHP
+                    $choice_survey_1 = '';
+                    $choice_survey_2 = '';
+                    foreach($arrSurvey as $index => $value){
+                      if($index%2==0){ //หา index (ข้อ)เลขคู่
+                        $choice_survey_1.= '';
+                      }else{
+                        $choice_survey_2.= '';
+                      }
+                    }
+                ?>
+                <div class="col-name-1 col-sm-4">
+                      <div class="d-inline-block w-100"><label>หัวข้อประเมิณ:</label> <span class="w-auto float-right text-success"><i class="fas fa-check-circle"></i> ผ่าน</span></div>
+                      <div class="d-inline-block w-100"><label>หัวข้อประเมิณ:</label> <span class="w-auto float-right text-success"><i class="fas fa-check-circle"></i> ผ่าน</span></div>
+                      <div class="d-inline-block w-100"><label>หัวข้อประเมิณ:</label> <span class="w-auto float-right text-danger"><i class="fas fa-times-circle"></i> ไม่ผ่าน</span></div>
+                      <div class="d-inline-block w-100"><label>หัวข้อประเมิณ:</label> <span class="w-auto float-right text-success"><i class="fas fa-check-circle"></i> ผ่าน</span></div>
+                      <div class="d-inline-block w-100"><label>หัวข้อประเมิณ:</label> <span class="w-auto float-right text-danger"><i class="fas fa-times-circle"></i> ไม่ผ่าน</span></div>
                 </div><!-- /.col -->
+
+                
+              <div class="col-name-1 col-sm-2">
+              </div>                
+
+                <div class="col-name-1 col-sm-4">
+                <div class="d-inline-block w-100"><label>หัวข้อประเมิณ:</label> <span class="w-auto float-right text-success"><i class="fas fa-check-circle"></i> ผ่าน</span></div>
+                      <div class="d-inline-block w-100"><label>หัวข้อประเมิณ:</label> <span class="w-auto float-right text-success"><i class="fas fa-check-circle"></i> ผ่าน</span></div>
+                      <div class="d-inline-block w-100"><label>หัวข้อประเมิณ:</label> <span class="w-auto float-right text-danger"><i class="fas fa-times-circle"></i> ไม่ผ่าน</span></div>
+                      <div class="d-inline-block w-100"><label>หัวข้อประเมิณ:</label> <span class="w-auto float-right text-success"><i class="fas fa-check-circle"></i> ผ่าน</span></div>
+                      <div class="d-inline-block w-100"><label>หัวข้อประเมิณ:</label> <span class="w-auto float-right text-danger"><i class="fas fa-times-circle"></i> ไม่ผ่าน</span></div>
+                </div><!-- /.col -->             
+
+                <div class="row mt-3">
+                <div class="col-sm-6 border-bottom">
+                      <div class="col col-sm-6 m-auto text-center">
+                            <span>ลายเซ็นของผู้ประเมิณ:</span>
+                            <img src="upload-signature/signature.png" class=" w-75" />
+                            <p>ชื่อ-นามกุล / User<br />วันที่ประเมิณ 01/12/2023</p>
+                      </div>
+                </div>
+                <div class="col-sm-6 border-bottom">
+                      <div class="col col-sm-6 m-auto text-center">
+                            <span>ลายเซ็นของหน่วยงานควบคุมคุณภาพ:</span>
+                            <img src="upload-signature/signature.png" class=" w-75" />
+                            <p>ชื่อ-นามกุล / User <br />วันที่ประเมิณ 01/12/2023</p>
+                      </div>
+                </div>
+                </div>
+
               </div><!-- /.row -->         
               
             </div><!-- /.tab-pane -->
@@ -648,6 +726,62 @@ $(document).on("click", ".btn-update_outsite", function (e){
   });
 });
 
+$(document).on("click", ".del-img", function (e){ 
+  var img_id = $(this).data("id");
+  var class_name= $(this).data("class");
+  alert(class_name);
+  var xxadasas = $('div.'+class_name+'').length;
+  aert(xxadasas);
+  swal({
+        title: "ยืนยันการลบรูปภาพนี้ ?",   text: "ใบแจ้งซ่อมเลขที่: <?PHP echo $breadcrumb_txt;?>",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        cancelButtonText: "ไม่, ยกเลิก",
+        confirmButtonText: "ตกลง",
+        closeOnConfirm: false 
+      }, function(){   
+        $.ajax({
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            data:{ "action":"delimg_before", ref_id:<?PHP echo $rowData['id_maintenance_request'];?>, "img_id":img_id},
+            beforeSend: function () {
+            },success: function (data) {
+                console.log(data); //return false;
+                event.stopPropagation();
+                if(data.error=='over_req'){
+                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+                    return false;
+                }else{
+                  $('.divimg_'+img_id).remove();
+                    //var numItems = $('div[class^=divimg_]').length;
+                    
+                    if(numItems<=0){
+                      $('.row_img_before').html('<div class="m-auto d-block pt-3 pb-3 text-center text-gray">ไม่มีรูปภาพ</div>');
+                    }
+                }
+                swal({
+                    title: "ลบข้อมูลเรียบร้อย.",
+                    //text: "คลิก \"OK\" เพื่อปิดหน้าต่างนี้",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //console.log(data);
+                    //event.stopPropagation();
+                    //return false();
+                    //alert(ref_id);
+                    //window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                })
+            },error: function (data) {
+                console.log(data);
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+            }
+        });
+    });
+    event.preventDefault();    
+    event.stopPropagation();
+});
 
 $(document).on("click", ".btn-img_after", function (e){ 
   e.stopPropagation();
@@ -660,6 +794,26 @@ $(document).on("click", ".btn-img_after", function (e){
       success: function (data) {
         console.log(data);
           $(".modal-img_after_repair").html(data);
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });
+});
+
+$(document).on("click", ".btn-survey", function (e){ 
+  e.stopPropagation();
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"satisfaction_survey","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>},
+      beforeSend: function () {
+      },
+      success: function (data) {
+        console.log(data);
+        $(".modal-satisfaction_survey").html(data);
       },
           error: function (jXHR, textStatus, errorThrown) {
           console.log(data);

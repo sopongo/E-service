@@ -4,6 +4,7 @@
     header('Content-Type: text/html; charset=utf-8');
     date_default_timezone_set('Asia/Bangkok');	
     require_once ('../../include/function.inc.php');
+    require_once ('../../include/setting.inc.php');
         
     $action = $_REQUEST['action']; #รับค่า action มาจากหน้าจัดการ
     $ref_id = intval($_POST['ref_id']);
@@ -484,10 +485,25 @@ $(function () {
         $resultUpdate = $obj->update($insertRow, "id_maintenance_request=".$ref_id."", "tb_maintenance_request");
         echo json_encode($resultUpdate);
         exit();        
-?>
-
-<?PHP
     }
+
+if ($action=='satisfaction_survey') {
+    foreach($arrSurvey as $index => $value){
+        echo $arrSurvey[$index];
+        //echo $arrSurvey[0];
+        //echo $arrSurvey[$index][$value];
+        /*
+        if($index%2==0){ //หา index (ข้อ)เลขคู่
+        $choice_survey_1.= '';
+        }else{
+            $choice_survey_2.= '';
+        }
+        */
+    }
+?>
+<?PHP
+    exit();
+}                
 ?>
 <?PHP 
     if($action=='img_after_repair'){
@@ -507,7 +523,7 @@ $(function () {
                             <label>เลือกรูปถ่าย:</label>
 			<div class="row-fluid">
 				<div class="col-md-12">
-					<input name="files[]" type="file" multiple="multiple" data-maxsize="6000" maxlength="6" id="our-test" accept="gif|jpg|png|jpeg" class="border  p-1 multi with-preview w-auto" />
+					<input name="files[]" type="file" multiple="multiple" data-maxsize="6000" maxlength="6" id="our-test" accept="gif|jpg|png|jpeg" class="border  p-0 multi with-preview w-100" />
                     <span class="text-red font-size-sm mt-2 d-block w-100">** ไม่เกิน 6 รูป / ไฟล์ไซต์ไม่เกิน 6 เมกะไบต์ต่อรูป</span> 
 				</div>
 			</div>
@@ -519,6 +535,8 @@ $(function () {
         </div>                
         </div><!--row-->
     </div><!--container-->
+    <input type="hidden" id="action" name="action" value="update_img_after" />
+    <input type="hidden" id="ref_id" name="ref_id" value="<?PHP echo $ref_id; ?>" />
     </form><!--FORM 1-->
     <script>
         $('#our-test').MultiFile({

@@ -5,7 +5,8 @@
     date_default_timezone_set('Asia/Bangkok');	
     require_once ('../../include/function.inc.php');
     require_once ('../../include/setting.inc.php');
-        
+
+
     $action = $_REQUEST['action']; #รับค่า action มาจากหน้าจัดการ
     !empty($_POST['ref_id']) ? $ref_id = intval($_POST['ref_id']): '';
 
@@ -13,20 +14,8 @@
         require_once ('../../include/class_crud.inc.php');
         $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเรียกใช้งานคลาส,ฟังก์ชั่นต่างๆ
     } 
+   
 
-    
-    /*
-        <pre>Array
-        (
-            [ref_id_dept] => 7
-            [problem_statement] =>  test test test test test test
-            [urgent_type] => 1
-            [fullnam_request] => สมชาย ห้องเห็น
-            [action] => adddata
-            [ref_id_machine_site] => 18
-        )
-        </pre><pre>Array
-    */
     if ($action=='adddata' && !empty($_POST)) {    
         
         //echo "<pre>";    print_r($_POST);    echo "</pre>";
@@ -118,6 +107,12 @@
         exit();        
     }    
 
+    if ($action=='delimg_before') {
+        !empty($_POST['img_id']) ? $img_id = intval($_POST['img_id']): '';
+        echo $result = $obj->deleteRow($ref_id, 'tb_attachment', 'id_attachment='.$img_id.' AND ref_id_used='.$ref_id.'');
+        exit();
+    }        
+
     if ($action=='accept_request') {
         //echo $ref_id.'----xxx------'.$action;
         $updateRow = [
@@ -130,6 +125,42 @@
         echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
         exit();        
     }    
+    
+    if ($action=='update_img_after') {
+        if(isset($_POST['data'])){
+            ##"slt_failure_code=3&txt_failure_code=xxxx&txt_caused_by=xxxxxxx&slt_repair_code=6&txt_repair_code=xxxx&txt_solution=xxxxxx
+            parse_str($_POST['data'], $output); //$output['period']
+            //echo $output['slt_failure_code'];                echo "\r\n\r\n";            
+            print_r($output); echo 'xxxxxxxxxxxxx'; exit();
+        }
+
+        //echo '<pre>'; print_r($_POST); print_r($_FILES); echo '</pre>'; exit();
+        //echo $_POST['action']; exit();
+        //$_FILES['files']['tmp_name'][0];
+
+        //$obj->uploadMulti_Photo($_FILES['files'], 0, $pathReq); exit();       
+
+        $imagename = '';
+        //echo count($_FILES['files']).'------------';
+        //id_attachment	ref_id_machine	attachment_sort	path_attachment_name	attachment_type
+        if (!empty($_FILES['files'])){ ##ถ้ามีแนบไฟล์รูปมาให้อัพโหลดรูปก่อน
+            //echo 'เจอรูปแนบมาจำนวน--'.count($_FILES['files']); exit();
+            for($x=1;$x<=count($_FILES['files'])+1;$x++){
+                if(!empty($_FILES['files']['tmp_name'][$x-1])){
+                    $imagename = $obj->uploadMulti_Photo($_FILES['files'], ($x-1), $pathReq);
+                    $insertPhoto = [
+                        'ref_id_used' => $ref_id,
+                        'attachment_sort' => null,
+                        'path_attachment_name' => $imagename,
+                        'attachment_type' => 1,
+                        'image_cate' => 3 //cate 3 = รูปหลังซ่อม
+                    ];
+                    $imgRowID = $obj->addRow($insertPhoto, "tb_attachment");
+                }
+            }
+        }
+        exit();
+    }
 
     if ($action=='update_parts') {
         //#tb_change_parts  id_parts, ref_id_maintenance_request, parts_serialno, parts_name, parts_description, parts_price, parts_qty, date_parts_change, ref_id_user_change, date_adddata

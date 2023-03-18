@@ -1,22 +1,17 @@
 <style type="text/css"> 
-.MultiFile-list{ background:#EAEAEA; margin:3px; padding:5px; width: 100%; }
-div.MultiFile-label{background:#fff /*EB2B2B*/; padding:6px; width:100%; margin-right:5px; margin-top:10px; display: inline-block; }
-span.MultiFile-label{background:#CCC; }
-.MultiFile-title{ width:100%; font-size:0.80rem;  padding: 4px; background:#EEE; height:28px; display:inline-block; overflow:hidden;}
-.MultiFile-remove{ background:#fff;}
-img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin-top:10px; width:auto; height:100px;}
+
 </style>
 
-<div class="modal fade" id="modal-img_after_repair" tabindex="-1" role="dialog" aria-labelledby="dataformLabel" aria-hidden="true">
-<div class="modal-dialog modal-lg">
+<div class="modal fade" id="modal-satisfaction_survey" tabindex="-1" role="dialog" aria-labelledby="dataformLabel" aria-hidden="true">
+<div class="modal-dialog modal-md">
     <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title font-weight-bold" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span>เพิ่มภาพถ่ายหลังซ่อม</span></h5>
+        <h5 class="modal-title font-weight-bold" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span>แบบประเมิณหลังซ่อม</span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-img_after_repair p-0 py-1">
+    <div class="modal-satisfaction_survey p-0 py-1">
     <?PHP
     
     ?>
