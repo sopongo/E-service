@@ -628,12 +628,20 @@ if ($action=='satisfaction_survey') {
         exit();
     }
     if($action=='change-parts'){
+        $parts_id = 0;
+        !empty($_POST['parts_id']) ? $parts_id = intval($_POST['parts_id']): '';
+        //echo '------------------------'.$parts_id; //exit();
         //id_parts, ref_id_maintenance_request, parts_serialno, parts_name, parts_description, parts_price, parts_qty, date_parts_change, ref_id_user_change, date_adddata
         #tb_change_parts
+        if($parts_id!=0 && $parts_id!=NULL){
+            $rowData = $obj->customSelect("SELECT * FROM tb_change_parts WHERE tb_change_parts.id_parts=".$parts_id." ");
+            //echo $rowData['parts_name'];
+        }
 ?>
         <script src="plugins/autoNumeric/autoNumeric.js"></script>
         <!--FORM 1-->
         <form id="needs-validation10" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+        <input type="hidden" name="id_parts" id="id_parts" value="<?PHP echo isset($rowData['id_parts']) ? $rowData['id_parts'] : ''; ?>" />
         <div class="container">
             <div class="row">
 
@@ -641,7 +649,6 @@ if ($action=='satisfaction_survey') {
                 <div class="card">  
                     <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p></div>
                     <div class="card-body p-3"> 
-
 
                     <div class="row row-7">
                         <div class="col-sm-4 col-md-4 col-xs-4"> 
@@ -662,13 +669,13 @@ if ($action=='satisfaction_survey') {
                         <div class="col-sm-4 col-md-4 col-xs-4">  
                             <div class="form-group mb-2">
                                 <label>ซีเรียลนัมเบอร์อะไหล่(ถ้ามี): </label> 
-                                <input type="text" id="parts_serialno" name="parts_serialno" maxlength="30" placeholder="Serial number.(ถ้ามี)" class="form-control" aria-describedby="inputGroupPrepend"  />                          
+                                <input type="text" id="parts_serialno" name="parts_serialno" maxlength="30" placeholder="Serial number.(ถ้ามี)" class="form-control" aria-describedby="inputGroupPrepend" value="<?PHP echo isset($rowData['parts_serialno']) ? $rowData['parts_serialno'] : ''; ?>" />
                             </div>
                         </div>  
                         <div class="col-sm-8 col-md-8 col-xs-8">  
                             <div class="form-group mb-2">
                                 <label>ชื่ออะไหล่:<span class="text-red font-size-sm">**</span> </label> 
-                                <input type="text" id="parts_name" name="parts_name" maxlength="80" placeholder="ชื่ออะไหล่" class="form-control" aria-describedby="inputGroupPrepend" required /><div class="invalid-feedback">กรอกชื่ออะไหล่</div>                                
+                                <input type="text" id="parts_name" name="parts_name" maxlength="80" placeholder="ชื่ออะไหล่" class="form-control" aria-describedby="inputGroupPrepend" value="<?PHP echo isset($rowData['parts_name']) ? $rowData['parts_name'] : ''; ?>" required /><div class="invalid-feedback">กรอกชื่ออะไหล่</div>                                
                             </div>
                         </div>  
                         </div><!--row-1-->
@@ -677,19 +684,19 @@ if ($action=='satisfaction_survey') {
                             <div class="col-sm-12 col-md-12 col-xs-12">  
                                 <div class="form-group">  
                                     <label for="parts_description">รายละเอียดอะไหล่</label>  
-                                    <textarea class="form-control w-100" id="parts_description" name="parts_description" rows="3" placeholder="รายละเอียดอะไหล่ ..."><?PHP echo isset($rowData['ref_id_supplier']) ? $rowData['ref_id_supplier'] : '';?></textarea>
+                                    <textarea class="form-control w-100" id="parts_description" name="parts_description" rows="3" placeholder="รายละเอียดอะไหล่ ..."><?PHP echo isset($rowData['parts_description']) ? $rowData['parts_description'] : ''; ?></textarea>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="parts_price">ราคาต่อชิ้น/บาท</label>  
-                                    <input type="text" id="site_name" name="parts_price" placeholder="ราคาต่อชิ้น/บาท" class="form-control numeric" aria-describedby="inputGroupPrepend" />
+                                    <input type="text" id="parts_price" name="parts_price" placeholder="ราคาต่อชิ้น/บาท" class="form-control numeric" value="<?PHP echo isset($rowData['parts_price']) ? number_format($rowData['parts_price'],2) : ''; ?>" aria-describedby="inputGroupPrepend" />
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="parts_qty">จำนวนที่เปลี่ยน/ชิ้น</label>  
-                                    <input type="text" id="parts_qty" name="parts_qty" placeholder="จำนวนที่เปลี่ยน/ชิ้น" class="form-control numeric_nocom" aria-describedby="inputGroupPrepend" />
+                                    <input type="text" id="parts_qty" name="parts_qty" placeholder="จำนวนที่เปลี่ยน/ชิ้น" class="form-control numeric_nocom" value="<?PHP echo isset($rowData['parts_qty']) ? number_format($rowData['parts_qty'], 0) : ''; ?>" aria-describedby="inputGroupPrepend" />
                                 </div>
                             </div>                            
                         </div><!--row-4-->

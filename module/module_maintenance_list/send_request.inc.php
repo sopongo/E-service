@@ -169,6 +169,18 @@
         exit();        
     }    
 
+    if ($action=='del_parts') {
+        !empty($_POST['parts_id']) ? $parts_id = intval($_POST['parts_id']): '';
+        //echo $ref_id.'-------'.$_POST['img_id']; exit();
+        //$checkFile = $obj->customSelect('SELECT * FROM tb_attachment WHERE id_attachment='.$img_id.'');
+        //@unlink('../../'.$pathReq.$checkFile['path_attachment_name']);
+        ######### รอใส่โค๊ด Update Timeline ###########
+        ##                           ใส่โค๊ดตรงนี้                              ##
+        ######### รอใส่โค๊ด Update Timeline ###########
+        echo $result = $obj->deleteRow($ref_id, 'tb_change_parts', 'id_parts='.$parts_id.' AND ref_id_maintenance_request='.$ref_id.'');
+        exit();
+    }
+
     if ($action=='delimg') {
         !empty($_POST['img_id']) ? $img_id = intval($_POST['img_id']): '';
         //echo $ref_id.'-------'.$_POST['img_id']; exit();
@@ -227,7 +239,7 @@
         exit();
     }
 
-    if ($action=='update_parts') {
+    if ($action=='update_parts'){
         //#tb_change_parts  id_parts, ref_id_maintenance_request, parts_serialno, parts_name, parts_description, parts_price, parts_qty, date_parts_change, ref_id_user_change, date_adddata
         //echo "<pre>";    print_r($_POST);    echo "</pre>"; //exit();
         if(isset($_POST['data'])){
@@ -236,23 +248,39 @@
             //echo $output['slt_failure_code'];                echo "\r\n\r\n";            
             //print_r($output); //exit();
         }
-
-        $insertRow = [
-            'ref_id_maintenance_request' => ($ref_id),
-            'parts_serialno' => (!empty($output['parts_serialno'])) ? $output['parts_serialno'] : '',
-            'parts_name' => (!empty($output['parts_name'])) ? $output['parts_name'] : '',
-            'parts_description' => (!empty($output['parts_description'])) ? $output['parts_description'] : '',
-            'parts_price' => ((!empty($output['parts_price'])) ? intval(str_replace(",","",$output['parts_price'])) : ''),
-            'parts_qty' => ((!empty($output['parts_qty'])) ? intval(str_replace(",","",$output['parts_qty'])) : ''),                        
-            'date_parts_change' => ((!empty(str_replace("/","-",$output['date_parts_change']))) ? $output['date_parts_change'] : ''),
-            'date_adddata' => (date('Y-m-d H:i:s')),
-            'ref_id_user_change' => ($_SESSION['sess_id_user']),
-        ];
+        if($output['id_parts']==NULL){
+            //echo  'add';
+            $insertRow = [
+                'ref_id_maintenance_request' => ($ref_id),
+                'parts_serialno' => (!empty($output['parts_serialno'])) ? $output['parts_serialno'] : '',
+                'parts_name' => (!empty($output['parts_name'])) ? $output['parts_name'] : '',
+                'parts_description' => (!empty($output['parts_description'])) ? $output['parts_description'] : '',
+                'parts_price' => ((!empty($output['parts_price'])) ? intval(str_replace(",","",$output['parts_price'])) : ''),
+                'parts_qty' => ((!empty($output['parts_qty'])) ? intval(str_replace(",","",$output['parts_qty'])) : ''),                        
+                'date_parts_change' => ((!empty(str_replace("/","-",$output['date_parts_change']))) ? $output['date_parts_change'] : ''),
+                'date_adddata' => (date('Y-m-d H:i:s')),
+                'ref_id_user_change' => ($_SESSION['sess_id_user']),
+            ];
+            $rowID = $obj->addRow($insertRow, "tb_change_parts");
+        }else{
+            //echo  'edit---'.$output['id_parts'];
+            //print_r($output); 
+            $updateRow = [
+                'parts_serialno' => (!empty($output['parts_serialno'])) ? $output['parts_serialno'] : '',
+                'parts_name' => (!empty($output['parts_name'])) ? $output['parts_name'] : '',
+                'parts_description' => (!empty($output['parts_description'])) ? $output['parts_description'] : '',
+                'parts_price' => ((!empty($output['parts_price'])) ? intval(str_replace(",","",$output['parts_price'])) : ''),
+                'parts_qty' => ((!empty($output['parts_qty'])) ? intval(str_replace(",","",$output['parts_qty'])) : ''),                        
+                'date_parts_change' => ((!empty(str_replace("/","-",$output['date_parts_change']))) ? $output['date_parts_change'] : ''),
+                'date_adddata' => (date('Y-m-d H:i:s')),
+                'ref_id_user_change' => ($_SESSION['sess_id_user']),
+            ];            
+            $rowID = $obj->update($updateRow, "id_parts=".$output['id_parts']."", "tb_change_parts");
+        }
         ######### รอใส่โค๊ด Update Timeline ###########
         ##                           ใส่โค๊ดตรงนี้                              ##
         ######### รอใส่โค๊ด Update Timeline ###########
-        $rowID = $obj->addRow($insertRow, "tb_change_parts");
-        echo json_encode($rowID);
+        echo $rowID;
         exit();        
     }        
 

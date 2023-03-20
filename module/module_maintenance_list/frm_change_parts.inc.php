@@ -2,7 +2,7 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title font-weight-bold" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span>เพิ่มรายการอะไหล่ที่เปลี่ยน</span></h5>
+        <h5 class="modal-title font-weight-bold" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span class="text-title-parts">เพิ่มรายการอะไหล่ที่เปลี่ยน</span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
@@ -28,17 +28,39 @@
 
 /*********************************************************************************************************/
 $(document).on("click", ".btn-update_parts", function (event){ 
-  var frmData = $("form#needs-validation10").serialize();
-
+    event.stopPropagation();
+    var id_parts = $('#id_parts').val();
+    //alert(id_parts); return false;
+    var frmData = $("form#needs-validation10").serialize();
+    parts_price = 0; parts_qty=0;
     var parts_name = $('#parts_name').val();
     var parts_price = $('#parts_price').val();    
     var parts_qty = $('#parts_qty').val();
+    var grand_total = $('.grand_total').text();
+    
     var date_parts_change = $('#date_parts_change').val();
+    var parts_serialno = $('#parts_serialno').val();
+    var parts_description = $('#parts_description').val();
+
+    parts_price = parts_price.replace(/,/g , '');
+    parts_qty = parts_qty.replace(/,/g , '');
+    grand_total = grand_total.replace(/,/g , '');
+    grand_total = parseFloat(grand_total); 
+
+	if(parts_price!='' && typeof(parts_price)!="undefined"){ 
+        parts_price = parseFloat(parts_price); 
+    }
+	if(parts_qty!='' && typeof(parts_qty)!="undefined"){ 
+        parts_qty = parseFloat(parts_qty);
+     }
+
+    var subTotal = (parseFloat(parts_price)*parseFloat(parts_qty)).toFixed(2);
+    var grand_total = (parseFloat(grand_total)+parseFloat(subTotal)).toFixed(2);
 
   if(date_parts_change==''){ swal("ผิดพลาด!", "ระบุวันที่เปลี่ยนอะไหล่", "error");  return false;}
   if(parts_name==''){ swal("ผิดพลาด!", "กรอกชื่ออะไหล่", "error");  return false;}
   if(parts_price==''){ swal("ผิดพลาด!", "กรอกราคาอะไหล่", "error");  return false;}
-  if(parts_qty==''){ swal("ผิดพลาด!", "กรอกจำนวน/ชิ้น", "error");  return false;}      
+  if(parts_qty==''){ swal("ผิดพลาด!", "กรอกจำนวน/ชิ้น", "error");  return false;}
 
   swal({
         title: "บันทึกข้อมูล \r\n รายการอะไหล่ที่เปลี่ยน ?",   text: "ใบแจ้งซ่อมเลขที่: <?PHP echo $breadcrumb_txt;?>",
@@ -61,11 +83,34 @@ $(document).on("click", ".btn-update_parts", function (event){
             beforeSend: function () {
             },success: function (data) {
                 console.log(data); //return false;
-                //event.stopPropagation();
+                event.stopPropagation();
+                part_id = data;
                 $("#modal-change_parts").modal('hide');
-                if(data.error=='over_req'){
+                if(data=='over_req'){
                     sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
                     return false;
+                }else{
+                    var tr_partid = $('tr[class^=tr_partid_]').length;
+                    var add_tr_partid = tr_partid+1;
+                    //alert(tr_partid);
+                    parts_price = addCommas(parts_price.toFixed(2));
+                    parts_qty = addCommas(parts_qty);
+                    subTotal = addCommas(subTotal);
+                    //alert(part_id);
+                    if(data!="Success"){
+                        $('.tb_parts tr:last').before('<tr class="tr_partid_'+add_tr_partid+'"><td>'+add_tr_partid+'.</td><td>'+parts_serialno+'</td><td>'+parts_name+'</td><td>'+parts_description+'</td><td class="text-right">'+parts_price+'</td><td class="text-right">'+parts_qty+'</td><td class="text-right">'+subTotal+'</td><td><button type="button" class="btn btn-danger btn-sm p-0 px-1 m-0" data-id="'+add_tr_partid+'" title="ลบรายการนี้" id="btn-del_parts"><i class="fa fa-trash-alt"></i></button> <button type="button" class="btn btn-warning btn-sm btn-edit_part p-0 px-1 m-0" data-id="'+part_id+'" data-toggle="modal" data-target="#modal-change_parts" id="addData" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button></td></tr>');
+                        $('.grand_total').text(addCommas(grand_total));
+                    }else{
+                        alert(part_id+'xxxxxxxxxxxxxx');
+                        return false;
+                        /*$('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(1)').text(parts_serialno);
+                        $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(2)').text(parts_name);
+                        $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(3)').text(parts_description);
+                        $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(4)').text(parts_price);
+                        $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(5)').text(parts_qty);
+                        $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(6)').text(subTotal);
+                        $('.grand_total').text(addCommas(grand_total));*/
+                    }
                 }
                 swal({
                     title: "สำเร็จ!",
@@ -75,7 +120,8 @@ $(document).on("click", ".btn-update_parts", function (event){
                 }, 
                 function(){
                     console.log(data);
-                    swal.close();                    
+                    swal.close();
+                    event.stopPropagation();
                     //return false();
                     //alert(ref_id);
                     //window.location.href = '?module=requestid&id=<?PHP echo $id; ?>';

@@ -386,15 +386,15 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <!-- Table row -->
                 <div class="row">
                 <div class="col-12 table-responsive">
-                  <table class="table table-striped">
+                  <table class="table table-striped tb_parts">
                     <thead>
                     <tr class="bg-light">
                       <th>#</th>
                       <th>S/N No.</th>
                       <th>ชื่ออะไหล่</th>
                       <th>รายละเอียด</th>
-                      <th class="text-right">จำนวน/ชิ้น</th>
                       <th class="text-right">ราคาบาท/ชิ้น</th>
+                      <th class="text-right">จำนวน/ชิ้น</th>
                       <th class="text-right">รวม/บาท</th>
                       <th>#</th>
                     </tr>
@@ -406,16 +406,16 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                           if (count($rowParts)!=0) {
                             $i = 1;
                               foreach($rowParts as $key => $value) {
-                                  echo '<tr>';
-                                  echo '<td>'.$i.'.</td>';
+                                  echo '<tr class="tr_partid_'.$rowParts[$key]['id_parts'].'">';
+                                  echo '<td class="td_no">'.$i.'.</td>';
                                   echo '<td>'.$rowParts[$key]['parts_serialno'].'</td>';
                                   echo '<td>'.$rowParts[$key]['parts_name'].'</td>';
                                   echo '<td>'.$rowParts[$key]['parts_description'].'</td>';
                                   echo '<td class="text-right">'.number_format($rowParts[$key]['parts_price'],2).'</td>';
                                   echo '<td class="text-right">'.number_format($rowParts[$key]['parts_qty'],0).'</td>';
-                                  echo '<td class="text-right">'.(number_format(($rowParts[$key]['parts_price']*$rowParts[$key]['parts_qty']),2)).'</td>';
-                                  echo '<td><button type="button" class="btn btn-danger btn-sm view-data p-0 px-1 m-0" data-id="'.$rowParts[$key]['id_parts'].'" data-toggle="modal"  id="viewData" data-backdrop="static" data-keyboard="false" title="ดูข้อมูล"><i class="fa fa-trash-alt"></i></button>
-                                  <button type="button" class="btn btn-warning btn-sm edit-data p-0 px-1 m-0" data-id="'.$rowParts[$key]['id_parts'].'" data-toggle="modal" id="edit-data" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button></td>';
+                                  echo '<td class="text-right subTotal">'.(number_format(($rowParts[$key]['parts_price']*$rowParts[$key]['parts_qty']),2)).'</td>';
+                                  echo '<td><button type="button" class="btn btn-danger btn-sm p-0 px-1 m-0" data-id="'.$rowParts[$key]['id_parts'].'" title="ลบรายการนี้" id="btn-del_parts"><i class="fa fa-trash-alt"></i></button>
+                                  <button type="button" class="btn btn-warning btn-sm btn-edit_part p-0 px-1 m-0" data-id="'.$rowParts[$key]['id_parts'].'" data-toggle="modal" data-target="#modal-change_parts" id="addData" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button></td>';
                                   echo '</tr>';
                                   $i++;
                                   $grand_total+=$rowParts[$key]['parts_price']*$rowParts[$key]['parts_qty'];
@@ -426,8 +426,8 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                     ?>
                         <tr class="bg-light">
                           <td colspan="6" class="text-right">รวมค่าอะไหล่ทั้งหมด(บาท):</td>
-                          <td class="text-right"><div class="doubleUnderline d-inline"><?PHP echo number_format($grand_total,2)?></div></td>
-                          <td></td>
+                          <td class="text-right"><div class="doubleUnderline d-inline grand_total"><?PHP echo number_format($grand_total,2)?></div></td>
+                          <td>บาท.</td>
                         </tr>
                     </tbody>
                   </table>
@@ -758,6 +758,70 @@ $(document).on("click", ".btn-update_outsite", function (e){
   });
 });
 
+$(document).on("click", "#btn-del_parts", function (e){ 
+    var parts_id = $(this).data("id");
+    swal({
+        title: "ยืนยันลบอะไหล่รายการนี้ ?",   text: "ใบแจ้งซ่อมเลขที่: <?PHP echo $breadcrumb_txt;?>",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        cancelButtonText: "ไม่, ยกเลิก",
+        confirmButtonText: "ตกลง",
+        closeOnConfirm: false 
+      }, function(){   
+        $.ajax({
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            data:{ "action":"del_parts", ref_id:<?PHP echo $rowData['id_maintenance_request'];?>, "parts_id":parts_id},
+            beforeSend: function () {
+            },success: function (data) {
+                console.log(data); //return false;
+                event.stopPropagation();
+                if(data.error=='over_req'){
+                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+                    return false;
+                }else{
+                  $('.tr_partid_'+parts_id).remove();
+                    var tr_partid = $('tr[class^=tr_partid_]').length;
+                    var num_tr = 0;
+                    var grand_total = 0;
+                    $(".tb_parts tr").each(function(){
+                        $(this).find('td.td_no').text(num_tr+'.'); //td_no //td:eq(0)
+                        subTotal = $(this).find('td:eq(6)').text();
+                        subTotal = subTotal.replace(/,/g , '');
+                        if(subTotal!='' && typeof(subTotal)!="undefined"){ 
+                          subTotal = parseFloat(subTotal); 
+                        }else{
+                          subTotal = 0; 
+                        }
+                        grand_total+= parseFloat(subTotal);
+                        num_tr++;
+                    });
+                  $('.grand_total').text(addCommas(grand_total.toFixed(2)));
+                }
+                swal({
+                    title: "ลบข้อมูลเรียบร้อย.",
+                    //text: "คลิก \"OK\" เพื่อปิดหน้าต่างนี้",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //console.log(data);
+                    //event.stopPropagation();
+                    //return false();
+                    //alert(ref_id);
+                    //window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                })
+            },error: function (data) {
+                console.log(data);
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+            }
+        });
+    });
+    event.preventDefault();    
+    event.stopPropagation();
+});
+
 $(document).on("click", ".del-img", function (e){ 
   var img_id = $(this).data("id");
   var class_name= $(this).data("class");  
@@ -1084,7 +1148,31 @@ $(document).on("click", ".btn-update-type", function (e){
   });
 });
 
+$(document).on("click", ".btn-edit_part", function (e){
+  var parts_id = $(this).data("id");
+  $('.text-title-parts').text('แก้ไขรายการอะไหล่ที่เปลี่ยน');
+  //alert(parts_id);  return false;
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"change-parts","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"parts_id":parts_id},
+      beforeSend: function () {
+      },
+      success: function (data) {
+          $(".modal-body-change_parts").html(data);
+          console.log(data);
+          e.stopPropagation();
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });  
+});
+
 $(document).on("click", ".btn-change_parts", function (e){
+  $('.text-title-parts').text('เพิ่มรายการอะไหล่ที่เปลี่ยน');
   $.ajax({
       url: "module/module_maintenance_list/update_result.inc.php",
       type: "POST",
