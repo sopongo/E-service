@@ -488,19 +488,57 @@ $(function () {
     }
 
 if ($action=='satisfaction_survey') {
-    foreach($arrSurvey as $index => $value){
-        echo $arrSurvey[$index];
-        //echo $arrSurvey[0];
-        //echo $arrSurvey[$index][$value];
-        /*
-        if($index%2==0){ //หา index (ข้อ)เลขคู่
-        $choice_survey_1.= '';
-        }else{
-            $choice_survey_2.= '';
+    //tb_satisfaction_survey        id_survey, ref_id_maintenance_request, ref_topic_survey, score_result, recomment
+    $rowSurvey = $obj->fetchRows("SELECT * FROM tb_satisfaction_survey WHERE ref_id_maintenance_request=".$ref_id." ORDER BY ref_topic_survey ASC");
+    if (count($rowSurvey)!=0) {
+        foreach($rowSurvey as $key => $value) {                
+            ///echo $rowSurvey[$key]['ref_topic_survey'].'--------'.$rowSurvey[$key]['score_result']."<br />";
         }
-        */
-    }
+      }    
 ?>
+    <form id="needs-validation_12" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+    <div class="container">
+        <div class="row">
+        <div class="offset-md-0 col-md-12 offset-md-0">  
+            <div class="card">  
+                <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p> <span class="float-right editby"></span></div>
+                <div class="card-body p-3">
+                    <!--ajax data hear-->
+                    <div class="row row-5">
+                        <!-- select -->
+                            <label>หัวข้อประเมิณ:</label>
+                            <?PHP
+                            $num = 1;
+                            foreach($arrTopicSurvey as $index => $value){
+                                echo '<div class="col-sm-12 border-bottom pt-2 pb-0 sur_hover">'.($num).'.'.$value.'<div class="w-100 ml-2 d-block">
+                                <div class="col-sm-6">
+                                <!-- radio -->
+                                <div class="form-group clearfix mt-2">
+                                <div class="icheck-success d-inline mr-4"><input type="radio" name="score_'.$index.'" id="score_'.$index.'" value="1" '.(isset($rowSurvey[$index]['score_result']) && $rowSurvey[$index]['score_result']==1 ? 'checked=""' : '').'><label for="score_'.$index.'" class="text-success">ผ่าน</label></div>
+                                <div class="icheck-danger d-inline"><input type="radio" name="score_'.$index.'" id="score_not_'.$index.'" value="0" '.(isset($rowSurvey[$index]['score_result']) && $rowSurvey[$index]['score_result']==0 ? 'checked=""' : '').'><label for="score_not_'.$index.'" class="text-danger">ไม่ผ่าน</label></div>
+                                </div>
+                              </div>
+                              </div></div> ';
+                              $num++;
+                            }
+                            ?>
+                        </div>
+                    </div><!--row-5-->
+                    <div class="col-sm-12">
+                      <!-- textarea -->
+                      <div class="form-group">
+                        <label>ข้อเสนอแนะ:</label>
+                        <textarea class="form-control" rows="3" name="recomment" id="recomment" placeholder="Enter ..."><?PHP echo $_POST['recomment'];?></textarea>
+                      </div>
+                    </div>
+                </div><!--card-body-->
+            </div><!--card-->
+        </div>                
+        </div><!--row-->
+    </div><!--container-->
+    <input type="hidden" id="action" name="action" value="send_survey" />
+    <input type="hidden" id="ref_id" name="ref_id" value="<?PHP echo $ref_id; ?>" />
+    </form><!--FORM 1-->
 <?PHP
     exit();
 }                

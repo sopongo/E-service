@@ -56,6 +56,9 @@
             'estimate_hand_over_date' => (NULL),
             'estimate_hand_over_date' => (NULL),
             'hand_over_date' => (NULL),
+            'recomment' => (NULL),
+            'ref_id_user_survey' => (NULL),
+            'survay_date' => (NULL),
             'ref_id_user_hand_over' => (NULL),
             'cause_mt_request_cancel' => (NULL),
             'date_mt_request_cancel' =>(NULL),
@@ -86,6 +89,65 @@
         exit();
     }
 
+
+    
+    if ($action=='send_survey') {
+        //echo '<pre>'; print_r($_POST); print_r($_FILES); echo '</pre>'; //exit();
+        //tb_satisfaction_survey        id_survey, ref_id_maintenance_request, ref_topic_survey, score_result, recomment
+        $rowID = $obj->customSelect("SELECT id_survey FROM tb_satisfaction_survey WHERE ref_id_maintenance_request=".$_POST['ref_id']." LIMIT 1");
+
+        if(empty($rowID['id_survey'])){
+            echo 'เพิ่ม';
+            $insertRow = array();
+            $updateRow = array();
+            foreach($arrTopicSurvey as $index => $value){
+                $addRow = [
+                    'ref_id_maintenance_request' => $_POST['ref_id'],
+                    'ref_topic_survey' => $index,
+                    'score_result' => $_POST['score_'.$index.''],
+                ];
+                $insertRow = array_merge($insertRow, $addRow);
+                //print_r($insertRow); 
+                $rowID = $obj->addRow($insertRow, "tb_satisfaction_survey");
+            }
+            $updateRow = [
+                'recomment' => $_POST['recomment'],
+                'survay_date' => date('Y-m-d H:i:s'),
+               'ref_id_user_survey' => ($_SESSION['sess_id_user']),
+                                
+            ];
+            $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+            echo $rowID ;
+            exit();
+        }else{
+            echo 'อัพเดท';
+            $updateRow = array();
+            foreach($arrTopicSurvey as $index => $value){
+                $addRow = [
+                    'ref_id_maintenance_request' => $_POST['ref_id'],
+                    'ref_topic_survey' => $index,
+                    'score_result' => $_POST['score_'.$index.''],
+                ];
+                $updateRow = array_merge($updateRow, $addRow);
+                //print_r($insertRow); 
+                $rowID = $obj->update($updateRow, "ref_id_maintenance_request=".$_POST['ref_id']." AND ref_topic_survey=".$index."", "tb_satisfaction_survey");
+            }
+            $updateRow = [
+                'recomment' => $_POST['recomment'],
+                'survay_date' => date('Y-m-d H:i:s'),
+                'ref_id_user_survey' => ($_SESSION['sess_id_user']),
+            ];
+            $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+            echo $rowID ;
+            exit();
+        }
+        ######### รอใส่โค๊ด Update Timeline ###########
+        ##                           ใส่โค๊ดตรงนี้                              ##
+        ######### รอใส่โค๊ด Update Timeline ###########        
+        exit();        
+    }
+
+
     if ($action=='problem_statement') {
         //echo $ref_id.'----xxx------'.$_POST['problem_statement']; exit();
         $updateRow = [
@@ -101,14 +163,17 @@
             'duration_serv_start' => (date('Y-m-d H:i:s')),
         ];
         ######### รอใส่โค๊ด Update Timeline ###########
-        ##                                                                           ##
+        ##                           ใส่โค๊ดตรงนี้                              ##
         ######### รอใส่โค๊ด Update Timeline ###########
         echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
         exit();        
     }    
 
-    if ($action=='delimg_before') {
+    if ($action=='delimg') {
         !empty($_POST['img_id']) ? $img_id = intval($_POST['img_id']): '';
+        //echo $ref_id.'-------'.$_POST['img_id']; exit();
+        $checkFile = $obj->customSelect('SELECT * FROM tb_attachment WHERE id_attachment='.$img_id.'');
+        @unlink('../../'.$pathReq.$checkFile['path_attachment_name']);
         echo $result = $obj->deleteRow($ref_id, 'tb_attachment', 'id_attachment='.$img_id.' AND ref_id_used='.$ref_id.'');
         exit();
     }        
@@ -120,7 +185,7 @@
             'ref_user_id_accept_request' => ($_SESSION['sess_id_user']),
         ];
         ######### รอใส่โค๊ด Update Timeline ###########
-        ##                                                                           ##
+        ##                           ใส่โค๊ดตรงนี้                              ##
         ######### รอใส่โค๊ด Update Timeline ###########
         echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
         exit();        
@@ -131,7 +196,7 @@
             ##"slt_failure_code=3&txt_failure_code=xxxx&txt_caused_by=xxxxxxx&slt_repair_code=6&txt_repair_code=xxxx&txt_solution=xxxxxx
             parse_str($_POST['data'], $output); //$output['period']
             //echo $output['slt_failure_code'];                echo "\r\n\r\n";            
-            print_r($output); echo 'xxxxxxxxxxxxx'; exit();
+            //print_r($output); echo 'xxxxxxxxxxxxx'; exit();
         }
 
         //echo '<pre>'; print_r($_POST); print_r($_FILES); echo '</pre>'; exit();
@@ -184,7 +249,7 @@
             'ref_id_user_change' => ($_SESSION['sess_id_user']),
         ];
         ######### รอใส่โค๊ด Update Timeline ###########
-        ##                                                                           ##
+        ##                           ใส่โค๊ดตรงนี้                              ##
         ######### รอใส่โค๊ด Update Timeline ###########
         $rowID = $obj->addRow($insertRow, "tb_change_parts");
         echo json_encode($rowID);

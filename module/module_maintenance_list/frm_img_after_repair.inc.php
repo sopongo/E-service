@@ -8,7 +8,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
 </style>
 
 <div class="modal fade" id="modal-img_after_repair" tabindex="-1" role="dialog" aria-labelledby="dataformLabel" aria-hidden="true">
-<div class="modal-dialog modal-lg">
+<div class="modal-dialog modal-md">
     <div class="modal-content">
     <div class="modal-header">
         <h5 class="modal-title font-weight-bold" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span>เพิ่มภาพถ่ายหลังซ่อม</span></h5>
@@ -63,7 +63,7 @@ $(document).on("click", ".btn-img_after_repair", function (event){
             },success: function (data) {
                 console.log(data); //return false;
                 //event.stopPropagation();
-                $("#modal-change_parts").modal('hide');
+                $("#modal-img_after_repair").modal('hide');
                 if(data.error=='over_req'){
                     sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
                     return false;
@@ -79,7 +79,7 @@ $(document).on("click", ".btn-img_after_repair", function (event){
                     swal.close();                    
                     //return false();
                     //alert(ref_id);
-                    //window.location.href = '?module=requestid&id=<?PHP echo $id; ?>';
+                    window.location.href = '?module=requestid&id=<?PHP echo $id; ?>';
                 })
             },error: function (data) {
                 console.log(data);
