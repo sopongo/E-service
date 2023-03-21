@@ -31,11 +31,16 @@
 
         $totalRow = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master WHERE (machine_code = '".(trim($_POST['machine_code']))."' OR name_machine='".(trim($_POST['name_machine']))."') ".$query_id."");
 
+
         $countCode = 0;
         $_POST['machine_code'] = str_replace("-0000", "", $_POST['machine_code']);
         ##หารหัสเครื่องจักรล่าสุดของหมวดนั้นๆ (ORDER BY DESC เช่น MT-AS-0002) จากนั้นเอามาตัดเอาตัวเลข 4 ตัวท้าย strip 0 ออกจากนั้นเอาไป+1
         $countCode = $obj->customSelect("SELECT machine_code FROM tb_machine_master WHERE LEFT(machine_code, ".strlen($_POST['machine_code']).")='".$_POST['machine_code']."' ORDER BY machine_code DESC LIMIT 1");
-        $machine_code =  $_POST['machine_code'].'-'.str_pad(intval(substr($countCode['machine_code'],  -4)+1), 4, 0, STR_PAD_LEFT);
+
+        if(empty($countCode)){
+            $countCode = array('machine_code'=> $_POST['machine_code'].'-0000');
+        }
+            $machine_code =  $_POST['machine_code'].'-'.str_pad(intval(substr($countCode['machine_code'],  -4)+1), 4, 0, STR_PAD_LEFT);
 
         if($totalRow!=0){ ##ถ้า $totalRow ไม่เท่ากับ 0 แสดงว่ามีในระบบแล้ว
             echo json_encode(1);

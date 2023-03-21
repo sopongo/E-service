@@ -347,7 +347,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                         echo '<div class="divimg_before divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                       }else{
                         $pathReq.$rowImg[$key]['path_attachment_name'] = $noimg;
-                        echo '<div class="divimg_before divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
+                        echo '<div class="divimg_before divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                       }
                         $i++;
                     }
@@ -374,7 +374,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">สาเหตุที่ส่งซ่อม:</strong> <?PHP echo $rowData['caused_outsite_repair']=='' ? '-' : $rowData['caused_outsite_repair'];?><br>
-                    <strong class="d-inline-block w-25">ซัพพลายเออร์:</strong> <?PHP echo $rowData['supplier_name']=='' ? '-' : $rowData['supplier_name'];?><br>
+                    <strong class="d-inline-block w-25">ซัพพลายเออร์:</strong> <?PHP echo $rowData['supplier_name']=='' ? $rowData['ref_id_supplier'] : $rowData['supplier_name'];?><br>
                 </div><!-- /.col -->
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">วันที่ส่งซ่อม:</strong> <?PHP echo $rowData['datesent_repair']=='' ? '-' : nowDateShort($rowData['datesent_repair']);?><br>
@@ -447,7 +447,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                         echo '<div class="divimg_after divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_after">&times;</span></div><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                       }else{
                         $pathReq.$rowImg[$key]['path_attachment_name'] = $noimg;
-                        echo '<div class="divimg_after divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ">').'</div></div>';
+                        echo '<div class="divimg_after divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ">').'</div></div>';
                       }
                         $i++;
                     }
@@ -882,7 +882,7 @@ $(document).on("click", ".del-img", function (e){
 
 $(document).on("click", ".btn-img_after", function (e){ 
   hand_over_date = '';
-  if(hand_over_date==''){
+  if(hand_over_date!=''){
     sweetAlert("ผิดพลาด!", "ผู้ซ่อมต้องสรุปผลการซ่อมก่อน\r\n จึงจะอัพโหลดรูปหลังซ่อมได้", "error");
     return false;
   /*
@@ -1094,11 +1094,10 @@ if(txt_repair_code!=''){  $("#slt_repair_code option[value=custom]").attr("selec
             beforeSend: function () {
             },
             success: function (data) {
-            console.log(data);
-            return false;
+            console.log(data); //return false;
+            $("#modal-repair_results").modal('hide');
             if(data==''){
-                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
-                return false;
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error"); return false;
             }else{
               swal({
                     title: "สำเร็จ!",
@@ -1107,10 +1106,9 @@ if(txt_repair_code!=''){  $("#slt_repair_code option[value=custom]").attr("selec
                     //timer: 3000
                 }, 
                 function(){
-                    //console.log(data);
-                    return false;
+                    //console.log(data);return false;
                     //alert(ref_id);
-                    //window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
                 })
                 //sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
             }   

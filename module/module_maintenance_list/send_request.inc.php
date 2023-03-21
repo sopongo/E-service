@@ -280,7 +280,8 @@
         ######### รอใส่โค๊ด Update Timeline ###########
         ##                           ใส่โค๊ดตรงนี้                              ##
         ######### รอใส่โค๊ด Update Timeline ###########
-        echo $rowID;
+        $rowID = str_replace(array("\r", "\n"), '', $rowID);
+        echo strip_tags($rowID);
         exit();        
     }        
 

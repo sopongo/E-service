@@ -98,7 +98,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 <body class="hold-transition login-page" style="background:url(dist/img/bg_login.png) no-repeat; background-position: 58.33325% center;">
 
 <section class="h-100">
-		<div class="container h-100 col-md-16">
+		<div class="container h-100 col-md-12">
 			<div class="row justify-content-md-center h-100">
 				<div class="card-wrapper">
 					<div class="brand">
@@ -108,6 +108,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 						<div class="card-body">
 							<h4 class="card-title text-center w-100 text-bold" style="line-height:1.8rem;">เข้าสู่ระบบ E-Service <br />แจ้งซ่อมออนไลน์</h4><br /><br />
 							<form method="POST" class="my-login-validation" novalidate="">
+<br />
 								<div class="form-group">
 									<label for="email">E-Mail Address</label>
 									<input id="email" type="email" class="form-control" name="email" value="" required autofocus>
@@ -116,27 +117,36 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 
 								<div class="form-group">
 									<label for="password">Password</label>
-									<input id="password" type="password" class="form-control" name="password" required>
-								    <div class="invalid-feedback">
-								    	Password is required
-							    	</div>
+									<input id="password" type="password" class="form-control" name="password" autocomplete="off" required>
+                <div class="invalid-feedback">Password is required</div>
 								</div>
 
 								<div class="form-group">
+                <label for="slt_manage_site">ไซต์งานที่จัดการ:</label>  <br />
+                    <select class="custom-select custom-select-md rounded-3" id="slt_manage_site" name="slt_manage_site" style="width:260px;">
+                        <option value="0">เลือกไซต์งาน</option>
+                        <?PHP
+                            $rowDept= $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY site_initialname DESC");
+                            if (count($rowDept)>0) {
+                                foreach($rowDept as $key => $value) { 
+                                    echo '<option value="'.$rowDept[$key]['id_site'].'">'.$rowDept[$key]['site_initialname'].' - '.$rowDept[$key]['site_name'].'</option>';
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+
+								<!--<div class="form-group">
 									<div class="custom-checkbox custom-control">
 										<input type="checkbox" name="remember" id="remember" class="custom-control-input">
 										<label for="remember" class="custom-control-label">จำรหัสผ่าน</label>
 									</div>
-								</div>
+								</div>-->
 
 								<div class="form-group m-0">
-									<button type="submit" class="btn btn-primary btn-block">
-										เข้าระบบ
-									</button>
+									<button type="submit" class="btn btn-primary btn-block" id="chk_login">เข้าระบบ</button>
 								</div>
-								<div class="mt-4 text-center">
-									หากไม่มีอีเมล์เข้าใช้งาน ติดต่อแผนก IT
-								</div>
+								<div class="mt-4 text-center">หากไม่มีอีเมล์เข้าใช้งาน ติดต่อแผนก IT</div>
 							</form>
 						</div>
 					</div>
@@ -157,12 +167,8 @@ function isEmail(email) {
 }
 
 $(document).ready(function () { //When the page has loaded
-  //sweetAlert("ผิดพลาด...", "รูปแบบอีเมล์ไม่ถูกต้อง!", "error"); //The error will display
-  <?PHP 
-    if(isset($_COOKIE["remember_log"])==1){
-      echo "$('#remember').prop('checked', true);";
-    }
-  ?>
+
+ //sweetAlert("ผิดพลาด...", "รูปแบบอีเมล์ไม่ถูกต้อง!", "error"); //The error will display
 
   $("#chk_login").click(function(){
   if (!isEmail($("#email").val())){
@@ -171,12 +177,14 @@ $(document).ready(function () { //When the page has loaded
  	}else if($("#password").val()==""){
     sweetAlert("ผิดพลาด...", "กรุณากรอกรหัสผ่าน", "error"); //The error will display
 		return false;
+  }else if($('#slt_manage_site option:selected').val()<=0){
+    sweetAlert("ผิดพลาด...", "เลือกไซต์งานที่ใช้งาน", "error"); //The error will display
+		return false;
   }else{
 		return true;  
   }
-    
-  });
 
+  });
 
 });
 
@@ -186,8 +194,11 @@ $(document).ready(function () { //When the page has loaded
 <?PHP
 //print_r($_POST); //ตรวจสอบมี input อะไรบ้าง และส่งอะไรมาบ้าง 
 //ถ้ามีค่าส่งมาจากฟอร์ม
-  if(isset($_POST['email']) && isset($_POST['password']) ){
 
+
+  if(isset($_POST['email']) && isset($_POST['password']) ){
+    $_POST['email'] = trim($_POST['email']);
+    $_POST['password'] = trim($_POST['password']);
     //ประกาศตัวแปรที่รับค่าจากฟอร์ม 
     //$email = $_POST['email'];
     $password = sha1($keygen.$_POST['password']); //เก็บรหัสผ่านในรูปแบบ sha1 
@@ -195,10 +206,11 @@ $(document).ready(function () { //When the page has loaded
     echo "<br />";
     echo $_POST['remember'];    die;*/
 
-    $fetchRow = $obj->fetchRows("SELECT tb_user.*, tb_dept.dept_initialname, tb_dept.dept_name
-    FROM tb_user 
-    LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept)
-    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."'");
+    $fetchRow = $obj->fetchRows("SELECT tb_user.*, tb_dept.dept_initialname, tb_dept.dept_name, tb_site.site_initialname FROM tb_user 
+    LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept) 
+    LEFT JOIN tb_site_responsibility ON (tb_site_responsibility.ref_id_user=tb_user.id_user) 
+    LEFT JOIN tb_site ON (tb_site.id_site=tb_site_responsibility.ref_id_site) 
+    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."' AND tb_site_responsibility.ref_id_site=".$_POST['slt_manage_site']."");
 
     if (!empty($fetchRow) && count($fetchRow)==1){
       //$fetchRow[0]['photo_name']
@@ -212,7 +224,7 @@ $(document).ready(function () { //When the page has loaded
       $_SESSION['sess_no_user'] = $fetchRow[0]['no_user'];
       $_SESSION['sess_email'] = $fetchRow[0]['email'];
       $_SESSION['sess_ref_id_site'] = $fetchRow[0]['ref_id_site'];
-      $_SESSION['sess_location_name'] = $fetchRow[0]['location_name'];
+      $_SESSION['sess_site_initialname'] = $fetchRow[0]['site_initialname'];
       $_SESSION['sess_fullname'] = $fetchRow[0]['fullname'];
       $_SESSION['sess_class_user'] = $fetchRow[0]['class_user'];
       $_SESSION['sess_id_dept'] = $fetchRow[0]['ref_id_dept'];
@@ -230,6 +242,7 @@ $(document).ready(function () { //When the page has loaded
 
     ?>
     <script type="text/javascript">
+
       //$.cookie("showHowto", "show");    
       //$.cookie("data", $("#cookieData").val());      
     </script>      

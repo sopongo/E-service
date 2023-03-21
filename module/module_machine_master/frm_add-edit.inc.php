@@ -52,8 +52,8 @@
                                     $rowData = $obj->fetchRows("SELECT * FROM tb_dept WHERE mt_request_manage=1 AND dept_status=1 ORDER BY id_dept ASC");
                                     if (count($rowData)!=0) {
                                         echo '<option value="" >เลือกแผนกที่รับผิดชอบ</option>';
-                                        foreach($rowData as $key => $value) {
-                                            echo '<option value="'.$rowData[$key]['id_dept'].'">'.$rowData[$key]['dept_initialname'].' - '.$rowData[$key]['dept_name'].'</option>';
+                                        foreach($rowData as $key => $value) { 
+                                            echo '<option '.($_SESSION['sess_id_dept']!=$rowData[$key]['id_dept'] ? 'disabled style="color:#ddd;"' : '').' value="'.$rowData[$key]['id_dept'].'">'.$rowData[$key]['dept_initialname'].' - '.$rowData[$key]['dept_name'].'</option>';
                                         }
                                     } else {
                                         echo '<option value="" >เลือกแผนกที่รับผิดชอบ</option>  ';
@@ -348,7 +348,7 @@ $(document).on("change", "#ref_id_dept", function (e){
             beforeSend: function () {
             },
             success: function (data) {
-                //console.log(data); return false;
+                console.log(data); return false;
                 if(data==1){
                     sweetAlert("ผิดพลาด!", "ชื่อเครื่องจักร-อุปกรณ์: '"+$("#name_machine").val()+"' ถูกใช้แล้ว", "error");
                     return false;

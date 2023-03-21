@@ -39,8 +39,10 @@
     </div>
 
     <?php
-      include_once 'module/module_machine_site/frm_add-edit.inc.php'; //หน้า add/edit
-      include_once 'module/module_machine_site/frm_view.inc.php'; //หน้า add/edit
+      if($_SESSION['sess_class_user']!=1){
+        include_once 'module/module_machine_site/frm_add-edit.inc.php'; //หน้า add/edit
+        include_once 'module/module_machine_site/frm_view.inc.php'; //หน้า add/edit
+      }
     ?>
 
     <div class="testx"></div>
@@ -139,15 +141,20 @@
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      "buttons": [<?PHP       if($_SESSION['sess_class_user']!=1){  ?>"copy", "csv", "excel", "pdf", "print", <?PHP } ?> "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {
     
   //var table = $('#example1').DataTable();
   //var info = table.page.info();
-
-  $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มเครื่องจักร-อุปกรณ์</button></div>');
+  <?PHP
+      if($_SESSION['sess_class_user']!=1){  
+  ?>
+      $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data- backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มเครื่องจักร-อุปกรณ์</button></div>');
+  <?PHP
+      }
+  ?>
   $('input[type=search]').attr('placeholder', 'ชื่ออาคาร หรือ ชื่ออาคาร');
   $('input[type=search]').attr('maxlength', 20);
   //$('#example1_filter').append('<select class="custom-select dataTables_filter" name="search" id="slt_search" aria-controls="example1"><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>');

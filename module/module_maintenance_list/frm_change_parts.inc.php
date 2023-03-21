@@ -85,6 +85,9 @@ $(document).on("click", ".btn-update_parts", function (event){
                 console.log(data); //return false;
                 event.stopPropagation();
                 part_id = data;
+                part_id = part_id.replace(/[\n\r]/g, '');
+                part_id = part_id.replace(/^\s+|\s+$/gm,'');
+
                 $("#modal-change_parts").modal('hide');
                 if(data=='over_req'){
                     sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
@@ -97,19 +100,19 @@ $(document).on("click", ".btn-update_parts", function (event){
                     parts_qty = addCommas(parts_qty);
                     subTotal = addCommas(subTotal);
                     //alert(part_id);
-                    if(data!="Success"){
-                        $('.tb_parts tr:last').before('<tr class="tr_partid_'+add_tr_partid+'"><td>'+add_tr_partid+'.</td><td>'+parts_serialno+'</td><td>'+parts_name+'</td><td>'+parts_description+'</td><td class="text-right">'+parts_price+'</td><td class="text-right">'+parts_qty+'</td><td class="text-right">'+subTotal+'</td><td><button type="button" class="btn btn-danger btn-sm p-0 px-1 m-0" data-id="'+add_tr_partid+'" title="ลบรายการนี้" id="btn-del_parts"><i class="fa fa-trash-alt"></i></button> <button type="button" class="btn btn-warning btn-sm btn-edit_part p-0 px-1 m-0" data-id="'+part_id+'" data-toggle="modal" data-target="#modal-change_parts" id="addData" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button></td></tr>');
-                        $('.grand_total').text(addCommas(grand_total));
-                    }else{
-                        alert(part_id+'xxxxxxxxxxxxxx');
-                        return false;
-                        /*$('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(1)').text(parts_serialno);
+                    if(isNaN(data)){
+                        //alert(data+'Show'+id_parts); //return false;
+                        $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(1)').text(parts_serialno);
                         $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(2)').text(parts_name);
                         $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(3)').text(parts_description);
                         $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(4)').text(parts_price);
                         $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(5)').text(parts_qty);
                         $('.tb_parts tr.tr_partid_'+id_parts).find('td:eq(6)').text(subTotal);
-                        $('.grand_total').text(addCommas(grand_total));*/
+                        $('.grand_total').text(addCommas(grand_total));
+                    }else{
+                        //alert('Show '+data+' Show'); //return false;
+                        $('.tb_parts tr:last').before('<tr class="tr_partid_'+part_id+'"><td>'+add_tr_partid+'.</td><td>'+parts_serialno+'</td><td>'+parts_name+'</td><td>'+parts_description+'</td><td class="text-right">'+parts_price+'</td><td class="text-right">'+parts_qty+'</td><td class="text-right">'+subTotal+'</td><td><button type="button" class="btn btn-danger btn-sm p-0 px-1 m-0" data-id="'+part_id+'" title="ลบรายการนี้" id="btn-del_parts"><i class="fa fa-trash-alt"></i></button> <button type="button" class="btn btn-warning btn-sm btn-edit_part p-0 px-1 m-0" data-id="'+part_id+'" data-toggle="modal" data-target="#modal-change_parts" id="addData" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button></td></tr>');
+                        $('.grand_total').text(addCommas(grand_total));
                     }
                 }
                 swal({

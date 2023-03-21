@@ -4,8 +4,6 @@ session_start();
 header('Content-Type: text/html; charset=utf-8');
 date_default_timezone_set('Asia/Bangkok');	
 
-//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
 require_once ('include/connect_db.inc.php');
 require_once ('include/function.inc.php');
 require_once ('include/setting.inc.php');
@@ -138,6 +136,12 @@ switch($module){
     $title_site = "ตั้งค่าใบแจ้งซ่อม"; $title_act = "ตั้งค่าใบแจ้งซ่อม"; $breadcrumb_txt = "ตั้งค่าใบแจ้งซ่อม";
     $include_module = "module/module_maintenance_req/list.inc.php";
     $module=="mtr-setting" ? ($active_mtr="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_mtr=""); #ไฮไลท์เมนูด้านซ้าย    
+  break;
+
+  case 'joblist':
+    $title_site = "งานซ่อมของคุณ"; $title_act = "งานซ่อมของคุณ"; $breadcrumb_txt = "งานซ่อมของคุณ";
+    $include_module = "module/module_joblist/list.inc.php";
+    $module=="joblist" ? ($active_joblist="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_joblist=""); #ไฮไลท์เมนูด้านซ้าย    
   break;
 
   case 'category':
@@ -398,11 +402,12 @@ $obj = new CRUD();
         </div>
         <div class="info">
           <a href="#" class="d-block"><?PHP echo $_SESSION['sess_fullname'];?></a>
-          <span class="text-white">ระดับ: <?PHP echo $classArr[$_SESSION['sess_class_user']]; ?> / <?PHP echo $_SESSION['sess_dept_initialname'];?></span>
+          <span class="text-white">ระดับ: <?PHP echo $classArr[$_SESSION['sess_class_user']]; ?> / <?PHP echo $_SESSION['sess_dept_initialname'];?></span><br />
+          <span class="text-white">ไซต์งาน: <?PHP echo $_SESSION['sess_site_initialname'];?></span>
           <a href="?module=profile" class="d-block text-yellow">[แก้ไขข้อมูลส่วนตัว]</a>
         </div>
       </div>
-
+ 
 
       <!-- Sidebar Menu active-->
       <nav class="mt-2">
@@ -414,11 +419,11 @@ $obj = new CRUD();
           <!--<li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>-->
         <?PHP } ?>
         <?PHP if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4){ ?>
-        <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-archive"></i> <p>งานใหม่รอรับงาน</p><span class="float-right badge bg-success">12</span></a></li>
+        <li class="nav-item"><a href="?module=newjob" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-archive"></i> <p>งานใหม่รอรับงาน</p><span class="float-right badge bg-success">12</span></a></li>
+        <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning">842</span></a></li>
         <?PHP } ?>
-        <li class="nav-item"><a href="?module=warehouse" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning">842</span></a></li>
         <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>
-        <?PHP if($_SESSION['sess_class_user']==4){?>
+        <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4){?>
         <li class="nav-item <?PHP echo $active_treeview_1; ?>"><!--ถ้าจะให้เปิดใส่คลาส menu-open-->
             <a href="#" class="nav-link"><i class="nav-icon fas fa-sitemap"></i><p>จัดการระบบ<i class="right fas fa-angle-left"></i></p></a>
             <ul class="nav nav-treeview">
