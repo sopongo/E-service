@@ -20,12 +20,13 @@
         
         //echo "<pre>";    print_r($_POST);    echo "</pre>";
         //echo "<pre>";    print_r($_FILES);    echo "</pre>";
-           
+
         $rowData = $obj->customSelect("SELECT dept_initialname FROM tb_dept WHERE tb_dept.id_dept=".$_POST['ref_id_dept']."");
-        $chk_no = $_SESSION['sess_dept_initialname'].'-FM-'.$rowData['dept_initialname'].'-'.date('y').''.date('m');
+        $chk_no = $_SESSION['sess_site_initialname'].'-FM-'.$rowData['dept_initialname'].'-'.date('y').''.date('m');
         #สร้างรหัสใบแจ้งซ่อม Ex. PCS-FM-IT-2302-0001	 
         $countNo= 0; 
-        $countNo = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE LEFT(maintenance_request_no,".strlen($chk_no).")='".$chk_no."'");
+        $countNo = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE 
+        ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND LEFT(maintenance_request_no,".strlen($chk_no).")='".$chk_no."'");
         $countNo = str_pad(($countNo+1), 4, '0', STR_PAD_LEFT);
         $maintenance_request_no = $chk_no.'-'.$countNo;
 
@@ -37,7 +38,7 @@
             'ref_id_dept_responsibility' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : '',
             'mt_request_date' => (date('Y-m-d H:i:s')),
             'ref_id_user_request' => ($_SESSION['sess_id_user']),
-            'ref_id_machine_site' => (!empty($_POST['ref_id_machine_site'])) ? $_POST['ref_id_machine_site'] : '',
+            'ref_id_machine_site' => (!empty($_POST['ref_id_machine_site'])) ? $_POST['ref_id_machine_site'] : 0,
             'ref_id_mt_type' => (0),
             'status_approved' => (0),
             'ref_id_user_approver' => (0),
@@ -65,9 +66,9 @@
             'ref_id_user_cancel' => (NULL),
             'maintenance_request_status' => 1,
         ];
+        //echo  json_encode($insertRow); exit();
         $rowID = $obj->addRow($insertRow, "tb_maintenance_request");
         //echo  json_encode(trim(intval($rowID)));
-
         $imagename = '';
         //id_attachment	ref_id_machine	attachment_sort	path_attachment_name	attachment_type
         if (!empty($_FILES['files'])){ ##ถ้ามีแนบไฟล์รูปมาให้อัพโหลดรูปก่อน

@@ -1,4 +1,6 @@
 <?PHP
+//ob_start();
+session_start();
 require_once '../../include/class_crud.inc.php';
 require_once '../../include/setting.inc.php';
 $obj = new CRUD();
@@ -20,7 +22,7 @@ $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 $search = $_POST["search"]["value"];
 $query_search = "";
 if(!empty($search[0])){
-    $query_search = " WHERE tb_machine_master.name_machine LIKE '%".$search."%'  OR (tb_machine_site.code_machine_site LIKE '%".$search."%'  OR tb_machine_site.serial_number LIKE '%".$search."%' )";
+    $query_search = " AND tb_machine_master.name_machine LIKE '%".$search."%'  OR (tb_machine_site.code_machine_site LIKE '%".$search."%'  OR tb_machine_site.serial_number LIKE '%".$search."%' )";
 }
 
 if($_POST["start"]==0){
@@ -67,7 +69,7 @@ tb_site.site_initialname, tb_building.building_name, tb_location.location_name
  LEFT JOIN tb_location ON (tb_location.id_location=tb_machine_site.ref_id_location) 
  LEFT JOIN tb_site ON (tb_site.id_site=tb_machine_site.ref_id_site)  
  LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu) 
-  LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine AND tb_attachment.image_cate=1) ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
+  LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine AND tb_attachment.image_cate=1) WHERE tb_machine_site.ref_id_site=".$_SESSION['sess_ref_id_site']." ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
 //EX.tb_machine_master
@@ -85,19 +87,30 @@ if (count($fetchRow)>0) {
         $dataRow = array();
         $dataRow[] = $No.'.';
         $dataRow[] = ($fetchRow[$key]['path_attachment_name']=='' ? '<img src="'.$path_machine_Default.'" class="img" />' : '<a href="'.$path_machine.$fetchRow[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$fetchRow[$key]['machine_code'].': '.$fetchRow[$key]['name_machine'].'"><img src="'.$path_machine.$fetchRow[$key]['path_attachment_name'].'" class="img" alt="'.$path_machine.$fetchRow[$key]['machine_code'].'"></a>');
-        $dataRow[] = '<div class="check-status custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline">
-        <input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['status_machine']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_machine_site'].'" id="customSwitch'.$fetchRow[$key]['id_machine_site'].'">
-        <label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_machine_site'].'"></label></div>';
+
+        if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $_SESSION['sess_class_user']!=2){
+            $dataRow[] = '<div class="check-status custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline">
+            <input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['status_work']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_machine_site'].'" id="customSwitch'.$fetchRow[$key]['id_machine_site'].'"> <label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_machine_site'].'"></label></div>';
+        }else{
+            $dataRow[] = ($fetchRow[$key]['status_work']==1 ? 'กำลังทำงาน' : 'กำลังซ่อม');
+        }
         $dataRow[] = ($fetchRow[$key]['code_machine_site']=='' ? '-' : $fetchRow[$key]['code_machine_site']);
         $dataRow[] = ($fetchRow[$key]['serial_number']=='' ? '-' : $fetchRow[$key]['serial_number']);
         $dataRow[] = ($fetchRow[$key]['name_machine']=='' ? '-' : $fetchRow[$key]['name_machine']);
         $dataRow[] = ($fetchRow[$key]['name_menu']=='' ? '-' : $fetchRow[$key]['name_menu']);
         $dataRow[] = ($fetchRow[$key]['site_initialname']=='' ? '-' : $fetchRow[$key]['site_initialname']);
         $dataRow[] = ($fetchRow[$key]['building_name']=='' ? '-' : $fetchRow[$key]['building_name']);        
-        $dataRow[] = ($fetchRow[$key]['location_name']=='' ? '-' : $fetchRow[$key]['location_name']);        
-        $dataRow[] = '<div class="check-status custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline"><input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['status_machine']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_machine_site'].'" id="customSwitch'.$fetchRow[$key]['id_machine_site'].'"><label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_machine_site'].'"></label></div>';
-        $dataRow[] = '<button type="button" class="btn btn-success btn-sm view-data" data-id="'.$fetchRow[$key]['id_machine_site'].'" data-toggle="modal"  id="viewData" data-backdrop="static" data-keyboard="false" title="ดูข้อมูล"><i class="fa fa-file-alt"></i></button>
-        <button type="button" class="btn btn-warning btn-sm edit-data" data-id="'.$fetchRow[$key]['id_machine_site'].'" data-toggle="modal" id="edit-data" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button>';
+        $dataRow[] = ($fetchRow[$key]['location_name']=='' ? '-' : $fetchRow[$key]['location_name']);
+        if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $_SESSION['sess_class_user']!=2){
+            $dataRow[] = '<div class="check-status custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline"><input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['status_machine']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_machine_site'].'" id="customSwitch'.$fetchRow[$key]['id_machine_site'].'"><label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_machine_site'].'"></label></div>';
+        }else{
+            $dataRow[] = ($fetchRow[$key]['status_machine']==1 ? 'ใช้งาน' : 'ยกเลิก');
+        }        
+        if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $_SESSION['sess_class_user']!=2){
+            $dataRow[] = '<button type="button" class="btn btn-success btn-sm view-data" data-id="'.$fetchRow[$key]['id_machine_site'].'" data-toggle="modal"  id="viewData" data-backdrop="static" data-keyboard="false" title="ดูข้อมูล"><i class="fa fa-file-alt"></i></button> <button type="button" class="btn btn-warning btn-sm edit-data" data-id="'.$fetchRow[$key]['id_machine_site'].'" data-toggle="modal" id="edit-data" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button>';
+        }else{
+            $dataRow[] = '<button type="button" class="btn btn-success btn-sm view-data" data-id="'.$fetchRow[$key]['id_machine_site'].'" data-toggle="modal"  id="viewData" data-backdrop="static" data-keyboard="false" title="ดูข้อมูล"><i class="fa fa-file-alt"></i></button>';
+        }
         $arrData[] = $dataRow; //data-target="#modal-view" //data-target="#modal-default" 
         $No--;
     }

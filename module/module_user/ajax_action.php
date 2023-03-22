@@ -42,7 +42,7 @@
         }       
         
     if(empty($rowID)){
-                #status_user=1&no_user=&fullname=&email=it%40jwdcoldchain.comxxx&password=1234&class_user=1&ref_id_site%5B%5D=7&ref_id_site%5B%5D=1&ref_id_site%5B%5D=3&slt_ref_id_dept=8&id_row=
+        #status_user=1&no_user=&fullname=&email=it%40jwdcoldchain.comxxx&password=1234&class_user=1&ref_id_site%5B%5D=7&ref_id_site%5B%5D=1&ref_id_site%5B%5D=3&slt_ref_id_dept=8&id_row=
         $output['password'] = sha1($keygen.$output['password']); //เก็บรหัสผ่านในรูปแบบ sha1 
         if(count($output['ref_id_site'])!=1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
             $ref_id_site = 99; //กำหนดขึ้นมาเอง เพื่อให้รู้ว่าดูมากกว่า 1 ไซต์
@@ -97,6 +97,27 @@
     }
     echo json_encode("Success");
     exit();
+    }
+
+    if($action=='edituser'){
+        !empty($_POST['password']) ? $_POST['password'] = sha1($keygen.$_POST['password']) : ''; //เก็บรหัสผ่านในรูปแบบ sha1         
+        //id_user, no_user, password, email, line_token, fullname, sex, phone, photo, class_user, ref_id_site, ref_id_dept, ref_id_position, status_user, create_date, ref_id_user_add, edit_date, ref_id_user_edit, latest_login, ip_address
+        $updateRow = [
+            'no_user' => (!empty($_POST['no_user'])) ? $_POST['no_user'] : '',
+            'fullname' => (!empty($_POST['fullname'])) ? $_POST['fullname'] : '',
+            'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : '',
+            'ref_id_site' => (!empty($_POST['ref_id_site'])) ? $_POST['ref_id_site'] : ''
+        ];
+
+        if(!empty($_POST['password'])){
+            $passRow = [
+                'password' => $_POST['password'],
+            ];
+            $updateRow = array_merge($updateRow, $passRow);
+        }
+        $Update = $obj->update($updateRow, "id_user=".$_SESSION['sess_id_user']."", "tb_user");
+        echo json_encode($Update);
+        exit();
     }
 
     if($action=='update-status'){

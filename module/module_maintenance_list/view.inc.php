@@ -230,30 +230,19 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               <!-- /.card-header -->
               <div class="card-body">
                 <strong><i class="fas fa-book mr-1"></i> Title Wait</strong>
-
-                <p class="text-muted">
-                Text Wait
-                </p>
-
+                <p class="text-muted">Coming Soon</p>
                 <hr>
 
                 <strong><i class="fas fa-map-marker-alt mr-1"></i> Title Wait</strong>
-
-                <p class="text-muted">Text Wait</p>
-
+                <p class="text-muted">Coming Soon</p>
                 <hr>
 
                 <strong><i class="fas fa-pencil-alt mr-1"></i> Title Wait</strong>
-
-                <p class="text-muted">
-                  <span class="tag tag-danger">Text Wait</span>
-                </p>
-
+                <p class="text-muted">Coming Soon</p>
                 <hr>
 
                 <strong><i class="far fa-file-alt mr-1"></i> Title Wait</strong>
-
-                <p class="text-muted">Text Wait</p>
+                <p class="text-muted">Coming Soon</p>
               </div>
               <!-- /.card-body -->
             </div>
@@ -312,20 +301,20 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2 mt-3"><i class="fas fa-industry"></i> เครื่องจักร-อุปกรณ์ที่แจ้งซ่อม: </div><br>
                 <div class="row invoice-info text-left linehi-170">
                 <div class="col-sm-4 invoice-col">
-                    <strong class="d-inline-block w-30">ประเภทเครื่องจักร:</strong> <?PHP echo $rowMachine['name_menu']!='' ? $rowMachine['name_menu'] : '-';?><br>
-                    <strong class="d-inline-block w-30">ชื่ออุปกรณ์:</strong> <?PHP echo $rowMachine['name_machine']!='' ? $rowMachine['name_machine'] : '-';?><br>
-                    <strong class="d-inline-block w-30">ไซต์งาน:</strong> <?PHP echo $rowMachine['site_initialname']!='' ? $rowMachine['site_initialname'] : '-';?><br>
+                    <strong class="d-inline-block w-30">ประเภทเครื่องจักร:</strong> <?PHP echo !empty($rowMachine['name_menu']) ? $rowMachine['name_menu'] : '-';?><br>
+                    <strong class="d-inline-block w-30">ชื่ออุปกรณ์:</strong> <?PHP echo !empty($rowMachine['name_machine']) ? $rowMachine['name_machine'] : 'ไม่ทราบชื่อ, ไม่ระบุ';?><br>
+                    <strong class="d-inline-block w-30">ไซต์งาน:</strong> <?PHP echo !empty($rowMachine['site_initialname']) ? $rowMachine['site_initialname'] : '-';?><br>
                 </div><!-- /.col -->
 
                 <div class="col-sm-4 invoice-col">
-                    <strong class="d-inline-block w-30">ซีเรียลนัมเบอร์:</strong> <?PHP echo $rowMachine['serial_number']!='' ? $rowMachine['serial_number'] : '-';?><br>
-                    <strong class="d-inline-block w-30">ชื่อรุ่น:</strong> <?PHP echo $rowMachine['model_name']!='' ? $rowMachine['model_name'] : '-';?><br>
-                    <strong class="d-inline-block w-30">อาคาร:</strong> <?PHP echo $rowMachine['building_name']!='' ? $rowMachine['building_name'] : '-';?><br>
+                    <strong class="d-inline-block w-30">ซีเรียลนัมเบอร์:</strong> <?PHP echo !empty($rowMachine['serial_number']) ? $rowMachine['serial_number'] : '-';?><br>
+                    <strong class="d-inline-block w-30">ชื่อรุ่น:</strong> <?PHP echo !empty($rowMachine['model_name']) ? $rowMachine['model_name'] : '-';?><br>
+                    <strong class="d-inline-block w-30">อาคาร:</strong> <?PHP echo !empty($rowMachine['building_name']) ? $rowMachine['building_name'] : '-';?><br>
                 </div><!-- /.col -->
 
                 <div class="col-sm-4 invoice-col">
-                <strong class="d-inline-block w-30">รหัสเครื่องจักร:</strong> <?PHP echo $rowMachine['code_machine_site'];?><br><br>
-                <strong class="d-inline-block w-30">สถานที่:</strong> <?PHP echo $rowMachine['location_name']!='' ? $rowMachine['location_name'] : '-';?><br>
+                <strong class="d-inline-block w-30">รหัสเครื่องจักร:</strong> <?PHP echo !empty($rowMachine['code_machine_site']) ? $rowMachine['code_machine_site'] : '-';?><br><br>
+                <strong class="d-inline-block w-30">สถานที่:</strong> <?PHP echo !empty($rowMachine['location_name']) ? $rowMachine['location_name'] : '-';?><br>
                 </div><!-- /.col -->                
 
                 <div class="col-sm-12 mt-3 ">
@@ -552,7 +541,10 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               
             </div><!-- /.tab-pane -->
 
-                  <div class="tab-pane" id="timeline">
+                  <div class="tab-pane" id="timeline">         
+                    <?PHP 
+                      if($id=='show'){
+                    ?>          
                     <!-- The timeline -->
                     <div class="timeline timeline-inverse">
                       <!-- timeline time label -->
@@ -638,10 +630,18 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                         <i class="far fa-clock bg-gray"></i>
                       </div>
                     </div>
+                    <?PHP 
+                      }else{
+                        echo 'Coming Soon.';
+                      }
+                    ?>
                   </div>
-                  <!-- /.tab-pane -->
+                  <!-- /.timeline tab-pane -->
 
                   <div class="tab-pane" id="settings">
+                    <?PHP 
+                      if($id=='show'){
+                    ?>
                     <form class="form-horizontal">
                       <div class="form-group row">
                         <label for="inputName" class="col-sm-2 col-form-label">Name</label>
@@ -690,6 +690,11 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                     </form>
                   </div>
                   <!-- /.tab-pane -->
+                  <?PHP 
+                      }else{
+                        echo 'Coming Soon.';
+                      }
+                    ?>
                 </div>
                 <!-- /.tab-content -->
               </div><!-- /.card-body -->

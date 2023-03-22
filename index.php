@@ -52,6 +52,13 @@ switch($module){
   break;
 
   case 'requestid':
+    
+    if(!is_numeric($id) || $id==0){
+      session_destroy(); //เคลียร์ค่า session
+      header('location:./');
+      exit();
+    }
+
     $rowData = $obj->customSelect("SELECT tb_maintenance_request.*, tb_maintenance_type.name_mt_type, tb_maintenance_request.ref_id_dept_responsibility AS id_dept_responsibility, tb_dept_responsibility.dept_initialname AS dept_responsibility,
     tb_user_request.no_user, tb_user_request.email, tb_user_request.fullname, tb_user_request.ref_id_dept AS ref_id_dept_request, tb_user_dept_request.dept_initialname AS dept_user_request,
     tb_user_cancel.fullname AS cancel_fullname, tb_user_approved.fullname AS approved_fullname, tb_failure_code.failure_code_th_name, tb_repair_code.repair_code_name, 
@@ -378,8 +385,6 @@ $obj = new CRUD();
         
   </nav>
   <!-- /.navbar -->
-
-
   
   <?PHP include('howto.inc.php'); ?>
 
@@ -408,7 +413,6 @@ $obj = new CRUD();
         </div>
       </div>
  
-
       <!-- Sidebar Menu active-->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -420,7 +424,7 @@ $obj = new CRUD();
         <?PHP } ?>
         <?PHP if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4){ ?>
         <li class="nav-item"><a href="?module=newjob" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-archive"></i> <p>งานใหม่รอรับงาน</p><span class="float-right badge bg-success">12</span></a></li>
-        <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning">842</span></a></li>
+        <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning">15</span></a></li>
         <?PHP } ?>
         <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>
         <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4){?>

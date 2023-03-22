@@ -44,14 +44,14 @@
                                 <div class="col-sm-4 col-md-4 col-xs-12">  
                                     <div class="form-group">  
                                         <label for="no_user">รหัสพนักงาน</label>  
-                                        <input type="text" maxlength="7" id="no_user" name="no_user" placeholder="รหัสพนักงาน" class="numberonly form-control w-10" aria-describedby="inputGroupPrepend" autocomplete="off" value="<?PHP echo $Row['no_user'];?>" required />  
+                                        <input type="text" maxlength="7" id="no_user" name="no_user" placeholder="รหัสพนักงาน" class="numberonly form-control w-10" aria-describedby="inputGroupPrepend" autocomplete="off" value="<?PHP echo $Row['no_user'];?>" />  
                                         <div class="invalid-feedback">กรอกรหัสพนักงาน</div>
                                     </div>  
                                 </div>  
                                 <div class="col-sm-5 col-md-4 col-xs-12">  
                                     <div class="form-group">  
                                         <label for="firstname">ชื่อ-นามสกุลผู้ใช้งาน</label>  
-                                        <input type="text" id="fullname" name="fullname" placeholder="ชื่อ-นามสกุล" class="form-control w-100" aria-describedby="inputGroupPrepend" autocomplete="off" value="<?PHP echo $Row['fullname'];?>" required />
+                                        <input type="text" id="fullname" name="fullname" placeholder="ชื่อ-นามสกุล" class="form-control w-100" aria-describedby="inputGroupPrepend" autocomplete="off" value="<?PHP echo $Row['fullname'];?>" />
                                         <div class="invalid-feedback">ต้องกรอกชื่อ-นามสกุล</div>
                                     </div>  
                                 </div>  
@@ -212,7 +212,7 @@ $(document).ready(function () {
         //$("#overlay").fadeIn();
       },
       success: function (response) {
-        console.log(response);
+        console.log(response); 
         if (response) {
           swal({
             title: "สำเร็จ!",

@@ -91,21 +91,22 @@
                 echo $insertRow['ref_id_dept'].'----'.$insertRow['ref_id_menu'];
                 exit();*/
             
-                $rowID = $obj->update($insertRow, "id_machine=".$rowID."", "tb_machine_master");
+                $result = $obj->update($insertRow, "id_machine=".$rowID."", "tb_machine_master");
             }
-
-            $imagename = '';
-            //id_attachment, ref_id_used, attachment_sort, attachment_name, attachment_type
-            if (!empty($_FILES['photo']['name'])){ ##ถ้ามีแนบไฟล์รูปมาให้อัพโหลดรูปก่อน
-                $imagename = $obj->uploadPhoto($_FILES['photo'], $path_machine);
-                $insertPhoto = [
-                    'ref_id_used' => $rowID,
-                    'attachment_sort' => null,
-                    'path_attachment_name' => $imagename,
-                    'attachment_type' => 1,
-                    'image_cate' => 2
-                ];    
-                $rowID = $obj->addRow($insertPhoto, "tb_attachment");        
+            if($result=='Success'){
+                $imagename = '';
+                //id_attachment, ref_id_used, attachment_sort, attachment_name, attachment_type
+                if (!empty($_FILES['photo']['name'])){ ##ถ้ามีแนบไฟล์รูปมาให้อัพโหลดรูปก่อน
+                    $imagename = $obj->uploadPhoto($_FILES['photo'], $path_machine);
+                    $insertPhoto = [
+                        'ref_id_used' => $rowID,
+                        'attachment_sort' => null,
+                        'path_attachment_name' => $imagename,
+                        'attachment_type' => 1,
+                        'image_cate' => 2
+                    ];    
+                    $rowID = $obj->addRow($insertPhoto, "tb_attachment");        
+                }
             }
             echo json_encode($rowID);
             exit();
