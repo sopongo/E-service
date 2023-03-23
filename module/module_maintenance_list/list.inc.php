@@ -132,7 +132,7 @@ $(document).on('change','.JobID',function(){
         },
         url: 'module/module_maintenance_list/datatable_processing.php?keyword=xxxxxxx',
         type: 'POST',
-        data : {"action":"get", "slt_search":"keyword"},//"slt_search":slt_search
+        data : {"action":"get", "slt_search":"keyword", 'module':'waitapprove'},//"slt_search":slt_search
         async: false,
         cache: false,
       },  

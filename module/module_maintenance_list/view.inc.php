@@ -214,7 +214,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['maintenance_request_status']==1){?>
                     <a href="#" class="btn btn-success btn-block">ปิดงาน</a>
                 <?PHP } ?>
-                <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 && $rowData['maintenance_request_status']==1){?>
+                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user']))  && $rowData['maintenance_request_status']==1){?>
                 <button type="button" class="btn btn-danger btn-block btn-cancel" data-toggle="modal" data-target="#modal-cancel" id="addData" data-backdrop="static" data-keyboard="false"> ยกเลิกใบแจ้งซ่อม</button>
                 <?PHP } ?>
               </div>
@@ -319,7 +319,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 
                 <div class="col-sm-12 mt-3 ">
                 <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2 text-red"><i class="fas fa-info-circle"></i> อาการเสีย/ปัญหาที่พบ: 
-                <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?>
+                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user'])) && $rowData['maintenance_request_status']!=2){ ?>
                 <button type="button" class="btn btn-default btn-sm btn-problem_statement"  data-toggle="modal" data-target="#modal-problem_statement" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>
                     <p class="problem_statement"><?PHP echo $rowData['problem_statement'];?></p>
                 </div><!-- /.col -->                
@@ -333,10 +333,10 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                     $i = 1;
                     foreach($rowImg as $key => $value) {
                       if(file_exists($pathReq.$rowImg[$key]['path_attachment_name'])){
-                        echo '<div class="divimg_before divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
+                        echo '<div class="divimg_before divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                       }else{
-                        $pathReq.$rowImg[$key]['path_attachment_name'] = $noimg;
-                        echo '<div class="divimg_before divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
+                        $pathReq.$rowImg[$key]['path_attachment_name'] = $noimg; //ถ้าหาไฟล์ไม่เจอ
+                        echo '<div class="divimg_before divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                       }
                         $i++;
                     }
@@ -359,7 +359,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div><!-- /.col -->
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-update_outsite" data-toggle="modal" data-target="#modal-outsite_repair" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-update_outsite" data-toggle="modal" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">สาเหตุที่ส่งซ่อม:</strong> <?PHP echo $rowData['caused_outsite_repair']=='' ? '-' : $rowData['caused_outsite_repair'];?><br>
@@ -433,10 +433,10 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                     $i = 1;
                     foreach($rowImg as $key => $value) {
                       if(file_exists($pathReq.$rowImg[$key]['path_attachment_name'])){
-                        echo '<div class="divimg_after divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_after">&times;</span></div><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
+                        echo '<div class="divimg_after divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                       }else{
                         $pathReq.$rowImg[$key]['path_attachment_name'] = $noimg;
-                        echo '<div class="divimg_after divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2"><div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div><div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ">').'</div></div>';
+                        echo '<div class="divimg_after divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ">').'</div></div>';
                       }
                         $i++;
                     }
@@ -744,23 +744,29 @@ $(document).on('click', '[data-toggle="lightbox"]', function(event) {
 
 
 $(document).on("click", ".btn-update_outsite", function (e){ 
-  e.stopPropagation();
-  $.ajax({
-      url: "module/module_maintenance_list/update_result.inc.php",
-      type: "POST",
-      data:{"action":"update_outsite","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>},
-      beforeSend: function () {
-      },
-      success: function (data) {
-          $(".modal-body-outsite_repair").html(data);
-          console.log(data);
-      },
-          error: function (jXHR, textStatus, errorThrown) {
-          console.log(data);
-          //alert(errorThrown);
-          swal("Error!", ""+errorThrown+"", "error");
-      }
-  });
+  if(chk_allotted_date==''){
+    swal("ผิดพลาด!", "ต้องให้ผู้ซ่อม(ช่าง) กดรับงานก่อน\r\nถึงจะสรุปผลการซ่อมได้", "error");    
+    return false;
+  }else{
+    e.stopPropagation();
+    $.ajax({
+        url: "module/module_maintenance_list/update_result.inc.php",
+        type: "POST",
+        data:{"action":"update_outsite","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>},
+        beforeSend: function () {
+        },
+        success: function (data) {
+            $(".modal-body-outsite_repair").html(data);
+            $('#modal-outsite_repair').modal('show');
+            console.log(data);
+        },
+            error: function (jXHR, textStatus, errorThrown) {
+            console.log(data);
+            //alert(errorThrown);
+            swal("Error!", ""+errorThrown+"", "error");
+        }
+    });
+  }  
 });
 
 $(document).on("click", "#btn-del_parts", function (e){ 
@@ -1215,9 +1221,10 @@ $(document).on("click", ".btn-change-approved", function (e){
   });  
 });
 
+var chk_allotted_date = '<?PHP echo $rowData['allotted_accept_date']; ?>';
+
 $(document).on("click", ".btn-repair_results", function (e){
   e.stopPropagation();
-  var chk_allotted_date = '<?PHP echo $rowData['allotted_accept_date']; ?>';
   if(chk_allotted_date==''){
     swal("ผิดพลาด!", "ต้องให้ผู้ซ่อม(ช่าง) กดรับงานก่อน\r\nถึงจะสรุปผลการซ่อมได้", "error");    
     return false;

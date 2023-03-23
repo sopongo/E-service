@@ -12,6 +12,7 @@ require_once ('include/timer.inc.php');
 require_once ('include/query_class.inc.php');
 
 error_reporting(error_reporting() & ~E_NOTICE);
+
 //$stmt = new CRUD();
 /*ทดสอบ คอมเม้นต์ และอัพโหลดลง GITHUB*/
 
@@ -51,14 +52,10 @@ switch($module){
     $module=="requestlist" ? ($active_requestlist="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestlist=""); #ไฮไลท์เมนูด้านซ้าย    
   break;
 
-  case 'requestid':
-    
-    if(!is_numeric($id) || $id==0){
-      session_destroy(); //เคลียร์ค่า session
-      header('location:./');
-      exit();
+  case 'requestid': 
+    if(!is_numeric($id) || $id==0){ //เคลียร์ค่า session
+      session_destroy(); header('location:./'); exit();
     }
-
     $rowData = $obj->customSelect("SELECT tb_maintenance_request.*, tb_maintenance_type.name_mt_type, tb_maintenance_request.ref_id_dept_responsibility AS id_dept_responsibility, tb_dept_responsibility.dept_initialname AS dept_responsibility,
     tb_user_request.no_user, tb_user_request.email, tb_user_request.fullname, tb_user_request.ref_id_dept AS ref_id_dept_request, tb_user_dept_request.dept_initialname AS dept_user_request,
     tb_user_cancel.fullname AS cancel_fullname, tb_user_approved.fullname AS approved_fullname, tb_failure_code.failure_code_th_name, tb_repair_code.repair_code_name, 
@@ -94,7 +91,7 @@ switch($module){
       header('location:./');
     }else{
       //|| $rowData['ref_id_dept']==$_SESSION['sess_id_dept']
-      if($rowData['ref_id_dept_request']==$_SESSION['sess_id_dept'] || $rowData['ref_id_user_request']==$_SESSION['sess_id_user'] || $_SESSION['sess_class_user']==4){#001
+      if($rowData['ref_id_dept_request']==$_SESSION['sess_id_dept'] || $rowData['ref_id_user_request']==$_SESSION['sess_id_user'] || $_SESSION['sess_class_user']==5 || $_SESSION['sess_class_user']==4 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==2){#001
         $denied_requestid = 1;
         $include_module = "module/module_maintenance_list/view.inc.php";
         $title_site = "".$rowData['maintenance_request_no'].""; $title_act = "ใบแจ้งซ่อมเลขที่: ".$rowData['maintenance_request_no'].""; $breadcrumb_txt = "".$rowData['maintenance_request_no']."";
@@ -145,6 +142,12 @@ switch($module){
     $module=="mtr-setting" ? ($active_mtr="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_mtr=""); #ไฮไลท์เมนูด้านซ้าย    
   break;
 
+  case 'waitapprove':
+    $title_site = "งานรออนุมัติซ่อม'"; $title_act = "งานรออนุมัติซ่อม"; $breadcrumb_txt = "งานรออนุมัติซ่อม";
+    $include_module = "module/module_maintenance_list/list.inc.php";
+    $module=="waitapprove" ? ($active_waitapprove="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_waitapprove=""); #ไฮไลท์เมนูด้านซ้าย    
+  break;
+    
   case 'joblist':
     $title_site = "งานซ่อมของคุณ"; $title_act = "งานซ่อมของคุณ"; $breadcrumb_txt = "งานซ่อมของคุณ";
     $include_module = "module/module_joblist/list.inc.php";
@@ -419,15 +422,16 @@ $obj = new CRUD();
         <li class="nav-item"><a href="./" class="nav-link <?PHP echo $active_dashbord;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=requestlist" class="nav-link <?PHP echo $active_requestlist;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ติดตาม-ประเมิณ</p> </a></li>
-        <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4){ ?>
+        <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ ?>
           <!--<li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>-->
         <?PHP } ?>
-        <?PHP if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4){ ?>
-        <li class="nav-item"><a href="?module=newjob" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-archive"></i> <p>งานใหม่รอรับงาน</p><span class="float-right badge bg-success">12</span></a></li>
+        <?PHP if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ ?>
+          <li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light">18</span></a></li>
+        <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-archive"></i> <p>งานใหม่รอรับงาน</p><span class="float-right badge bg-success">12</span></a></li>
         <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning">15</span></a></li>
         <?PHP } ?>
         <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>
-        <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4){?>
+        <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){?>
         <li class="nav-item <?PHP echo $active_treeview_1; ?>"><!--ถ้าจะให้เปิดใส่คลาส menu-open-->
             <a href="#" class="nav-link"><i class="nav-icon fas fa-sitemap"></i><p>จัดการระบบ<i class="right fas fa-angle-left"></i></p></a>
             <ul class="nav nav-treeview">

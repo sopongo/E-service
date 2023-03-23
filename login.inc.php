@@ -129,7 +129,8 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
                             $rowDept= $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY site_initialname DESC");
                             if (count($rowDept)>0) {
                                 foreach($rowDept as $key => $value) { 
-                                    echo '<option value="'.$rowDept[$key]['id_site'].'">'.$rowDept[$key]['site_initialname'].' - '.$rowDept[$key]['site_name'].'</option>';
+                                    $rowDept[$key]['id_site']==1 ? $selected='selected' : $selected='';
+                                    echo '<option '.$selected.' value="'.$rowDept[$key]['id_site'].'">'.$rowDept[$key]['site_initialname'].' - '.$rowDept[$key]['site_name'].'</option>';
                                 }
                             }
                         ?>
@@ -195,7 +196,6 @@ $(document).ready(function () { //When the page has loaded
 //print_r($_POST); //ตรวจสอบมี input อะไรบ้าง และส่งอะไรมาบ้าง 
 //ถ้ามีค่าส่งมาจากฟอร์ม
 
-
   if(isset($_POST['email']) && isset($_POST['password']) ){
     $_POST['email'] = trim($_POST['email']);
     $_POST['password'] = trim($_POST['password']);
@@ -214,16 +214,16 @@ $(document).ready(function () { //When the page has loaded
 
     if (!empty($fetchRow) && count($fetchRow)==1){
       //$fetchRow[0]['photo_name']
-
-      if($_POST['remember']==1){
+      /*if($_POST['remember']==1){
         setcookie("remember_log",$_POST['remember'],time()+3600*24*356);
         setcookie("email_log",$_POST['email'],time()+3600*24*356);
         setcookie("password_log",$_POST['password'],time()+3600*24*356);
-      }
+      }*/
       $_SESSION['sess_id_user'] = $fetchRow[0]['id_user'];
       $_SESSION['sess_no_user'] = $fetchRow[0]['no_user'];
       $_SESSION['sess_email'] = $fetchRow[0]['email'];
-      $_SESSION['sess_ref_id_site'] = $fetchRow[0]['ref_id_site'];
+      //$_SESSION['sess_ref_id_site'] = $fetchRow[0]['ref_id_site'];
+      $_SESSION['sess_ref_id_site'] = intval($_POST['slt_manage_site']);
       $_SESSION['sess_site_initialname'] = $fetchRow[0]['site_initialname'];
       $_SESSION['sess_fullname'] = $fetchRow[0]['fullname'];
       $_SESSION['sess_class_user'] = $fetchRow[0]['class_user'];
@@ -233,13 +233,12 @@ $(document).ready(function () { //When the page has loaded
       //$_SESSION['sess_dept_initialname'] = 'PCS';
       $_SESSION['sess_status_user'] = $fetchRow[0]['status_user'];
       $_SESSION['sess_popup_howto'] = 0;
-
+    
       $fetchPermission= $obj->fetchRows("SELECT tb_permission.* FROM tb_permission WHERE ref_class_user=".$fetchRow[0]['class_user']."");
       foreach($fetchPermission as $key=>$value){
         $_SESSION['module_access'] =  $fetchPermission[$key]['module_name'].'-'.$fetchPermission[$key]['accept_denied'];
         //$fetchPermission[$key]['module_name']
       }
-
     ?>
     <script type="text/javascript">
 
@@ -247,7 +246,7 @@ $(document).ready(function () { //When the page has loaded
       //$.cookie("data", $("#cookieData").val());      
     </script>      
     <?PHP
-      header('Location:./'); //login ถูกต้องและกระโดดไปหน้าตามที่ต้องการ ?module=dashboard
+       header('Location:./'); //login ถูกต้องและกระโดดไปหน้าตามที่ต้องการ ?module=dashboard
     }else{
       echo '<script>sweetAlert("ผิดพลาด...", "ไม่พบผู้ใช้งานที่ระบุ ", "error");</script>';
       $conn = null; //close connect db

@@ -24,11 +24,17 @@ switch($_SESSION['sess_class_user']){
         ################ ?module=warehouse ########################
     break;
 
-    case 4://Administrator
+    case 4://Manager
         ################ ?module=warehouse ########################  
         $class_query = "";
         ################ ?module=warehouse ########################
     break;
+
+    case 5://Manager
+        ################ ?module=warehouse ########################  
+        $class_query = "";
+        ################ ?module=warehouse ########################
+    break;    
   
     default:
       session_destroy(); die(include('login.inc.php')); 
