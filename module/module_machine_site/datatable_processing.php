@@ -56,7 +56,7 @@ $orderBY = $colunm_sort[$_POST['order']['0']['column']];
 $arrData = array();	
 
 $numRow = $obj->getCount("SELECT count(tb_machine_site.id_machine_site) AS total_row FROM tb_machine_site 
-LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master) ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
+LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master) WHERE tb_machine_site.ref_id_site=".$_SESSION['sess_ref_id_site']." ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
 
 $fetchRow = $obj->fetchRows("SELECT tb_machine_master.id_machine, tb_machine_master.machine_code, tb_machine_master.model_name, tb_machine_master.name_machine, tb_machine_master.status_machine,  
 tb_category.name_menu, tb_dept.dept_initialname, tb_attachment.path_attachment_name, 

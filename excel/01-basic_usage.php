@@ -65,8 +65,11 @@ foreach($Machine_Tool as $index => $value){
         $rowData = $obj->customSelect("SELECT * FROM tb_machine_master WHERE name_machine='".$Machine_Tool[$index][5]."'");     
 
         $rowSite= $obj->customSelect("SELECT id_site FROM tb_site WHERE site_initialname='".$Machine_Tool[$index][3]."'");
-        $rowBuilding = $obj->customSelect("SELECT id_building, building_name FROM tb_building WHERE building_name='".$Machine_Tool[$index][4]."' ");
-        echo "(NULL, 'code_machine_site', NULL , NULL, '".$rowData['id_machine']."', ".$rowBuilding['building_name'].'---'.$Machine_Tool[$index][2]." , NULL, ".$rowSite['id_site'].", NULL, 1, NULL, '2023-03-24 18:18:18', 3, NULL, NULL, 1), <br />";
+        $rowBuilding = $obj->customSelect("SELECT id_building, building_name FROM tb_building WHERE building_name='".$Machine_Tool[$index][2]."' ");
+        //echo "SELECT id_building, building_name FROM tb_building WHERE building_name='".$Machine_Tool[$index][2]."' <br />";
+        if(!empty($rowData['id_machine']) && !empty($rowBuilding['id_building']) && !empty($rowSite['id_site'])){
+            echo "(NULL, '".$Machine_Tool[$index][1]."', NULL , NULL, '".$rowData['id_machine']."', ".$rowBuilding['id_building']." , NULL, ".$rowSite['id_site'].", NULL, 1, NULL, '2023-03-24 18:18:18', 3, NULL, NULL, 1), <br />";
+        }
     }
 }
 

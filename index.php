@@ -429,7 +429,7 @@ $obj = new CRUD();
             if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ 
               ##$numRow_waitapprove ===== นับงานรออนุมัติ
               $numRow_waitapprove = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
-              WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status!=2"); 
+              WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.maintenance_request_status!=2"); 
 
               ##$numRow_accept ===== จำนวนงานที่รอกดรับงาน (งานที่ได้รับมอบหมายให้ซ่อม)
               $numRow_accept = $obj->getCount("SELECT count(tb_ref_repairer.ref_id_user_repairer) AS total_row FROM tb_ref_repairer 
