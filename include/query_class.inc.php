@@ -36,6 +36,7 @@ switch($_SESSION['sess_class_user']){
         ################ ?module=warehouse ########################
     break;    
   
+    case 0://Non
     default:
       session_destroy(); die(include('login.inc.php')); 
     break;

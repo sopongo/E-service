@@ -17,7 +17,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
 /*ทดสอบ คอมเม้นต์ และอัพโหลดลง GITHUB*/
 
 //if($_SESSION['sess_id_user']!=NULL && $_SESSION['sess_status_user']!=NULL){ 
-if($_SESSION['sess_id_user']==NULL && $_SESSION['sess_status_user']==NULL){ 
+if(empty($_SESSION['sess_id_user'])){ 
   $_SESSION = []; //empty array. 
   session_destroy(); die(include('login.inc.php')); 
 }
@@ -425,9 +425,18 @@ $obj = new CRUD();
         <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ ?>
           <!--<li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>-->
         <?PHP } ?>
-        <?PHP if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ ?>
-          <li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light">18</span></a></li>
-        <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-archive"></i> <p>งานใหม่รอรับงาน</p><span class="float-right badge bg-success">12</span></a></li>
+        <?PHP 
+            if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ 
+              ##$numRow_waitapprove ===== นับงานรออนุมัติ
+              $numRow_waitapprove = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
+              WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status!=2"); 
+
+              ##$numRow_accept ===== จำนวนงานที่รอกดรับงาน (งานที่ได้รับมอบหมายให้ซ่อม)
+              $numRow_accept = $obj->getCount("SELECT count(tb_ref_repairer.ref_id_user_repairer) AS total_row FROM tb_ref_repairer 
+              WHERE ref_id_user_repairer=".$_SESSION['sess_id_user']." AND status_repairer=1"); 
+          ?>
+          <li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light"><?PHP echo $numRow_waitapprove; ?></span></a></li>
+        <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-archive"></i> <p>งานใหม่รอรับงาน</p><span class="float-right badge bg-success"><?PHP echo $numRow_accept; ?></span></a></li>
         <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning">15</span></a></li>
         <?PHP } ?>
         <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>
@@ -475,6 +484,7 @@ $obj = new CRUD();
 
     <!-- Main content -->
     <?PHP
+    echo '<pre>'.print_r($_SESSION).'</pre>';
     include($include_module);
     ?>
 

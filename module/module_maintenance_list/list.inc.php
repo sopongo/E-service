@@ -1,4 +1,5 @@
 <?PHP
+echo $module;
 /*echo "INSERT INTO `tb_site` (`id_dept`, `dept_initialname`, `dept_name`, `dept_status`) VALUES";
 for($i=14;$i<=500;$i++){
     echo "<br/>(NULL, 'test-".$i."', 'test-".$i."', ".(rand(1, 2))."),";
@@ -130,9 +131,9 @@ $(document).on('change','.JobID',function(){
         beforeSend: function () {
           //จะให้ทำอะไรก่อนส่งค่าไปหรือไม่
         },
-        url: 'module/module_maintenance_list/datatable_processing.php?keyword=xxxxxxx',
+        url: 'module/module_maintenance_list/datatable_processing.php', //?keyword=xxxxxxx
         type: 'POST',
-        data : {"action":"get", "slt_search":"keyword", 'module':'waitapprove'},//"slt_search":slt_search
+        data : {"action":"get", "slt_search":"keyword", 'module':'<?PHP echo $module;?>'},//"slt_search":slt_search
         async: false,
         cache: false,
       },  

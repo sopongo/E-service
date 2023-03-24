@@ -1,4 +1,6 @@
 <?PHP
+
+session_start();
 require_once '../../include/class_crud.inc.php';
 require_once '../../include/setting.inc.php';
 $obj = new CRUD();
@@ -22,7 +24,7 @@ $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 $search = $_POST["search"]["value"];
 $query_search = "";
 if(!empty($search[0])){
-    $query_search = " WHERE tb_building.building_initialname LIKE '%".$search."%' OR tb_building.building_name LIKE '%".$search."%' ";
+    $query_search = " AND tb_building.building_initialname LIKE '%".$search."%' OR tb_building.building_name LIKE '%".$search."%' ";
 }
 
 if($_POST["start"]==0){
@@ -49,10 +51,11 @@ $orderBY = $colunm_sort[$_POST['order']['0']['column']];
 
 $arrData = array();	
 
-$numRow = $obj->getCount("SELECT count(id_building) AS total_row FROM tb_building ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
+$numRow = $obj->getCount("SELECT count(id_building) AS total_row FROM tb_building WHERE tb_building.ref_id_site=".$_SESSION['sess_ref_id_site']." ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
 
-$fetchRow = $obj->fetchRows("SELECT tb_building.*, tb_site.site_initialname FROM tb_building LEFT JOIN tb_site ON(tb_site.id_site=tb_building.ref_id_site) ".$query_search."
-ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
+$fetchRow = $obj->fetchRows("SELECT tb_building.*, tb_site.site_initialname FROM tb_building 
+LEFT JOIN tb_site ON (tb_site.id_site=tb_building.ref_id_site) 
+WHERE tb_building.ref_id_site=".$_SESSION['sess_ref_id_site']." ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
 

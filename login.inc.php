@@ -137,6 +137,20 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
                     </select>
                 </div>
 
+                <div class="form-group">
+                    <label for="email">User Test:</label>
+                        <p>sopon.g@jwdcoldchain.com <span class="float-right">Admin PCS</span></p>
+                        <p>apiwan.s@jwdcoldchain.com <span class="float-right">IT SUP</span></p>
+                        <p>mitipol@jwdcoldchain.com <span class="float-right">IT SUP</span></p>
+                        <p>usertest3@pcs-plp.com <span class="float-right">xxxxx</span></p>
+                        <p>userpacs1@pcs-plp.com <span class="float-right">xxxxx</span></p>
+                        <p>userpact1@pcs-plp.com <span class="float-right">xxxxx</span></p>
+                        <p>usertest2@pcs-plp.com <span class="float-right">xxxxx</span></p>
+                        <p>usertest1@pcs-plp.com <span class="float-right">xxxxx</span></p>
+                        <p>enuser1@pcs-plp.com <span class="float-right">EN SUP</span></p>
+                </div>
+                
+
 								<!--<div class="form-group">
 									<div class="custom-checkbox custom-control">
 										<input type="checkbox" name="remember" id="remember" class="custom-control-input">
@@ -206,11 +220,18 @@ $(document).ready(function () { //When the page has loaded
     echo "<br />";
     echo $_POST['remember'];    die;*/
 
+   /*echo "SELECT tb_user.*, tb_dept.dept_initialname, tb_dept.dept_name, tb_site.site_initialname FROM tb_user 
+    LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept) 
+    LEFT JOIN tb_site_responsibility ON (tb_site_responsibility.ref_id_user=".$_POST['slt_manage_site'].") 
+    LEFT JOIN tb_site ON (tb_site.id_site=".$_POST['slt_manage_site'].") 
+    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."'";
+    exit();*/
+
     $fetchRow = $obj->fetchRows("SELECT tb_user.*, tb_dept.dept_initialname, tb_dept.dept_name, tb_site.site_initialname FROM tb_user 
     LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept) 
-    LEFT JOIN tb_site_responsibility ON (tb_site_responsibility.ref_id_user=tb_user.id_user) 
-    LEFT JOIN tb_site ON (tb_site.id_site=tb_site_responsibility.ref_id_site) 
-    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."' AND tb_site_responsibility.ref_id_site=".$_POST['slt_manage_site']."");
+    LEFT JOIN tb_site_responsibility ON (tb_site_responsibility.ref_id_user=".$_POST['slt_manage_site'].") 
+    LEFT JOIN tb_site ON (tb_site.id_site=".$_POST['slt_manage_site'].") 
+    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."' ");
 
     if (!empty($fetchRow) && count($fetchRow)==1){
       //$fetchRow[0]['photo_name']
@@ -239,6 +260,9 @@ $(document).ready(function () { //When the page has loaded
         $_SESSION['module_access'] =  $fetchPermission[$key]['module_name'].'-'.$fetchPermission[$key]['accept_denied'];
         //$fetchPermission[$key]['module_name']
       }
+
+      //echo $_SESSION['sess_id_user']; exit();
+
     ?>
     <script type="text/javascript">
 
