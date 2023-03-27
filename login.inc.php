@@ -142,12 +142,14 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
                         <p>sopon.g@jwdcoldchain.com <span class="float-right">Admin PCS</span></p>
                         <p>apiwan.s@jwdcoldchain.com <span class="float-right">IT SUP</span></p>
                         <p>mitipol@jwdcoldchain.com <span class="float-right">IT SUP</span></p>
+                        <p>user-jpac@pcs-plp.com <span class="float-right"> User JPAC</span></p>
                         <p>usertest3@pcs-plp.com <span class="float-right">xxxxx</span></p>
                         <p>userpacs1@pcs-plp.com <span class="float-right">xxxxx</span></p>
                         <p>userpact1@pcs-plp.com <span class="float-right">xxxxx</span></p>
                         <p>usertest2@pcs-plp.com <span class="float-right">xxxxx</span></p>
                         <p>usertest1@pcs-plp.com <span class="float-right">xxxxx</span></p>
-                        <p>enuser1@pcs-plp.com <span class="float-right">EN SUP</span></p>
+                        <p>enuser1@pcs-plp.com <span class="float-right"> หัวหน้า MT</span></p>
+                        <p>enuser2@pcs-plp.com <span class="float-right"> ช่าง MT-1</span></p>
                 </div>
                 
 
@@ -240,6 +242,14 @@ $(document).ready(function () { //When the page has loaded
         setcookie("email_log",$_POST['email'],time()+3600*24*356);
         setcookie("password_log",$_POST['password'],time()+3600*24*356);
       }*/
+      /*
+      echo $fetchRow[0]['ref_id_site'];
+      if($fetchRow[0]['class_user']!=5 && ($fetchRow[0]['ref_id_site']!=intval($_POST['slt_manage_site']))){
+        echo '<script>sweetAlert("ผิดพลาด...", "ผู้ใช้ระบบหรือไซต์งานไม่ถูกต้อง ", "error");</script>';
+        exit();
+      }
+      */
+
       $_SESSION['sess_id_user'] = $fetchRow[0]['id_user'];
       $_SESSION['sess_no_user'] = $fetchRow[0]['no_user'];
       $_SESSION['sess_email'] = $fetchRow[0]['email'];
@@ -272,7 +282,7 @@ $(document).ready(function () { //When the page has loaded
     <?PHP
        header('Location:./'); //login ถูกต้องและกระโดดไปหน้าตามที่ต้องการ ?module=dashboard
     }else{
-      echo '<script>sweetAlert("ผิดพลาด...", "ไม่พบผู้ใช้งานที่ระบุ ", "error");</script>';
+      echo '<script>sweetAlert("ผิดพลาด...", "ผู้ใช้ระบบหรือเลือกไซต์งานไม่ถูกต้อง ", "error");</script>';
       $conn = null; //close connect db
     }
 

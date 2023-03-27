@@ -371,7 +371,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 </div><!-- /.col -->                
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-change_parts" data-toggle="modal" data-target="#modal-change_parts" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-change_parts" data-toggle="modal" data-id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
                 <!-- Table row -->
                 <div class="row">
                 <div class="col-12 table-responsive">
@@ -425,18 +425,21 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               </div>                
                 <!-- /Table row -->
               
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-img_after"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
+              <?PHP
+                  $rowImg_af= $obj->fetchRows("SELECT * FROM tb_attachment WHERE ref_id_used=".$rowData['id_maintenance_request']." AND attachment_type=1 AND image_cate=3");
+
+              ?>
+              <br><div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-img_after"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
               <div class="row divimg_after_null">
                   <?PHP
-                  $rowImg= $obj->fetchRows("SELECT * FROM tb_attachment WHERE ref_id_used=".$rowData['id_maintenance_request']." AND attachment_type=1 AND image_cate=3");                 
-                  if (count($rowImg)>0) {
+                  if (count($rowImg_af)>0) {
                     $i = 1;
-                    foreach($rowImg as $key => $value) {
-                      if(file_exists($pathReq.$rowImg[$key]['path_attachment_name'])){
-                        echo '<div class="divimg_after divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
+                    foreach($rowImg_af as $key => $value) {
+                      if(file_exists($pathReq.$rowImg_af[$key]['path_attachment_name'])){
+                        echo '<div class="divimg_after divimg_'.$rowImg_af[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg_af[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg_af[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                       }else{
-                        $pathReq.$rowImg[$key]['path_attachment_name'] = $noimg;
-                        echo '<div class="divimg_after divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ">').'</div></div>';
+                        $pathReq.$rowImg_af[$key]['path_attachment_name'] = $noimg;
+                        echo '<div class="divimg_after divimg_'.$rowImg_af[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg_af[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg_af[$key]['path_attachment_name']=='' ? '' : '<img src="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ">').'</div></div>';
                       }
                         $i++;
                     }
@@ -891,9 +894,9 @@ $(document).on("click", ".del-img", function (e){
     event.stopPropagation();
 });
 
+
 $(document).on("click", ".btn-img_after", function (e){ 
-  hand_over_date = '';
-  if(hand_over_date!=''){
+    if(chk_duration_serv_start==''){
     sweetAlert("ผิดพลาด!", "ผู้ซ่อมต้องสรุปผลการซ่อมก่อน\r\n จึงจะอัพโหลดรูปหลังซ่อมได้", "error");
     return false;
   /*
@@ -1182,7 +1185,11 @@ $(document).on("click", ".btn-edit_part", function (e){
 
 $(document).on("click", ".btn-change_parts", function (e){
   $('.text-title-parts').text('เพิ่มรายการอะไหล่ที่เปลี่ยน');
-  $.ajax({
+  if(chk_duration_serv_start==''){
+    swal("ผิดพลาด!", "ต้องกดเริ่มซ่อมก่อน\r\nเพิ่มรายการอะไหล่ที่เปลี่ยนได้", "error");    
+    return false;
+  }else{
+    $.ajax({
       url: "module/module_maintenance_list/update_result.inc.php",
       type: "POST",
       data:{"action":"change-parts","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"id_dept_responsibility":<?PHP echo $rowData['id_dept_responsibility']?>},
@@ -1190,6 +1197,7 @@ $(document).on("click", ".btn-change_parts", function (e){
       },
       success: function (data) {
           $(".modal-body-change_parts").html(data);
+          $("#modal-change_parts").show();
           console.log(data);
           e.stopPropagation();
       },
@@ -1198,7 +1206,8 @@ $(document).on("click", ".btn-change_parts", function (e){
           //alert(errorThrown);
           swal("Error!", ""+errorThrown+"", "error");
       }
-  });  
+    });  
+  }
 });
 
 $(document).on("click", ".btn-change-approved", function (e){
@@ -1222,6 +1231,7 @@ $(document).on("click", ".btn-change-approved", function (e){
 });
 
 var chk_allotted_date = '<?PHP echo $rowData['allotted_accept_date']; ?>';
+var chk_duration_serv_start = '<?PHP echo $rowData['duration_serv_start']; ?>';
 
 $(document).on("click", ".btn-repair_results", function (e){
   e.stopPropagation();

@@ -52,6 +52,12 @@ switch($module){
     $module=="requestlist" ? ($active_requestlist="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestlist=""); #ไฮไลท์เมนูด้านซ้าย    
   break;
 
+    case 'waitaccept':    
+      $title_site = "งานใบรอรับงาน"; $title_act = "งานใบรอรับงาน"; $breadcrumb_txt = "งานใบรอรับงาน";
+      $include_module = "module/module_maintenance_list/list.inc.php";
+      $module=="requestlist" ? ($active_requestlist="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestlist=""); #ไฮไลท์เมนูด้านซ้าย    
+    break;  
+
   case 'requestid': 
     if(!is_numeric($id) || $id==0){ //เคลียร์ค่า session
       session_destroy(); header('location:./'); exit();
@@ -143,7 +149,7 @@ switch($module){
   break;
 
   case 'waitapprove':
-    $title_site = "งานรออนุมัติซ่อม'"; $title_act = "งานรออนุมัติซ่อม"; $breadcrumb_txt = "งานรออนุมัติซ่อม";
+    $title_site = "งานรออนุมัติซ่อม"; $title_act = "งานรออนุมัติซ่อม"; $breadcrumb_txt = "งานรออนุมัติซ่อม";
     $include_module = "module/module_maintenance_list/list.inc.php";
     $module=="waitapprove" ? ($active_waitapprove="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_waitapprove=""); #ไฮไลท์เมนูด้านซ้าย    
   break;
@@ -426,19 +432,21 @@ $obj = new CRUD();
           <!--<li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>-->
         <?PHP } ?>
         <?PHP 
-            if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ 
+            if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){##11
               ##$numRow_waitapprove ===== นับงานรออนุมัติ
               $numRow_waitapprove = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
-              WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.maintenance_request_status!=2"); 
+              WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.status_approved=0 AND tb_maintenance_request.maintenance_request_status!=2"); 
 
               ##$numRow_accept ===== จำนวนงานที่รอกดรับงาน (งานที่ได้รับมอบหมายให้ซ่อม)
-              $numRow_accept = $obj->getCount("SELECT count(tb_ref_repairer.ref_id_user_repairer) AS total_row FROM tb_ref_repairer 
-              WHERE ref_id_user_repairer=".$_SESSION['sess_id_user']." AND status_repairer=1"); 
+              $numRow_accept = $obj->getCount("SELECT count(tb_ref_repairer.id_ref_repairer) AS total_row FROM tb_ref_repairer WHERE acknowledge_date=NULL AND status_repairer=1"); 
           ?>
-          <li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light"><?PHP echo $numRow_waitapprove; ?></span></a></li>
-        <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-archive"></i> <p>งานใหม่รอรับงาน</p><span class="float-right badge bg-success"><?PHP echo $numRow_accept; ?></span></a></li>
+          <?PHP
+            if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){?>
+<li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light"><?PHP echo $numRow_waitapprove; ?></span></a></li>
+            <?PHP }?>
+        <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-handshake"></i> <p>งานรอช่างรับงาน</p><span class="float-right badge bg-success"><?PHP echo $numRow_accept; ?></span></a></li>
         <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning">15</span></a></li>
-        <?PHP } ?>
+        <?PHP }##11 ?>
         <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>
         <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){?>
         <li class="nav-item <?PHP echo $active_treeview_1; ?>"><!--ถ้าจะให้เปิดใส่คลาส menu-open-->
@@ -484,7 +492,7 @@ $obj = new CRUD();
 
     <!-- Main content -->
     <?PHP
-    echo '<pre>'.print_r($_SESSION).'</pre>';
+    //echo "<pre>".print_r($_SESSION)."</pre>";
     include($include_module);
     ?>
 

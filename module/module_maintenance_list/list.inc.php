@@ -1,5 +1,5 @@
 <?PHP
-echo $module;
+//echo $module;
 /*echo "INSERT INTO `tb_site` (`id_dept`, `dept_initialname`, `dept_name`, `dept_status`) VALUES";
 for($i=14;$i<=500;$i++){
     echo "<br/>(NULL, 'test-".$i."', 'test-".$i."', ".(rand(1, 2))."),";
