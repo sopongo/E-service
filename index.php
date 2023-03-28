@@ -442,9 +442,9 @@ $obj = new CRUD();
           ?>
           <?PHP
             if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){?>
-<li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light"><?PHP echo $numRow_waitapprove; ?></span></a></li>
+          <li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light"><?PHP echo $numRow_waitapprove; ?></span></a></li>
+          <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-handshake"></i> <p>งานรอช่างรับงาน</p><span class="float-right badge bg-success"><?PHP echo $numRow_accept; ?></span></a></li>
             <?PHP }?>
-        <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-handshake"></i> <p>งานรอช่างรับงาน</p><span class="float-right badge bg-success"><?PHP echo $numRow_accept; ?></span></a></li>
         <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning">15</span></a></li>
         <?PHP }##11 ?>
         <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>

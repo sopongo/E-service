@@ -31,12 +31,9 @@
     <div class="card card-gray card-tabs">
         <div class="card-header p-0 pt-1">
         <ul class="nav nav-tabs mt-2" id="custom-tabs-one-tab" role="tablist">
-            <li class="nav-item">
-            <a class="nav-link active pl-3 pr-3" id="custom-tabs11" data-toggle="pill" href="#custom-tabs-content-1" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true"><i class="fas fa-hourglass-half"></i> รอเริ่มซ่อม (7)</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link tab-2 pl-3 pr-3" id="custom-tabs2" data-toggle="pill" href="#custom-tabs-content-2" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false"><i class="fas fa-wrench"></i> กำลังซ่อม (8)</a>
-            </li>
+        <li class="nav-item"><a class="nav-link active pl-3 pr-3" id="custom-tabs1" data-toggle="pill" href="#custom-tabs-content-1" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true"><i class="fas fa-hourglass-half"></i> รอรับงานซ่อม (7)</a></li>
+            <li class="nav-item"><a class="nav-link pl-3 pr-3" id="custom-tabs2" data-toggle="pill" href="#custom-tabs-content-2" role="tab" aria-controls="custom-tabs-one-home" aria-selected="false"><i class="fas fa-clock"></i> รอเริ่มซ่อม (7)</a></li>
+            <li class="nav-item"><a class="nav-link tab-2 pl-3 pr-3" id="custom-tabs3" data-toggle="pill" href="#custom-tabs-content-3" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false"><i class="fas fa-wrench"></i> กำลังซ่อม (8)</a></li>
         </ul>
         </div>
 
@@ -106,7 +103,7 @@ $(document).on("click", "#custom-tabs2", function (){
 
 $(document).on("click", "#custom-tabs3", function (event){    
     $.ajax({
-        url: "module/module_maintenance_req/sub_module_caused_code/list.inc.php",
+        url: "module/module_maintenance_req/sub_module_caused_code/list.inc.phpx",
         type: "POST",
         data:{"action":"getdata"},
         beforeSend: function () {
