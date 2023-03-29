@@ -439,13 +439,18 @@ $obj = new CRUD();
 
               ##$numRow_accept ===== จำนวนงานที่รอกดรับงาน (งานที่ได้รับมอบหมายให้ซ่อม)
               $numRow_accept = $obj->getCount("SELECT count(tb_ref_repairer.id_ref_repairer) AS total_row FROM tb_ref_repairer WHERE acknowledge_date=NULL AND status_repairer=1"); 
+
+              $sql_fetch_alljob = "SELECT tb_maintenance_request.*, tb_ref_repairer.* FROM tb_maintenance_request 
+              LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
+              WHERE (tb_maintenance_request.allotted_accept_date IS NULL OR tb_maintenance_request.duration_serv_start IS NULL OR tb_maintenance_request.hand_over_date IS NULL) AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']."   ";
+              $total_alljob = $obj->countAll($sql_fetch_alljob."");              
           ?>
           <?PHP
             if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){?>
           <li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light"><?PHP echo $numRow_waitapprove; ?></span></a></li>
           <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-handshake"></i> <p>งานรอช่างรับงาน</p><span class="float-right badge bg-success"><?PHP echo $numRow_accept; ?></span></a></li>
             <?PHP }?>
-        <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning">15</span></a></li>
+        <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning"><?PHP echo $total_alljob; ?></span></a></li>
         <?PHP }##11 ?>
         <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>
         <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){?>
@@ -466,7 +471,7 @@ $obj = new CRUD();
             </ul>
           </li>
           <li class="nav-item"><a href="?module=mtr-setting" class="nav-link <?PHP echo $active_mtr; ?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ตั้งค่าใบแจ้งซ่อม</p></a></li>
-          <li class="nav-item"><a href="?module=system-setting" class="nav-link"><i class="nav-icon fas fa-cog"></i> <p>ตั้งค่าระบบ</p></a></li>
+          <!--<li class="nav-item"><a href="?module=system-setting" class="nav-link"><i class="nav-icon fas fa-cog"></i> <p>ตั้งค่าระบบ</p></a></li>-->
           
           <!--<li class="nav-item"><a href="?module=tabview" class="nav-link <?PHP echo $active_tabview; ?>"><i class="fas fa fa-bars nav-icon"></i> <p> TAB View</p></a></li>-->
           <!--<li class="nav-item"><a href="?module=qrscaner" class="nav-link <?PHP echo $active_qrscaner; ?>"><i class="fas fa fa-qrcode nav-icon"></i> <p> QR Scanner</p></a></li>-->
@@ -492,7 +497,7 @@ $obj = new CRUD();
 
     <!-- Main content -->
     <?PHP
-    //echo "<pre>".print_r($_SESSION)."</pre>";
+    echo "<pre>".print_r($_SESSION)."</pre>";
     include($include_module);
     ?>
 

@@ -1,5 +1,20 @@
 <?PHP
 //$obj = new CRUD();
+$sql_fetch_Accept= "SELECT tb_maintenance_request.*, tb_ref_repairer.* FROM tb_maintenance_request 
+LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
+WHERE tb_maintenance_request.allotted_accept_date IS NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']."  ";
+$accept_numRow = $obj->countAll($sql_fetch_Accept."");
+
+
+$sql_fetch_WaitStart = "SELECT tb_maintenance_request.*, tb_ref_repairer.* FROM tb_maintenance_request 
+LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
+WHERE tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_start IS NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']."  ";
+$waitStart_numRow = $obj->countAll($sql_fetch_WaitStart."");
+
+$sql_fetch_Working = "SELECT tb_maintenance_request.*, tb_ref_repairer.* FROM tb_maintenance_request 
+LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
+WHERE tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_start IS NOT NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']."  ";
+$working_numRow = $obj->countAll($sql_fetch_Working."");
 ?>
 <style type="text/css"> 
 </style>
@@ -31,9 +46,9 @@
     <div class="card card-gray card-tabs">
         <div class="card-header p-0 pt-1">
         <ul class="nav nav-tabs mt-2" id="custom-tabs-one-tab" role="tablist">
-        <li class="nav-item"><a class="nav-link active pl-3 pr-3" id="custom-tabs1" data-toggle="pill" href="#custom-tabs-content-1" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true"><i class="fas fa-hourglass-half"></i> รอรับงานซ่อม (7)</a></li>
-            <li class="nav-item"><a class="nav-link pl-3 pr-3" id="custom-tabs2" data-toggle="pill" href="#custom-tabs-content-2" role="tab" aria-controls="custom-tabs-one-home" aria-selected="false"><i class="fas fa-clock"></i> รอเริ่มซ่อม (7)</a></li>
-            <li class="nav-item"><a class="nav-link tab-2 pl-3 pr-3" id="custom-tabs3" data-toggle="pill" href="#custom-tabs-content-3" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false"><i class="fas fa-wrench"></i> กำลังซ่อม (8)</a></li>
+        <li class="nav-item"><a class="nav-link active pl-3 pr-3" id="custom-tabs1" data-toggle="pill" href="#custom-tabs-content-1" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true"><i class="fas fa-hourglass-half"></i> รอรับงานซ่อม (<?PHP echo $accept_numRow; ?>)</a></li>
+            <li class="nav-item"><a class="nav-link pl-3 pr-3" id="custom-tabs2" data-toggle="pill" href="#custom-tabs-content-2" role="tab" aria-controls="custom-tabs-one-home" aria-selected="false"><i class="fas fa-clock"></i> รอเริ่มซ่อม (<?PHP echo $waitStart_numRow; ?>)</a></li>
+            <li class="nav-item"><a class="nav-link tab-2 pl-3 pr-3" id="custom-tabs3" data-toggle="pill" href="#custom-tabs-content-3" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false"><i class="fas fa-wrench"></i> กำลังซ่อม (<?PHP echo $working_numRow; ?>)</a></li>
         </ul>
         </div>
 
@@ -41,16 +56,16 @@
         <div class="tab-content" id="custom-tabs-one-tabContent">
 
             <div class="tab-pane fade active show" id="custom-tabs-content-1" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-                <?php include_once 'module/module_joblist/wait_start.inc.php'; //หน้ารายการประเภทใบแจ้งซ่อม ?>
+                <?php include_once 'module/module_joblist/wait_accept.inc.php'; //รอรับงานซ่อม ?>
             </div>
 
             <div class="tab-pane fade table-responsive-xl" id="custom-tabs-content-2" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
                 ...TAB-2 Wait process
-                <?php //include_once 'module/module_joblist/working.inc.php'; //หน้ารายการประเภทใบแจ้งซ่อม ?>
+                <?php //include_once 'module/module_joblist/working.inc.php'; //รอเริ่มซ่อม ?>
             </div>
 
             <div class="tab-pane fade" id="custom-tabs-content-3" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
-                ...TAB-3  Wait process
+                ...TAB-3  Wait process <!--กำลังซ่อม--->
             </div>
 
             <div class="tab-pane fade" id="custom-tabs-content-4" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
@@ -80,7 +95,7 @@ $(document).on("click", "#custom-tabs2", function (){
 
 $(document).on("click", "#custom-tabs2", function (){    
     $.ajax({
-        url: "module/module_joblist/working.inc.php",
+        url: "module/module_joblist/wait_start.inc.php",
         type: "POST",
         data:{"action":"getdata"},
         beforeSend: function () {
@@ -103,7 +118,7 @@ $(document).on("click", "#custom-tabs2", function (){
 
 $(document).on("click", "#custom-tabs3", function (event){    
     $.ajax({
-        url: "module/module_maintenance_req/sub_module_caused_code/list.inc.phpx",
+        url: "module/module_joblist/working.inc.php",
         type: "POST",
         data:{"action":"getdata"},
         beforeSend: function () {
@@ -122,26 +137,6 @@ $(document).on("click", "#custom-tabs3", function (event){
             alert(errorThrown);
         }
     });  
-});
-
-$(document).on('click','#addData-tab3',function(event){
-    $('#id_row-tab3').val();
-    $('#exampleModalLabel-tab3 span').html("เพิ่มสาเหตุการเสีย");
-    $.ajax({
-    type: 'POST',
-      url: "module/module_maintenance_req/sub_module_caused_code/ajax_action.php",
-      dataType: "json",
-      data:{action:"ref_id_dept"},
-      success: function (data) {
-        //console.log(data);
-        $('#ref_id_dept-tab3').html(data);
-      },
-      error: function (data) {
-        //console.log(data);        
-        swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ.", "error");
-      }
-    });
-    event.preventDefault();
 });
 
 

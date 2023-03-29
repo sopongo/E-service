@@ -1,4 +1,5 @@
 <?PHP
+session_start();
 require_once '../../../include/class_crud.inc.php';
 require_once '../../../include/setting.inc.php';
 $obj = new CRUD();
@@ -19,8 +20,18 @@ $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 
 $search = $_POST["search"]["value"];
 $query_search = "";
+
+if($_SESSION['sess_class_user']!=5){
+    $query_class = "AND";
+}else{
+    $query_class = "";
+}
+
 if(!empty($search[0])){
-    $query_search = " WHERE name_mt_type LIKE '%".$search."%' ";
+    $query_search = " WHERE (name_mt_type LIKE '%".$search."%') ".$query_class." tb_maintenance_type.ref_id_dept=".$_SESSION['sess_id_dept']."";
+}else{
+    $query_search = "WHERE tb_maintenance_type.ref_id_dept=".$_SESSION['sess_id_dept']."";
+    $query_class = "";
 }
 
 if($_POST["start"]==0){
@@ -29,7 +40,6 @@ if($_POST["start"]==0){
     $length=$_POST['length'];
 }
 $start = ($_POST["start"]-1)*$_POST['length'];
-
 
 empty($_POST['order']['0']['column']) ? $_POST['order']['0']['column']=0 : $_POST['order']['0']['column'];
 //empty($_POST['order']['0']['dir']) ? $_POST['order']['0']['dir']='desc' : $_POST['order']['0']['dir']='';

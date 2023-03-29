@@ -1,4 +1,5 @@
 <?PHP
+session_start();
 require_once '../../include/class_crud.inc.php';
 require_once '../../include/setting.inc.php';
 $obj = new CRUD();
@@ -21,6 +22,14 @@ $search = $_POST["search"]["value"];
 $query_search = "";
 if(!empty($search[0])){
     $query_search = " WHERE tb_machine_master.name_machine LIKE '%".$search."%' OR tb_machine_master.machine_code LIKE '%".$search."%' ";
+}else if(!empty($search[0]) && $_SESSION['sess_class_user']!=5){
+    $query_search = " WHERE tb_machine_master.ref_id_dept=".$_SESSION['sess_id_dept']." AND (tb_machine_master.name_machine LIKE '%".$search."%' OR tb_machine_master.machine_code LIKE '%".$search."%') ";
+}
+
+if(empty($search[0]) && $_SESSION['sess_class_user']!=5){
+    $query_dept = "WHERE tb_machine_master.ref_id_dept=".$_SESSION['sess_id_dept']."";
+}else if(empty($search[0]) && $_SESSION['sess_class_user']=5){
+    $query_dept = "";
 }
 
 if($_POST["start"]==0){
@@ -44,12 +53,11 @@ $colunm_sort = array( //ใช้เรียงข้อมูล
     7=> "tb_dept.dept_initialname",                 
 );
 //tb_machine_master    id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine
-
 $orderBY = $colunm_sort[$_POST['order']['0']['column']];
 
 $arrData = array();	
 
-$numRow = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
+$numRow = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master ".$query_dept." ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
 
 //$fetchRow = $obj->fetchRows("SELECT tb_machine_master.* FROM tb_machine_master ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 $fetchRow = $obj->fetchRows("SELECT tb_machine_master.id_machine, tb_machine_master.machine_code, tb_machine_master.model_name, tb_machine_master.name_machine, tb_machine_master.status_machine,  
@@ -57,7 +65,7 @@ tb_category.name_menu, tb_dept.dept_initialname, tb_attachment.path_attachment_n
  FROM tb_machine_master 
  LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_machine_master.ref_id_dept) 
  LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu) 
- LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine) ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
+ LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine) ".$query_dept." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
 //EX.tb_machine_master

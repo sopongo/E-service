@@ -1,10 +1,3 @@
-<?PHP
-session_start();
-require_once '../../include/class_crud.inc.php';
-require_once '../../include/setting.inc.php';
-$obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเรียกใช้งานคลาส,ฟังก์ชั่นต่างๆ
-?>
-
 <style>
 </style>
 <div class="card-body p-2">
@@ -24,7 +17,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
         LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) 
         LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_maintenance_request.id_maintenance_request AND tb_attachment.attachment_type=1 AND tb_attachment.image_cate=2) 
         LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
-        WHERE tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_start IS NOT NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']."  ";
+        WHERE tb_maintenance_request.allotted_accept_date IS NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']."  ";
         
 //AND tb_ref_repairer.acknowledge_date IS NULL
 //AND tb_maintenance_request.allotted_accept_date IS NULL 
@@ -32,7 +25,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
     if (count($fetchRow)>0) {
         foreach($fetchRow as $key=>$value){
 ?>
-<div class="card card-row card-success col-md-3 p-0 mr-3 d-inline-block align-top">
+<div class="card card-row card-warning col-md-3 p-0 mr-3 d-inline-block align-top">
     <div class="card-header"><span class="card-title text-md"><i class="fas fa-file-alt"></i> ใบแจ้งซ่อมเลขที่: <?PHP echo $fetchRow[$key]['maintenance_request_no']; ?></span></div>
     <div class="card-body p-3 m-0">
         <div class="border-bottom pb-2 mb-2"><span class="badge bg-info text-sm"><?PHP echo $fetchRow[$key]['dept_responsibility'];?></span> <span class="badge bg-<?PHP echo $fetchRow[$key]['urgent_type']==1 ? 'danger' : 'warning';?> text-sm"><?PHP echo $fetchRow[$key]['urgent_type']==1 ? 'ด่วน' : 'ไม่ด่วน';?></span><div class="float-right text-sm">วันที่แจ้งซ่อม: <?PHP echo $fetchRow[$key]['mt_request_date'];?></div></div>

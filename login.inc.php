@@ -229,43 +229,44 @@ $(document).ready(function () { //When the page has loaded
     WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."'";
     exit();*/
 
-    $fetchRow = $obj->fetchRows("SELECT tb_user.*, tb_dept.dept_initialname, tb_dept.dept_name, tb_site.site_initialname FROM tb_user 
-    LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept) 
-    LEFT JOIN tb_site_responsibility ON (tb_site_responsibility.ref_id_user=".$_POST['slt_manage_site'].") 
-    LEFT JOIN tb_site ON (tb_site.id_site=".$_POST['slt_manage_site'].") 
-    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."' ");
 
-    if (!empty($fetchRow) && count($fetchRow)==1){
-      //$fetchRow[0]['photo_name']
+    $Row = $obj->customSelect("SELECT tb_user.*, tb_dept.dept_initialname, tb_dept.dept_name, tb_site.site_initialname, tb_site_responsibility.ref_id_site AS chk_ref_id_site FROM tb_user 
+    LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept) 
+    LEFT JOIN tb_site_responsibility ON (tb_site_responsibility.ref_id_user=tb_user.id_user) 
+    LEFT JOIN tb_site ON (tb_site.id_site=".$_POST['slt_manage_site'].") 
+    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."' AND tb_site_responsibility.ref_id_site=".$_POST['slt_manage_site']."");
+
+    if (!empty($Row) && ($Row['chk_ref_id_site']!='' || $Row['class_user']==5 )){
+      //$Row['photo_name']
       /*if($_POST['remember']==1){
         setcookie("remember_log",$_POST['remember'],time()+3600*24*356);
         setcookie("email_log",$_POST['email'],time()+3600*24*356);
         setcookie("password_log",$_POST['password'],time()+3600*24*356);
       }*/
       /*
-      echo $fetchRow[0]['ref_id_site'];
-      if($fetchRow[0]['class_user']!=5 && ($fetchRow[0]['ref_id_site']!=intval($_POST['slt_manage_site']))){
+      echo $Row['ref_id_site'];
+      if($Row['class_user']!=5 && ($Row['ref_id_site']!=intval($_POST['slt_manage_site']))){
         echo '<script>sweetAlert("ผิดพลาด...", "ผู้ใช้ระบบหรือไซต์งานไม่ถูกต้อง ", "error");</script>';
         exit();
       }
       */
 
-      $_SESSION['sess_id_user'] = $fetchRow[0]['id_user'];
-      $_SESSION['sess_no_user'] = $fetchRow[0]['no_user'];
-      $_SESSION['sess_email'] = $fetchRow[0]['email'];
-      //$_SESSION['sess_ref_id_site'] = $fetchRow[0]['ref_id_site'];
+      $_SESSION['sess_id_user'] = $Row['id_user'];
+      $_SESSION['sess_no_user'] = $Row['no_user'];
+      $_SESSION['sess_email'] = $Row['email'];
+      //$_SESSION['sess_ref_id_site'] = $Row['ref_id_site'];
       $_SESSION['sess_ref_id_site'] = intval($_POST['slt_manage_site']);
-      $_SESSION['sess_site_initialname'] = $fetchRow[0]['site_initialname'];
-      $_SESSION['sess_fullname'] = $fetchRow[0]['fullname'];
-      $_SESSION['sess_class_user'] = $fetchRow[0]['class_user'];
-      $_SESSION['sess_id_dept'] = $fetchRow[0]['ref_id_dept'];
-      $_SESSION['sess_dept_name'] = $fetchRow[0]['dept_name'];
-      $_SESSION['sess_dept_initialname'] = $fetchRow[0]['dept_initialname'];      
+      $_SESSION['sess_site_initialname'] = $Row['site_initialname'];
+      $_SESSION['sess_fullname'] = $Row['fullname'];
+      $_SESSION['sess_class_user'] = $Row['class_user'];
+      $_SESSION['sess_id_dept'] = $Row['ref_id_dept'];
+      $_SESSION['sess_dept_name'] = $Row['dept_name'];
+      $_SESSION['sess_dept_initialname'] = $Row['dept_initialname'];      
       //$_SESSION['sess_dept_initialname'] = 'PCS';
-      $_SESSION['sess_status_user'] = $fetchRow[0]['status_user'];
+      $_SESSION['sess_status_user'] = $Row['status_user'];
       $_SESSION['sess_popup_howto'] = 0;
     
-      $fetchPermission= $obj->fetchRows("SELECT tb_permission.* FROM tb_permission WHERE ref_class_user=".$fetchRow[0]['class_user']."");
+      $fetchPermission= $obj->fetchRows("SELECT tb_permission.* FROM tb_permission WHERE ref_class_user=".$Row['class_user']."");
       foreach($fetchPermission as $key=>$value){
         $_SESSION['module_access'] =  $fetchPermission[$key]['module_name'].'-'.$fetchPermission[$key]['accept_denied'];
         //$fetchPermission[$key]['module_name']

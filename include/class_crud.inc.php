@@ -170,12 +170,14 @@ class CRUD extends Database
         }
     }
 
-    public function countAll($sql)
-    {
+    public function countAll($sql){
         //$sql = "SELECT * FROM  `$table`";
         $stmt = $this->conn->prepare($sql);
-         try { $stmt->execute();}
-         catch(PDOException $e){echo $e->getMessage();}
+        try{ 
+            $stmt->execute();
+        }catch(
+            PDOException $e){echo $e->getMessage();
+        }
      return $stmt->rowCount();
     }    
 
@@ -237,7 +239,6 @@ class CRUD extends Database
         return $results;
     }
 
-
     public function uploadPhoto($file,$path){
         if (!empty($file)) {
             $fileTempPath = $file['tmp_name'];
@@ -288,7 +289,6 @@ class CRUD extends Database
             echo 'Error: ' . $e->getMessage();
         }
     }
-
 
     //เรียกข้อมูลตามช่วงที่ระบุจาก $start $limit มาแสดง
     public function fetchRows($sql)
