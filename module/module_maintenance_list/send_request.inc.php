@@ -191,17 +191,33 @@
         exit();
     }        
 
+    if ($action=='serv_end') { ##ปิดงาน/ส่งมอบงาน
+        //echo $ref_id.'----xxx------'.$action; exit();
+        $updateRow = [
+            'duration_serv_end' => (date('Y-m-d H:i:s')),   //เวลาที่ซ่อมเสร็จ	
+        ];
+        ######### รอใส่โค๊ด Update Timeline ###########
+        ##                           ใส่โค๊ดตรงนี้                              ##
+        ######### รอใส่โค๊ด Update Timeline ###########
+        echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+        exit();
+    }        
+
     if ($action=='accept_request') {
         //echo $ref_id.'----xxx------'.$action;
         $updateRow = [
             'allotted_accept_date' => (date('Y-m-d H:i:s')),
             'ref_user_id_accept_request' => ($_SESSION['sess_id_user']),
         ];
-        ######### รอใส่โค๊ด Update Timeline ###########
-        ##                           ใส่โค๊ดตรงนี้                              ##
-        ######### รอใส่โค๊ด Update Timeline ###########
-        echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
-        exit();        
+        $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+        if($rowID=='Success'){
+            $update_repairer = [
+                'acknowledge_date' => (date('Y-m-d H:i:s')),
+            ];
+            $rowID = $obj->update($update_repairer, "ref_id_maintenance_request=".$_POST['ref_id']." AND ref_id_user_repairer=".$_SESSION['sess_id_user']."", "tb_ref_repairer");
+        }        
+        echo $rowID;
+        exit();
     }    
     
     if ($action=='update_img_after') {

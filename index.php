@@ -66,14 +66,15 @@ switch($module){
     tb_user_request.no_user, tb_user_request.email, tb_user_request.fullname, tb_user_request.ref_id_dept AS ref_id_dept_request, tb_user_dept_request.dept_initialname AS dept_user_request,
     tb_user_cancel.fullname AS cancel_fullname, tb_user_approved.fullname AS approved_fullname, tb_failure_code.failure_code_th_name, tb_repair_code.repair_code_name, 
     tb_repair_result.txt_solution, tb_repair_result.txt_caused_by, tb_repair_result.ref_id_failure_code, tb_repair_result.ref_id_repair_code,
-    tb_failure_code.id_failure_code, tb_repair_code.id_repair_code, tb_outsite_repair.*, tb_supplier.supplier_name, tb_user_survey.fullname AS fullname_survay
-    FROM tb_maintenance_request 
+    tb_failure_code.id_failure_code, tb_repair_code.id_repair_code, tb_outsite_repair.*, tb_supplier.supplier_name, tb_user_survey.fullname AS fullname_survay,
+    tb_accept_request.fullname AS fullname_accept FROM tb_maintenance_request 
     LEFT JOIN tb_maintenance_type ON (tb_maintenance_type.id_mt_type=tb_maintenance_request.ref_id_mt_type)
     LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
     LEFT JOIN tb_user AS tb_user_request ON (tb_user_request.id_user=tb_maintenance_request.ref_id_user_request)    
     LEFT JOIN tb_user AS tb_user_cancel ON (tb_user_cancel.id_user=tb_maintenance_request.ref_id_user_cancel)    
     LEFT JOIN tb_user AS tb_user_approved ON (tb_user_approved.id_user=tb_maintenance_request.ref_id_user_approver) 
     LEFT JOIN tb_user AS tb_user_survey ON (tb_user_survey.id_user=tb_maintenance_request.ref_id_user_survey) 
+    LEFT JOIN tb_user AS tb_accept_request ON (tb_accept_request.id_user=tb_maintenance_request.ref_user_id_accept_request)      
     LEFT JOIN tb_dept AS tb_user_dept_request ON (tb_user_dept_request.id_dept=tb_user_request.ref_id_dept)
     LEFT JOIN tb_repair_result ON (tb_repair_result.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request)
     LEFT JOIN tb_failure_code ON (tb_failure_code.id_failure_code=tb_repair_result.ref_id_failure_code)   
@@ -497,7 +498,7 @@ $obj = new CRUD();
 
     <!-- Main content -->
     <?PHP
-    echo "<pre>".print_r($_SESSION)."</pre>";
+    //echo "<pre>".print_r($_SESSION)."</pre>";
     include($include_module);
     ?>
 
