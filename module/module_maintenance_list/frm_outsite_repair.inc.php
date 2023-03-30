@@ -34,8 +34,8 @@ $(document).on("click", ".btn-outsite_repair", function (event){
   var frmData = $("form#needs-validation9").serialize();
 
   var caused_outsite_repair = $('#caused_outsite_repair').val();
-  var txt_ref_id_supplier = $('#txt_ref_id_supplier').val();  
-  var ref_id_supplier = $("#ref_id_supplier option:selected" ).val();
+  var txt_ref_id_supplier = $('#txt_ref_id_supplier_2').val();  
+  var ref_id_supplier = $("#slt_ref_id_supplier_2 option:selected" ).val();
   datesent_repair = $('#datesent_repair').val();
   dateresive_repair = $('#dateresive_repair').val();
 
@@ -118,21 +118,20 @@ $(document).ready(function(){
     });
 
     $(document).on("click", ".chk_id_supplier", function (){ 
-        $('#txt_ref_id_supplier').val("").toggleClass('d-none d-block');
-        $('#ref_id_supplier').toggleClass('d-none d-block');
-        $("#ref_id_supplier option[value='']").prop("selected", true);
-        $('.chk_id_supplier').toggleClass('d-none d-inline');
+        $('#txt_ref_id_supplier_2').val("").toggleClass('d-block d-none');
+        $('#slt_ref_id_supplier_2').toggleClass('d-none d-block');
+        $("#slt_ref_id_supplier_2 option[value='']").prop("selected", true);
         $('.chk_id_supplier').toggleClass('d-none d-inline');
         $('.invalid-feedback').toggleClass('d-none d-inline');
     });        
 
 
-    $(document).on("change", "#ref_id_supplier", function (){ 
+    $(document).on("change", "#slt_ref_id_supplier_2", function (){ 
     var ref_id = $(this).val();
     if(ref_id=='custom'){
         //$("#ref_id_supplier option[value='']").prop("selected", true);
-        $('#txt_ref_id_supplier').val("").toggleClass('d-none d-block');
-        $('#ref_id_supplier').toggleClass('d-none d-block');
+        $('#txt_ref_id_supplier_2').val("").toggleClass('d-none d-block');
+        $('#slt_ref_id_supplier_2').toggleClass('d-none d-block');
         $('.chk_id_supplier').toggleClass('d-none d-inline');        
     }
 });        

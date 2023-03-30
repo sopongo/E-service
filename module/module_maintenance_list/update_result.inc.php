@@ -101,7 +101,8 @@ if ($action=='repair_results') {
                                 <label for="slt_failure_code"><i class="fas fa-angle-double-right"></i>  รหัสอาการเสีย:<span class="text-red font-size-sm">**</span></label>   <?PHP //echo $ref_id;?> / <?PHP //echo $_POST['id_dept_responsibility'];?>
                                 <?PHP 
                                             if(isset($editData['ref_id_failure_code'])){/*เช็คการแสดงผล รหัสอาการเสีย*/
-                                                if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ</[^>*\][\]+>|/])', $editData['ref_id_failure_code'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
+                                                //if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ</[^>*\][\]+>|/])', $editData['ref_id_failure_code'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
+                                                if(!is_numeric($editData['ref_id_failure_code'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
                                                     $chk_show_failure_code = 'd-line'; $chk_slt_failure_code = 'd-none'; $chk_txt_failure_code = 'd-block';
                                                     //echo "ปปปปปปปปปปปปปปปปปปปปปน";
                                                 }else{
@@ -151,7 +152,8 @@ if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ])', $myString)){ //
     echo("no");
 }*/
                                             if(isset($editData['ref_id_repair_code'])){/*เช็คการแสดงผล รหัสซ่อม*/
-                                                if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ</[^>*\][\]+>|/])', $editData['ref_id_repair_code'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
+                                                //if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ</[^>*\][\]+>|/])', $editData['ref_id_repair_code'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
+                                                if(!is_numeric($editData['ref_id_repair_code'])){ //ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง                                                    
                                                     $chk_show_repair_code = 'd-inline'; $chk_slt_repair_code = 'd-none'; $chk_txt_repair_code = 'd-block';
                                                     //echo "ปนcccccccccccccccccc";
                                                 }else{
@@ -228,7 +230,7 @@ if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ])', $myString)){ //
                             <div class="form-group">  
                                 <label for="problem_statement">อาการเสีย/ปัญหาที่พบ:<span class="text-red font-size-sm">**</span></label>  
                                 <textarea class="form-control" rows="5" id="problem_statement" name="problem_statement" placeholder="Enter ..." required><?PHP echo $Row['problem_statement'];?></textarea>
-                                <input type="hidden" name="action" id="action" value="xxxxxxxxxxxxxx" />
+                                <input type="hidden" name="action" id="action" value="" />
                                 <input type="hidden" name="ref_id" id="ref_id" value="<?PHP echo $ref_id; ?>" />
                                 <div class="invalid-feedback">กรอกสาเหตุการยกเลิก</div>
                             </div>
@@ -475,8 +477,34 @@ $(function () {
         echo json_encode($resultUpdate);
         exit();        
     }
+
+    if($action=='reject_request'){         
 ?>
+    <form id="needs-validation_12" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+    <div class="container">
+        <div class="row">
+        <div class="offset-md-0 col-md-12 offset-md-0">  
+            <div class="card">  
+                <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p> <span class="float-right editby"></span></div>
+                <div class="card-body p-3">
+                    <!--ajax data hear-->
+                    <div class="row row-5">
+                        <div class="col-sm-12">
+                        <!-- select -->
+                        <div class="form-group"><label>ผู้ปฏิเสธงานซ่อม: <?PHP echo $_SESSION['sess_fullname'];?> (<?PHP echo $_SESSION['sess_dept_initialname'];?>)</label></div>
+                        </div>
+                        <div class="col-sm-12"><label class="text-red">สาเหตุปฏิเสธงานซ่อม:</label>
+                        <textarea class="form-control" rows="5" id="reject_caused" name="reject_caused" placeholder="Enter ..." required></textarea>
+                        </div>
+                    </div><!--row-5-->
+                </div><!--card-body-->
+            </div><!--card-->
+        </div>                
+        </div><!--row-->
+    </div><!--container-->
+    </form><!--FORM 1-->
 <?PHP 
+    }
     if($action=='update_mt_type'){     
         //echo $ref_id; exit();
         $insertRow = [
@@ -740,7 +768,7 @@ $('#date_parts_change').datetimepicker({
                     <div class="row row-4">
                         <div class="col-sm-12 col-md-12 col-xs-12">  
                             <div class="form-group">  
-                                <label for="problem_statement"><span class="text-red font-size-sm"></span> ผู้อัพเดท:</label> <?PHP echo !isset($rowData['fullname']) ? '-' : $rowData['fullname'];?>
+                                <label for="problem_statement"><span class="text-red font-size-sm"></span> ผู้อัพเดท:</label> <?PHP echo !isset($rowData['fullname']) ? $_SESSION['sess_fullname'] : $rowData['fullname'];?>
                             </div>
                         </div>
                     </div><!--row-4-->
@@ -760,17 +788,17 @@ $('#date_parts_change').datetimepicker({
                                 <?PHP
                                     if(isset($rowData['ref_id_supplier'])){/*เช็คการแสดงผล ซัพพลายเออร์*/
                                         if(is_numeric($rowData['ref_id_supplier'])){
-                                            $chk_show_id_supplier = 'd-none'; $chk_slt_id_supplier = 'd-block'; $chk_txt_id_supplier = 'd-none';
+                                            $chk_show_id_supplier = 'd-none'; $chk_slt_id_supplier = 'd-block'; $chk_txt_id_supplier = 'd-none'; $custom_seleted ='';
                                             //echo "ไม่ปนccccccccccccccccccccc";
                                         }else{//ถ้ามีตัวอักษรปน แสดงว่าพิมพ์เอง
                                             $chk_show_id_supplier = 'd-inline'; $chk_slt_id_supplier = 'd-none'; $chk_txt_id_supplier = 'd-block'; $custom_seleted = "selected";
                                             //echo "ปนcccccccccccccccccc";
                                         }
                                     }else{
-                                            $chk_show_id_supplier = 'd-none'; $chk_slt_id_supplier = 'd-block'; $chk_txt_id_supplier = 'd-none';
+                                            $chk_show_id_supplier = 'd-none'; $chk_slt_id_supplier = 'd-block'; $chk_txt_id_supplier = 'd-none'; $custom_seleted ='';
                                     }
                                 ?>
-                                <label for="ref_id_supplier"><i class="fas fa-angle-double-right"></i>  ซัพพลายเออร์:<span class="text-red font-size-sm">**</span></label>  <a class="chk_id_supplier <?PHP echo $chk_show_id_supplier; ?> text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
+                                <label for="slt_ref_id_supplier_2"><i class="fas fa-angle-double-right"></i>  ซัพพลายเออร์:<span class="text-red font-size-sm">**</span></label>  <a class="chk_id_supplier <?PHP echo $chk_show_id_supplier; ?> text-red text-size-2"><i class="fas fa-undo"></i> กลับไปใช้ตัวเลือก</a>
                                 <select class="custom-select <?PHP echo $chk_slt_id_supplier;?>" name="slt_ref_id_supplier_2" id="slt_ref_id_supplier_2" style="width: 100%;" >
                                 <?PHP  
                                     echo '<option value="">เลือกซัพพลายเออร์</option>';

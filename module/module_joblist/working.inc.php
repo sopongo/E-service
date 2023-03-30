@@ -53,7 +53,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
                 }
         ?>
                 <div class="m-auto w-100 text-center border-bottom pb-1 overflow-hidden">
-                <span class="btn bg-success btn-md col-md-4 d-inline float-left mb-1"><a href="?module=requestid&id=<?PHP echo $fetchRow[$key]['id_maintenance_request']!='' ? $fetchRow[$key]['id_maintenance_request'] : 0;?>" target="_blank">ดูใบแจ้งซ่อม</a></span> 
+                <a href="?module=requestid&id=<?PHP echo $fetchRow[$key]['id_maintenance_request']!='' ? $fetchRow[$key]['id_maintenance_request'] : 0;?>" target="_blank" class="btn bg-success btn-md col-md-4 d-inline float-left mb-1">ดูใบแจ้งซ่อม</a>
                 <!--<span class="btn bg-warning btn-md col-md-3 d-inline-block float-left ml-1 mb-1">รับทราบ</span>
                 <span class="btn bg-info btn-md col-md-3 d-inline-block float-right">เริ่มซ่อม</span>-->
                 </div>
@@ -63,7 +63,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 <?PHP
         }
     }else{
-        echo 'ยังไม่มีงานที่ได้รับมอบหมาย';
+        echo '<div class="m-auto w-75 pt-5 pb-5 text-center">ยังไม่มีงานซ่อม</div>';
     }
 ?>
 

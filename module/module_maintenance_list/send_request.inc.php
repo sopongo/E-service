@@ -380,6 +380,23 @@
         exit();
     }
 
+    if ($action=='update_reject') {
+        $updateRow = [
+            'reject_caused' =>  (!empty($_POST['reject_caused'])) ? $_POST['reject_caused'] : NULL,
+            'reject_date' => (date('Y-m-d H:i:s')),
+            'status_repairer' => (2),
+        ];
+        $resultUpdate = $obj->update($updateRow, "ref_id_maintenance_request=".$ref_id." AND ref_id_user_repairer=".$_SESSION['sess_id_user']." AND status_repairer=1", "tb_ref_repairer");
+        /*
+        $updateRow = [
+            'allotted_accept_date' =>  NULL,
+            'ref_user_id_accept_request' => NULL,
+        ];
+        $resultUpdate = $obj->update($updateRow, "id_maintenance_request=".$ref_id." AND ref_user_id_accept_request=".$_SESSION['sess_id_user']."", "tb_maintenance_request");
+        */
+        echo $resultUpdate;
+        exit();
+    }    
 
     if ($action=='cancel-req') {
         $insertRow = [
@@ -412,6 +429,8 @@
         $query_1 = str_replace("AND )", ")", $query_1);
 
         $holdRow = [
+            'reject_caused' =>  'ถูกยกเลิก',
+            'reject_date' => (date('Y-m-d H:i:s')),
             'status_repairer' => 2,
         ];
         $updRepairer = $obj->update($holdRow, $query_1, "tb_ref_repairer");        
@@ -420,6 +439,8 @@
             $insertRow = [
                 'ref_id_maintenance_request' => $ref_id,
                 'ref_id_user_repairer' => (!empty($_POST['slt_select2_mechanic'][$i])) ? $_POST['slt_select2_mechanic'][$i] : NULL,
+                'reject_date' => NULL,
+                'reject_caused' => NULL,                
                 'status_repairer' => 1,
             ];
             if($obj->countAll("SELECT ref_id_user_repairer FROM tb_ref_repairer WHERE ref_id_maintenance_request=".$ref_id." AND ref_id_user_repairer=".$_POST['slt_select2_mechanic'][$i]." AND status_repairer=1")==0){

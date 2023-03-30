@@ -69,14 +69,47 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
   include_once 'module/module_maintenance_list/frm_change_parts.inc.php';#อัพเดทรายการอะไหล่ที่เปลี่ยน
   include_once 'module/module_maintenance_list/frm_img_after_repair.inc.php';#อัพเดทรูปหลังซ่อม
   include_once 'module/module_maintenance_list/frm_satisfaction_surey.inc.php';#อัพเดทรูปหลังซ่อม
+  include_once 'module/module_maintenance_list/frm_reject_request.inc.php';#ปฎิเสธงานซ่อม
         
   ##ลิงค์โค๊ดส่วนที่ 1
   if($rowData['status_approved']==1){//ถ้าอนุมัติแล้ว จะคิวรี่ผู้รับผิดชอบมารอไว้
     $rowMechanic = $obj->fetchRows("SELECT tb_user.id_user, tb_user.fullname, tb_ref_repairer.* FROM tb_ref_repairer 
-    LEFT JOIN tb_user ON (tb_user.id_user=tb_ref_repairer.ref_id_user_repairer) WHERE tb_ref_repairer.ref_id_maintenance_request=".$rowData['id_maintenance_request']." AND tb_ref_repairer.status_repairer=1 ORDER BY tb_ref_repairer.id_ref_repairer ASC");
+    LEFT JOIN tb_user ON (tb_user.id_user=tb_ref_repairer.ref_id_user_repairer) WHERE tb_ref_repairer.ref_id_maintenance_request=".$rowData['id_maintenance_request']." ORDER BY tb_ref_repairer.id_ref_repairer ASC"); // AND tb_ref_repairer.status_repairer=1 
     ##เช็คว่าไอดีใน $_SESSION['sess_id_user'] ตรงกับ $rowMechanic ถ้าตรงจะแสดงปุ่มรับงาน-ปฏิเสธ
     $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user'));
+    $rowMechanic_reject = $rowMechanic;
   }  
+
+  /*
+    $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user')); //หาแบบใช้คอลัมน์ id_user เป็นค่าที่ต้องการ
+    $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', )); //หาแบบใช้ index key  [0] เป็นค่าที่ต้องการ
+  */
+
+  /*
+if((array_search(2, array_column($rowMechanic_reject, 'status_repairer', 'status_repairer')))==true) {
+    echo 'มีมมมมมมมมมมมมมมมมมมมมมมมมมมม';
+    echo "xxxxxxxxxxxxxx".$key_del = array_search(2, array_column($rowMechanic_reject, 'status_repairer'));
+    unset($rowMechanic_reject[$key_del]);
+}
+*/
+
+if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (ช่าง) กรณี status_repairer=1 คือยังเป็นผู้รับผิดชอบอยู่
+  foreach($rowMechanic as $key => $value) {
+    if($rowMechanic[$key]['status_repairer']==2) {//ถ้าเจอ status_repairer= 2 จะลบออก
+      unset($rowMechanic[$key]);
+    }
+  }
+  sort($rowMechanic);
+}  
+
+ if (count($rowMechanic_reject)!=0) {//แยกผู้รับผิดชอบ (ช่าง) กรณี status_repairer=2 คือ ปฏิเสธซ่อม หรือโดนยกเลิกโดนแอดมิน,หัวหน้าช่าง
+  foreach($rowMechanic_reject as $key => $value) {
+  if($rowMechanic_reject[$key]['status_repairer']==1) { ////ถ้าเจอ status_repairer= 1 จะลบออก
+    unset($rowMechanic_reject[$key]);
+  }
+  }
+  sort($rowMechanic_reject);
+ }  
 ?>
 
 <!-- Main content -->
@@ -110,11 +143,16 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                   <div class="ribbon bg-warning text-lg">รออนุมัติ</div>
                 </div>
                   <?PHP } ?>
-                  <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']==''){?>
+                  <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']==NULL && $chk_id_result!=NULL){?>
                   <div class="ribbon-wrapper ribbon-lg">
                   <div class="ribbon bg-warning text-lg">รอรับงาน</div>
                 </div>
                   <?PHP } ?>
+                  <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']==NULL && $chk_id_result==''){?>
+                  <div class="ribbon-wrapper ribbon-lg">
+                  <div class="ribbon bg-warning text-lg">รอมอบหมาย<?PHP echo $chk_id_result?></div>
+                </div>
+                  <?PHP } ?>                  
                   <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']=='' ){?>
                   <div class="ribbon-wrapper ribbon-lg">
                   <div class="ribbon bg-warning text-lg">รอซ่อม</div>
@@ -125,10 +163,8 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                   <div class="ribbon bg-warning text-lg">กำลังซ่อม</div>
                 </div>
                 <?PHP } ?>
-                <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL ){?>
-                  <div class="ribbon-wrapper ribbon-lg">
-                  <div class="ribbon bg-success text-lg">รอส่งมอบ</div>
-                </div>
+                <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL){?>
+                  <div class="ribbon-wrapper ribbon-lg"><div class="ribbon bg-success text-lg">รอส่งมอบ</div></div>
                 <?PHP } ?>
                 <?PHP if($rowData['maintenance_request_status']==2){?>
                 <div class="ribbon-wrapper ribbon-lg">
@@ -231,7 +267,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']==NULL && $rowData['maintenance_request_status']==1){ ?>
                     <?PHP if(($chk_id_result == $_SESSION['sess_id_user'] && $rowData['status_approved']==1) || $_SESSION['sess_class_user']==4){ ##เช็คว่าคนที่เปิดดูหน้านี้ใช้ผู้รับผิดชอบหรือไม่ ?>
                       <a href="#" class="btn btn-success btn-block btn-accept_date">รับทราบ, รับงานซ่อม</a>
-                      <a href="#" class="btn btn-warning btn-block">ปฎิเสธรับงาน</a>
+                      <a href="#" data-toggle="modal" data-target="#modal-reject_request" id="addData" data-backdrop="static" data-keyboard="false" class="btn btn-danger btn-block btn-reject_request">ปฎิเสธรับงาน</a>
                       <?PHP } ?>
                 <?PHP } ?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1){?>
@@ -240,10 +276,10 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
                     <a href="#" class="btn btn-warning btn-block btn-serv_end">ปิดงาน</a>
                 <?PHP } ?>
-                <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL && $rowData['maintenance_request_status']==1){?>
+                <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4)){?>
                     <a href="#" class="btn btn-success btn-block btn-hand_over">ส่งมอบงาน</a>
                 <?PHP } ?>                
-                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user']))  && $rowData['maintenance_request_status']==1){?>
+                <?PHP if((($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user']))  && $rowData['maintenance_request_status']==1){?>
                 <button type="button" class="btn btn-danger btn-block btn-cancel" data-toggle="modal" data-target="#modal-cancel" id="addData" data-backdrop="static" data-keyboard="false"> ยกเลิกใบแจ้งซ่อม</button>
                 <?PHP } ?>
               </div>
@@ -327,6 +363,19 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <?PHP }?>
               </div>
 
+              <?PHP 
+                if (count($rowMechanic_reject)!=0){
+                  $i = 1;
+                  echo '<div class="row mt-3 pt-2 border-top">';
+                  foreach($rowMechanic_reject as $key => $value) {
+                      echo '<div class="col-sm-2 text-danger"><strong class="d-inline-block">ยกเลิกงานซ่อม'.(count($rowMechanic_reject)>1 ? 'คนที่ '.$i.': ' : ': ').'</strong></div><div class="col-md-9 text-danger">'.$rowMechanic_reject[$key]['fullname'].' ('.$rowMechanic_reject[$key]['reject_caused'].' วันที่: '.$rowMechanic_reject[$key]['reject_date'].')</div>';
+                      //echo '<span>'.$i.'. '.$rowMechanic[$key]['fullname'].'</span>';
+                      $i++;
+                  }
+                  echo '</div>';
+                }
+              ?>
+
                 <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2 mt-3"><i class="fas fa-industry"></i> เครื่องจักร-อุปกรณ์ที่แจ้งซ่อม: </div><br>
                 <div class="row invoice-info text-left linehi-170">
                 <div class="col-sm-4 invoice-col">
@@ -362,7 +411,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                     $i = 1;
                     foreach($rowImg as $key => $value) {
                       if(file_exists($pathReq.$rowImg[$key]['path_attachment_name'])){
-                        echo '<div class="divimg_before divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
+                        echo '<div class="divimg_before divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2 alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                       }else{
                         $pathReq.$rowImg[$key]['path_attachment_name'] = $noimg; //ถ้าหาไฟล์ไม่เจอ
                         echo '<div class="divimg_before divimg_'.$rowImg[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
@@ -457,17 +506,17 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
               <?PHP
                   $rowImg_af= $obj->fetchRows("SELECT * FROM tb_attachment WHERE ref_id_used=".$rowData['id_maintenance_request']." AND attachment_type=1 AND image_cate=3");
               ?>
-              <br><div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if($_SESSION['sess_class_user']=2 && $_SESSION['sess_class_user']=3 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-img_after"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
+              <br><div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-img_after"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
               <div class="row divimg_after_null">
                   <?PHP
                   if (count($rowImg_af)>0) {
                     $i = 1;
                     foreach($rowImg_af as $key => $value) {
                       if(file_exists($pathReq.$rowImg_af[$key]['path_attachment_name'])){
-                        echo '<div class="divimg_after divimg_'.$rowImg_af[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg_af[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg_af[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
+                        echo '<div class="divimg_after divimg_'.$rowImg_af[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg_af[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg_af[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                       }else{
                         $pathReq.$rowImg_af[$key]['path_attachment_name'] = $noimg;
-                        echo '<div class="divimg_after divimg_'.$rowImg_af[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg_af[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg_af[$key]['path_attachment_name']=='' ? '' : '<img src="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ">').'</div></div>';
+                        echo '<div class="divimg_after divimg_'.$rowImg_af[$key]['id_attachment'].' col-sm-2">'.($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5 ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg_af[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg_af[$key]['path_attachment_name']=='' ? '' : '<img src="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ">').'</div></div>';
                       }
                         $i++;
                     }
@@ -550,16 +599,15 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
                 <div class="col-name-1 col-sm-4">
                   <?PHP echo $choice_survey_2;?>
                 </div><!-- /.col -->             
-
-                <div class="row mt-3">
-                <div class="col-sm-6 border-bottom">
+                <div class="row mt-5">
+                <div class="col-sm-6">
                       <div class="col col-sm-6 m-auto text-center">
                             <span>ลายเซ็นของผู้ประเมิณ:</span>
                             <img src="upload-signature/signature.png" class=" w-75" />
                             <p>ชื่อ-นามสกุล: <?PHP echo $rowData['fullname_survay']!='' ? $rowData['fullname_survay'] : '-';?><br />วันที่ประเมิณ <?PHP echo $rowData['survay_date']!='' ? nowDate($rowData['survay_date']) : '-';?></p>
                       </div>
                 </div>
-                <div class="col-sm-6 border-bottom">
+                <div class="col-sm-6">
                       <div class="col col-sm-6 m-auto text-center">
                             <span>ลายเซ็นของหน่วยงานควบคุมคุณภาพ:</span>
                             <img src="upload-signature/signature.png" class=" w-75" />
@@ -983,7 +1031,6 @@ $(document).on("click", ".btn-survey", function (e){
   }
 });
 
-
 $(document).on("click", ".btn-problem_statement", function (e){ 
   e.stopPropagation();
   $.ajax({
@@ -1019,7 +1066,7 @@ $(document).on("click", ".btn-serv_end", function (event){
         type: "warning",   
         showCancelButton: true,   
         confirmButtonColor: "#DD6B55",   
-        confirmButtonText: "ปิดงานและส่งมอบ",
+        confirmButtonText: "ปิดงานซ่อม",
         cancelButtonText: "ไม่, ยกเลิก",        
         closeOnConfirm: false 
       }, function(){   
@@ -1224,6 +1271,28 @@ if(txt_repair_code!=''){  $("#slt_repair_code option[value=custom]").attr("selec
     //alert('Ajax'); return false;
     formAdd.classList.add('was-validated');      
     return false;
+});
+
+
+$(document).on("click", ".btn-reject_request", function (e){ 
+  var frmData = $("form#needs-validation10").serialize();
+  e.stopPropagation();
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"reject_request","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>},
+      beforeSend: function () {
+      },
+      success: function (data) {
+          $(".modal-body-reject_request").html(data);
+          console.log(data);
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });
 });
 
 $(document).on("click", ".btn-update-type", function (e){ 

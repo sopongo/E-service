@@ -439,11 +439,11 @@ $obj = new CRUD();
               WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.status_approved=0 AND tb_maintenance_request.maintenance_request_status!=2"); 
 
               ##$numRow_accept ===== จำนวนงานที่รอกดรับงาน (งานที่ได้รับมอบหมายให้ซ่อม)
-              $numRow_accept = $obj->getCount("SELECT count(tb_ref_repairer.id_ref_repairer) AS total_row FROM tb_ref_repairer WHERE acknowledge_date=NULL AND status_repairer=1"); 
+              $numRow_accept = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NULL"); 
 
               $sql_fetch_alljob = "SELECT tb_maintenance_request.*, tb_ref_repairer.* FROM tb_maintenance_request 
               LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
-              WHERE (tb_maintenance_request.allotted_accept_date IS NULL OR tb_maintenance_request.duration_serv_start IS NULL OR tb_maintenance_request.hand_over_date IS NULL) AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']."   ";
+              WHERE (tb_maintenance_request.allotted_accept_date IS NULL OR tb_maintenance_request.duration_serv_start IS NULL OR tb_maintenance_request.hand_over_date IS NULL) AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']." AND tb_ref_repairer.status_repairer=1 ";
               $total_alljob = $obj->countAll($sql_fetch_alljob."");              
           ?>
           <?PHP

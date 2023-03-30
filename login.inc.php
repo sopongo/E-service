@@ -230,11 +230,12 @@ $(document).ready(function () { //When the page has loaded
     exit();*/
 
 
-    $Row = $obj->customSelect("SELECT tb_user.*, tb_dept.dept_initialname, tb_dept.dept_name, tb_site.site_initialname, tb_site_responsibility.ref_id_site AS chk_ref_id_site FROM tb_user 
+    $query_login = "SELECT tb_user.*, tb_dept.dept_initialname, tb_dept.dept_name, tb_site.site_initialname, tb_site_responsibility.ref_id_site AS chk_ref_id_site FROM tb_user 
     LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept) 
     LEFT JOIN tb_site_responsibility ON (tb_site_responsibility.ref_id_user=tb_user.id_user) 
     LEFT JOIN tb_site ON (tb_site.id_site=".$_POST['slt_manage_site'].") 
-    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."' AND tb_site_responsibility.ref_id_site=".$_POST['slt_manage_site']."");
+    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."' AND tb_site_responsibility.ref_id_site=".$_POST['slt_manage_site']."";
+    $Row = $obj->customSelect($query_login);   
 
     if (!empty($Row) && ($Row['chk_ref_id_site']!='' || $Row['class_user']==5 )){
       //$Row['photo_name']
