@@ -61,7 +61,7 @@ $(document).ready(function(){
                     //event.stopPropagation();
                     //return false();
                     //alert(ref_id);
-                    //window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
                 })
             },error: function (data) {
                 console.log(data);
