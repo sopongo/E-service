@@ -218,7 +218,36 @@
         }        
         echo $rowID;
         exit();
-    }    
+    }
+   
+    if ($action=='hand_over') {
+        $updateRow = [
+            'hand_over_date' => (date('Y-m-d H:i:s')),
+            'ref_id_user_hand_over' => $_SESSION['sess_id_user'],
+        ];
+        $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+        if($rowID=='Success'){
+            ######### รอใส่โค๊ด Update Timeline ###########
+            ##                           ใส่โค๊ดตรงนี้                              ##
+            ######### รอใส่โค๊ด Update Timeline ###########
+            echo $rowID;
+            exit();
+        }
+    }     
+
+    if ($action=='reject_hand_over') {
+        $updateRow = [
+            'duration_serv_end' => NULL,
+        ];
+        $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+        if($rowID=='Success'){
+            ######### รอใส่โค๊ด Update Timeline ###########
+            ##                           ใส่โค๊ดตรงนี้                              ##
+            ######### รอใส่โค๊ด Update Timeline ###########
+            echo $rowID;
+            exit();
+        }
+    }
     
     if ($action=='update_img_after') {
         if(isset($_POST['data'])){
@@ -347,14 +376,14 @@
             ##"slt_failure_code=3&txt_failure_code=xxxx&txt_caused_by=xxxxxxx&slt_repair_code=6&txt_repair_code=xxxx&txt_solution=xxxxxx
             parse_str($_POST['data'], $output); //$output['period']
             //echo $output['slt_failure_code'];                echo "\r\n\r\n";            
-            //print_r($output);
+            //print_r($output); exit();
         }
         $chkID = $obj->customSelect("SELECT count(id_repair_result) AS total_row FROM tb_repair_result WHERE ref_id_maintenance_request=".$_POST['ref_id']." ");
         //#tb_repair_result     id_repair_result, ref_id_maintenance_request, ref_id_failure_code, ref_id_repair_code, txt_caused_by, txt_solution, ref_id_user_report, report_date, edit_report_date
         if($chkID['total_row']==1){
             $insertRow = [
-                'ref_id_failure_code' => ($output['slt_failure_code']=='custom' ? $output['txt_failure_code'] : $output['slt_failure_code']),
-                'ref_id_repair_code' => ($output['slt_repair_code']=='custom' ? $output['txt_repair_code'] : $output['slt_repair_code']),
+                'ref_id_failure_code' => ($output['slt_failure_code']=='custom' || $output['slt_failure_code']=='' ? $output['txt_failure_code'] : $output['slt_failure_code']),
+                'ref_id_repair_code' => ($output['slt_repair_code']=='custom'  || $output['slt_repair_code']=='' ? $output['txt_repair_code'] : $output['slt_repair_code']),
                 'txt_caused_by' => (!empty($output['txt_caused_by'])) ? $output['txt_caused_by'] : '',
                 'txt_solution' => (!empty($output['txt_solution'])) ? $output['txt_solution'] : '',
                 'edit_report_date' => (date('Y-m-d H:i:s')),

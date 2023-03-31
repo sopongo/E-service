@@ -65,15 +65,17 @@ $(document).on("change", "#slt_repair_code", function (){
     }
 });        
 
-$(document).on("click", ".btn_report_result", function (e){ 
-e.stopPropagation();
 
-slt_failure_code = $("#slt_failure_code option:selected" ).val();
-txt_failure_code = $('#txt_failure_code').val();
- slt_repair_code = $("#slt_repair_code option:selected" ).val();
-txt_repair_code = $('#txt_repair_code').val();
-txt_solution = $('#txt_solution').val();
-txt_caused_by = $('#txt_caused_by').val();
+$(document).on("click", ".btn-submit_result", function (event){ 
+    var formAdd = document.getElementById('needs-validation8');  
+    var frmData = $("form#needs-validation8").serialize();
+
+    slt_failure_code = $("#slt_failure_code option:selected" ).val();
+    txt_failure_code = $('#txt_failure_code').val();
+    slt_repair_code = $("#slt_repair_code option:selected" ).val();
+    txt_repair_code = $('#txt_repair_code').val();
+    txt_solution = $('#txt_solution').val();
+    txt_caused_by = $('#txt_caused_by').val();
 
 if(slt_failure_code=='' && txt_failure_code==''){    swal("ผิดพลาด!", "ระบุรหัสอาการเสีย", "error");    return false;}
 if(slt_failure_code=='custom' && txt_failure_code==''){    swal("ผิดพลาด!", "กรอกอาการเสีย", "error");    return false;}
@@ -82,28 +84,51 @@ if(slt_repair_code=='' && txt_repair_code==''){    swal("ผิดพลาด!"
 if(slt_repair_code=='custom' && txt_repair_code==''){    swal("ผิดพลาด!", "กรอกรหัสซ่อม", "error");    return false;}
 if(txt_solution==''){    swal("ผิดพลาด!", "ระบุวิธีการแก้ไข/ป้องกันเกิดปัญหาซ้ำ", "error");    return false;}
 
-var frmData = $("form#needs-validation").serialize();
-$.ajax({
-    url: "module/module_maintenance_list/send_request.inc.php",
-    type: "POST",
-    data: frmData,  
-    //data:{"action":"report_result","ref_id":0},       
-    //data:{"action":"report_result","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>,"data":frmData},
-    beforeSend: function () {
-    },
-    success: function (data) {
-        console.log(data);
-        if(data="Success"){
-            //$('#modal-repair_results').modal('toggle');
-            //swal("สำเร็จ!", "บันทึกข้อมูลเรียบร้อย", "success");
-        }
-    },
-        error: function (jXHR, textStatus, errorThrown) {
-        console.log(data);
-        //alert(errorThrown);
-        swal("Error!", ""+errorThrown+"", "error");
+if(txt_failure_code!=''){  $("#slt_failure_code option[value=custom]").attr("selected","selected");}
+if(txt_repair_code!=''){  $("#slt_repair_code option[value=custom]").attr("selected","selected");}
+
+    if(formAdd.checkValidity()===false) {  
+        event.preventDefault();  
+        event.stopPropagation();
+    }else{
+        //alert('Send Ajax'); return false;
+        $.ajax({
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            data:{"data":frmData, "action":"report_result",  "ref_id":<?PHP echo $id; ?>},
+            beforeSend: function () {
+            },
+            success: function (data) {
+            console.log(data); //return false;
+            $("#modal-repair_results").modal('hide');
+            if(data==''){
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error"); return false;
+            }else{
+              swal({
+                    title: "สำเร็จ!",
+                    text: "บันทึกข้อมูลเรียบร้อยแล้ว",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //console.log(data);return false;
+                    //alert(ref_id);
+                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                })
+                //sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
+            }   
+                event.preventDefault();
+            },
+                error: function (jXHR, textStatus, errorThrown) {
+                //console.log(data);
+                //alert(errorThrown);
+            }
+        });    
+        event.preventDefault();    
     }
-});
+    //alert('Ajax'); return false;
+    formAdd.classList.add('was-validated');      
+    return false;
 });
 
 });

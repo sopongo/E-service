@@ -33,7 +33,13 @@ isset($_REQUEST['module']) ? $module = $_REQUEST['module'] : $module = '';
 isset($_REQUEST['id']) ? $id = intval($_REQUEST['id']) : $id = '';
 
 switch($module){  
-  
+
+  case 'newslist':
+    $title_site = "ข่าวประกาศทั้งหมด"; $title_act = "ข่าวประกาศทั้งหมด"; $breadcrumb_txt = "ข่าวประกาศทั้งหมด";
+    $include_module = "module/module_news/list.inc.php";
+    $module=="newslist" ? ($active_newslist="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_newslist=""); #ไฮไลท์เมนูด้านซ้าย    
+  break;
+
   case 'permission':
     $title_site = "กำหนดสิทธิ์การใช้งาน"; $title_act = "กำหนดสิทธิ์การใช้งาน"; $breadcrumb_txt = "กำหนดสิทธิ์การใช้งาน";
     $include_module = "module/module_permission/view.inc.php";
@@ -67,7 +73,7 @@ switch($module){
     tb_user_cancel.fullname AS cancel_fullname, tb_user_approved.fullname AS approved_fullname, tb_failure_code.failure_code_th_name, tb_repair_code.repair_code_name, 
     tb_repair_result.txt_solution, tb_repair_result.txt_caused_by, tb_repair_result.ref_id_failure_code, tb_repair_result.ref_id_repair_code,
     tb_failure_code.id_failure_code, tb_repair_code.id_repair_code, tb_outsite_repair.*, tb_supplier.supplier_name, tb_user_survey.fullname AS fullname_survay,
-    tb_accept_request.fullname AS fullname_accept FROM tb_maintenance_request 
+    tb_user_handover.fullname AS fullname_handover, tb_accept_request.fullname AS fullname_accept FROM tb_maintenance_request 
     LEFT JOIN tb_maintenance_type ON (tb_maintenance_type.id_mt_type=tb_maintenance_request.ref_id_mt_type)
     LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
     LEFT JOIN tb_user AS tb_user_request ON (tb_user_request.id_user=tb_maintenance_request.ref_id_user_request)    
@@ -75,6 +81,7 @@ switch($module){
     LEFT JOIN tb_user AS tb_user_approved ON (tb_user_approved.id_user=tb_maintenance_request.ref_id_user_approver) 
     LEFT JOIN tb_user AS tb_user_survey ON (tb_user_survey.id_user=tb_maintenance_request.ref_id_user_survey) 
     LEFT JOIN tb_user AS tb_accept_request ON (tb_accept_request.id_user=tb_maintenance_request.ref_user_id_accept_request)      
+    LEFT JOIN tb_user AS tb_user_handover ON (tb_user_handover.id_user=tb_maintenance_request.ref_id_user_hand_over) 
     LEFT JOIN tb_dept AS tb_user_dept_request ON (tb_user_dept_request.id_dept=tb_user_request.ref_id_dept)
     LEFT JOIN tb_repair_result ON (tb_repair_result.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request)
     LEFT JOIN tb_failure_code ON (tb_failure_code.id_failure_code=tb_repair_result.ref_id_failure_code)   
@@ -111,8 +118,7 @@ switch($module){
       }
     }
   break;  
-  
- 
+   
   case 'site':
     $title_site = "ไซต์งาน"; $title_act = "ไซต์งาน"; $breadcrumb_txt = "ไซต์งาน";
     $include_module = "module/module_site/list.inc.php";
@@ -429,6 +435,7 @@ $obj = new CRUD();
         <li class="nav-item"><a href="./" class="nav-link <?PHP echo $active_dashbord;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=requestlist" class="nav-link <?PHP echo $active_requestlist;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ติดตาม-ประเมิณ</p> </a></li>
+        <li class="nav-item"><a href="?module=news" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-bell"></i> <p>ข่าวประกาศ</p></a></li>
         <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ ?>
           <!--<li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>-->
         <?PHP } ?>
@@ -441,6 +448,9 @@ $obj = new CRUD();
               ##$numRow_accept ===== จำนวนงานที่รอกดรับงาน (งานที่ได้รับมอบหมายให้ซ่อม)
               $numRow_accept = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NULL"); 
 
+              ##$numRow_handover ===== จำนวนงานที่รอส่งมอบ
+              $numRow_handover = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_end IS NOT NULL");                           
+
               $sql_fetch_alljob = "SELECT tb_maintenance_request.*, tb_ref_repairer.* FROM tb_maintenance_request 
               LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
               WHERE (tb_maintenance_request.allotted_accept_date IS NULL OR tb_maintenance_request.duration_serv_start IS NULL OR tb_maintenance_request.hand_over_date IS NULL) AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']." AND tb_ref_repairer.status_repairer=1 ";
@@ -450,6 +460,7 @@ $obj = new CRUD();
             if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){?>
           <li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light"><?PHP echo $numRow_waitapprove; ?></span></a></li>
           <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-handshake"></i> <p>งานรอช่างรับงาน</p><span class="float-right badge bg-success"><?PHP echo $numRow_accept; ?></span></a></li>
+          <li class="nav-item"><a href="?module=handover" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-flag-checkered"></i> <p>งานรอส่งมอบ</p><span class="float-right badge bg-success"><?PHP echo $numRow_handover; ?></span></a></li>
             <?PHP }?>
         <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning"><?PHP echo $total_alljob; ?></span></a></li>
         <?PHP }##11 ?>
@@ -460,6 +471,7 @@ $obj = new CRUD();
             <ul class="nav nav-treeview">
               <li class="nav-item"><a href="?module=machine-master" class="nav-link <?PHP echo $active_machine; ?>"><i class="fa fa-caret-right nav-icon"></i><p>เครื่องจักร-อุปกรณ์ (Master)</p></a></li>
               <li class="nav-item"><a href="?module=category" class="nav-link <?PHP echo $active_category; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ประเภทเครื่องจักร-อุปกรณ์</p></a></li>
+              <li class="nav-item"><a href="?module=newslist" class="nav-link <?PHP echo $active_newslist; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ข่าวประกาศ</p></a></li>
               <li class="nav-item"><a href="?module=userlist" class="nav-link <?PHP echo $active_userlist; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ผู้ใช้งาน</p></a></li>
               <li class="nav-item"><a href="?module=permission" class="nav-link <?PHP echo $active_permission; ?>"><i class="fa fa-caret-right nav-icon"></i><p>สิทธิ์การใช้งาน</p></a></li>
               <li class="nav-item"><a href="?module=site" class="nav-link <?PHP echo $active_site; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ไซต์งาน</p></a></li>

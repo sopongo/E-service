@@ -228,9 +228,9 @@ if (count($fetchRow)>0) {
         if($fetchRow[$key]['status_approved']==NULL && $fetchRow[$key]['allotted_date']==NULL && $fetchRow[$key]['maintenance_request_status']==1){
             $req_textstatus = 'รออนุมัติ/จ่ายงาน';
         }else if($fetchRow[$key]['status_approved']==1 && $fetchRow[$key]['allotted_date']!='' && $fetchRow[$key]['maintenance_request_status']==1){            
-            $req_textstatus = 'รอช่างรับงานซ่อม';
+            $req_textstatus= '<span class="text-bold text-danger">รอช่างรับงานซ่อม</span>';
         }else if($fetchRow[$key]['maintenance_request_status']==2){            
-            $req_textstatus = '<span class="text-red">ยกเลิกใบแจ้งซ่อม</span>';
+            $req_textstatus= '<span class="text-bold text-gray">ยกเลิกใบแจ้งซ่อม</span>';
         }else{
             $req_textstatus = '-';
         }

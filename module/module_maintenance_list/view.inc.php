@@ -76,10 +76,19 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
     $rowMechanic = $obj->fetchRows("SELECT tb_user.id_user, tb_user.fullname, tb_ref_repairer.* FROM tb_ref_repairer 
     LEFT JOIN tb_user ON (tb_user.id_user=tb_ref_repairer.ref_id_user_repairer) WHERE tb_ref_repairer.ref_id_maintenance_request=".$rowData['id_maintenance_request']." ORDER BY tb_ref_repairer.id_ref_repairer ASC"); // AND tb_ref_repairer.status_repairer=1 
     ##เช็คว่าไอดีใน $_SESSION['sess_id_user'] ตรงกับ $rowMechanic ถ้าตรงจะแสดงปุ่มรับงาน-ปฏิเสธ
-    $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user'));
-    $rowMechanic_reject = $rowMechanic;
-  }  
+    if(count($rowMechanic)>0){
+      //$chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user'));
+      $rowMechanic_reject = $rowMechanic;
 
+      $chk_key_responsibility = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user')); //ให้หา index
+      echo $rowMechanic[$chk_key_responsibility]['status_repairer'];
+      if($rowMechanic[$chk_key_responsibility]['status_repairer']==2){//ปฎิเสธซ่อม
+          $chk_responsibility = 0;
+      }else{
+          $chk_responsibility = 1;
+      }
+    }
+  }
   /*
     $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user')); //หาแบบใช้คอลัมน์ id_user เป็นค่าที่ต้องการ
     $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', )); //หาแบบใช้ index key  [0] เป็นค่าที่ต้องการ
@@ -93,23 +102,23 @@ if((array_search(2, array_column($rowMechanic_reject, 'status_repairer', 'status
 }
 */
 
-if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (ช่าง) กรณี status_repairer=1 คือยังเป็นผู้รับผิดชอบอยู่
+if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (ช่าง) กรณี status_repairer=1 คือยังเป็นผู้รับผิดชอบอยู่
   foreach($rowMechanic as $key => $value) {
     if($rowMechanic[$key]['status_repairer']==2) {//ถ้าเจอ status_repairer= 2 จะลบออก
       unset($rowMechanic[$key]);
     }
   }
   sort($rowMechanic);
-}  
+}
 
- if (count($rowMechanic_reject)!=0) {//แยกผู้รับผิดชอบ (ช่าง) กรณี status_repairer=2 คือ ปฏิเสธซ่อม หรือโดนยกเลิกโดนแอดมิน,หัวหน้าช่าง
+ if (!empty($rowMechanic_reject) && count($rowMechanic_reject)!=0) {//แยกผู้รับผิดชอบ (ช่าง) กรณี status_repairer=2 คือ ปฏิเสธซ่อม หรือโดนยกเลิกโดนแอดมิน,หัวหน้าช่าง
   foreach($rowMechanic_reject as $key => $value) {
   if($rowMechanic_reject[$key]['status_repairer']==1) { ////ถ้าเจอ status_repairer= 1 จะลบออก
     unset($rowMechanic_reject[$key]);
   }
   }
   sort($rowMechanic_reject);
- }  
+ }
 ?>
 
 <!-- Main content -->
@@ -143,14 +152,9 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
                   <div class="ribbon bg-warning text-lg">รออนุมัติ</div>
                 </div>
                   <?PHP } ?>
-                  <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']==NULL && $chk_id_result!=NULL){?>
+                  <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']==NULL && !empty($rowMechanic)){?>
                   <div class="ribbon-wrapper ribbon-lg">
-                  <div class="ribbon bg-warning text-lg">รอรับงาน</div>
-                </div>
-                  <?PHP } ?>
-                  <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']==NULL && $chk_id_result==''){?>
-                  <div class="ribbon-wrapper ribbon-lg">
-                  <div class="ribbon bg-warning text-lg">รอมอบหมาย<?PHP echo $chk_id_result?></div>
+                  <div class="ribbon bg-warning text-lg">รอช่างรับงาน</div>
                 </div>
                   <?PHP } ?>                  
                   <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']=='' ){?>
@@ -163,13 +167,14 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
                   <div class="ribbon bg-warning text-lg">กำลังซ่อม</div>
                 </div>
                 <?PHP } ?>
-                <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL){?>
+                <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL && $rowData['hand_over_date']==NULL){?>
                   <div class="ribbon-wrapper ribbon-lg"><div class="ribbon bg-success text-lg">รอส่งมอบ</div></div>
                 <?PHP } ?>
+                <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL && $rowData['hand_over_date']!=NULL){?>
+                  <div class="ribbon-wrapper ribbon-lg"><div class="ribbon bg-success text-lg"><i class="nav-icon fas fa-flag-checkered"></i> ซ่อมแล้ว</div></div>
+                <?PHP } ?>                
                 <?PHP if($rowData['maintenance_request_status']==2){?>
-                <div class="ribbon-wrapper ribbon-lg">
-                  <div class="ribbon bg-danger text-lg">ยกเลิก</div>
-                </div>
+                <div class="ribbon-wrapper ribbon-lg"><div class="ribbon bg-danger text-lg">ยกเลิก</div></div>
                 <?PHP } ?>
               <div class="card-body box-profile">
 
@@ -265,7 +270,7 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
                     <a href="#" class="btn btn-warning btn-block btn-disapprove">ไม่อนุมัติใบแจ้งซ่อม</a>
                 <?PHP }?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']==NULL && $rowData['maintenance_request_status']==1){ ?>
-                    <?PHP if(($chk_id_result == $_SESSION['sess_id_user'] && $rowData['status_approved']==1) || $_SESSION['sess_class_user']==4){ ##เช็คว่าคนที่เปิดดูหน้านี้ใช้ผู้รับผิดชอบหรือไม่ ?>
+                    <?PHP if(($chk_responsibility==1 && $rowData['status_approved']==1) || $_SESSION['sess_class_user']==5){ ##เช็คว่าคนที่เปิดดูหน้านี้ใช้ผู้รับผิดชอบหรือไม่ ?>
                       <a href="#" class="btn btn-success btn-block btn-accept_date">รับทราบ, รับงานซ่อม</a>
                       <a href="#" data-toggle="modal" data-target="#modal-reject_request" id="addData" data-backdrop="static" data-keyboard="false" class="btn btn-danger btn-block btn-reject_request">ปฎิเสธรับงาน</a>
                       <?PHP } ?>
@@ -276,10 +281,11 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
                     <a href="#" class="btn btn-warning btn-block btn-serv_end">ปิดงาน</a>
                 <?PHP } ?>
-                <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4)){?>
+                <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL  && $rowData['hand_over_date']==NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){?>
                     <a href="#" class="btn btn-success btn-block btn-hand_over">ส่งมอบงาน</a>
-                <?PHP } ?>                
-                <?PHP if((($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user']))  && $rowData['maintenance_request_status']==1){?>
+                    <a href="#" class="btn btn-warning btn-block btn-reject_hand_over">ยกเลิกการส่งมอบงาน</a>
+                <?PHP } ?>
+                <?PHP if((($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user']))  && $rowData['hand_over_date']==NULL && $rowData['maintenance_request_status']==1){?>
                 <button type="button" class="btn btn-danger btn-block btn-cancel" data-toggle="modal" data-target="#modal-cancel" id="addData" data-backdrop="static" data-keyboard="false"> ยกเลิกใบแจ้งซ่อม</button>
                 <?PHP } ?>
               </div>
@@ -344,7 +350,7 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
                 <!-- /.col -->
               </div>
               
-              <div class="card-title d-block text-bold w-100 border-bottom pb-1 mt-3 mb-2"><i class="fas fa-users-cog"></i> ผู้รับผิดชอบงานซ่อม: <?PHP if($rowData['status_approved']==1 && $rowData['maintenance_request_status']!=2 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){?><button type="button" class="btn btn-default btn-sm btn-change-approved" data-toggle="modal" data-target="#modal-change-approved" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> เปลี่ยน-เพิ่ม ผู้รับผิดชอบ</button><?PHP } ?></div><br>
+              <div class="card-title d-block text-bold w-100 border-bottom pb-1 mt-3 mb-2"><i class="fas fa-users-cog"></i> ผู้รับผิดชอบงานซ่อม: <?PHP if($rowData['status_approved']==1 && $rowData['maintenance_request_status']!=2 && $rowData['hand_over_date']==NULL && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){?><button type="button" class="btn btn-default btn-sm btn-change-approved" data-toggle="modal" data-target="#modal-change-approved" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> เปลี่ยน-เพิ่ม ผู้รับผิดชอบ</button><?PHP } ?></div><br>
               <div class="row invoice-info linehi-170">
                 <?PHP if($rowData['status_approved']!=1){?>
                         <div class="m-auto d-block pt-3 pb-3 text-center text-gray">ยังไม่กำหนดผู้รับผิดชอบ</div>
@@ -364,7 +370,7 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
               </div>
 
               <?PHP 
-                if (count($rowMechanic_reject)!=0){
+                if (!empty($rowMechanic_reject) && count($rowMechanic_reject)!=0){
                   $i = 1;
                   echo '<div class="row mt-3 pt-2 border-top">';
                   foreach($rowMechanic_reject as $key => $value) {
@@ -397,7 +403,7 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
 
                 <div class="col-sm-12 mt-3 ">
                 <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2 text-red"><i class="fas fa-info-circle"></i> อาการเสีย/ปัญหาที่พบ: 
-                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user'])) && $rowData['maintenance_request_status']!=2){ ?>
+                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user'])) && $rowData['maintenance_request_status']!=2 && $rowData['hand_over_date']==NULL){ ?>
                 <button type="button" class="btn btn-default btn-sm btn-problem_statement"  data-toggle="modal" data-target="#modal-problem_statement" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>
                     <p class="problem_statement"><?PHP echo $rowData['problem_statement'];?></p>
                 </div><!-- /.col -->                
@@ -425,7 +431,7 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
               </div><!-- /.row -->
               
               <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-clipboard-check"></i> สรุปผลการซ่อม: 
-              <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){ ?><button type="button" class="btn btn-default btn-sm btn-repair_results" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
+              <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL){ ?><button type="button" class="btn btn-default btn-sm btn-repair_results" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">รหัสอาการเสีย:</strong> <?PHP echo $rowData['failure_code_th_name']=='' ? ($rowData['ref_id_failure_code']=='' ? '-' : $rowData['ref_id_failure_code']) : $rowData['failure_code_th_name'];?><br>
@@ -437,7 +443,7 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
                 </div><!-- /.col -->
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){ ?><button type="button" class="btn btn-default btn-sm btn-update_outsite" data-toggle="modal" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL){ ?><button type="button" class="btn btn-default btn-sm btn-update_outsite" data-toggle="modal" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">สาเหตุที่ส่งซ่อม:</strong> <?PHP echo $rowData['caused_outsite_repair']=='' ? '-' : $rowData['caused_outsite_repair'];?><br>
@@ -449,7 +455,7 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
                 </div><!-- /.col -->                
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){ ?><button type="button" class="btn btn-default btn-sm btn-change_parts" data-toggle="modal" data-id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL){ ?><button type="button" class="btn btn-default btn-sm btn-change_parts" data-toggle="modal" data-id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
                 <!-- Table row -->
                 <div class="row">
                 <div class="col-12 table-responsive">
@@ -481,7 +487,7 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
                                   echo '<td class="text-right">'.number_format($rowParts[$key]['parts_price'],2).'</td>';
                                   echo '<td class="text-right">'.number_format($rowParts[$key]['parts_qty'],0).'</td>';
                                   echo '<td class="text-right subTotal">'.(number_format(($rowParts[$key]['parts_price']*$rowParts[$key]['parts_qty']),2)).'</td>';
-                                  if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){  
+                                  if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL){  
                                     echo '<td><button type="button" class="btn btn-danger btn-sm p-0 px-1 m-0" data-id="'.$rowParts[$key]['id_parts'].'" title="ลบรายการนี้" id="btn-del_parts"><i class="fa fa-trash-alt"></i></button>
                                     <button type="button" class="btn btn-warning btn-sm btn-edit_part p-0 px-1 m-0" data-id="'.$rowParts[$key]['id_parts'].'" data-toggle="modal" data-target="#modal-change_parts" id="addData" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button></td>';
                                   }else{
@@ -510,17 +516,17 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
               <?PHP
                   $rowImg_af= $obj->fetchRows("SELECT * FROM tb_attachment WHERE ref_id_used=".$rowData['id_maintenance_request']." AND attachment_type=1 AND image_cate=3");
               ?>
-              <br><div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){ ?><button type="button" class="btn btn-default btn-sm btn-img_after"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
+              <br><div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL){ ?><button type="button" class="btn btn-default btn-sm btn-img_after"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
               <div class="row divimg_after_null">
                   <?PHP
                   if (count($rowImg_af)>0) {
                     $i = 1;
                     foreach($rowImg_af as $key => $value) {
                       if(file_exists($pathReq.$rowImg_af[$key]['path_attachment_name'])){
-                        echo '<div class="divimg_after divimg_'.$rowImg_af[$key]['id_attachment'].' col-sm-2">'.(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg_af[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg_af[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
+                        echo '<div class="divimg_after divimg_'.$rowImg_af[$key]['id_attachment'].' col-sm-2">'.(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg_af[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg_af[$key]['path_attachment_name']=='' ? '' : '<a href="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$title_act.'" data-gallery="gallery" class="img_lightbox"><img src="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ"></a>').'</div></div>';
                       }else{
                         $pathReq.$rowImg_af[$key]['path_attachment_name'] = $noimg;
-                        echo '<div class="divimg_after divimg_'.$rowImg_af[$key]['id_attachment'].' col-sm-2">'.(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg_af[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg_af[$key]['path_attachment_name']=='' ? '' : '<img src="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ">').'</div></div>';
+                        echo '<div class="divimg_after divimg_'.$rowImg_af[$key]['id_attachment'].' col-sm-2">'.(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL ? '<div class="img-wrap"><span class="close text-danger del-img" data-id="'.$rowImg_af[$key]['id_attachment'].'" data-class="divimg_before">&times;</span></div>' : '').'<div class="position-relative">'.($rowImg_af[$key]['path_attachment_name']=='' ? '' : '<img src="'.$pathReq.$rowImg_af[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ">').'</div></div>';
                       }
                         $i++;
                     }
@@ -529,8 +535,8 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
                   }
                 ?>
               </div><!-- /.row -->
-
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-chart-bar"></i> ประเมินผลการซ่อม: <?PHP if($_SESSION['sess_class_user']==1 && $rowData['hand_over_date']!=NULL && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-survey"><i class="fas fa-pencil-alt"></i>
+              
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-chart-bar"></i> ประเมินผลการซ่อม: <?PHP if(($_SESSION['sess_class_user']==1 || $_SESSION['sess_id_dept']==$rowData['ref_id_dept_request']) && $rowData['hand_over_date']!=NULL && $rowData['maintenance_request_status']!=2){ ?><button type="button" class="btn btn-default btn-sm btn-survey"><i class="fas fa-pencil-alt"></i>
  อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                     <?PHP
@@ -615,7 +621,7 @@ if (count($rowMechanic)!=0) { //แยกผู้รับผิดชอบ (�
                       <div class="col col-sm-6 m-auto text-center">
                             <span>ลายเซ็นของหน่วยงานควบคุมคุณภาพ:</span>
                             <img src="upload-signature/signature.png" class=" w-75" />
-                            <p>ชื่อ-นามสกุล: -<br />วันที่ประเมิณ -</p>
+                            <p>ชื่อ-นามสกุล: <?PHP echo $rowData['fullname_handover']!='' ? $rowData['fullname_handover'] : '-';?><br />วันที่ส่งมอบ: <?PHP echo $rowData['hand_over_date']!='' ? nowDate($rowData['hand_over_date']) : '-';?></p>
                       </div>
                 </div>
                 </div>
@@ -916,6 +922,106 @@ $(document).on("click", "#btn-del_parts", function (e){
     event.stopPropagation();
 });
 
+
+$(document).on("click", ".btn-hand_over", function (e){ 
+  var img_id = $(this).data("id");
+  var class_name= $(this).data("class");  
+  swal({
+        title: "ยืนยันการส่งมอบงาน  ?",   text: "ใบแจ้งซ่อมเลขที่: <?PHP echo $breadcrumb_txt;?> \r\n คุณได้ทำการตรวจสอบการซ่อมแล้ว",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        cancelButtonText: "ไม่, ยกเลิก",
+        confirmButtonText: "ตกลง",
+        closeOnConfirm: false 
+      }, function(){   
+        $.ajax({
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            data:{ "action":"hand_over", ref_id:<?PHP echo $rowData['id_maintenance_request'];?>},
+            beforeSend: function () {
+            },success: function (data) {
+                console.log(data); //return false;
+                event.stopPropagation();
+                if(data.error=='over_req'){
+                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+                    return false;
+                }else{
+
+                }
+                swal({
+                    title: "ส่งมอบงานเรียบร้อย.",
+                    //text: "คลิก \"OK\" เพื่อปิดหน้าต่างนี้",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //console.log(data);
+                    //event.stopPropagation();
+                    //return false();
+                    //alert(ref_id);
+                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                })
+            },error: function (data) {
+                console.log(data);
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+            }
+        });
+    });
+    event.preventDefault();    
+    event.stopPropagation();
+});
+
+
+$(document).on("click", ".btn-reject_hand_over", function (e){ 
+  var img_id = $(this).data("id");
+  var class_name= $(this).data("class");  
+  swal({
+        title: "ยกเลิกการส่งมอบงาน ?",   text: "ใบแจ้งซ่อมเลขที่: <?PHP echo $breadcrumb_txt;?> \r\n ระบบจะส่งกลับไปให้ช่างซ่อมแก้ไขใหม่",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        cancelButtonText: "ไม่, ยกเลิก",
+        confirmButtonText: "ตกลง",
+        closeOnConfirm: false 
+      }, function(){   
+        $.ajax({
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            data:{ "action":"reject_hand_over", ref_id:<?PHP echo $rowData['id_maintenance_request'];?>},
+            beforeSend: function () {
+            },success: function (data) {
+                console.log(data); //return false;
+                event.stopPropagation();
+                if(data.error=='over_req'){
+                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+                    return false;
+                }else{
+
+                }
+                swal({
+                    title: "ยกเลิกการส่งมอบงานเรียบร้อย.",
+                    //text: "คลิก \"OK\" เพื่อปิดหน้าต่างนี้",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //console.log(data);
+                    //event.stopPropagation();
+                    //return false();
+                    //alert(ref_id);
+                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                })
+            },error: function (data) {
+                console.log(data);
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+            }
+        });
+    });
+    event.preventDefault();    
+    event.stopPropagation();
+});
+
 $(document).on("click", ".del-img", function (e){ 
   var img_id = $(this).data("id");
   var class_name= $(this).data("class");  
@@ -1008,10 +1114,10 @@ $rowData['txt_solution']
 });
 
 $(document).on("click", ".btn-survey", function (e){ 
-  var checkDate = '<?PHP echo $rowData['survay_date'];?>';
+  var checkDate = '<?PHP echo $rowData['hand_over_date'];?>';
   var recomment = $('p.recomment').text();
   if(checkDate==''){
-    sweetAlert("ผิดพลาด!", "ผู้ซ่อมต้องปิดงานซ่อมก่อน \r\n จึงจะประเมิณผลการซ่อมได้", "error");
+    sweetAlert("ผิดพลาด!", "ช่างต้องส่งมอบงานซ่อมก่อน \r\n จึงจะประเมิณผลการซ่อมได้", "error");
     return false;
   }else{
     e.stopPropagation();
@@ -1211,72 +1317,6 @@ $(document).on("click", ".btn-accept_date", function (event){
     event.preventDefault();    
     event.stopPropagation();
 });
-
-$(document).on("click", ".btn-submit_result", function (event){ 
-    var formAdd = document.getElementById('needs-validation8');  
-    var frmData = $("form#needs-validation8").serialize();
-
-    slt_failure_code = $("#slt_failure_code option:selected" ).val();
-    txt_failure_code = $('#txt_failure_code').val();
-    slt_repair_code = $("#slt_repair_code option:selected" ).val();
-    txt_repair_code = $('#txt_repair_code').val();
-    txt_solution = $('#txt_solution').val();
-    txt_caused_by = $('#txt_caused_by').val();
-
-if(slt_failure_code=='' && txt_failure_code==''){    swal("ผิดพลาด!", "ระบุรหัสอาการเสีย", "error");    return false;}
-if(slt_failure_code=='custom' && txt_failure_code==''){    swal("ผิดพลาด!", "กรอกอาการเสีย", "error");    return false;}
-if(txt_caused_by==''){    swal("ผิดพลาด!", "ระบุสาเหตุของปัญหา", "error");    return false;}
-if(slt_repair_code=='' && txt_repair_code==''){    swal("ผิดพลาด!", "ระบุรหัสซ่อม", "error");    return false;}
-if(slt_repair_code=='custom' && txt_repair_code==''){    swal("ผิดพลาด!", "กรอกรหัสซ่อม", "error");    return false;}
-if(txt_solution==''){    swal("ผิดพลาด!", "ระบุวิธีการแก้ไข/ป้องกันเกิดปัญหาซ้ำ", "error");    return false;}
-
-if(txt_failure_code!=''){  $("#slt_failure_code option[value=custom]").attr("selected","selected");}
-if(txt_repair_code!=''){  $("#slt_repair_code option[value=custom]").attr("selected","selected");}
-
-    if(formAdd.checkValidity()===false) {  
-        event.preventDefault();  
-        event.stopPropagation();
-    }else{
-        //alert('Send Ajax'); return false;
-        $.ajax({
-            url: "module/module_maintenance_list/send_request.inc.php",
-            type: "POST",
-            data:{"data":frmData, "action":"report_result",  "ref_id":<?PHP echo $id; ?>},
-            beforeSend: function () {
-            },
-            success: function (data) {
-            console.log(data); //return false;
-            $("#modal-repair_results").modal('hide');
-            if(data==''){
-                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error"); return false;
-            }else{
-              swal({
-                    title: "สำเร็จ!",
-                    text: "บันทึกข้อมูลเรียบร้อยแล้ว",
-                    type: "success",
-                    //timer: 3000
-                }, 
-                function(){
-                    //console.log(data);return false;
-                    //alert(ref_id);
-                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
-                })
-                //sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
-            }   
-                event.preventDefault();
-            },
-                error: function (jXHR, textStatus, errorThrown) {
-                //console.log(data);
-                //alert(errorThrown);
-            }
-        });    
-        event.preventDefault();    
-    }
-    //alert('Ajax'); return false;
-    formAdd.classList.add('was-validated');      
-    return false;
-});
-
 
 $(document).on("click", ".btn-reject_request", function (e){ 
   var frmData = $("form#needs-validation10").serialize();
