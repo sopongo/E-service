@@ -90,14 +90,14 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td><i class="fas fa-caret-right"></i> 183</td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                      <td><span class="tag tag-success">Approved</span></td>
+                      <td><i class="fas fa-caret-right"></i> 2023/03/31</td>
+                      <td width="80%">Topic News</td>
+                      <td><span class="tag tag-success">Admin PCS</span></td>
                     </tr>
                     <tr>
-                      <td><i class="fas fa-caret-right"></i> 219</td>
-                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
-                      <td><span class="tag tag-warning">Pending</span></td>
+                      <td><i class="fas fa-caret-right"></i> 2023/03/29</td>
+                      <td>Topic News</td>
+                      <td><span class="tag tag-warning">หัวหน้าช่าง MT</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -125,7 +125,7 @@
                       <th scope="col">เกี่ยวกับความปลอดภัย</th>
                     </tr>
                   </thead>
-                  <tr class="odd"><td class="sorting_1">14.</td><td><a class="btn btn-success btn-sm" href="?module=requestid&amp;id=14" id="viewData" title="ดูข้อมูล" target="_blank"><i class="fa fa-file-alt"></i></a> </td><td>PCS-FM-MT-2303-0014--module--&gt;requestlist</td><td>31/03/2023</td><td>รออนุมัติ/จ่ายงาน</td><td>PCS.IT.M.Building.W</td><td>งานสร้างฝ่ายไอที</td><td>Building (อาคาร, ตึก)</td><td>เพิ่มจุดต่อปลั๊กไฟ ลานจอดรถ อ.8 เพื่อติดตั้งกล้องว</td><td><a class="text-info"><i class="fas fa-images"></i> คลิกดูภาพ</a></td><td>MT</td><td>แจ้งช่างซ่อม</td><td><i class="fas fa-times text-danger"></i></td></tr>                  
+                  <!--<tr class="odd"><td class="sorting_1">14.</td><td><a class="btn btn-success btn-sm" href="?module=requestid&amp;id=14" id="viewData" title="ดูข้อมูล" target="_blank"><i class="fa fa-file-alt"></i></a> </td><td>PCS-FM-MT-2303-0014--module--&gt;requestlist</td><td>31/03/2023</td><td>รออนุมัติ/จ่ายงาน</td><td>PCS.IT.M.Building.W</td><td>งานสร้างฝ่ายไอที</td><td>Building (อาคาร, ตึก)</td><td>เพิ่มจุดต่อปลั๊กไฟ ลานจอดรถ อ.8 เพื่อติดตั้งกล้องว</td><td><a class="text-info"><i class="fas fa-images"></i> คลิกดูภาพ</a></td><td>MT</td><td>แจ้งช่างซ่อม</td><td><i class="fas fa-times text-danger"></i></td></tr>-->
                   <tbody>
                   </tbody>
                 </table>

@@ -81,7 +81,6 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
       $rowMechanic_reject = $rowMechanic;
 
       $chk_key_responsibility = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user')); //ให้หา index
-      echo $rowMechanic[$chk_key_responsibility]['status_repairer'];
       if($rowMechanic[$chk_key_responsibility]['status_repairer']==2){//ปฎิเสธซ่อม
           $chk_responsibility = 0;
       }else{
@@ -146,11 +145,8 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
 
             <!-- Profile Image -->
             <div class="card card-main card-primary card-outline position-relative ">
-
-                <?PHP if($rowData['status_approved']==NULL && $rowData['maintenance_request_status']!==2){?>
-                  <div class="ribbon-wrapper ribbon-lg">
-                  <div class="ribbon bg-warning text-lg">รออนุมัติ</div>
-                </div>
+                  <?PHP if($rowData['status_approved']==NULL && $rowData['maintenance_request_status']!=2){?>
+                  <div class="ribbon-wrapper ribbon-lg"><div class="ribbon bg-warning text-lg">รออนุมัติ</div></div>
                   <?PHP } ?>
                   <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']==NULL && !empty($rowMechanic)){?>
                   <div class="ribbon-wrapper ribbon-lg">
@@ -265,7 +261,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                   </li>
                 </ul>
 
-                <?PHP if($rowData['status_approved']==NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4)){ //รออนุมัติ/หรือไม่อนุมัติ?>
+                <?PHP if($rowData['status_approved']==NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){ //รออนุมัติ/หรือไม่อนุมัติ?>
                     <button type="button" class="btn btn-success btn-block btn-approved" data-toggle="modal" data-target="#modal-approved" id="addData" data-backdrop="static" data-keyboard="false"> อนุมัติ, จ่ายงานซ่อม</button>
                     <a href="#" class="btn btn-warning btn-block btn-disapprove">ไม่อนุมัติใบแจ้งซ่อม</a>
                 <?PHP }?>
@@ -275,10 +271,10 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                       <a href="#" data-toggle="modal" data-target="#modal-reject_request" id="addData" data-backdrop="static" data-keyboard="false" class="btn btn-danger btn-block btn-reject_request">ปฎิเสธรับงาน</a>
                       <?PHP } ?>
                 <?PHP } ?>
-                <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1){?>
+                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1){?>
                     <a href="#" class="btn btn-warning btn-block btn-start_repair">เริ่มซ่อม</a>
                 <?PHP } ?>
-                <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
+                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
                     <a href="#" class="btn btn-warning btn-block btn-serv_end">ปิดงาน</a>
                 <?PHP } ?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL  && $rowData['hand_over_date']==NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){?>

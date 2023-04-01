@@ -40,12 +40,14 @@
             
             if(empty($rowID)){
                 $insertRow = [
+                    //id_menu, menu_code, level_menu, sort_menu, ref_id_menu, ref_id_sub, ref_id_dept, name_menu, desc_menu, menu_adddate, ref_id_user_add, menu_editdate, ref_id_user_edit, status_menu
                     'menu_code' => (!empty($output['menu_code'])) ? $output['menu_code'] : NULL,
                     'level_menu' => (!empty($output['level_menu'])) ? $output['level_menu'] : NULL,
                     'sort_menu' => NULL,
                     'ref_id_menu' => (!empty($output['ref_id_menu'])) ? $output['ref_id_menu'] : NULL,
                     'ref_id_sub' => NULL,
-                    'ref_id_dept' => (!empty($output['ref_id_dept'])) ? $output['ref_id_dept'] : NULL,
+                    //'ref_id_dept' => (!empty($output['ref_id_dept'])) ? $output['ref_id_dept'] : NULL,
+                    'ref_id_dept' => $_SESSION['sess_id_dept'],
                     'name_menu' => (!empty($output['name_menu'])) ? $output['name_menu'] : NULL,
                     'desc_menu' => (!empty($output['desc_menu'])) ? $output['desc_menu'] : NULL,
                     'menu_adddate' => date('Y-m-d H:i:s'),
@@ -63,6 +65,7 @@
                     'ref_id_menu' => (!empty($output['ref_id_menu'])) ? $output['ref_id_menu'] : NULL,
                     'ref_id_sub' => NULL,
                     'ref_id_dept' => (!empty($output['ref_id_dept'])) ? $output['ref_id_dept'] : NULL,
+                    //'ref_id_dept' => $_SESSION['sess_id_dept'],
                     'name_menu' => (!empty($output['name_menu'])) ? $output['name_menu'] : NULL,
                     'desc_menu' => (!empty($output['desc_menu'])) ? $output['desc_menu'] : NULL,
                     'menu_adddate' => date('Y-m-d H:i:s'),

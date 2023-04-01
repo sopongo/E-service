@@ -80,7 +80,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
         font-family: 'Sarabun', sans-serif;
         font-style: normal;
         font-weight: 500;
-        padding-top:10rem;
+        padding-top:2rem;
     }
   .logo{ width:200px; margin:0px 0px 15px 35px; text-align:center;}
   </style>
@@ -139,15 +139,9 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 
                 <div class="form-group">
                     <label for="email">User Test:</label>
-                        <p>sopon.g@jwdcoldchain.com <span class="float-right">Admin PCS</span></p>
-                        <p>apiwan.s@jwdcoldchain.com <span class="float-right">IT SUP</span></p>
-                        <p>mitipol@jwdcoldchain.com <span class="float-right">IT SUP</span></p>
-                        <p>user-jpac@pcs-plp.com <span class="float-right"> User JPAC</span></p>
-                        <p>usertest3@pcs-plp.com <span class="float-right">xxxxx</span></p>
-                        <p>userpacs1@pcs-plp.com <span class="float-right">xxxxx</span></p>
-                        <p>userpact1@pcs-plp.com <span class="float-right">xxxxx</span></p>
-                        <p>usertest2@pcs-plp.com <span class="float-right">xxxxx</span></p>
-                        <p>usertest1@pcs-plp.com <span class="float-right">xxxxx</span></p>
+                        <p>usertest1@pcs-plp.com <span class="float-right"> User</span></p>
+                        <p>usertest2@pcs-plp.com <span class="float-right">User</span></p>
+                        <p>usertest3@pcs-plp.com <span class="float-right">User</span></p>                 
                         <p>enuser1@pcs-plp.com <span class="float-right"> หัวหน้า MT</span></p>
                         <p>enuser2@pcs-plp.com <span class="float-right"> ช่าง MT-1</span></p>
                 </div>
