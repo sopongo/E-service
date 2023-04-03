@@ -59,10 +59,16 @@ switch($module){
   break;
 
     case 'waitaccept':    
-      $title_site = "งานใบรอรับงาน"; $title_act = "งานใบรอรับงาน"; $breadcrumb_txt = "งานใบรอรับงาน";
+      $title_site = "งานรอช่างรับงาน"; $title_act = "งานรอช่างรับงาน"; $breadcrumb_txt = "งานรอช่างรับงาน";
       $include_module = "module/module_maintenance_list/list.inc.php";
-      $module=="requestlist" ? ($active_requestlist="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_requestlist=""); #ไฮไลท์เมนูด้านซ้าย    
-    break;  
+      $module=="waitaccept" ? ($active_waitaccept="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_waitaccept=""); #ไฮไลท์เมนูด้านซ้าย    
+    break;
+
+    case 'handover':    
+      $title_site = "งานรอส่งมอบ"; $title_act = "งานรอส่งมอบ"; $breadcrumb_txt = "งานรอช่างรับงาน";
+      $include_module = "module/module_maintenance_list/list.inc.php";
+      $module=="handover" ? ($active_handover="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_handover=""); #ไฮไลท์เมนูด้านซ้าย    
+    break;
 
   case 'requestid': 
     if(!is_numeric($id) || $id==0){ //เคลียร์ค่า session
@@ -449,7 +455,7 @@ $obj = new CRUD();
               $numRow_accept = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NULL"); 
 
               ##$numRow_handover ===== จำนวนงานที่รอส่งมอบ
-              $numRow_handover = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_end IS NOT NULL");                           
+              $numRow_handover = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_end IS NOT NULL AND tb_maintenance_request.hand_over_date IS NULL");                           
 
               $sql_fetch_alljob = "SELECT tb_maintenance_request.*, tb_ref_repairer.* FROM tb_maintenance_request 
               LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
@@ -459,8 +465,8 @@ $obj = new CRUD();
           <?PHP
             if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){?>
           <li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light"><?PHP echo $numRow_waitapprove; ?></span></a></li>
-          <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-handshake"></i> <p>งานรอช่างรับงาน</p><span class="float-right badge bg-success"><?PHP echo $numRow_accept; ?></span></a></li>
-          <li class="nav-item"><a href="?module=handover" class="nav-link <?PHP echo $active_warehouse;?>"><i class="nav-icon fas fa-flag-checkered"></i> <p>งานรอส่งมอบ</p><span class="float-right badge bg-success"><?PHP echo $numRow_handover; ?></span></a></li>
+          <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_waitaccept;?>"><i class="nav-icon fas fa-handshake"></i> <p>งานรอช่างรับงาน</p><span class="float-right badge bg-light"><?PHP echo $numRow_accept; ?></span></a></li>
+          <li class="nav-item"><a href="?module=handover" class="nav-link <?PHP echo $active_handover;?>"><i class="nav-icon fas fa-flag-checkered"></i> <p>งานรอส่งมอบ</p><span class="float-right badge bg-success"><?PHP echo $numRow_handover; ?></span></a></li>
             <?PHP }?>
         <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning"><?PHP echo $total_alljob; ?></span></a></li>
         <?PHP }##11 ?>

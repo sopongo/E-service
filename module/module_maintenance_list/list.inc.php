@@ -1,3 +1,7 @@
+<!-- Ekko Lightbox -->
+<script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>  
+  <!-- Ekko Lightbox -->
+  <link rel="stylesheet" href="plugins/ekko-lightbox/ekko-lightbox.css">
 <?PHP
 //echo $module;
 /*echo "INSERT INTO `tb_site` (`id_dept`, `dept_initialname`, `dept_name`, `dept_status`) VALUES";
@@ -150,6 +154,13 @@ $(document).on('change','.JobID',function(){
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {
+
+  $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+      event.preventDefault();
+      $(this).ekkoLightbox({
+        alwaysShowClose: true
+      });
+  });  
 
   //var info = table.page.info();
   //$('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มแผนก</button></div>');

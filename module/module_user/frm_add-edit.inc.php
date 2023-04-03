@@ -49,13 +49,13 @@ no_user     password        email       fullname        class_user      ref_id_s
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname">รหัสพนักงาน:</label>
-                                    <input type="text" id="no_user" name="no_user" placeholder="รหัสพนักงาน" maxlength="7" class="form-control numbersOnly" aria-describedby="inputGroupPrepend" />
+                                    <input type="text" id="no_user" name="no_user" placeholder="รหัสพนักงาน" maxlength="7" class="form-control numbersOnly" aria-describedby="inputGroupPrepend" value="000000" />
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname">ชื่อ-นามสกุล:</label>  
-                                    <input type="text" id="fullname" name="fullname" placeholder="รหัสพนักงาน" class="form-control" aria-describedby="inputGroupPrepend" />
+                                    <input type="text" id="fullname" name="fullname" placeholder="รหัสพนักงาน" class="form-control" aria-describedby="inputGroupPrepend" value="user fullname" />
                                 </div>
                             </div>
                         </div><!--row-4 -->
@@ -213,11 +213,12 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
             },
             success: function (data) {
             console.log(data);
-            if(data=='mail_error'){
-                sweetAlert("ผิดพลาด!", "อีเมล์ "+($('#email').val())+" นี้มีผู้ใช้งานแล้ว ถูกใช้แล้ว", "error");
+            if(data=="mailerror"){
+                sweetAlert("ผิดพลาด!", "อีเมล์ "+($('#email').val())+" \r\nนี้ถูกใช้งานแล้ว", "error");
                 return false;
             }else{
                 sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
+                return false;
                 $('#example1').DataTable().ajax.reload();
                 $("#modal-default").modal("hide"); 
                 $(".modal-backdrop").hide().fadeOut();

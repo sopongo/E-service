@@ -14,8 +14,6 @@
     }
 
     /*echo $action; exit();*/
-
-
     if ($action=='adddata' && !empty($_POST)) {
         //id_user, no_user, password, email, line_token, fullname, sex, phone, photo, class_user, ref_id_site, ref_id_dept, ref_id_position, status_user, create_date, ref_id_user_add, edit_date, ref_id_user_edit, latest_login, ip_address
 
@@ -35,12 +33,14 @@
         $rowID = "";
         !empty($output['id_row']) ? ($rowID = $output["id_row"]) && ($query_id = " AND id_user!=".$output["id_row"]."") : ($query_id = "");               
         $output['email'] = trim($output['email']);
+
         $totalRow = $obj->getCount("SELECT count(id_user) AS total_row FROM tb_user WHERE email = '".(trim($output['email']))."' ".$query_id."");
         if($totalRow!=0){
-            echo 'mail_error';
+            echo str_replace("<br>", "", trim('mail_dup'));;
             exit();
         }       
-        
+
+    echo "passssssssssssssssssssssssssssssssss"; exit();
     if(empty($rowID)){
         #status_user=1&no_user=&fullname=&email=it%40jwdcoldchain.comxxx&password=1234&class_user=1&ref_id_site%5B%5D=7&ref_id_site%5B%5D=1&ref_id_site%5B%5D=3&slt_ref_id_dept=8&id_row=
         $output['password'] = sha1($keygen.$output['password']); //เก็บรหัสผ่านในรูปแบบ sha1 

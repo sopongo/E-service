@@ -79,15 +79,19 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
     if(count($rowMechanic)>0){
       //$chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user'));
       $rowMechanic_reject = $rowMechanic;
+      
+      //echo "<pre>";      print_r($rowMechanic);      echo "</pre>";
 
       $chk_key_responsibility = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user')); //ให้หา index
-      if($rowMechanic[$chk_key_responsibility]['status_repairer']==2){//ปฎิเสธซ่อม
+    
+      if($rowMechanic[$chk_key_responsibility]['ref_id_user_repairer']!=$_SESSION['sess_id_user']){//ปฎิเสธซ่อม
           $chk_responsibility = 0;
       }else{
           $chk_responsibility = 1;
       }
     }
   }
+
   /*
     $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user')); //หาแบบใช้คอลัมน์ id_user เป็นค่าที่ต้องการ
     $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', )); //หาแบบใช้ index key  [0] เป็นค่าที่ต้องการ
@@ -119,7 +123,6 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
   sort($rowMechanic_reject);
  }
 ?>
-
 <!-- Main content -->
 <section class="content">
 
@@ -268,10 +271,10 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']==NULL && $rowData['maintenance_request_status']==1){ ?>
                     <?PHP if(($chk_responsibility==1 && $rowData['status_approved']==1) || $_SESSION['sess_class_user']==5){ ##เช็คว่าคนที่เปิดดูหน้านี้ใช้ผู้รับผิดชอบหรือไม่ ?>
                       <a href="#" class="btn btn-success btn-block btn-accept_date">รับทราบ, รับงานซ่อม</a>
-                      <a href="#" data-toggle="modal" data-target="#modal-reject_request" id="addData" data-backdrop="static" data-keyboard="false" class="btn btn-danger btn-block btn-reject_request">ปฎิเสธรับงาน</a>
+                      <a href="#" data-toggle="modal" id="addData" data-backdrop="static" data-keyboard="false" class="btn btn-danger btn-block btn-reject_request">ปฎิเสธรับงาน</a>
                       <?PHP } ?>
                 <?PHP } ?>
-                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1){?>
+                <?PHP if($chk_responsibility==1 && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1 && $_SESSION['sess_class_user']==2){?>
                     <a href="#" class="btn btn-warning btn-block btn-start_repair">เริ่มซ่อม</a>
                 <?PHP } ?>
                 <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
@@ -1314,7 +1317,15 @@ $(document).on("click", ".btn-accept_date", function (event){
     event.stopPropagation();
 });
 
-$(document).on("click", ".btn-reject_request", function (e){ 
+$(document).on("click", ".btn-reject_request", function (e){   
+<?PHP
+    if(!empty($rowMechanic) &&count($rowMechanic)==1){
+?>
+    swal("ผิดพลาด!", "ต้องแจ้งหัวหน้าช่างก่อนเพื่อมอบหมายงาน\r\nให้ช่างท่านอื่นก่อน ถึงจะปฏิเสธงานซ่อมได้", "error");    
+    return false;    
+<?PHP
+  }
+?>  
   var frmData = $("form#needs-validation10").serialize();
   e.stopPropagation();
   $.ajax({
@@ -1325,6 +1336,7 @@ $(document).on("click", ".btn-reject_request", function (e){
       },
       success: function (data) {
           $(".modal-body-reject_request").html(data);
+          $("#modal-reject_request").modal("show");
           console.log(data);
       },
           error: function (jXHR, textStatus, errorThrown) {
