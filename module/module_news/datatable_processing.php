@@ -61,13 +61,9 @@ if (count($fetchRow)>0) {
         $dataRow = array();
         $dataRow[] = $No.'.';
         $dataRow[] = nowDate($fetchRow[$key]['datetime_post']);
-        $dataRow[] = '<a href="#" data-toggle="modal" data-target="#modal-news" id="addData" data-id="'.$fetchRow[$key]['id_news'].'" data-backdrop="static" data-keyboard="false">'.$fetchRow[$key]['news_title'].'</a>';
+        $dataRow[] = '<a href="#" data-toggle="modal" data-target="#modal-news" id="addData" data-id="'.$fetchRow[$key]['id_news'].'" data-backdrop="static" data-keyboard="false" class="view-news">'.$fetchRow[$key]['news_title'].'</a>';
         $dataRow[] = '<div class="check-status custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline"><input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['status_news']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_news'].'" id="customSwitch'.$fetchRow[$key]['id_news'].'"><label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_news'].'"></label></div>';
-        $dataRow[] = '<div class="btn-group dropdown"><button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">จัดการ</button>
-        <div class="dropdown-menu" style="margin-left:-4rem;">
-          <a class="dropdown-item edit-data" data-id="'.$fetchRow[$key]['id_news'].'" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fas fa-pencil-alt"></i> แก้ไขข้อมูล</a>
-          <a class="dropdown-item view-data" href="#" data-toggle="modal" data-target="#modal-approved" id="addData" data-id="'.$fetchRow[$key]['id_news'].'" data-backdrop="static" data-keyboard="false"><i class="fas fa-bell"></i> ดูข่าวประกาศ</a>          
-        </div></div>'.'';//.'SELECT * FROM tb_user '.$query_search.' ORDER BY '.$orderBY.' '.$_POST['order']['0']['dir'].' LIMIT '.$_POST['start'].', '.$length.''
+        $dataRow[] = '<button type="button" class="btn btn-success btn-sm view-news" data-id="'.$fetchRow[$key]['id_news'].'" data-toggle="modal" data-target="#modal-news" id="viewData" data-backdrop="static" data-keyboard="false" title="ดูข้อมูล"><i class="fa fa-file-alt"></i></button> <button type="button" class="btn btn-warning btn-sm edit-data" data-id="'.$fetchRow[$key]['id_news'].'" data-toggle="modal" data-target="#modal-default" id="edit-data" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button>';
         $arrData[] = $dataRow;
         $No--;
     }

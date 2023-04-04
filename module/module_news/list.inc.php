@@ -4,7 +4,7 @@ for($i=14;$i<=500;$i++){
     echo "<br/>(NULL, 'test-".$i."', 'test-".$i."', ".(rand(1, 2))."),";
 }
 */
-include_once 'module/module_news/view.inc.php'; #ดูข่าว?>
+?>
 
 <!-- DataTables -->
 <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -43,6 +43,7 @@ include_once 'module/module_news/view.inc.php'; #ดูข่าว?>
     </div>
 
     <?php
+      include_once 'module/module_news/view.inc.php'; #ดูข่าว
       include_once 'module/module_news/frm_add-edit.inc.php'; //หน้า add/edit
     ?>
 
@@ -58,7 +59,7 @@ include_once 'module/module_news/view.inc.php'; #ดูข่าว?>
         <th class="sorting_disabled">No</th>
         <th width="15%">วันที่ประกาศ</th>
         <th width="60%">หัวข้อข่าว</th>
-        <th>สถานะ</th>
+        <th>แสดงผล</th>
         <th>จัดการ</th>
       </tr>
       </thead>
@@ -136,9 +137,33 @@ $(document).ready(function () {
 
 
   $(document).on('click','#addData',function(){   
-    $('#exampleModalLabel span').html("เพิ่มข่าวประกาศ");
+    //$('#exampleModalLabel span').html("เพิ่มข่าวประกาศ");
   });
 
+  
+  $(document).on('click','.view-news',function(){   
+    var id_row = $(this).data("id");
+    //alert(id_row);
+    $.ajax({
+      type: 'POST',
+      url: "module/module_news/ajax_action.php",
+      dataType: "json",
+      data:{action:"view_news", id_row:id_row},
+      success: function (data) {
+        console.log(data);
+        if(data){
+          $('.title_news').html(data.news_title);
+          $('.modal-body-news').html('<div class="w-100 m-auto pl-5 pr-5 pt-5 pb-5">'+data.news_detail+'</div>');
+          $('.ref_id_user_post').html(data.fullname);          
+        }else{
+          swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
+        }
+      },
+      error: function (data) {
+        swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ.", "error");
+      }
+    });
+  });
   
   $(document).on('click','.edit-data',function(){   
     $('#exampleModalLabel span').html("แก้ไขข่าวประกาศ");
@@ -174,7 +199,5 @@ $(document).ready(function () {
 
 
 });
-  
-
-    /*module/module_site/datatable_processing.php*/
+/*module/module_site/datatable_processing.php*/
 </script>

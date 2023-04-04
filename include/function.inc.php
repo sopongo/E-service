@@ -74,7 +74,6 @@ function removespecialchars($raw){
      return preg_replace('#[^a-zA-Z0-9-]#u', '', $raw);
 }
 
-
 ##เช็คนามสกุลไฟล์
 function file_extension($fileName){ return strtolower(substr(strrchr($fileName,'.'),1)); }
 

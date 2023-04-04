@@ -1,4 +1,29 @@
-    <!-- Main content -->
+<style>
+.dataTables_length, .form-control-sm{  font-size:0.85rem; /* 40px/16=2.5em */
+}
+.table, .dataTable tr td{  padding:0.35rem 0.50rem;  margin:0;}
+
+.btn-sm{ padding:0.10rem 0.40rem 0.20rem 0.40rem; margin:0.0rem 0.0rem;}
+
+.dt-buttons button{font-size:0.85rem; /* 40px/16=2.5em */}
+
+.dropdown-menu{  /*left:-70px;*/}
+.dropdown-menu a.dropdown-item{  font-size:0.85rem; /* 40px/16=2.5em */ }
+
+div.dataTables_wrapper {
+        width:100%;
+        /*background-color:#FCC;*/
+        margin:0 auto;
+    }
+
+.dataTables_scrollBody{ margin-bottom:5px;}
+</style>
+<!-- Ekko Lightbox -->
+<script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>  
+  <!-- Ekko Lightbox -->
+  <link rel="stylesheet" href="plugins/ekko-lightbox/ekko-lightbox.css">
+
+<!-- Main content -->
     <section class="content">
 
       <!-- Default box -->
@@ -77,9 +102,10 @@
           <!-- ./col -->
           </div>
 
-<h3 class="card-title mb-2 mt-4 text-bold"><i class="fas fa-bell"></i> ข่าวประกาศ</h3>
-<div class="w-100 d-inline-block overflow-auto">
-<div class="card-body table-responsive p-0">
+              <h3 class="card-title mb-2 mt-4 text-bold"><i class="fas fa-bell"></i> ข่าวประกาศ</h3>
+              <?PHP include_once 'module/module_news/view.inc.php'; #ดูข่าว ?>
+              <div class="w-100 d-inline-block overflow-auto">
+              <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
@@ -89,22 +115,27 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td><i class="fas fa-caret-right"></i> 2023/03/31</td>
-                      <td width="80%">Topic News</td>
-                      <td><span class="tag tag-success">Admin PCS</span></td>
-                    </tr>
-                    <tr>
-                      <td><i class="fas fa-caret-right"></i> 2023/03/29</td>
-                      <td>Topic News</td>
-                      <td><span class="tag tag-warning">หัวหน้าช่าง MT</span></td>
-                    </tr>
+                    <?PHP
+                        $rowNews = $obj->fetchRows("SELECT tb_news.*, tb_user.fullname FROM tb_news 
+                        LEFT JOIN tb_user ON (tb_user.id_user=tb_news.ref_id_user_post) WHERE tb_news.ref_id_site=".$_SESSION['sess_ref_id_site']." ORDER BY tb_news.datetime_post DESC LIMIT 5;");
+                        if (count($rowNews)!=0) {
+                            foreach($rowNews as $key => $value) {
+                                echo '<tr>
+                                <td><i class="fas fa-caret-right"></i> '.nowDate($rowNews[$key]['datetime_post']).'</td>
+                                <td width="75%"><a href="#" data-toggle="modal" data-target="#modal-news" id="addData" data-id="'.$rowNews[$key]['id_news'].'" data-backdrop="static" data-keyboard="false" class="view-news">'.$rowNews[$key]['news_title'].'</a></td>
+                                <td><span class="tag tag-success">'.$rowNews[$key]['fullname'].'</span></td>
+                              </tr>';
+                            }
+                        } else {
+                          echo '<tr><td width="100%" colspan="3" align="center" class="text-bold text-md text-gray">ยังไม่มีข่าวประกาศ</td></tr>';
+                        }
+                    ?>
                   </tbody>
                 </table>
+                  </div>
               </div>
-</div>
 
-<h3 class="card-title mb-2 mt-5 text-bold"><i class="fas fa-file-invoice"></i> ติดตาม-ประเมิณ (10 ใบแจ้งซ่อมล่าสุด)</h3>
+<h3 class="card-title mb-2 mt-5 text-bold"><i class="fas fa-file-invoice"></i> ติดตาม-ประเมิณ (5 ใบแจ้งซ่อมล่าสุด)</h3>
 <div class="w-100 d-inline-block overflow-auto">
 <table class="table table-hover table-bordered dataTable text-nowrap">
                   <thead>
@@ -125,8 +156,54 @@
                       <th scope="col">เกี่ยวกับความปลอดภัย</th>
                     </tr>
                   </thead>
-                  <!--<tr class="odd"><td class="sorting_1">14.</td><td><a class="btn btn-success btn-sm" href="?module=requestid&amp;id=14" id="viewData" title="ดูข้อมูล" target="_blank"><i class="fa fa-file-alt"></i></a> </td><td>PCS-FM-MT-2303-0014--module--&gt;requestlist</td><td>31/03/2023</td><td>รออนุมัติ/จ่ายงาน</td><td>PCS.IT.M.Building.W</td><td>งานสร้างฝ่ายไอที</td><td>Building (อาคาร, ตึก)</td><td>เพิ่มจุดต่อปลั๊กไฟ ลานจอดรถ อ.8 เพื่อติดตั้งกล้องว</td><td><a class="text-info"><i class="fas fa-images"></i> คลิกดูภาพ</a></td><td>MT</td><td>แจ้งช่างซ่อม</td><td><i class="fas fa-times text-danger"></i></td></tr>-->
                   <tbody>
+                  <?PHP
+                        $sqlGrouprow = $obj->fetchRows("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY','')); ");
+                        $fetchRow = $obj->fetchRows("SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
+                        tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine, tb_attachment.path_attachment_name FROM tb_maintenance_request 
+                        LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
+                        LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+                        LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu) 
+                        LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) 
+                        LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_maintenance_request.id_maintenance_request AND tb_attachment.attachment_type=1 AND tb_attachment.image_cate=2) WHERE tb_maintenance_request.ref_id_dept_request=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." GROUP BY tb_maintenance_request.id_maintenance_request ORDER BY tb_maintenance_request.mt_request_date DESC LIMIT 5 ");
+                        if (count($fetchRow)>0) {
+                          $No = 1;
+                          foreach($fetchRow as $key=>$value){
+                            if($fetchRow[$key]['status_approved']==NULL && $fetchRow[$key]['allotted_date']==NULL && $fetchRow[$key]['maintenance_request_status']==1 && $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['hand_over_date']==NULL){
+                              $req_textstatus= '<span class="text-bold text-danger">รออนุมัติ/จ่ายงาน</span>';
+                          }else if($fetchRow[$key]['status_approved']==1 && $fetchRow[$key]['allotted_date']!='' && $fetchRow[$key]['maintenance_request_status']==1 && $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['hand_over_date']==NULL){
+                              $req_textstatus= '<span class="text-bold text-danger">รอช่างรับงานซ่อม</span>';
+                          }else if($fetchRow[$key]['status_approved']==1 && $fetchRow[$key]['allotted_date']!='' && $fetchRow[$key]['maintenance_request_status']==1 && $fetchRow[$key]['duration_serv_end']!=NULL && $fetchRow[$key]['hand_over_date']!=NULL){
+                              $req_textstatus= '<span class="text-bold text-success"> งานรอส่งมอบ</span>';
+                          }else if($fetchRow[$key]['maintenance_request_status']==2){            
+                              $req_textstatus= '<span class="text-bold text-gray">ยกเลิกใบแจ้งซ่อม</span>';
+                          }else{
+                              $req_textstatus = '-';
+                          }                            
+                  ?>
+                    <tr>
+                      <td><?PHP echo $No; ?>.</td>
+                      <td><?PHP echo '<a class="btn btn-success btn-sm" href="?module=requestid&id='.$fetchRow[$key]['id_maintenance_request'].'" id="viewData"  title="ดูข้อมูล" target="_blank"><i class="fa fa-file-alt"></i></a>';?></td>
+                      <td><?PHP echo $fetchRow[$key]['maintenance_request_no']=='' ? '-' : $fetchRow[$key]['maintenance_request_no']; ?></td>
+                      <td><?PHP echo $fetchRow[$key]['mt_request_date']=='' ? '-' : shortDateEN($fetchRow[$key]['mt_request_date']);?></td>
+                      <td><?PHP echo $req_textstatus;?></td>
+                      <td><?PHP echo $fetchRow[$key]['code_machine_site']=='' ? '-' : $fetchRow[$key]['code_machine_site'];?></td>
+                      <td><?PHP echo !empty($fetchRow[$key]['name_machine'])=='' ? 'ไม่ทราบชื่อ, ไม่ระบุ' : $fetchRow[$key]['name_machine'];?></td>
+                      <td><?PHP echo $fetchRow[$key]['name_menu']=='' ? '-' : $fetchRow[$key]['name_menu'];?></td>
+                      <td><?PHP echo $fetchRow[$key]['problem_statement']=='' ? '-' : mb_substr($fetchRow[$key]['problem_statement'],0,50,"utf8");?></td>
+                      <td><?PHP echo !empty($fetchRow[$key]['path_attachment_name']) ? '<a href="'.$pathReq.$fetchRow[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="ใบแจ้งซ่อมเลขที่: '.$fetchRow[$key]['maintenance_request_no'].'" data-gallery="gallery" class="link-danger"><i class="fas fa-images"></i> คลิกดูภาพ</a>' : '-';?></td>
+                      <td><?PHP echo $fetchRow[$key]['dept_responsibility']=='' ? '-' : $fetchRow[$key]['dept_responsibility'];?></td>
+                      <td><?PHP echo $fetchRow[$key]['ref_id_job_type']=='' ? '-' : $ref_id_job_typeArr[$fetchRow[$key]['ref_id_job_type']];?></td>
+                      <td><?PHP echo $fetchRow[$key]['related_to_safty']==1 ? '<i class="fas fa-times text-danger"></i>' : '<i class="fas fa-check text-success"></i>';?></td>
+                    </tr>
+                  <?PHP
+                              $No++;
+                          }
+                        }else{
+                          echo '<tr><td width="100%" colspan="13" align="center" class="text-bold text-md text-gray pt-5 pb-5">ยังไม่มีใบแจ้งซ่อม</td></tr>';
+                        }
+                        
+                  ?>
                   </tbody>
                 </table>
 </div>
@@ -140,3 +217,40 @@
 
     </section>
     <!-- /.content -->
+
+
+
+<script type="text/javascript">  
+
+$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+      event.preventDefault();
+      $(this).ekkoLightbox({
+        alwaysShowClose: true
+      });
+});  
+
+
+$(document).on('click','.view-news',function(){   
+    var id_row = $(this).data("id");
+    //alert(id_row);
+    $.ajax({
+      type: 'POST',
+      url: "module/module_news/ajax_action.php",
+      dataType: "json",
+      data:{action:"view_news", id_row:id_row},
+      success: function (data) {
+        console.log(data);
+        if(data){
+          $('.title_news').html(data.news_title);
+          $('.modal-body-news').html('<div class="w-100 m-auto pl-5 pr-5 pt-5 pb-5">'+data.news_detail+'</div>');
+          $('.ref_id_user_post').html(data.fullname);          
+        }else{
+          swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ", "error");
+        }
+      },
+      error: function (data) {
+        swal("ผิดพลาด!", "ไม่พบข้อมูลที่ระบุ.", "error");
+      }
+    });
+  });
+</script> 

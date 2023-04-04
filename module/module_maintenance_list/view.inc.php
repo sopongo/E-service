@@ -56,6 +56,8 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 
 <?PHP 
+
+  $chk_responsibility = 0;
   if($rowData['status_approved']==1 && $rowData['maintenance_request_status']!=2){
     include_once 'module/module_maintenance_list/frm_change_approved.inc.php'; #หน้าเปลี่ยน-เพิ่มช่างซ่อม
   }else{
@@ -83,8 +85,10 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
       //echo "<pre>";      print_r($rowMechanic);      echo "</pre>";
 
       $chk_key_responsibility = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user')); //ให้หา index
-    
-      if($rowMechanic[$chk_key_responsibility]['ref_id_user_repairer']!=$_SESSION['sess_id_user']){//ปฎิเสธซ่อม
+    //echo $rowMechanic[$chk_key_responsibility]['ref_id_user_repairer'];
+    //echo "<hr />";
+    //echo $rowMechanic[$chk_key_responsibility]['status_repairer'];
+      if($rowMechanic[$chk_key_responsibility]['ref_id_user_repairer']!=$_SESSION['sess_id_user'] || $rowMechanic[$chk_key_responsibility]['status_repairer']==2){//ปฎิเสธซ่อม
           $chk_responsibility = 0;
       }else{
           $chk_responsibility = 1;
@@ -180,7 +184,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                 <div class="text-center">
                   <img class="profile-user-img img-fluid img-circle" src="dist/img/mt_request/icon_view.png" alt="User profile picture">
                 </div>
-                <h3 class="profile-username text-center">สถานะการซ่อม: ???</h3>
+                <h3 class="profile-username text-center">สถานะการซ่อม</h3>
                 <p class="text-muted text-center">วันที่อัพเดท: 00/00/0000</p>
 
                 <ul class="list-group list-group-unbordered mb-1">
@@ -194,7 +198,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                     <b>ความเร่งด่วน</b> <span class="float-right"> <?PHP echo $rowData['urgent_type']==1 ? '<i class="fas fa-lightbulb fa-1x"></i> '.$urgentArr[$rowData['urgent_type']] : '<span class="text-green">'.$urgentArr[$rowData['urgent_type']].'</span>';?></span>
                   </li>
                   <li class="list-group-item">
-                    <b>ประเภทใบแจ้งซ่อม</b> <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL){?><button type="button" class="btn btn-default btn-sm float-right btn-update-type ml-2" data-toggle="modal" data-target="#modal-maintenance_type" id="btn_maintenance_type" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button> <?PHP } ?>
+                    <b>ประเภทใบแจ้งซ่อม</b> <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL && $chk_responsibility==1){?><button type="button" class="btn btn-default btn-sm float-right btn-update-type ml-2" data-toggle="modal" data-target="#modal-maintenance_type" id="btn_maintenance_type" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button> <?PHP } ?>
                       <span class="d-block pt-2 pl-3 span_mt_type"><?PHP echo $rowData['name_mt_type']!='' ? '- '.$rowData['name_mt_type'] : '- ยังไม่ระบุ';?>	</span>
                   </li>
                   <li class="list-group-item bg-hover">
@@ -277,14 +281,14 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                 <?PHP if($chk_responsibility==1 && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1 && $_SESSION['sess_class_user']==2){?>
                     <a href="#" class="btn btn-warning btn-block btn-start_repair">เริ่มซ่อม</a>
                 <?PHP } ?>
-                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
+                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
                     <a href="#" class="btn btn-warning btn-block btn-serv_end">ปิดงาน</a>
                 <?PHP } ?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL  && $rowData['hand_over_date']==NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){?>
                     <a href="#" class="btn btn-success btn-block btn-hand_over">ส่งมอบงาน</a>
                     <a href="#" class="btn btn-warning btn-block btn-reject_hand_over">ยกเลิกการส่งมอบงาน</a>
                 <?PHP } ?>
-                <?PHP if((($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user']))  && $rowData['hand_over_date']==NULL && $rowData['maintenance_request_status']==1){?>
+                <?PHP if(($_SESSION['sess_class_user']==1 && $rowData['ref_id_dept_request']==$_SESSION['sess_id_dept']) || (($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user']))  && $rowData['hand_over_date']==NULL && $rowData['maintenance_request_status']==1){?>
                 <button type="button" class="btn btn-danger btn-block btn-cancel" data-toggle="modal" data-target="#modal-cancel" id="addData" data-backdrop="static" data-keyboard="false"> ยกเลิกใบแจ้งซ่อม</button>
                 <?PHP } ?>
               </div>
@@ -349,7 +353,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                 <!-- /.col -->
               </div>
               
-              <div class="card-title d-block text-bold w-100 border-bottom pb-1 mt-3 mb-2"><i class="fas fa-users-cog"></i> ผู้รับผิดชอบงานซ่อม: <?PHP if($rowData['status_approved']==1 && $rowData['maintenance_request_status']!=2 && $rowData['hand_over_date']==NULL && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){?><button type="button" class="btn btn-default btn-sm btn-change-approved" data-toggle="modal" data-target="#modal-change-approved" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> เปลี่ยน-เพิ่ม ผู้รับผิดชอบ</button><?PHP } ?></div><br>
+              <div class="card-title d-block text-bold w-100 border-bottom pb-1 mt-3 mb-2"><i class="fas fa-users-cog"></i> ผู้รับผิดชอบงานซ่อม: <?PHP if($rowData['status_approved']==1 && $rowData['maintenance_request_status']!=2 && $rowData['hand_over_date']==NULL && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && ($_SESSION['sess_id_dept']==$rowData['ref_id_dept_responsibility'])){?><button type="button" class="btn btn-default btn-sm btn-change-approved" data-toggle="modal" data-target="#modal-change-approved" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> เปลี่ยน-เพิ่ม ผู้รับผิดชอบ</button><?PHP } ?></div><br>
               <div class="row invoice-info linehi-170">
                 <?PHP if($rowData['status_approved']!=1){?>
                         <div class="m-auto d-block pt-3 pb-3 text-center text-gray">ยังไม่กำหนดผู้รับผิดชอบ</div>
@@ -402,7 +406,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
 
                 <div class="col-sm-12 mt-3 ">
                 <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2 text-red"><i class="fas fa-info-circle"></i> อาการเสีย/ปัญหาที่พบ: 
-                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user'])) && $rowData['maintenance_request_status']!=2 && $rowData['hand_over_date']==NULL){ ?>
+                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || ($chk_responsibility==1)) && $rowData['maintenance_request_status']!=2 && $rowData['hand_over_date']==NULL && ($_SESSION['sess_id_dept']==$rowData['ref_id_dept_responsibility'])){ ?>
                 <button type="button" class="btn btn-default btn-sm btn-problem_statement"  data-toggle="modal" data-target="#modal-problem_statement" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>
                     <p class="problem_statement"><?PHP echo $rowData['problem_statement'];?></p>
                 </div><!-- /.col -->                
@@ -430,7 +434,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
               </div><!-- /.row -->
               
               <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-clipboard-check"></i> สรุปผลการซ่อม: 
-              <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL){ ?><button type="button" class="btn btn-default btn-sm btn-repair_results" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
+              <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL && $chk_responsibility==1) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL && ($_SESSION['sess_id_dept']==$rowData['ref_id_dept_responsibility'])){ ?><button type="button" class="btn btn-default btn-sm btn-repair_results" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">รหัสอาการเสีย:</strong> <?PHP echo $rowData['failure_code_th_name']=='' ? ($rowData['ref_id_failure_code']=='' ? '-' : $rowData['ref_id_failure_code']) : $rowData['failure_code_th_name'];?><br>
@@ -442,7 +446,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                 </div><!-- /.col -->
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL){ ?><button type="button" class="btn btn-default btn-sm btn-update_outsite" data-toggle="modal" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-truck"></i> ส่งซ่อมภายนอก: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL && $chk_responsibility==1) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL && ($_SESSION['sess_id_dept']==$rowData['ref_id_dept_responsibility'])){ ?><button type="button" class="btn btn-default btn-sm btn-update_outsite" data-toggle="modal" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>  
               <div class="row invoice-info linehi-170">
                 <div class="col-sm-6 invoice-col">
                     <strong class="d-inline-block w-25">สาเหตุที่ส่งซ่อม:</strong> <?PHP echo $rowData['caused_outsite_repair']=='' ? '-' : $rowData['caused_outsite_repair'];?><br>
@@ -454,7 +458,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                 </div><!-- /.col -->                
               </div><!-- /.row -->
 
-              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL){ ?><button type="button" class="btn btn-default btn-sm btn-change_parts" data-toggle="modal" data-id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
+              <br>  <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-tools"></i> รายการอะไหล่ที่เปลี่ยน: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL && $chk_responsibility==1) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL && ($_SESSION['sess_id_dept']==$rowData['ref_id_dept_responsibility'])){ ?><button type="button" class="btn btn-default btn-sm btn-change_parts" data-toggle="modal" data-id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
                 <!-- Table row -->
                 <div class="row">
                 <div class="col-12 table-responsive">
@@ -515,7 +519,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
               <?PHP
                   $rowImg_af= $obj->fetchRows("SELECT * FROM tb_attachment WHERE ref_id_used=".$rowData['id_maintenance_request']." AND attachment_type=1 AND image_cate=3");
               ?>
-              <br><div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL){ ?><button type="button" class="btn btn-default btn-sm btn-img_after"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
+              <br><div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-camera"></i> ภาพถ่ายหลังซ่อม: <?PHP if(($_SESSION['sess_class_user']==2 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL && $chk_responsibility==1) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['hand_over_date']==NULL && ($_SESSION['sess_id_dept']==$rowData['ref_id_dept_responsibility'])){ ?><button type="button" class="btn btn-default btn-sm btn-img_after"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP }?></div><br>  
               <div class="row divimg_after_null">
                   <?PHP
                   if (count($rowImg_af)>0) {

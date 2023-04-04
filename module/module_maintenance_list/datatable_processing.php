@@ -169,7 +169,7 @@ switch($_SESSION['sess_class_user']){
         
     if($module=='waitaccept'){## -----OK แล้ว------ หัวหน้าช่างเรียกดูใบแจ้งซ่อมที่ ช่าง(ลูกน้อง)ยังไม่กดรับงาน 
         $sql_fetchRow = "SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
-        tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine, tb_attachment.path_attachment_name, tb_attachment.path_attachment_name 
+        tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine, tb_attachment.path_attachment_name
         FROM tb_maintenance_request 
         LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
         LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
@@ -190,7 +190,7 @@ switch($_SESSION['sess_class_user']){
 
     if($module=='handover'){## งานที่ช่างซ่อมเสร็จแล้ว กดปิดงานแล้ว > รอส่งมอบผู้แจ้งซ่อม
         $sql_fetchRow = "SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
-        tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine, tb_attachment.path_attachment_name, tb_attachment.path_attachment_name 
+        tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine, tb_attachment.path_attachment_name
         FROM tb_maintenance_request 
         LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
         LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
@@ -263,8 +263,8 @@ if (count($fetchRow)>0) {
         $dataRow = array();
         $dataRow[] = $No.'.';
         //$dataRow[] = $No.'.'.(count($fetchRow)).'---'.$search.'--------'.$query_class.'-------------'.$query_search.$fetchRow[$key]['dept_request'];
-        $dataRow[] = '<a class="btn btn-success btn-sm" href="?module=requestid&id='.$fetchRow[$key]['id_maintenance_request'].'" id="viewData"  title="ดูข้อมูล" target="_blank"><i class="fa fa-file-alt"></i></a> ';
-        $dataRow[] = ($fetchRow[$key]['maintenance_request_no']=='' ? '-' : $fetchRow[$key]['maintenance_request_no']).'--module-->'.$module; //.'----'.$slt_search.'-------'.$keyword
+        $dataRow[] = '<a class="btn btn-success btn-sm" href="?module=requestid&id='.$fetchRow[$key]['id_maintenance_request'].'" id="viewData"  title="ดูข้อมูล" target="_blank"><i class="fa fa-file-alt"></i></a>';
+        $dataRow[] = ($fetchRow[$key]['maintenance_request_no']=='' ? '-' : $fetchRow[$key]['maintenance_request_no']); //.'----'.$slt_search.'-------'.$keyword
         $dataRow[] = ($fetchRow[$key]['mt_request_date']=='' ? '-' : shortDateEN($fetchRow[$key]['mt_request_date']));
         $dataRow[] = $req_textstatus;
         $dataRow[] = ($fetchRow[$key]['code_machine_site']=='' ? '-' : $fetchRow[$key]['code_machine_site']);
@@ -272,9 +272,7 @@ if (count($fetchRow)>0) {
         $dataRow[] = ($fetchRow[$key]['name_menu']=='' ? '-' : $fetchRow[$key]['name_menu']);
         //$dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : $fetchRow[$key]['problem_statement']);
         $dataRow[] = ($fetchRow[$key]['problem_statement']=='' ? '-' : mb_substr($fetchRow[$key]['problem_statement'],0,50,"utf8"));
-
         $dataRow[] = (!empty($fetchRow[$key]['path_attachment_name']) ? '<a href="'.$pathReq.$fetchRow[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="ใบแจ้งซ่อมเลขที่: '.$fetchRow[$key]['maintenance_request_no'].'" data-gallery="gallery" class="link-danger"><i class="fas fa-images"></i> คลิกดูภาพ</a>' : '-');
-
         $dataRow[] = ($fetchRow[$key]['dept_responsibility']=='' ? '-' : $fetchRow[$key]['dept_responsibility']);        
         $dataRow[] = ($fetchRow[$key]['ref_id_job_type']=='' ? '-' : $ref_id_job_typeArr[$fetchRow[$key]['ref_id_job_type']]);
         $dataRow[] = ($fetchRow[$key]['related_to_safty']==1 ? '<i class="fas fa-times text-danger"></i>' : '<i class="fas fa-check text-success"></i>');

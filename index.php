@@ -34,6 +34,13 @@ isset($_REQUEST['id']) ? $id = intval($_REQUEST['id']) : $id = '';
 
 switch($module){  
 
+  
+  case 'howto':
+    $title_site = "คู่มือการใช้งาน"; $title_act = "คู่มือการใช้งาน"; $breadcrumb_txt = "คู่มือการใช้งาน";
+    $include_module = "module/module_howto/howto.inc.php";
+    $module=="howto" ? ($active_howto="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_howto=""); #ไฮไลท์เมนูด้านซ้าย    
+  break;
+
   case 'newslist':
     $title_site = "ข่าวประกาศทั้งหมด"; $title_act = "ข่าวประกาศทั้งหมด"; $breadcrumb_txt = "ข่าวประกาศทั้งหมด";
     $include_module = "module/module_news/list.inc.php";
@@ -407,8 +414,7 @@ $obj = new CRUD();
         
   </nav>
   <!-- /.navbar -->
-  
-  <?PHP include('howto.inc.php'); ?>
+
 
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#00387c;">
@@ -518,10 +524,6 @@ $obj = new CRUD();
     <?PHP
     //echo "<pre>".print_r($_SESSION)."</pre>";
     include($include_module);
-    ?>
-
-    <?PHP
-    
     ?>
     <!-- Main content -->
 

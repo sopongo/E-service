@@ -137,14 +137,14 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
                     </select>
                 </div>
 
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label for="email">User Test:</label>
                         <p>usertest1@pcs-plp.com <span class="float-right"> User</span></p>
                         <p>usertest2@pcs-plp.com <span class="float-right">User</span></p>
                         <p>usertest3@pcs-plp.com <span class="float-right">User</span></p>                 
                         <p>enuser1@pcs-plp.com <span class="float-right"> หัวหน้า MT</span></p>
                         <p>enuser2@pcs-plp.com <span class="float-right"> ช่าง MT-1</span></p>
-                </div>
+                </div>-->
                 
 
 								<!--<div class="form-group">

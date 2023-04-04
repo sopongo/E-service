@@ -155,14 +155,23 @@ $(document).ready(function () {
       type: 'POST',
       url: "module/module_user/ajax_action.php",
       dataType: "json",
-      data:{action:"edit", id_row:id_row},
+      data:{action:"edit_user", id_row:id_row},
+      beforeSend: function () {
+      },      
       success: function (data) {
         console.log(data);
-        if(data){//id_unit, unit_name, status_unit
-          $('#unit_name').val(data.unit_name);
-          $('#id_row').val(data.id_unit);
-          $('#exampleModalLabel span').html("แก้ไขผู้ใช้งาน: "+data.unit_name);
-          if(data.status_unit==1){
+        if(data){
+          $('#exampleModalLabel span').html("แก้ไขผู้ใช้งาน: "+data.email);
+          $('#id_row').val(data.id_user);
+          $('#no_user').val(data.no_user);
+          $('#fullname').val(data.fullname);
+          $('#email').val(data.email);
+          $("#class_user_"+data.class_user).attr("checked", "checked");
+          $("#ref_id_site"+data.ref_id_site).attr("checked", "checked");
+          $("#slt_ref_id_dept"+data.ref_id_site).attr("selected", "selected");          
+          $("#slt_ref_id_dept option[value='"+data.ref_id_dept+"']").attr("selected", "selected");
+         
+          if(data.status_user==1){
             $('#status_use').prop('checked',true);
             $('#status_hold').prop('checked',false);
           }else{

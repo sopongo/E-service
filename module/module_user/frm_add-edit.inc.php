@@ -49,13 +49,13 @@ no_user     password        email       fullname        class_user      ref_id_s
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname">รหัสพนักงาน:</label>
-                                    <input type="text" id="no_user" name="no_user" placeholder="รหัสพนักงาน" maxlength="7" class="form-control numbersOnly" aria-describedby="inputGroupPrepend" value="000000" />
+                                    <input type="text" id="no_user" name="no_user" placeholder="รหัสพนักงาน" maxlength="7" class="form-control numbersOnly" aria-describedby="inputGroupPrepend" />
                                 </div>
                             </div>
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname">ชื่อ-นามสกุล:</label>  
-                                    <input type="text" id="fullname" name="fullname" placeholder="รหัสพนักงาน" class="form-control" aria-describedby="inputGroupPrepend" value="user fullname" />
+                                    <input type="text" id="fullname" name="fullname" placeholder="รหัสพนักงาน" class="form-control" aria-describedby="inputGroupPrepend" />
                                 </div>
                             </div>
                         </div><!--row-4 -->
@@ -64,7 +64,7 @@ no_user     password        email       fullname        class_user      ref_id_s
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname">อีเมล์:<span class="text-danger">**</span></label>  
-                                    <input type="text" id="email" name="email" placeholder="รหัสพนักงาน" class="form-control" aria-describedby="inputGroupPrepend" required />
+                                    <input type="text" id="email" name="email" placeholder="รหัสพนักงาน" class="form-control" aria-describedby="inputGroupPrepend" value="" autocomplete="off" required />
                                     <div class="invalid-feedback">กรอกอีเมล์</div>
                                 </div>
                             </div>
@@ -85,7 +85,7 @@ no_user     password        email       fullname        class_user      ref_id_s
                                         <?PHP
                                             foreach($classArr as $index=> $value){
                                                 if($index!=0){
-                                                    echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
+                                                    echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" '.($index==4 || $index==5 && $_SESSION['sess_class_user']!=5 ? 'disabled' : '').' name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
                                                 }
                                             }
                                             //$value==end($classArr) ? '<div class="invalid-feedback">เลือกระดับผู้ใช้งาน</div>
@@ -105,7 +105,7 @@ no_user     password        email       fullname        class_user      ref_id_s
                                             $rowSite= $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY site_initialname DESC");                 
                                             if (count($rowSite)>0){
                                                 foreach($rowSite as $key => $value) {
-                                                    echo '<div class="icheck-primary d-inline-block mr-4"><input type="checkbox" name="ref_id_site[]" id="ref_id_site'.$key.'" value="'.$rowSite[$key]['id_site'].'" required><label for="ref_id_site'.$key.'">'.$rowSite[$key]['site_initialname'].'</label></div>';
+                                                    echo '<div class="icheck-primary d-inline-block mr-4"><input type="checkbox" name="ref_id_site[]" id="ref_id_site'.$key.'" value="'.$rowSite[$key]['id_site'].'" '.($key!=$_SESSION['sess_ref_id_site'] && $_SESSION['sess_class_user']!=5 ? 'disabled' : '').''.($key==$_SESSION['sess_ref_id_site'] ? 'checked' : '').' required><label for="ref_id_site'.$key.'">'.$rowSite[$key]['site_initialname'].'</label></div>';
                                                 }
                                             }
                                         ?>
@@ -184,8 +184,7 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
     if($("input:radio[name^=status_user]").filter(':checked').length<1){
         sweetAlert("ผิดพลาด!", "เลือกสถานะการใช้งาน", "error");
         return false;
-    }else if($('#password').val()==''){
-        /*no_user     password        email       fullname        class_user      ref_id_site     ref_id_dept     ref_id_position     status_user*/
+    }else if($('#password').val()=='' && $('#id_row').val()!=''){
         sweetAlert("ผิดพลาด!", "กรอกรหัสผ่าน", "error");
         return false;
     }else if($('#email').val()==''){
@@ -210,15 +209,17 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
             type: "POST",
             data:{"data":frmData, "action":"adddata"},
             beforeSend: function () {
+                //console.log('mail_dup');
             },
             success: function (data) {
             console.log(data);
-            if(data=="mailerror"){
+            data = $.trim(data.replace(/\s+/g," "));
+            //console.log(data==='mail_dup'); 
+            if(data=='mail_dup'){
                 sweetAlert("ผิดพลาด!", "อีเมล์ "+($('#email').val())+" \r\nนี้ถูกใช้งานแล้ว", "error");
                 return false;
             }else{
                 sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
-                return false;
                 $('#example1').DataTable().ajax.reload();
                 $("#modal-default").modal("hide"); 
                 $(".modal-backdrop").hide().fadeOut();

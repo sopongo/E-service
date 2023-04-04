@@ -36,19 +36,19 @@
 
         $totalRow = $obj->getCount("SELECT count(id_user) AS total_row FROM tb_user WHERE email = '".(trim($output['email']))."' ".$query_id."");
         if($totalRow!=0){
-            echo str_replace("<br>", "", trim('mail_dup'));;
+            echo 'mail_dup';
             exit();
         }       
 
-    echo "passssssssssssssssssssssssssssssssss"; exit();
-    if(empty($rowID)){
-        #status_user=1&no_user=&fullname=&email=it%40jwdcoldchain.comxxx&password=1234&class_user=1&ref_id_site%5B%5D=7&ref_id_site%5B%5D=1&ref_id_site%5B%5D=3&slt_ref_id_dept=8&id_row=
         $output['password'] = sha1($keygen.$output['password']); //เก็บรหัสผ่านในรูปแบบ sha1 
         if(count($output['ref_id_site'])!=1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
             $ref_id_site = 99; //กำหนดขึ้นมาเอง เพื่อให้รู้ว่าดูมากกว่า 1 ไซต์
         }else{
             $ref_id_site = $output['ref_id_site'][0];
         }
+                
+    if(empty($rowID)){
+        #status_user=1&no_user=&fullname=&email=it%40jwdcoldchain.comxxx&password=1234&class_user=1&ref_id_site%5B%5D=7&ref_id_site%5B%5D=1&ref_id_site%5B%5D=3&slt_ref_id_dept=8&id_row=
         $insertRow = [
             'no_user' => (!empty($output['no_user'])) ? $output['no_user'] : '',
             'password' => (!empty($output['password'])) ? $output['password'] : '',
@@ -90,10 +90,33 @@
         exit();
     }else{
         $insertRow = [
-            'unit_name' => (!empty($output['unit_name'])) ? $output['unit_name'] : '',
-            'status_unit' => (!empty($output['status_unit'])) ? $output['status_unit'] : '',
+            'no_user' => (!empty($output['no_user'])) ? $output['no_user'] : '',
+            'password' => (!empty($output['password'])) ? $output['password'] : '',
+            'email' => (!empty($output['email'])) ? $output['email'] : '',
+            'line_token' => NULL,
+            'fullname' => (!empty($output['fullname'])) ? $output['fullname'] : '',
+            'sex' => NULL,
+            'phone' => NULL,
+            'photo' => NULL,
+            'class_user' => (!empty($output['class_user'])) ? $output['class_user'] : '',
+            'ref_id_site' => $ref_id_site,
+            'ref_id_dept' => (!empty($output['slt_ref_id_dept'])) ? $output['slt_ref_id_dept'] : '',
+            'status_user' => (!empty($output['status_user'])) ? $output['status_user'] : '',           
+            'edit_date' => (date('Y-m-d H:i:s')),
+            'ref_id_user_edit' => ($_SESSION['sess_id_user']),
         ];
-        $obj->update($insertRow, "id_unit=".$rowID."", "tb_xunit");
+        $obj->update($insertRow, "id_user=".$rowID."", "tb_user");
+
+        /*
+        if(count($output['ref_id_site'])>1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
+            foreach($output['ref_id_site'] as $index => $value){
+                $insertRow = [				
+                    'ref_id_user' => $rowID,
+                    'ref_id_site' => (!empty($output['ref_id_site'][$index])) ? $output['ref_id_site'][$index] : NULL,
+                ];
+                $rowSite = $obj->addRow($insertRow, "tb_site_responsibility");
+            }        
+            */
     }
     echo json_encode("Success");
     exit();
@@ -130,10 +153,11 @@
         exit();
     }    
 
-    if ($action=="edit") {
+    if ($action=="edit_user") {
+        //id_user, no_user, password, email, line_token, fullname, sex, phone, photo, class_user, ref_id_site, ref_id_dept, ref_id_position, status_user, create_date, ref_id_user_add, edit_date, ref_id_user_edit, latest_login, ip_address
         $rowID = (!empty($_POST['id_row'])) ? $_POST['id_row'] : '';
         if (!empty($rowID)) {        
-            $rowData = $obj->customSelect("SELECT * FROM tb_unit WHERE tb_unit.id_unit=".$rowID."");
+            $rowData = $obj->customSelect("SELECT * FROM tb_user WHERE tb_user.id_user=".$rowID."");
             echo json_encode($rowData);
             exit();
         }
