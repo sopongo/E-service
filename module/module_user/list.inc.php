@@ -192,12 +192,13 @@ $(document).ready(function () {
   $(document).on('click','.check-status',function(){
     var chk_box = $(this).parent().find('input[type="checkbox"]');
     var id_row = $(this).parent().find('input[type="checkbox"]').data("id");
+    var email = $(this).parent().find('input[type="checkbox"]').data("email");
 
     if(chk_box.is(":checked")==true){
-      chk_box_text = "ระงับการใช้งาน";
+      chk_box_text = "ระงับการใช้งาน \r\n "+email;
       chk_box_value = 2;
     }else{
-      chk_box_text = "ใช้งานรายการนี้";
+      chk_box_text = "อนุมัติใช้งาน \r\n "+email;
       chk_box_value = 1;
     }
 
@@ -217,7 +218,7 @@ $(document).ready(function () {
         $.ajax({
           type: 'POST',
           url: "module/module_user/ajax_action.php",
-          data:{action:"update-status", chk_box_value:chk_box_value, id_row:id_row},
+          data:{action:"update-status", chk_box_value:chk_box_value, "id_row":id_row},
           success: function (data) {
             console.log(data);
             if(data==1){

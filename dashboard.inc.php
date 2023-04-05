@@ -167,14 +167,17 @@ div.dataTables_wrapper {
                         LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) 
                         LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_maintenance_request.id_maintenance_request AND tb_attachment.attachment_type=1 AND tb_attachment.image_cate=2) WHERE tb_maintenance_request.ref_id_dept_request=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." GROUP BY tb_maintenance_request.id_maintenance_request ORDER BY tb_maintenance_request.mt_request_date DESC LIMIT 5 ");
                         if (count($fetchRow)>0) {
-                          $No = 1;
+                          $No = count($fetchRow);
                           foreach($fetchRow as $key=>$value){
                             if($fetchRow[$key]['status_approved']==NULL && $fetchRow[$key]['allotted_date']==NULL && $fetchRow[$key]['maintenance_request_status']==1 && $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['hand_over_date']==NULL){
                               $req_textstatus= '<span class="text-bold text-danger">รออนุมัติ/จ่ายงาน</span>';
-                          }else if($fetchRow[$key]['status_approved']==1 && $fetchRow[$key]['allotted_date']!='' && $fetchRow[$key]['maintenance_request_status']==1 && $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['hand_over_date']==NULL){
+                          }else if($fetchRow[$key]['status_approved']==1 && $fetchRow[$key]['allotted_date']!='' && $fetchRow[$key]['maintenance_request_status']==1 && $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['allotted_accept_date']==NULL && $fetchRow[$key]['hand_over_date']==NULL){
                               $req_textstatus= '<span class="text-bold text-danger">รอช่างรับงานซ่อม</span>';
+
+                            }else if($fetchRow[$key]['status_approved']==1 && $fetchRow[$key]['allotted_date']!='' && $fetchRow[$key]['maintenance_request_status']==1 && $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['hand_over_date']==NULL && $fetchRow[$key]['allotted_accept_date']!=NULL && $fetchRow[$key]['duration_serv_start']==NULL){
+                              $req_textstatus= '<span class="text-bold text-danger">รอซ่อม</span>'; //duration_serv_start
                           }else if($fetchRow[$key]['status_approved']==1 && $fetchRow[$key]['allotted_date']!='' && $fetchRow[$key]['maintenance_request_status']==1 && $fetchRow[$key]['duration_serv_end']!=NULL && $fetchRow[$key]['hand_over_date']!=NULL){
-                              $req_textstatus= '<span class="text-bold text-success"> งานรอส่งมอบ</span>';
+                              $req_textstatus= '<span class="text-bold text-success"> ซ่อมแล้ว</span>'; //ok
                           }else if($fetchRow[$key]['maintenance_request_status']==2){            
                               $req_textstatus= '<span class="text-bold text-gray">ยกเลิกใบแจ้งซ่อม</span>';
                           }else{
@@ -197,7 +200,7 @@ div.dataTables_wrapper {
                       <td><?PHP echo $fetchRow[$key]['related_to_safty']==1 ? '<i class="fas fa-times text-danger"></i>' : '<i class="fas fa-check text-success"></i>';?></td>
                     </tr>
                   <?PHP
-                              $No++;
+                              $No--;
                           }
                         }else{
                           echo '<tr><td width="100%" colspan="13" align="center" class="text-bold text-md text-gray pt-5 pb-5">ยังไม่มีใบแจ้งซ่อม</td></tr>';

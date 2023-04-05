@@ -5,7 +5,8 @@
         - อธิบายโปรแกรมแจ้งซ่อมออนไลน์<br />
         - ส่วนของ Dashboard<br />
         - รายชื่อเครื่องจักร-อุปกรณ์<br />
-        - วิธีแจ้งซ่อม<br />
+        - วิธีแจ้งซ่อมด้วยคอมพิวเตอร์<br />
+        - วิธีแจ้งซ่อมด้วยโทรศัพท์มือถือ<br />
         - ส่วนของ Dashboard<br />
         - ส่วนของ Dashboard<br />
 
@@ -14,17 +15,26 @@
 <!-- Howto 1 -->
 <div class="card collapsed-card">
 <div class="card-header" data-card-widget="collapse" title="อ่านวิธีใช้งาน">
-  <a href="#" class="link-info"><span class="card-title text-sm"><strong>ส่วนของ Dashboard</strong></span></a>
+  <a href="#" class="link-info"><span class="card-title text-sm"><strong>อธิบายโปรแกรมแจ้งซ่อมออนไลน์</strong></span></a>
   <div class="card-tools">
     <button type="button" class="btn btn-tool">
       <i class="fas fa-plus"></i>
     </button>
   </div>
 </div>
-<div class="card-body p-howto" style="display:none;">
-  หากคุณต้องการดูวัสดุ-อุปกรณ์ หรือ ยอดคงเหลือ ให้คลิกที่เมนู "คลังวัสดุ-อุปกรณ์" ด้านซ้ายมือระบบจะแสดงรายการวัสดุอุปกรณ์และยอดคงเหลือของแต่ละรายการ
-  <br>
-  <a class="a-howto" href="dist/img/howto/howto-1/ss-1.png" data-toggle="lightbox" data-title="วิธีดูรายการวัสดุ-อุปกรณ์ คงเหลือ"><img src="dist/img/howto/howto-1/ss-1.png" class="howto w-100" /><p>คลิกเพื่อดูรูปขนาดใหญ่</p></a>
+<div class="card-body p-howto" style="display:block;">
+  โปรแกรมแจ้งซ่อมออนไลน์ เฟส 1 ใช้สำหรับแจ้งซ่อม,แจ้งสร้างภายในบริษัทเพื่อให้แผนกที่รับผิดชอบเครื่องจักรหรืออุปกรณ์รับทราบและซ่อมแซมตามที่ได้รับแจ้ง
+  <strong class="d-block mt-2 mb-2">ความสามารถของระบบแจ้งซ่อม เฟส 1</strong>
+  <ul>
+      <li>สามารแจ้งซ่อมผ่านทางคอมพิวเตอร์ หรือ โทรศัพท์มือถือได้</li>
+      <li>สแกนรหัสเครื่องจักร-อุปกรณ์ ผ่าน QR CODE เพื่อแจ้งซ่อมได้</li>
+      <li>- ใบแจ้งซ่อม</li>
+      <li>-แสดงรายละเอียดใบแจ้งซ่อม</li>
+      <li>-แก้ไขประเภทใบแจ้งซ่อมได้</li>
+      <li>-เพิ่ม, ยกเลิก, เปลี่ยนช่างซ่อมได้</li>
+  </ul>
+  <br />
+  <a class="a-howto" href="dist/img/howto/class_1/img_1.png" class="m-auto w-75 bg-danger d-block" data-toggle="lightbox" data-title="โปรแกรมแจ้งซ่อมออนไลน์ เฟส 1"><img src="dist/img/howto/class_1/img_1.png" class="howto w-50 " /><p>คลิกเพื่อดูรูปขนาดใหญ่</p></a>
 </div>
 <!-- /.card-body -->
 </div><!-- /.card collapsed-card -->

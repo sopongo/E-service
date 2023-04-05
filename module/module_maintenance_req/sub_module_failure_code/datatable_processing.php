@@ -69,8 +69,7 @@ if (count($fetchRow)>0) {
     foreach($fetchRow as $key=>$value){
         $dataRow = array();
         $dataRow[] = $No.'.';
-        $dataRow[] = ($fetchRow[$key]['failure_code']=='' ? '-' : $fetchRow[$key]['failure_code'])."SELECT tb_failure_code.*, tb_dept.dept_name, tb_dept.dept_initialname FROM tb_failure_code
-        LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_failure_code.ref_id_dept) ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."";
+        $dataRow[] = ($fetchRow[$key]['failure_code']=='' ? '-' : $fetchRow[$key]['failure_code']);
         $dataRow[] = ($fetchRow[$key]['failure_code_th_name']=='' ? '-' : $fetchRow[$key]['failure_code_th_name']);
         $dataRow[] = ($fetchRow[$key]['failure_code_en_name']=='' ? '-' : $fetchRow[$key]['failure_code_en_name']);
         $dataRow[] = ($fetchRow[$key]['dept_name']=='' ? '-' : $fetchRow[$key]['dept_name'].' ('.$fetchRow[$key]['dept_initialname'].')');        

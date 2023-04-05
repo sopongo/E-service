@@ -1,6 +1,14 @@
     <!-- Main content -->
     <section class="content">
-    
+
+    <div class="alert alert-danger alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                  <h5><i class="icon fas fa-ban"></i> Alert!</h5>
+                  Danger alert preview. This alert is dismissable. A wonderful serenity has taken possession of my
+                  entire
+                  soul, like these sweet mornings of spring which I enjoy with my whole heart.
+                </div>    
+
     <?PHP 
     if($_SESSION['sess_no_user']==null || $_SESSION['sess_id_dept']==0){ ?>
     <div class="alert alert-danger" role="alert">กรอกข้อมูลไซต์งานและแผนก เพื่อเปิดใช้งานระบบ</div>
@@ -9,15 +17,15 @@
       <!-- Default box -->
       <div class="card"><!-- /.card 00000-->
         
-        <div class="card-header">
-          <h4 class="display-10 d-inline-block font-weight-bold"><?PHP echo $title_act;?></h4>
-          <div class="card-tools">
-            <ol class="breadcrumb float-sm-right pt-1 pb-1 m-0">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">แก้ไขข้อมูลส่วนตัว</li>
-            </ol>
-          </div>
-        </div>
+      <div class="card-header">
+    <h6 class="display-8 d-inline-block font-weight-bold"><i class="nav-icon fas fa-file-invoice"></i> <?PHP echo $title_act;?></h6>
+    <div class="card-tools">
+    <ol class="breadcrumb float-sm-right pt-1 pb-1 m-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active"><?PHP echo $breadcrumb_txt;?></li>
+    </ol>
+    </div>
+</div>
 
         
 
@@ -111,7 +119,7 @@
                                         if (count($rowData)!=0) {
                                             foreach($rowData as $key => $value) {
                                               echo '<div class="form-check-inline"><div class="custom-control custom-radio ">';
-                                              echo '<input type="radio" '.($Row['ref_id_site']==$key+1 ? 'checked' : '').' class="custom-control-input" id="location_'.($key+1).'" name="ref_id_site" value="'.($key+1).'" aria-describedby="inputGroupPrepend" required>  
+                                              echo '<input type="radio" '.($Row['ref_id_site']==$key+1 ? 'checked' : 'disabled').' class="custom-control-input" id="location_'.($key+1).'" name="ref_id_site" value="'.($key+1).'" aria-describedby="inputGroupPrepend" required>  
                                               <label class="custom-control-label" for="location_'.($key+1).'">'.$rowData[$key]['site_initialname'].'</label>  ';
                                               //if($key==1){echo '<div class="invalid-feedback">เลือกส่วนงานที่ใช้</div>';}
                                               echo '</div></div>';
@@ -133,8 +141,6 @@
                                     </div>   
                             </div>  
                             </div>                              
-
-
 
                             <div class="row">  
                                 <div class="col-sm-0 col-md-0 col-xs-0">  
@@ -189,9 +195,7 @@ var statusArr_js = <?PHP echo json_encode($statusArr); ?>;
     })();  
 
 
-
 $(document).ready(function () {
-
   // add/edit user
   $(document).on("submit", ".addform", function (event) {
     event.preventDefault();  

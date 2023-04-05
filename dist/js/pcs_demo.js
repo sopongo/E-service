@@ -5,6 +5,15 @@
  * This file is for demo purposes only.
  */
 
+//It restrict the non-numbers
+var specialKeys = new Array();
+specialKeys.push(8,46,9); //Backspace
+function IsNumeric(e) {
+    var keyCode = e.which ? e.which : e.keyCode;
+    console.log( keyCode );
+    var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1);
+    return ret;
+}
 
 function isEmail(email) {
   var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;

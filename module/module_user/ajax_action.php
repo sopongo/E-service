@@ -12,6 +12,52 @@
         require_once ('../../include/class_crud.inc.php');
         $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเรียกใช้งานคลาส,ฟังก์ชั่นต่างๆ
     }
+    
+    if ($action=='register_user' && !empty($_POST)) {
+        if(isset($_POST['data'])){
+            //echo $_POST['data']; exit();
+            //no_user=0000000&email_regis=testuser1%40pcs-plp.com&password_regis=1234&slt_regis_site=1&slt_regis_dept=16
+            parse_str($_POST['data'], $output); //$output['period']
+        }
+        
+        $totalRow = $obj->getCount("SELECT count(id_user) AS total_row FROM tb_user WHERE email = '".(trim($output['email_regis']))."';");
+        if($totalRow!=0){
+            echo 'mail_dup';
+            exit();
+        }
+        $output['password_regis'] = sha1($keygen.$output['password_regis']); //เก็บรหัสผ่านในรูปแบบ sha1 
+        $insertRow = [
+            'no_user' => (!empty($output['no_user'])) ? $output['no_user'] : '',
+            'password' => (!empty($output['password_regis'])) ? $output['password_regis'] : '',
+            'email' => (!empty($output['email_regis'])) ? $output['email_regis'] : '',
+            'line_token' => NULL,
+            'fullname' => (!empty($output['fullname'])) ? $output['fullname'] : '',
+            'sex' => NULL,
+            'phone' => NULL,
+            'photo' => NULL,
+            'class_user' => 1,
+            'ref_id_site' => (!empty($output['slt_regis_site'])) ? $output['slt_regis_site'] : '',
+            'ref_id_dept' => (!empty($output['slt_regis_dept'])) ? $output['slt_regis_dept'] : '',
+            'ref_id_position' => NULL,
+            'status_user' => 3,
+            'create_date' => (date('Y-m-d H:i:s')),
+            'ref_id_user_add' => 0,
+            'edit_date' => NULL,
+            'ref_id_user_edit' => NULL,
+            'latest_login' => NULL,
+            'ip_address' => NULL,
+        ];
+        $rowID = $obj->addRow($insertRow, "tb_user");
+        if($rowID!=NULL){
+            $insertRow = [				
+                'ref_id_user' => $rowID,
+                'ref_id_site' => (!empty($output['slt_regis_site'])) ? $output['slt_regis_site'] : '',
+            ];
+            $rowSite = $obj->addRow($insertRow, "tb_site_responsibility");
+        }
+        echo $rowID;
+        exit();
+    }//register_user
 
     /*echo $action; exit();*/
     if ($action=='adddata' && !empty($_POST)) {
@@ -146,9 +192,11 @@
     if($action=='update-status'){
         //echo "------".$_POST['chk_box_value'].'----------'.$_POST['id_row']; exit();
         $insertRow = [
-            'status_unit' => (!empty($_POST['chk_box_value'])) ? $_POST['chk_box_value'] : ''
+            'status_user' => (!empty($_POST['chk_box_value'])) ? $_POST['chk_box_value'] : ''
         ];
-        $obj->update($insertRow, "id_unit=".$_POST['id_row']."", "tb_unit");
+        $id_row = (!empty($_POST['id_row'])) ? $_POST['id_row'] : '';
+        //print_r($insertRow); exit();
+        $obj->update($insertRow, "id_user=".$id_row."", "tb_user");
         echo json_encode(1);
         exit();
     }    
