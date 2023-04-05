@@ -1,4 +1,103 @@
 <?PHP
+//echo $arr_test_tm['2023-04-01']['id_timeline'];
+//echo count($arr_test_tm['2023-04-01']);
+/*
+for($i=1;$i<=30;$i++){
+  $day = rand(1,10);
+  echo '"'.$i.'" => array("id_timeline" => "'.$i.'", "ref_id_maintenance_request" => "'.$i.'", "timeline_date" => "2023-04-'.($day<10 ? '0'.$day : $day).'", "ref_id_user" => "'.$i.'", "ref_arr_timeline" => "'.$i.'","title_timeline" => "'.$i.'", "detail_timeline" => "'.$i.'",),<br />';
+}*/
+
+
+$rowTM = $obj->fetchRows("SELECT * FROM tb_timeline WHERE ref_id_maintenance_request=".$rowData['id_maintenance_request']." ORDER BY timeline_date ASC"); // AND tb_ref_repairer.status_repairer=1 
+if (count($rowTM)!=0){
+  foreach($rowTM as $key => $value){
+    //tb_timeline id_timeline, ref_id_maintenance_request, timeline_date, ref_id_user, ref_arr_timeline, title_timeline, detail_timeline
+    $date = explode(" ", $rowTM[$key]['timeline_date']);
+    $addArr = [
+      'date' => $date[0],      
+      'id_timeline' => $rowTM[$key]['id_timeline'],
+      'ref_id_maintenance_request' => $rowTM[$key]['ref_id_maintenance_request'],
+      'timeline_date' => $rowTM[$key]['timeline_date'],
+      'ref_id_user' => $rowTM[$key]['ref_id_user'],
+      'ref_arr_timeline' => $rowTM[$key]['ref_arr_timeline'],
+      'title_timeline' => $rowTM[$key]['title_timeline'],
+      'detail_timeline' => $rowTM[$key]['detail_timeline'],
+    ];
+    array_push($arr_test_tm_test, $addArr);
+  }
+}
+$key_values = array_column($arr_test_tm_test, 'timeline_date'); 
+array_multisort($key_values, SORT_ASC, $arr_test_tm_test);
+
+echo '<pre>';
+print_r($arr_test_tm_test);
+echo '</pre>';
+//exit();
+
+$i = 1;
+foreach($arr_test_tm_test as $key => $value){
+  if($key==0){
+    $chk_date = $arr_test_tm_test[$key]['date'];
+  }
+
+  if($chk_date==$arr_test_tm_test[$key]['date']){
+    if($i==1){
+      $i++;
+      echo '<div class="text-bold">(A)-'.$arr_test_tm_test[$key]['date'].'</div>';
+      echo 'a.'.$arr_test_tm_test[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm_test[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+    }else{
+      echo 'b.'.$arr_test_tm_test[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm_test[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+      $i++;
+    }
+  }else{
+    $i = 1;
+    $chk_date=$arr_test_tm_test[$key]['date'];
+    if($i==1){
+      $i++;
+      echo '<div class="text-bold">(B)-'.$arr_test_tm_test[$key]['date'].'</div>';
+      echo 'a.'.$arr_test_tm_test[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm_test[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+    }else{
+      echo 'b.'.$arr_test_tm_test[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm_test[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+      $i++;
+    }
+  }
+}
+
+echo '<div class="w-100 bg-danger">xxx</div><hr />';
+/*------------------------------------------------------------*/
+
+$key_values = array_column($arr_test_tm, 'timeline_date'); 
+array_multisort($key_values, SORT_ASC, $arr_test_tm);
+
+$i = 1;
+foreach($arr_test_tm as $key => $value){
+  if($key==0){
+    $chk_date = $arr_test_tm[$key]['timeline_date'];
+  }
+
+  if($chk_date==$arr_test_tm[$key]['timeline_date']){
+    if($i==1){
+      $i++;
+      echo '<div class="text-bold">(A)-'.$arr_test_tm[$key]['timeline_date'].'</div>';
+      echo 'a. id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+    }else{
+      echo 'b. id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+      $i++;
+    }
+  }else{
+    $i = 1;
+    $chk_date=$arr_test_tm[$key]['timeline_date'];
+    if($i==1){
+      $i++;
+      echo '<div class="text-bold">(B)-'.$arr_test_tm[$key]['timeline_date'].'</div>';
+      echo 'a. id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+    }else{
+      echo 'b. id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+      $i++;
+    }
+  }
+}
+
 switch($denied_requestid){
   case 1:
 ?>
@@ -637,18 +736,18 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                     <!-- The timeline -->
                     <div class="timeline timeline-inverse">
                       <!-- timeline time label -->
-                      <!--<div class="time-label"><span class="bg-danger"><?PHP echo nowDateShort(date('Y-m-d H:i:s'))?></span></div>-->
+                      <div class="time-label">
+                        <span class="bg-danger"><?PHP echo nowDateShort(date('Y-m-d H:i:s'))?></span>
+                      </div>
                       <!-- /.timeline-label -->
                       <!-- timeline item -->
                       <?PHP
-                            $arr_test_tm = array();
                             $rowTM = $obj->fetchRows("SELECT * FROM tb_timeline WHERE ref_id_maintenance_request=".$rowData['id_maintenance_request']." ORDER BY timeline_date ASC"); // AND tb_ref_repairer.status_repairer=1 
+                            echo $rowData['id_maintenance_request'];
                             if (count($rowTM)!=0){
                               foreach($rowTM as $key => $value){
                                 //tb_timeline id_timeline, ref_id_maintenance_request, timeline_date, ref_id_user, ref_arr_timeline, title_timeline, detail_timeline
-                                  $date = explode(" ", $rowTM[$key]['timeline_date']);
-                                  $addArr = [
-                                  'date' => $date[0],
+                                $addArr = [
                                   'id_timeline' => $rowTM[$key]['timeline_date'],
                                   'ref_id_maintenance_request' => $rowTM[$key]['ref_id_maintenance_request'],
                                   'timeline_date' => $rowTM[$key]['timeline_date'],
@@ -657,77 +756,78 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                                   'title_timeline' => $rowTM[$key]['title_timeline'],
                                   'detail_timeline' => $rowTM[$key]['detail_timeline'],
                                 ];
-                                array_push($arr_test_tm, $addArr);
-                              }
-                              $key_values = array_column($arr_test_tm, 'timeline_date'); 
-                              array_multisort($key_values, SORT_ASC, $arr_test_tm);
-                              //echo '<pre>'; print_r($arr_test_tm); echo '</pre>';
-                            }
-
-                            $i = 1;
-                            foreach($arr_test_tm as $key => $value){
-                              if($key==0){
-                                $chk_date = $arr_test_tm[$key]['date'];
-                              }
-                              if($chk_date==$arr_test_tm[$key]['date']){
-                                if($i==1){
-                                  $i++;
-                                  echo '<!-- timeline time label --><div class="time-label"><span class="bg-warning">'.nowDateShort($arr_test_tm[$key]['date']).'</span></div><!--.timeline time label -->';
-                                  //echo '<div class="text-bold">(A)-'.$arr_test_tm[$key]['date'].'</div>';
-                                  //echo 'a.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
-                                  echo '<div>
-                                  <i class="fas fa-file-invoice bg-primary"></i>
-                                  <div class="timeline-item">
-                                    <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
-                                    <h3 class="timeline-header text-bold">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].': '.$rowData['maintenance_request_no'].'</h3>
-                                    <div class="timeline-body">หกดกหดกกดหกดห</div>
-                                  </div>
-                                </div>';
-                                }else{
-                                  //echo 'b.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
-                                  echo '<div>
-                                  <i class="fas fa-file-invoice bg-primary"></i>
-                                  <div class="timeline-item">
-                                    <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
-                                    <h3 class="timeline-header text-bold">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].'</h3>
-                                    <div class="timeline-body">ชื่อเครื่องจักร / อาการเสีย / ผู้แจ้ง</div>
-                                  </div>
-                                </div>';
-                                  $i++;
-                                }
-                              }else{
-                                $i = 1;
-                                $chk_date=$arr_test_tm[$key]['date'];
-                                if($i==1){
-                                  $i++;
-                                  //echo '<div class="text-bold">(B)-'.$arr_test_tm[$key]['date'].'</div>';
-                                  //echo 'a.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
-                                  echo '<!-- timeline time label --><div class="time-label"><span class="bg-warning">'.nowDateShort($arr_test_tm[$key]['date']).'</span></div><!--.timeline time label -->';
-                                  echo '<div>
-                                  <i class="fas fa-file-invoice bg-primary"></i>
-                                  <div class="timeline-item">
-                                    <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
-                                    <h3 class="timeline-header text-bold">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].'</h3>
-                                    <div class="timeline-body">ชื่อเครื่องจักร / อาการเสีย / ผู้แจ้ง</div>
-                                  </div>
-                                </div>';                                  
-                                }else{
-                                  //echo 'b.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
-                                  echo '<div>
-                                  <i class="fas fa-file-invoice bg-primary"></i>
-                                  <div class="timeline-item">
-                                    <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
-                                    <h3 class="timeline-header text-bold">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].'</h3>
-                                    <div class="timeline-body">ชื่อเครื่องจักร / อาการเสีย / ผู้แจ้ง</div>
-                                  </div>
-                                </div>';                                  
-                                  $i++;
-                                }
-                              }
-                            }                            
+                                array_push($addArr, $arr_test_tm_test)
                         ?>
+                      <div>
+                        <i class="fas fa-file-invoice bg-primary"></i>
+                        <div class="timeline-item">
+                          <span class="time"><i class="far fa-clock"></i> <?PHP echo timeAgo($rowTM[$key]['timeline_date']); ?></span>
+                          <h3 class="timeline-header"><a href="#"> <?PHP echo $arr_timeline[$rowTM[$key]['ref_arr_timeline']][1]; ?></a></h3>
+                          <div class="timeline-body">ชื่อเครื่องจักร / อาการเสีย / ผู้แจ้ง</div>
+                        </div>
+                      </div>
+                        <?PHP
+                              }
+                            }
+                      ?>
                       <!-- END timeline item -->
+                      <!-- timeline item -->
+                      <div>
+                        <i class="fas fa-user bg-info"></i>
 
+                        <div class="timeline-item">
+                          <span class="time"><i class="far fa-clock"></i> 5 mins ago</span>
+
+                          <h3 class="timeline-header border-0"><a href="#">Sarah Young</a> accepted your friend request
+                          </h3>
+                        </div>
+                      </div>
+                      <!-- END timeline item -->
+                      <!-- timeline item -->
+                      <div>
+                        <i class="fas fa-comments bg-warning"></i>
+
+                        <div class="timeline-item">
+                          <span class="time"><i class="far fa-clock"></i> 27 mins ago</span>
+
+                          <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
+
+                          <div class="timeline-body">
+                            Take me to your leader!
+                            Switzerland is small and neutral!
+                            We are more like Germany, ambitious and misunderstood!
+                          </div>
+                          <div class="timeline-footer">
+                            <a href="#" class="btn btn-warning btn-flat btn-sm">View comment</a>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- END timeline item -->
+                      <!-- timeline time label -->
+                      <div class="time-label">
+                        <span class="bg-success">
+                          3 Jan. 2014
+                        </span>
+                      </div>
+                      <!-- /.timeline-label -->
+                      <!-- timeline item -->
+                      <div>
+                        <i class="fas fa-camera bg-purple"></i>
+
+                        <div class="timeline-item">
+                          <span class="time"><i class="far fa-clock"></i> 2 days ago</span>
+
+                          <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
+
+                          <div class="timeline-body">
+                            <img src="https://placehold.it/150x100" alt="...">
+                            <img src="https://placehold.it/150x100" alt="...">
+                            <img src="https://placehold.it/150x100" alt="...">
+                            <img src="https://placehold.it/150x100" alt="...">
+                          </div>
+                        </div>
+                      </div>
+                      <!-- END timeline item -->
                       <div>
                         <i class="far fa-clock bg-gray"></i>
                       </div>

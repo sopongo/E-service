@@ -61,6 +61,63 @@ $deptArr = array(
     array(14,'PC','xxxxxxxxxxxxxxx')
 );
 
+$arr_timeline = array( 
+    array(0,''),
+    array(1,'เปิดใบแจ้งซ่อมเลขที่: '),
+    array(2,'ยกเลิกใบแจ้งซ่อม'),
+    array(3,'ไม่อนุมัติใบแจ้งซ่อม'),
+    array(4,'อนุมัติใบแจ้งซ่อม และ จ่ายงาน'),
+    array(5,'ช่างซ่อมปฏิเสธงานซ่อม'),
+    array(6,'เริ่มซ่อม'),
+    array(7,'แก้ไขผู้รับผิดชอบงานซ่อม'),
+    array(8,'แก้ไขอาการเสีย/ปัญหาที่พบ'),
+    array(9,'อัพเดทข้อมูลสรุปผลการซ่อม'),
+    array(10,'อัพเดทข้อมูลส่งซ่อมภายนอก'),
+    array(11,'อัพเดทข้อมูลรายการอะไหล่ที่เปลี่ยน'),
+    array(12,'อัพเดทข้อมูลภาพถ่ายหลังซ่อม'),
+    array(13,'ปิดงานซ่อม ส่งหัวหน้าช่างประเมิณเพื่อส่งมอบงาน'),    
+    array(14,'ส่งมอบงาน รอผู้แจ้งซ่อมประเมิณ'),    
+    array(15,'ประเมิณผลการซ่อม'),
+    array(16,'ซ่อมแล้ว'),
+    array(17,'ส่งข้อความ/ติดตามงานซ่อม'),
+);
+
+
+//tb_timeline id_timeline, ref_id_maintenance_request, timeline_date, ref_id_user, ref_arr_timeline, title_timeline, detail_timeline
+$arr_test_tm_test = array( 
+    "0" => array("id_timeline" => "1", "ref_id_maintenance_request" => "1", "timeline_date" => "2023-04-09", "ref_id_user" => "1", "ref_arr_timeline" => "1","title_timeline" => "1", "detail_timeline" => "1",),
+    "1" => array("id_timeline" => "1", "ref_id_maintenance_request" => "1", "timeline_date" => "2023-04-01", "ref_id_user" => "1", "ref_arr_timeline" => "1","title_timeline" => "1", "detail_timeline" => "1",),
+    "2" => array("id_timeline" => "2", "ref_id_maintenance_request" => "2", "timeline_date" => "2023-04-03", "ref_id_user" => "2", "ref_arr_timeline" => "2","title_timeline" => "2", "detail_timeline" => "2",),
+    "3" => array("id_timeline" => "3", "ref_id_maintenance_request" => "3", "timeline_date" => "2023-04-07", "ref_id_user" => "3", "ref_arr_timeline" => "3","title_timeline" => "3", "detail_timeline" => "3",),
+    "4" => array("id_timeline" => "4", "ref_id_maintenance_request" => "4", "timeline_date" => "2023-04-07", "ref_id_user" => "4", "ref_arr_timeline" => "4","title_timeline" => "4", "detail_timeline" => "4",),
+    "5" => array("id_timeline" => "5", "ref_id_maintenance_request" => "5", "timeline_date" => "2023-04-07", "ref_id_user" => "5", "ref_arr_timeline" => "5","title_timeline" => "5", "detail_timeline" => "5",),
+    "6" => array("id_timeline" => "6", "ref_id_maintenance_request" => "6", "timeline_date" => "2023-04-10", "ref_id_user" => "6", "ref_arr_timeline" => "6","title_timeline" => "6", "detail_timeline" => "6",),
+    "7" => array("id_timeline" => "7", "ref_id_maintenance_request" => "7", "timeline_date" => "2023-04-01", "ref_id_user" => "7", "ref_arr_timeline" => "7","title_timeline" => "7", "detail_timeline" => "7",),
+    "8" => array("id_timeline" => "8", "ref_id_maintenance_request" => "8", "timeline_date" => "2023-04-05", "ref_id_user" => "8", "ref_arr_timeline" => "8","title_timeline" => "8", "detail_timeline" => "8",),
+    "9" => array("id_timeline" => "9", "ref_id_maintenance_request" => "9", "timeline_date" => "2023-04-06", "ref_id_user" => "9", "ref_arr_timeline" => "9","title_timeline" => "9", "detail_timeline" => "9",),
+    "10" => array("id_timeline" => "10", "ref_id_maintenance_request" => "10", "timeline_date" => "2023-04-08", "ref_id_user" => "10", "ref_arr_timeline" => "10","title_timeline" => "10", "detail_timeline" => "10",),
+    "11" => array("id_timeline" => "11", "ref_id_maintenance_request" => "11", "timeline_date" => "2023-04-10", "ref_id_user" => "11", "ref_arr_timeline" => "11","title_timeline" => "11", "detail_timeline" => "11",),
+    "12" => array("id_timeline" => "12", "ref_id_maintenance_request" => "12", "timeline_date" => "2023-04-05", "ref_id_user" => "12", "ref_arr_timeline" => "12","title_timeline" => "12", "detail_timeline" => "12",),
+    "13" => array("id_timeline" => "13", "ref_id_maintenance_request" => "13", "timeline_date" => "2023-04-03", "ref_id_user" => "13", "ref_arr_timeline" => "13","title_timeline" => "13", "detail_timeline" => "13",),
+    "14" => array("id_timeline" => "14", "ref_id_maintenance_request" => "14", "timeline_date" => "2023-04-03", "ref_id_user" => "14", "ref_arr_timeline" => "14","title_timeline" => "14", "detail_timeline" => "14",),
+    "15" => array("id_timeline" => "15", "ref_id_maintenance_request" => "15", "timeline_date" => "2023-04-08", "ref_id_user" => "15", "ref_arr_timeline" => "15","title_timeline" => "15", "detail_timeline" => "15",),
+    "16" => array("id_timeline" => "16", "ref_id_maintenance_request" => "16", "timeline_date" => "2023-04-05", "ref_id_user" => "16", "ref_arr_timeline" => "16","title_timeline" => "16", "detail_timeline" => "16",),
+    "17" => array("id_timeline" => "17", "ref_id_maintenance_request" => "17", "timeline_date" => "2023-04-07", "ref_id_user" => "17", "ref_arr_timeline" => "17","title_timeline" => "17", "detail_timeline" => "17",),
+    "18" => array("id_timeline" => "18", "ref_id_maintenance_request" => "18", "timeline_date" => "2023-04-10", "ref_id_user" => "18", "ref_arr_timeline" => "18","title_timeline" => "18", "detail_timeline" => "18",),
+    "19" => array("id_timeline" => "19", "ref_id_maintenance_request" => "19", "timeline_date" => "2023-04-02", "ref_id_user" => "19", "ref_arr_timeline" => "19","title_timeline" => "19", "detail_timeline" => "19",),
+    "20" => array("id_timeline" => "20", "ref_id_maintenance_request" => "20", "timeline_date" => "2023-04-01", "ref_id_user" => "20", "ref_arr_timeline" => "20","title_timeline" => "20", "detail_timeline" => "20",),
+    "21" => array("id_timeline" => "21", "ref_id_maintenance_request" => "21", "timeline_date" => "2023-04-07", "ref_id_user" => "21", "ref_arr_timeline" => "21","title_timeline" => "21", "detail_timeline" => "21",),
+    "22" => array("id_timeline" => "22", "ref_id_maintenance_request" => "22", "timeline_date" => "2023-04-05", "ref_id_user" => "22", "ref_arr_timeline" => "22","title_timeline" => "22", "detail_timeline" => "22",),
+    "23" => array("id_timeline" => "23", "ref_id_maintenance_request" => "23", "timeline_date" => "2023-04-06", "ref_id_user" => "23", "ref_arr_timeline" => "23","title_timeline" => "23", "detail_timeline" => "23",),
+    "24" => array("id_timeline" => "24", "ref_id_maintenance_request" => "24", "timeline_date" => "2023-04-05", "ref_id_user" => "24", "ref_arr_timeline" => "24","title_timeline" => "24", "detail_timeline" => "24",),
+    "25" => array("id_timeline" => "25", "ref_id_maintenance_request" => "25", "timeline_date" => "2023-04-06", "ref_id_user" => "25", "ref_arr_timeline" => "25","title_timeline" => "25", "detail_timeline" => "25",),
+    "26" => array("id_timeline" => "26", "ref_id_maintenance_request" => "26", "timeline_date" => "2023-04-09", "ref_id_user" => "26", "ref_arr_timeline" => "26","title_timeline" => "26", "detail_timeline" => "26",),
+    "27" => array("id_timeline" => "27", "ref_id_maintenance_request" => "27", "timeline_date" => "2023-04-05", "ref_id_user" => "27", "ref_arr_timeline" => "27","title_timeline" => "27", "detail_timeline" => "27",),
+    "28" => array("id_timeline" => "28", "ref_id_maintenance_request" => "28", "timeline_date" => "2023-04-06", "ref_id_user" => "28", "ref_arr_timeline" => "28","title_timeline" => "28", "detail_timeline" => "28",),
+    "29" => array("id_timeline" => "29", "ref_id_maintenance_request" => "29", "timeline_date" => "2023-04-09", "ref_id_user" => "29", "ref_arr_timeline" => "29","title_timeline" => "29", "detail_timeline" => "29",),
+    "30" => array("id_timeline" => "30", "ref_id_maintenance_request" => "30", "timeline_date" => "2023-04-04", "ref_id_user" => "30", "ref_arr_timeline" => "30","title_timeline" => "30", "detail_timeline" => "30",),    
+);
+
 /*
 "0"=> "ไม่พบข้อมูล", 
 "1" => "User",

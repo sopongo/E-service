@@ -82,10 +82,21 @@
                             'attachment_type' => 1,
                             'image_cate' => 2
                         ];    
-                        $imgRowID = $obj->addRow($insertPhoto, "tb_attachment");                                
+                        $imgRowID = $obj->addRow($insertPhoto, "tb_attachment");
                     }
                 }
         }
+
+        //#tb_timeline id_timeline, ref_id_maintenance_request, timeline_date, ref_id_user, ref_arr_timeline, title_timeline, detail_timeline
+        $insert_tm = [
+            'ref_id_maintenance_request' => $rowID,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 1, //REF. $arr_timeline
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
         echo json_encode($rowID);
         exit();
     }
