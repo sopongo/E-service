@@ -1,10 +1,15 @@
+
+    <link type="text/css" rel="stylesheet" href="plugins/drawing-signature/css/bcPaint.css" />
+	<!--<link type="text/css" rel="stylesheet" href="plugins/drawing-signature/css/demo-page.css" />-->
+	<link type="text/css" rel="stylesheet" href="plugins/drawing-signature/css/bcPaint.mobile.css" />
+	<script type="text/javascript" src="plugins/drawing-signature/js/bcPaint.js"></script>
+
     <!-- Main content -->
     <section class="content">
 
     <div class="alert alert-danger alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h5><i class="icon fas fa-ban"></i> แจ้งเตือน!</h5>
-        หากเลือกไซต์งาน หรือ แผนก ผิด ให้ติดต่อแผนก IT เพื่อแก้ไข
+        <h5><i class="icon fas fa-ban"></i> แจ้งเตือน!</h5> -หากเลือกไซต์งาน หรือ แผนก ผิด ให้ติดต่อแผนก IT เพื่อแก้ไข <br/>- ใช้อีเมล์แอคเค้าท์ ที่มีอยู่จริง เพื่อให้ระบบสามารถส่งอีเมล์หาคุณได้
     </div>    
 
     <?PHP 
@@ -24,8 +29,6 @@
     </ol>
     </div>
 </div>
-
-        
 
 <div class="card-body"><!-- /.card-body 11111-->
 
@@ -84,13 +87,13 @@
                                 <div class="col-sm-4 col-md-4 col-xs-12">  
                                     <div class="form-group">  
                                         <label for="ref_id_dept">แผนก</label>  
-                                        <select class="custom-select" name="ref_id_dept" required>  
+                                        <select class="custom-select" name="ref_id_dept" <?PHP echo $_SESSION['sess_class_user']!=4 || $_SESSION['sess_class_user']!=5 ? 'disabled' : '';?> required>  
                                             <option value="" >เลือกแผนก</option>  
                                             <?PHP
                                             $rowData = $obj->fetchRows("SELECT * FROM tb_dept WHERE dept_status=1 ORDER BY id_dept ASC");
                                             if (count($rowData)!=0) {
                                                 foreach($rowData as $key => $value) {
-                                                    echo '<option '.($Row['ref_id_dept']==$key+1 ? "selected" : "").' '.($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 ? 'disabled' : '').' value="'.($key+1).'">'.$rowData[$key]['dept_name'].' ('.$rowData[$key]['dept_initialname'].')</option>';
+                                                    echo '<option '.($_SESSION['sess_id_dept']==$rowData[$key]['id_dept'] ? "selected" : "").' '.($_SESSION['sess_class_user']!=4 || $_SESSION['sess_class_user']!=5 ? 'disabled' : '').' value="'.($rowData[$key]['id_dept']).'">'.$rowData[$key]['dept_name'].' ('.$rowData[$key]['dept_initialname'].')</option>';
                                                 }
                                             } 
                                             ?>
@@ -107,26 +110,26 @@
                                     </div>  
                                 </div>  
                             </div>  
-                            <div class="row">  
-                                <div class="col-sm-5 col-md-12 col-xs-1">  
-                                    <div class="form-group m-0 p-0">  
-                                        <label>ไซต์งานที่ใช้</label>                                          
-                                     </div> 
-                                      <?PHP
-                                        $rowData = $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY id_site ASC");
-                                        if (count($rowData)!=0) {
-                                            foreach($rowData as $key => $value) {
-                                              echo '<div class="form-check-inline"><div class="custom-control custom-radio ">';
-                                              echo '<input type="radio" '.($Row['ref_id_site']==$key+1 ? 'checked' : 'disabled').' class="custom-control-input" id="location_'.($key+1).'" name="ref_id_site" value="'.($key+1).'" aria-describedby="inputGroupPrepend" required>  
-                                              <label class="custom-control-label" for="location_'.($key+1).'">'.$rowData[$key]['site_initialname'].'</label>  ';
-                                              //if($key==1){echo '<div class="invalid-feedback">เลือกส่วนงานที่ใช้</div>';}
-                                              echo '</div></div>';
+
+                            <div class="row row-7">
+                            <div class="col-sm-12 col-md-12 col-xs-12">
+                                <div class="form-group">  
+                                    <label for="firstname">ไซต์งาน:<span class="text-danger">**</span></label>  
+                                    <div class="form-group clearfix">
+                                        <?PHP
+                                            $rowSite= $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY site_initialname DESC");                 
+                                            if (count($rowSite)>0){
+                                                foreach($rowSite as $key => $value) {
+                                                    echo '<div class="icheck-primary d-inline-block mr-4"><input type="checkbox" name="ref_id_site[]" id="ref_id_site'.$rowSite[$key]['id_site'].'" value="'.$rowSite[$key]['id_site'].'" '.($rowSite[$key]['id_site']!=$_SESSION['sess_ref_id_site'] && $_SESSION['sess_class_user']!=5 ? 'disabled' : '').''.($rowSite[$key]['id_site']==$_SESSION['sess_ref_id_site'] ? 'checked disabled' : '').' required><label for="ref_id_site'.$rowSite[$key]['id_site'].'">'.$rowSite[$key]['site_initialname'].'</label></div>'."\r\n";
+                                                }
                                             }
-                                        } 
-                                      ?>
+                                        ?>
+                                            <div class="invalid-feedback">เลือกไซต์งาน</div>
+                                        </div>
                                 </div>
-                            </div>  
-                            
+                            </div>
+                        </div><!--row-7 -->
+
                             <div class="row mt-3"> 
                             <div class="col-sm-4 col-md-4 col-xs-12">  
                                                <div class="form-group">  
@@ -138,7 +141,22 @@
                                         </div>  
                                     </div>   
                             </div>  
-                            </div>                              
+                            </div>
+
+                            <div class="row">  
+                            <div class="col-sm-6 col-md-6 col-xs-6">  
+                            <div class="form-group">           
+                            <label>ลายเซ็น (ถ้ามี)</label>                         
+			<div id="bcPaint"></div>
+			<script type="text/javascript">
+				$('#bcPaint').bcPaint();
+			</script>
+    </div>
+    </div>    
+    </div>
+
+    
+                                
 
                             <div class="row">  
                                 <div class="col-sm-0 col-md-0 col-xs-0">  
@@ -174,7 +192,7 @@ $(document).ready(function(){
 
 
 <script type="text/javascript">
-var statusArr_js = <?PHP echo json_encode($statusArr); ?>;
+//var statusArr_js = <?PHP echo json_encode($statusArr); ?>;
 
 
   //ส่วนเช็ค validate ตอนสมัครสมาชิก
@@ -197,6 +215,31 @@ $(document).ready(function () {
   // add/edit user
   $(document).on("submit", ".addform", function (event) {
     event.preventDefault();  
+    //var image_object_url = URL.createObjectURL($("#img_signature").get(0).files[0]);
+    
+//
+    var canvas  = document.getElementById("bcPaintCanvas");
+    var image_data = canvas.toDataURL("image/png");
+    alert('dfsgsdfsfd'+image_data);
+
+    $.ajax({
+      url: "module/module_user/ajax_action.php",
+      type: "POST",
+      data: {imgurl:image_data, action:"image"},
+      beforeSend: function () {
+      },
+      success: function (response) {
+        console.log(response); 
+      },
+      error: function (response) {
+        console.log("ไม่สำเร็จ! มีบางอย่างผิดพลาด!"+response);
+        sweetAlert("ไม่สำเร็จ!", 'มีบางอย่างผิดพลาด', "error");
+        return false;
+      },
+    });    
+
+    //img_signature
+    return false;
     var no_user = $("#no_user").val();
     if($.isNumeric(no_user)==false){
       sweetAlert("ผิดพลาด!", 'รหัสพนักงานไม่ถูกต้อง', "error");
@@ -223,7 +266,7 @@ $(document).ready(function () {
             //timer: 3000
           }, 
           function(){
-            window.location.href = "./";
+            window.location.href = "?module=profile";
           })
 
           //$("body form#needs-validation")[0].reset();

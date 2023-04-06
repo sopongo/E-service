@@ -85,7 +85,7 @@ no_user     password        email       fullname        class_user      ref_id_s
                                         <?PHP
                                             foreach($classArr as $index=> $value){
                                                 if($index!=0){
-                                                    echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" '.($index==4 || $index==5 && $_SESSION['sess_class_user']!=5 ? 'disabled' : '').' name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
+                                                    echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" '.(($index==4 || $index==5) && $_SESSION['sess_class_user']!=5 ? 'disabled' : '').' name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
                                                 }
                                             }
                                             //$value==end($classArr) ? '<div class="invalid-feedback">เลือกระดับผู้ใช้งาน</div>
@@ -162,9 +162,35 @@ no_user     password        email       fullname        class_user      ref_id_s
 <script type="text/javascript">
 $(document).ready(function(){
 
-    $('.numbersOnly').keyup(function () { 
+$('.numbersOnly').keyup(function () { 
     this.value = this.value.replace(/[^0-9\.]/g,'');
-    });
+});
+
+
+$('input[type=radio][name=class_user]').on('change', function() {
+   //alert($(this).val());
+   if ($(this).val()==5) {
+        $('input[type=checkbox][name^=ref_id_site]').attr('checked', true);
+    } else{
+        $('input[type=checkbox][name^=ref_id_site]').attr('checked', false);
+        $('input[type=checkbox][id^=ref_id_site<?PHP echo $_SESSION['sess_ref_id_site']; ?>]').attr('checked', true);
+    }
+});
+
+$('input[type=checkbox][name^=ref_id_site]').on('change', function() {
+   //alert($(this).val());
+   /*
+   if ($(this).is(":checked")) {
+        $('input[type=checkbox][name^=ref_id_site]').attr('disabled', true);
+        $(this).attr('disabled', false);
+    } else {
+        $('input[type=checkbox][name^=ref_id_site]').attr('disabled', false);
+        $(this).attr('disabled', true);
+    }
+    */   
+});
+
+
 
 $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
     $('body').find('.was-validated').removeClass();

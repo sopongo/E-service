@@ -59,7 +59,6 @@
         exit();
     }//register_user
 
-    /*echo $action; exit();*/
     if ($action=='adddata' && !empty($_POST)) {
         //id_user, no_user, password, email, line_token, fullname, sex, phone, photo, class_user, ref_id_site, ref_id_dept, ref_id_position, status_user, create_date, ref_id_user_add, edit_date, ref_id_user_edit, latest_login, ip_address
 
@@ -135,8 +134,7 @@
         echo $rowID;
         exit();
     }else{
-        $insertRow = [
-            
+        $insertRow = [            
             'no_user' => (!empty($output['no_user'])) ? $output['no_user'] : '',
             'password' => (!empty($output['password'])) ? $output['password'] : '',
             'email' => (!empty($output['email'])) ? $output['email'] : '',
@@ -169,14 +167,29 @@
     exit();
     }
 
+    if($action=='image'){
+        //echo 'xxxxxxxxxxx'.$_POST['imgurl']; exit();
+        $img = $_POST['imgurl'];
+        $img = str_replace('data:image/png;base64,', '', $img);
+        $img = str_replace(' ', '+', $img);
+        $data = base64_decode($img);
+        //$file = UPLOAD_DIR . uniqid() . '.png';
+        $file = UPLOAD_DIR . $_SESSION['sess_email'] . '.png';
+        $success = file_put_contents($file, $data);
+        print $success ? $file : 'Unable to save the file.';
+        exit();
+    }    
+
+
     if($action=='edituser'){
-        !empty($_POST['password']) ? $_POST['password'] = sha1($keygen.$_POST['password']) : ''; //เก็บรหัสผ่านในรูปแบบ sha1         
+        //echo json_encode($_POST); exit();
+        !empty($_POST['password']) ? $_POST['password'] = sha1($keygen.$_POST['password']) : ''; //เก็บรหัสผ่านในรูปแบบ sha1        
         //id_user, no_user, password, email, line_token, fullname, sex, phone, photo, class_user, ref_id_site, ref_id_dept, ref_id_position, status_user, create_date, ref_id_user_add, edit_date, ref_id_user_edit, latest_login, ip_address
         $updateRow = [
             'no_user' => (!empty($_POST['no_user'])) ? $_POST['no_user'] : '',
             'fullname' => (!empty($_POST['fullname'])) ? $_POST['fullname'] : '',
-            'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : '',
-            'ref_id_site' => (!empty($_POST['ref_id_site'])) ? $_POST['ref_id_site'] : ''
+            //'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : '',
+            //'ref_id_site' => (!empty($_POST['ref_id_site'])) ? $_POST['ref_id_site'] : ''
         ];
 
         if(!empty($_POST['password'])){

@@ -45,14 +45,14 @@ $colunm_sort = array( //ใช้เรียงข้อมูล
     4=> "tb_user.fullname",
     5=> "tb_user.ref_id_site",
     6=> "tb_user.ref_id_dept",
-   7=> "tb_user.class_user",
+    7=> "tb_user.class_user",
 );
 
 
 if($_SESSION['sess_class_user']==5){
     $query_site = " tb_user.ref_id_site!='' ";
 }else{
-    $query_site = " tb_user.ref_id_site=".$_SESSION['sess_ref_id_site'];
+    $query_site = " tb_user.ref_id_site=".$_SESSION['sess_ref_id_site']." AND class_user!=5";
 }
 
 $orderBY = $colunm_sort[$_POST['order']['0']['column']];
@@ -77,7 +77,7 @@ if (count($fetchRow)>0) {
         $dataRow[] = ($fetchRow[$key]['no_user']=='' ? '-' : $fetchRow[$key]['no_user']);
         $dataRow[] = ($fetchRow[$key]['email']=='' ? '-' : $fetchRow[$key]['email']);
         $dataRow[] = ($fetchRow[$key]['fullname']=='' ? '-' : $fetchRow[$key]['fullname']);
-        $dataRow[] = ($fetchRow[$key]['site_initialname']=='' ? '-' : $fetchRow[$key]['site_initialname']);
+        $dataRow[] = ($fetchRow[$key]['site_initialname']=='' ? 'All Site' : $fetchRow[$key]['site_initialname']);
         $dataRow[] = ($fetchRow[$key]['dept_initialname']=='' ? '-' : $fetchRow[$key]['dept_initialname']);
         $dataRow[] = ($fetchRow[$key]['class_user']=='' ? '-' : $classArr[$fetchRow[$key]['class_user']]);
         $dataRow[] = '<div class="check-status custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline">

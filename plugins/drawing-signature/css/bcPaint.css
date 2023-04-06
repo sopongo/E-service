@@ -1,0 +1,12 @@
+.bcPaint-palette-color {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 0 5px;
+}
+
+#bcPaint-palette > .selected { 
+  border: 2px solid #343a40;
+}

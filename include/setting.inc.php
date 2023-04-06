@@ -7,6 +7,7 @@ $title_site_2 = "ระบบ แจ้งซ่อมออนไลน์ | E-
 $title_site_3 = "PCS E-Service";
 $title_site_4 = "E-Service";
 
+define('UPLOAD_DIR', '../../upload-signature/');
 
 $noreply_mail = "no-reply@cc.ps-plp.com";
 $pass_mail = "Pcs@1234";
