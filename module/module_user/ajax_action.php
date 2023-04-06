@@ -136,6 +136,7 @@
         exit();
     }else{
         $insertRow = [
+            
             'no_user' => (!empty($output['no_user'])) ? $output['no_user'] : '',
             'password' => (!empty($output['password'])) ? $output['password'] : '',
             'email' => (!empty($output['email'])) ? $output['email'] : '',

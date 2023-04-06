@@ -41,6 +41,12 @@ switch($module){
     $module=="howto" ? ($active_howto="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_howto=""); #ไฮไลท์เมนูด้านซ้าย    
   break;
 
+  case 'news':
+    $title_site = "ข่าวประกาศทั้งหมด"; $title_act = "ข่าวประกาศทั้งหมด"; $breadcrumb_txt = "ข่าวประกาศทั้งหมด";
+    $include_module = "module/module_news/user_list.inc.php";
+    $module=="news" ? ($active_news="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_news=""); #ไฮไลท์เมนูด้านซ้าย    
+  break;
+
   case 'newslist':
     $title_site = "ข่าวประกาศทั้งหมด"; $title_act = "ข่าวประกาศทั้งหมด"; $breadcrumb_txt = "ข่าวประกาศทั้งหมด";
     $include_module = "module/module_news/list.inc.php";
@@ -100,9 +106,7 @@ switch($module){
     LEFT JOIN tb_failure_code ON (tb_failure_code.id_failure_code=tb_repair_result.ref_id_failure_code)   
     LEFT JOIN tb_repair_code ON (tb_repair_code.id_repair_code=tb_repair_result.ref_id_repair_code)   
     LEFT JOIN tb_outsite_repair ON (tb_outsite_repair.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request)   
-    LEFT JOIN tb_supplier ON (tb_supplier.id_supplier=tb_outsite_repair.ref_id_supplier )       
-    
-     WHERE tb_maintenance_request.id_maintenance_request=".$id." ");
+    LEFT JOIN tb_supplier ON (tb_supplier.id_supplier=tb_outsite_repair.ref_id_supplier) WHERE tb_maintenance_request.id_maintenance_request=".$id." ");
   
     $rowMachine = $obj->customSelect("SELECT tb_machine_site.*, tb_machine_master.*,
     tb_site.site_initialname, tb_building.building_name, tb_location.location_name, tb_dept.dept_initialname, tb_category.name_menu  FROM tb_machine_site
@@ -165,7 +169,7 @@ switch($module){
   case 'mtr-setting':
     $title_site = "ตั้งค่าใบแจ้งซ่อม"; $title_act = "ตั้งค่าใบแจ้งซ่อม"; $breadcrumb_txt = "ตั้งค่าใบแจ้งซ่อม";
     $include_module = "module/module_maintenance_req/list.inc.php";
-    $module=="mtr-setting" ? ($active_mtr="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_mtr=""); #ไฮไลท์เมนูด้านซ้าย    
+    $module=="mtr-setting" ? ($active_mtr="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_mtr=""); #ไฮไลท์เมนูด้านซ้าย    
   break;
 
   case 'waitapprove':
@@ -423,11 +427,10 @@ $obj = new CRUD();
     <img src="dist/img/logo_2.png" alt="JWD Logo" class="w-100 p-0 m-0" >
       <!--<img src="dist/img/logo_2.png" alt="JWD Logo" class="brand-image brand-text" >-->
       <span class="font-weight-bold p-1 mt-2 text-pcs-ct"><?PHP echo $title_site_1; ?></span>
-    </a>
-                  
+    </a>                  
                   
     <!-- Sidebar -->
-    <div class="sidebar"><br><br>
+    <div class="sidebar"><br /><br />
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-1 mb-3 d-flex">
         <div class="image">
@@ -447,7 +450,7 @@ $obj = new CRUD();
         <li class="nav-item"><a href="./" class="nav-link <?PHP echo $active_dashbord;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=requestlist" class="nav-link <?PHP echo $active_requestlist;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ติดตาม-ประเมิณ</p> </a></li>
-        <li class="nav-item"><a href="?module=news" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-bell"></i> <p>ข่าวประกาศ</p></a></li>
+        <li class="nav-item"><a href="?module=news" class="nav-link <?PHP echo $active_news;?>"><i class="nav-icon fas fa-bell"></i> <p>ข่าวประกาศ</p></a></li>
         <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ ?>
           <!--<li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>-->
         <?PHP } ?>
@@ -481,6 +484,7 @@ $obj = new CRUD();
         <li class="nav-item <?PHP echo $active_treeview_1; ?>"><!--ถ้าจะให้เปิดใส่คลาส menu-open-->
             <a href="#" class="nav-link"><i class="nav-icon fas fa-sitemap"></i><p>จัดการระบบ<i class="right fas fa-angle-left"></i></p></a>
             <ul class="nav nav-treeview">
+              <li class="nav-item"><a href="?module=mtr-setting" class="nav-link <?PHP echo $active_mtr; ?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ตั้งค่าใบแจ้งซ่อม</p></a></li>                
               <li class="nav-item"><a href="?module=machine-master" class="nav-link <?PHP echo $active_machine; ?>"><i class="fa fa-caret-right nav-icon"></i><p>เครื่องจักร-อุปกรณ์ (Master)</p></a></li>
               <li class="nav-item"><a href="?module=category" class="nav-link <?PHP echo $active_category; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ประเภทเครื่องจักร-อุปกรณ์</p></a></li>
               <li class="nav-item"><a href="?module=newslist" class="nav-link <?PHP echo $active_newslist; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ข่าวประกาศ</p></a></li>
@@ -495,7 +499,6 @@ $obj = new CRUD();
               <li class="nav-item"><a href="?module=supplier" class="nav-link <?PHP echo $active_supplier; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ซัพพลายเออร์</p></a></li>
             </ul>
           </li>
-          <li class="nav-item"><a href="?module=mtr-setting" class="nav-link <?PHP echo $active_mtr; ?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ตั้งค่าใบแจ้งซ่อม</p></a></li>
           <!--<li class="nav-item"><a href="?module=system-setting" class="nav-link"><i class="nav-icon fas fa-cog"></i> <p>ตั้งค่าระบบ</p></a></li>-->
           
           <!--<li class="nav-item"><a href="?module=tabview" class="nav-link <?PHP echo $active_tabview; ?>"><i class="fas fa fa-bars nav-icon"></i> <p> TAB View</p></a></li>-->

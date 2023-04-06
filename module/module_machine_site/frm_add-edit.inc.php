@@ -191,7 +191,7 @@
                             <select class="custom-select" name="ref_id_location" id="ref_id_location" style="width:100%; font-size:0.85rem;"><option value="" disabled selected>ต้องเลือกไซต์งานก่อน</option></select>
                             <div class="invalid-feedback">เลือกสถานที่ใช้งาน</div>
                         </div>
-                        </div>                        
+                        </div>
 
                         </div><!--row-6-->
            

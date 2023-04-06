@@ -2,12 +2,10 @@
     <section class="content">
 
     <div class="alert alert-danger alert-dismissible">
-                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                  <h5><i class="icon fas fa-ban"></i> Alert!</h5>
-                  Danger alert preview. This alert is dismissable. A wonderful serenity has taken possession of my
-                  entire
-                  soul, like these sweet mornings of spring which I enjoy with my whole heart.
-                </div>    
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h5><i class="icon fas fa-ban"></i> แจ้งเตือน!</h5>
+        หากเลือกไซต์งาน หรือ แผนก ผิด ให้ติดต่อแผนก IT เพื่อแก้ไข
+    </div>    
 
     <?PHP 
     if($_SESSION['sess_no_user']==null || $_SESSION['sess_id_dept']==0){ ?>
@@ -92,7 +90,7 @@
                                             $rowData = $obj->fetchRows("SELECT * FROM tb_dept WHERE dept_status=1 ORDER BY id_dept ASC");
                                             if (count($rowData)!=0) {
                                                 foreach($rowData as $key => $value) {
-                                                    echo '<option '.($Row['ref_id_dept']==$key+1 ? "selected" : "").' value="'.($key+1).'">'.$rowData[$key]['dept_name'].' ('.$rowData[$key]['dept_initialname'].')</option>';
+                                                    echo '<option '.($Row['ref_id_dept']==$key+1 ? "selected" : "").' '.($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 ? 'disabled' : '').' value="'.($key+1).'">'.$rowData[$key]['dept_name'].' ('.$rowData[$key]['dept_initialname'].')</option>';
                                                 }
                                             } 
                                             ?>

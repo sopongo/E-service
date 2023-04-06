@@ -18,19 +18,13 @@ $_POST['length']
 
 $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 
-if($_SESSION['sess_class_user']!=5){
-    $query_class = "AND";
-}else{
-    $query_class = "";
-}
 
 $search = $_POST["search"]["value"];
 $query_search = "";
 if(!empty($search[0])){
-    $query_search = " WHERE (failure_code_th_name LIKE '%".$search."%' OR failure_code_en_name LIKE '%".$search."%') ".$query_class."tb_failure_code.ref_id_dept=".$_SESSION['sess_id_dept']."";
+    $query_search = " WHERE (failure_code_th_name LIKE '%".$search."%' OR failure_code_en_name LIKE '%".$search."%') AND tb_failure_code.ref_id_dept=".$_SESSION['sess_id_dept']."";
 }else{
-    $query_search = "";
-    $query_class = "";
+    $query_search = "WHERE tb_failure_code.ref_id_dept=".$_SESSION['sess_id_dept']."";
 }
 
 if($_POST["start"]==0){

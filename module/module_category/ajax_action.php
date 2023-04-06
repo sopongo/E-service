@@ -65,6 +65,7 @@
                     'ref_id_menu' => (!empty($output['ref_id_menu'])) ? $output['ref_id_menu'] : NULL,
                     'ref_id_sub' => NULL,
                     'ref_id_dept' => (!empty($output['ref_id_dept'])) ? $output['ref_id_dept'] : NULL,
+                    'ref_id_site' => (!empty($output['ref_id_site'])) ? $output['ref_id_site'] : NULL,
                     //'ref_id_dept' => $_SESSION['sess_id_dept'],
                     'name_menu' => (!empty($output['name_menu'])) ? $output['name_menu'] : NULL,
                     'desc_menu' => (!empty($output['desc_menu'])) ? $output['desc_menu'] : NULL,

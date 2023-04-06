@@ -7,6 +7,10 @@ $title_site_2 = "ระบบ แจ้งซ่อมออนไลน์ | E-
 $title_site_3 = "PCS E-Service";
 $title_site_4 = "E-Service";
 
+
+$noreply_mail = "no-reply@cc.ps-plp.com";
+$pass_mail = "Pcs@1234";
+
 $req_digit = "-RQ-"; //ตัวย่อหน้าเลขที่ใบเบิก
 
 $keygen = 'Pcs@'; //sha1+password
@@ -62,24 +66,30 @@ $deptArr = array(
 );
 
 $arr_timeline = array( 
-    array(0,''),
-    array(1,'เปิดใบแจ้งซ่อมเลขที่: '),
-    array(2,'ยกเลิกใบแจ้งซ่อม'),
-    array(3,'ไม่อนุมัติใบแจ้งซ่อม'),
-    array(4,'อนุมัติใบแจ้งซ่อม และ จ่ายงาน'),
-    array(5,'ช่างซ่อมปฏิเสธงานซ่อม'),
-    array(6,'เริ่มซ่อม'),
-    array(7,'แก้ไขผู้รับผิดชอบงานซ่อม'),
-    array(8,'แก้ไขอาการเสีย/ปัญหาที่พบ'),
-    array(9,'อัพเดทข้อมูลสรุปผลการซ่อม'),
-    array(10,'อัพเดทข้อมูลส่งซ่อมภายนอก'),
-    array(11,'อัพเดทข้อมูลรายการอะไหล่ที่เปลี่ยน'),
-    array(12,'อัพเดทข้อมูลภาพถ่ายหลังซ่อม'),
-    array(13,'ปิดงานซ่อม ส่งหัวหน้าช่างประเมิณเพื่อส่งมอบงาน'),    
-    array(14,'ส่งมอบงาน รอผู้แจ้งซ่อมประเมิณ'),    
-    array(15,'ประเมิณผลการซ่อม'),
-    array(16,'ซ่อมแล้ว'),
-    array(17,'ส่งข้อความ/ติดตามงานซ่อม'),
+    array(0, '<i class="fas fa-caret-right bg-warning"></i>'),
+    array(1,'เปิดใบแจ้งซ่อมเลขที่', '<i class="fas fa-file-invoice bg-primary"></i>'),
+    array(2,'ยกเลิกใบแจ้งซ่อม', '<i class="fas fa-caret-right bg-warning"></i>'),
+    array(3,'ไม่อนุมัติใบแจ้งซ่อม', '<i class="fas fa-caret-right bg-warning"></i>'),
+    array(4,'อนุมัติใบแจ้งซ่อม และ จ่ายงาน', '<i class="fas fa-clipboard-check bg-success"></i>'),
+    array(5,'ช่างซ่อมปฏิเสธงานซ่อม', '<i class="fas fa-caret-right bg-warning"></i>'),
+    array(6,'เริ่มซ่อม', '<i class="fas fa-tools bg-red"></i>'),
+    array(7,'แก้ไขผู้รับผิดชอบงานซ่อม', '<i class="fas fa-user-friends bg-warning"></i>'),
+    array(8,'แก้ไขอาการเสีย/ปัญหาที่พบ', '<i class="fas fa-info-circle bg-warning"></i>'),
+    array(9,'อัพเดทข้อมูลสรุปผลการซ่อม', '<i class="fas fa-file-signature bg-warning"></i>'),
+    array(10,'อัพเดทข้อมูลส่งซ่อมภายนอก', '<i class="fas fa-truck bg-warning"></i>'),
+    array(11,'อัพเดทข้อมูลรายการอะไหล่ที่เปลี่ยน', '<i class="fas fa-caret-right bg-warning"></i>'),
+    array(12,'อัพเดทข้อมูลภาพถ่ายหลังซ่อม', '<i class="fas fa-caret-right bg-warning"></i>'),
+    array(13,'ปิดงานซ่อม ส่งหัวหน้าช่างประเมิณเพื่อส่งมอบงาน', '<i class="fas fa-file-signature bg-warning"></i>'),    
+    array(14,'ส่งมอบงาน รอผู้แจ้งซ่อมประเมิณ', '<i class="fas fa-handshake bg-success"></i>'),    
+    array(15,'ประเมิณผลการซ่อม', '<i class="fas fa-poll bg-success"></i>'),
+    array(16,'ซ่อมแล้ว', '<i class="fas fa-flag-checkered bg-success"></i>'),
+    array(17,'ส่งข้อความ/ติดตามงานซ่อม', '<i class="fas fa-comments bg-info"></i>'),
+    array(18,'อัพเดทประเภทใบแจ้งซ่อม', '<i class="fas fa-file-signature bg-warning"></i>'),
+    array(19,'ช่างรับทราบ, รับงานซ่อม', '<i class="fas fa-user-check bg-warning"></i>'),    
+    array(20,'ส่งข้อความ/ติดตามงานซ่อม', '<i class="fas fa-comments bg-blue"></i>'),
+    array(21,'ยกเลิกส่งมอบ ให้ช่างแก้ไขงานซ่อมใหม่', '<i class="fas fa-undo-alt bg-red"></i>'),    
+    array(22,'ลบข้อมูลรายการอะไหล่ที่เปลี่ยน', '<i class="fas fa-comments bg-blue"></i>'),    
+    array(23,'ลบรูปถ่ายใบแจ้งซ่อม', '<i class="fas fa-comments bg-blue"></i>'),    
 );
 
 

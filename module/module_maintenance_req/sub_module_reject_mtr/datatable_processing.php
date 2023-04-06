@@ -1,4 +1,5 @@
 <?PHP
+session_start();
 require_once '../../../include/class_crud.inc.php';
 require_once '../../../include/setting.inc.php';
 $obj = new CRUD();
@@ -20,7 +21,9 @@ $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 $search = $_POST["search"]["value"];
 $query_search = "";
 if(!empty($search[0])){
-    $query_search = " WHERE reject_mtr_name LIKE '%".$search."%' ";
+    $query_search = " WHERE (tb_reject_mtr_code.reject_mtr_name LIKE '%".$search."%') AND tb_reject_mtr_code.ref_id_dept=".$_SESSION['sess_id_dept']."";
+}else{
+    $query_search = " WHERE tb_reject_mtr_code.ref_id_dept=".$_SESSION['sess_id_dept']."";
 }
 
 if($_POST["start"]==0){

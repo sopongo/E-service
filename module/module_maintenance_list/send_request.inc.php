@@ -5,7 +5,7 @@
     date_default_timezone_set('Asia/Bangkok');	
     require_once ('../../include/function.inc.php');
     require_once ('../../include/setting.inc.php');
-
+    require_once('../../include/class.phpmailer.php');//ระบบส่งเมล์
 
     $action = $_REQUEST['action']; #รับค่า action มาจากหน้าจัดการ
     !empty($_POST['ref_id']) ? $ref_id = intval($_POST['ref_id']): '';
@@ -13,8 +13,7 @@
     if (!empty($action)) { ##ถ้า $action มีการส่งค่ามาจะดึงไฟล์ class.inc.php (ไฟล์ class+function) มาใช้งาน
         require_once ('../../include/class_crud.inc.php');
         $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเรียกใช้งานคลาส,ฟังก์ชั่นต่างๆ
-    } 
-   
+    }    
 
     if ($action=='adddata' && !empty($_POST)) {    
         
@@ -88,6 +87,7 @@
         }
 
         //#tb_timeline id_timeline, ref_id_maintenance_request, timeline_date, ref_id_user, ref_arr_timeline, title_timeline, detail_timeline
+        ######### รอใส่โค๊ด Update Timeline ###########
         $insert_tm = [
             'ref_id_maintenance_request' => $rowID,
             'timeline_date' => date('Y-m-d H:i:s'),
@@ -97,19 +97,108 @@
             'detail_timeline' => NULL,
         ];
         $insertTM = $obj->addRow($insert_tm, "tb_timeline");
-        echo json_encode($rowID);
+        ######### .รอใส่โค๊ด Update Timeline ###########
+
+        ##### ส่งอีเมล์แจ้งเตือนหัวหน้าช่าง-ผู้แจ้งซ่อม ######
+        $rowData = $obj->customSelect("SELECT tb_maintenance_request.*, tb_maintenance_type.name_mt_type, tb_maintenance_request.ref_id_dept_responsibility AS id_dept_responsibility, tb_dept_responsibility.dept_initialname AS dept_responsibility,
+        tb_user_request.no_user, tb_user_request.email, tb_user_request.fullname, tb_user_request.ref_id_dept AS ref_id_dept_request, tb_user_dept_request.dept_initialname AS dept_user_request,
+        tb_user_cancel.fullname AS cancel_fullname, tb_user_approved.fullname AS approved_fullname, tb_failure_code.failure_code_th_name, tb_repair_code.repair_code_name, 
+        tb_repair_result.txt_solution, tb_repair_result.txt_caused_by, tb_repair_result.ref_id_failure_code, tb_repair_result.ref_id_repair_code,
+        tb_failure_code.id_failure_code, tb_repair_code.id_repair_code, tb_outsite_repair.*, tb_supplier.supplier_name, tb_user_survey.fullname AS fullname_survay,
+        tb_user_handover.fullname AS fullname_handover, tb_accept_request.fullname AS fullname_accept, tb_machine_site.ref_id_machine_master, tb_machine_master.name_machine FROM tb_maintenance_request 
+        LEFT JOIN tb_maintenance_type ON (tb_maintenance_type.id_mt_type=tb_maintenance_request.ref_id_mt_type)
+        LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
+        LEFT JOIN tb_user AS tb_user_request ON (tb_user_request.id_user=tb_maintenance_request.ref_id_user_request)    
+        LEFT JOIN tb_user AS tb_user_cancel ON (tb_user_cancel.id_user=tb_maintenance_request.ref_id_user_cancel)    
+        LEFT JOIN tb_user AS tb_user_approved ON (tb_user_approved.id_user=tb_maintenance_request.ref_id_user_approver) 
+        LEFT JOIN tb_user AS tb_user_survey ON (tb_user_survey.id_user=tb_maintenance_request.ref_id_user_survey) 
+        LEFT JOIN tb_user AS tb_accept_request ON (tb_accept_request.id_user=tb_maintenance_request.ref_user_id_accept_request)      
+        LEFT JOIN tb_user AS tb_user_handover ON (tb_user_handover.id_user=tb_maintenance_request.ref_id_user_hand_over) 
+        LEFT JOIN tb_dept AS tb_user_dept_request ON (tb_user_dept_request.id_dept=tb_user_request.ref_id_dept)
+        LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)    
+        LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)          
+        LEFT JOIN tb_repair_result ON (tb_repair_result.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request)
+        LEFT JOIN tb_failure_code ON (tb_failure_code.id_failure_code=tb_repair_result.ref_id_failure_code)   
+        LEFT JOIN tb_repair_code ON (tb_repair_code.id_repair_code=tb_repair_result.ref_id_repair_code)   
+        LEFT JOIN tb_outsite_repair ON (tb_outsite_repair.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request)   
+        LEFT JOIN tb_supplier ON (tb_supplier.id_supplier=tb_outsite_repair.ref_id_supplier) WHERE tb_maintenance_request.id_maintenance_request=".$rowID.";");
+
+//ref_id_dept_responsibility
+        $rowDeptResp = $obj->customSelect("SELECT tb");
+
+        $mail = new PHPMailer();
+        $mail->IsSMTP();
+        $mail->SMTPDebug = 1;
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = "ssl"; // Enable "tls" encryption, "ssl" also accepted
+        $mail->Host = "mail.cc.pcs-plp.com"; //$smtp
+        $mail->Port = 465; //$smtp_port
+        $mail->CharSet = 'UTF-8';
+        $mail->Username = "no-reply@cc.pcs-plp.com"; //$noreply_mail
+        $mail->Password = "Pcs@1234"; //$pass_mail
+        $mail->SetFrom("no-reply@cc.pcs-plp.com", "E-service (แจ้งซ่อมออนไลน์)");
+        //$mail->AddBCC("it-support@jwdcoldchain.com", "หัว จม.(เทส ส่งใบแจ้งซ่อมนะต๊ะ) มีผู้แจ้งซ่อมผ่านระบบ E-service เลขที่ใบแจ้งซ่อม");
+        //$mail->AddAttachment($upload_pdf."invoice_".$inv_no.".pdf");
+        //$mail->AddReplyTo("youruser@yahoo.com","Mocyc Dot Com");
+     $mail->Subject = "[แจ้งซ่อม] มีผู้แจ้งซ่อมผ่านระบบ E-service เลขที่ใบแจ้งซ่อม ".$rowData['maintenance_request_no']." ";
+     $message = '<table style="width:50%;" cellspacing="0" cellpadding="1" border="1">
+     <tr>
+       <td>
+     <table style="width:100%; font-family: Tahoma, serif; font-size:13px;" cellspacing="0" cellpadding="10" border="0">
+       <tr>
+         <td colspan="2"><strong>[E-service Alert] มีผู้แจ้งซ่อมผ่านระบบ E-service เลขที่ใบแจ้งซ่อม: '.$rowData['maintenance_request_no'].'</strong></td>
+       </tr>
+       <tr>
+         <td colspan="2"><strong>แจ้ง ผจก.แผนก, หัวหน้าส่วน, ผู้มีส่วนเกี่ยวข้อง</strong></td>
+       </tr>
+       <tr>
+         <td colspan="2"><strong>ไซต์งาน:</strong> '.$_SESSION['sess_site_initialname'].'</td>
+       </tr>
+       <tr>
+         <td colspan="2"><strong>แผนก:</strong> '.$rowData['dept_responsibility'].'</td>
+       </tr>    
+         <tr>
+         <td colspan="2">มีผู้แจ้งซ่อมเครื่องจักร-อุปกรณ์ เลขที่ใบแจ้งซ่อม: '.$rowData['maintenance_request_no'].'</td>
+       </tr>
+       <tr><td width="30%"><strong>ผู้แจ้งซ่อม:</strong></td><td width="70%">'.$rowData['fullname'].' <strong>แผนก:</strong> '.$rowData['dept_user_request'].'</td></tr>
+       <tr><td><strong>วันที่แจ้งซ่อม:</strong></td><td>'.$rowData['mt_request_date'].'</td></tr>
+       <tr><td><strong>รหัสเครื่องจักร-อุปกรณ์:</strong></td><td>'.$rowData['code_machine_site'].':</td></tr>
+       <tr><td><strong>ชื่อเครื่องจักร-อุปกรณ์:</strong></td><td>'.$rowData['name_machine'].':</td></tr>
+       <tr><td><strong>ไซต์งาน:</strong></td><td>'.$_SESSION['sess_site_initialname'].'</td></tr>
+       <tr><td><strong>อาคาร:</strong></td><td>'.$rowData['building_name'].'</td></tr>
+       <tr><td><strong>สถานที่:</strong></td><td>'.$rowData['location_name'].'</td></tr>
+       <tr><td><strong>อาการเสีย/ปัญหาที่พบ:</strong></td><td></td></tr>
+       <tr><td colspan="2">'.$rowData['problem_statement'].'</td></tr>
+       <tr><td colspan="2"><hr /></td></tr>  
+       <tr><td colspan="2">กรุณาล็อกอินเข้าระบบเพื่อตรวจสอบใบแจ้งซ่อม <strong>คลิกที่นี่เพื่อเข้าสู่ระบบ E-service</strong></td></tr>  
+     </table>
+       </td>
+     </tr>
+     </table>';
+     $mail->MsgHTML($message);
+     //$mail->AddAttachment("(Windows 7) - Wallpapers4Desktop.com 015.jpg");
+     $mail->AddAddress($rowData['email']);//อีเมล์ผู้แจ้งซ่อม
+     $mail->AddBCC("it-support@jwdcoldchain.com"); //BCC ส่งอีเมล์หาหัวหน้าแผนกที่รับผิดชอบ
+     $mail->set('X-Priority', '3'); //Priority 1 = High, 3 = Normal, 5 = low
+     //$mail->Send(); //ส่งเมล์
+     if(!$mail->Send()){
+         //echo 'ส่งไม่ได้';
+         echo json_encode($rowID);
+     }else{
+         //echo 'ส่งแล้วคร้าบบบบบบ';
+         echo json_encode($rowID);
+     }
+        ##### ส่งอีเมล์แจ้งเตือนหัวหน้าช่าง-ผู้แจ้งซ่อม ######
         exit();
     }
-
-
     
-    if ($action=='send_survey') {
+    if ($action=='send_survey') { //ประเมิณผลการซ่อม
         //echo '<pre>'; print_r($_POST); print_r($_FILES); echo '</pre>'; //exit();
         //tb_satisfaction_survey        id_survey, ref_id_maintenance_request, ref_topic_survey, score_result, recomment
         $rowID = $obj->customSelect("SELECT id_survey FROM tb_satisfaction_survey WHERE ref_id_maintenance_request=".$_POST['ref_id']." LIMIT 1");
 
         if(empty($rowID['id_survey'])){
-            echo 'เพิ่ม';
+            //echo 'เพิ่ม';
             $insertRow = array();
             $updateRow = array();
             foreach($arrTopicSurvey as $index => $value){
@@ -129,10 +218,34 @@
                                 
             ];
             $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+            ######### รอใส่โค๊ด Update Timeline ###########
+            $insert_tm = [
+                'ref_id_maintenance_request' => $ref_id,
+                'timeline_date' => date('Y-m-d H:i:s'),
+                'ref_id_user' => $_SESSION['sess_id_user'],
+                'ref_arr_timeline' => 15, //REF. $arr_timeline ประเมิณผลการซ่อม
+                'title_timeline' => NULL,
+                'detail_timeline' => NULL,
+            ];
+            $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+            ######### รอใส่โค๊ด Update Timeline ###########
+
+            ######### ปิดงานซ่อม ###########
+            $insert_tm = [
+                'ref_id_maintenance_request' => $ref_id,
+                'timeline_date' => date('Y-m-d H:i:s'),
+                'ref_id_user' => $_SESSION['sess_id_user'],
+                'ref_arr_timeline' => 16, //REF. $arr_timeline ซ่อมแล้ว
+                'title_timeline' => NULL,
+                'detail_timeline' => NULL,
+            ];
+            $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+            ######### .ปิดงานซ่อม ###########
+
             echo $rowID ;
             exit();
         }else{
-            echo 'อัพเดท';
+            //echo 'อัพเดท';
             $updateRow = array();
             foreach($arrTopicSurvey as $index => $value){
                 $addRow = [
@@ -150,12 +263,20 @@
                 'ref_id_user_survey' => ($_SESSION['sess_id_user']),
             ];
             $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+            ######### รอใส่โค๊ด Update Timeline ###########
+            $insert_tm = [
+                'ref_id_maintenance_request' => $ref_id,
+                'timeline_date' => date('Y-m-d H:i:s'),
+                'ref_id_user' => $_SESSION['sess_id_user'],
+                'ref_arr_timeline' => 15, //REF. $arr_timeline ประเมิณผลการซ่อม
+                'title_timeline' => NULL,
+                'detail_timeline' => NULL,
+            ];
+            $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+            ######### รอใส่โค๊ด Update Timeline ###########
             echo $rowID ;
             exit();
         }
-        ######### รอใส่โค๊ด Update Timeline ###########
-        ##                           ใส่โค๊ดตรงนี้                              ##
-        ######### รอใส่โค๊ด Update Timeline ###########        
         exit();        
     }
 
@@ -165,7 +286,19 @@
         $updateRow = [
             'problem_statement' => (!empty($_POST['problem_statement'])) ? $_POST['problem_statement'] : '',
         ];
-        echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+        $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+        ######### Update Timeline ###########
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 8, //REF. $arr_timeline
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### .Update Timeline ###########
+        echo $rowID;
         exit();        
     }
 
@@ -174,47 +307,99 @@
         $updateRow = [
             'duration_serv_start' => (date('Y-m-d H:i:s')),
         ];
+        $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
         ######### รอใส่โค๊ด Update Timeline ###########
-        ##                           ใส่โค๊ดตรงนี้                              ##
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 6, //REF. $arr_timeline
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
         ######### รอใส่โค๊ด Update Timeline ###########
-        echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
+        echo $rowID;
         exit();        
     }    
 
-    if ($action=='del_parts') {
+    if ($action=='del_parts') {//ลบข้อมูลรายการอะไหล่ที่เปลี่ยน
         !empty($_POST['parts_id']) ? $parts_id = intval($_POST['parts_id']): '';
         //echo $ref_id.'-------'.$_POST['img_id']; exit();
         //$checkFile = $obj->customSelect('SELECT * FROM tb_attachment WHERE id_attachment='.$img_id.'');
         //@unlink('../../'.$pathReq.$checkFile['path_attachment_name']);
+        $result = $obj->deleteRow($ref_id, 'tb_change_parts', 'id_parts='.$parts_id.' AND ref_id_maintenance_request='.$ref_id.'');
         ######### รอใส่โค๊ด Update Timeline ###########
-        ##                           ใส่โค๊ดตรงนี้                              ##
-        ######### รอใส่โค๊ด Update Timeline ###########
-        echo $result = $obj->deleteRow($ref_id, 'tb_change_parts', 'id_parts='.$parts_id.' AND ref_id_maintenance_request='.$ref_id.'');
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 22, //REF. $arr_timeline ลบข้อมูลรายการอะไหล่ที่เปลี่ยน
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### รอใส่โค๊ด Update Timeline ###########        
+        echo $result;
         exit();
     }
 
-    if ($action=='delimg') {
+    if ($action=='delimg') {//ลบรูปถ่ายใบแจ้งซ่อม
         !empty($_POST['img_id']) ? $img_id = intval($_POST['img_id']): '';
         //echo $ref_id.'-------'.$_POST['img_id']; exit();
         $checkFile = $obj->customSelect('SELECT * FROM tb_attachment WHERE id_attachment='.$img_id.'');
         @unlink('../../'.$pathReq.$checkFile['path_attachment_name']);
-        echo $result = $obj->deleteRow($ref_id, 'tb_attachment', 'id_attachment='.$img_id.' AND ref_id_used='.$ref_id.'');
+        $result = $obj->deleteRow($ref_id, 'tb_attachment', 'id_attachment='.$img_id.' AND ref_id_used='.$ref_id.'');
+        ######### รอใส่โค๊ด Update Timeline ###########
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 23, //REF. $arr_timeline ลบรูปถ่ายใบแจ้งซ่อม
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### รอใส่โค๊ด Update Timeline ###########
+        echo $result;
         exit();
-    }        
+    }
 
+    if ($action=='post_timeline') { ##ส่งข้อความติดตามงานซ่อม
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 17, //REF. $arr_timeline
+            'title_timeline' => NULL,
+            'detail_timeline' => (!empty($_POST['txt_timeline'])) ? $_POST['txt_timeline'] : NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        echo $insertTM;
+        exit();
+    }
+    
     if ($action=='serv_end') { ##ปิดงาน/ส่งมอบงาน
         //echo $ref_id.'----xxx------'.$action; exit();
         $updateRow = [
             'duration_serv_end' => (date('Y-m-d H:i:s')),   //เวลาที่ซ่อมเสร็จ	
         ];
         ######### รอใส่โค๊ด Update Timeline ###########
-        ##                           ใส่โค๊ดตรงนี้                              ##
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 13, //REF. $arr_timeline
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
         ######### รอใส่โค๊ด Update Timeline ###########
         echo $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
         exit();
     }        
 
-    if ($action=='accept_request') {
+    if ($action=='accept_request') { //ช่างรับทราบ, รับงานซ่อม
         //echo $ref_id.'----xxx------'.$action;
         $updateRow = [
             'allotted_accept_date' => (date('Y-m-d H:i:s')),
@@ -226,12 +411,23 @@
                 'acknowledge_date' => (date('Y-m-d H:i:s')),
             ];
             $rowID = $obj->update($update_repairer, "ref_id_maintenance_request=".$_POST['ref_id']." AND ref_id_user_repairer=".$_SESSION['sess_id_user']."", "tb_ref_repairer");
-        }        
+        }
+        ######### Update Timeline ###########
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 19, //REF. $arr_timeline
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### .Update Timeline ###########        
         echo $rowID;
         exit();
     }
    
-    if ($action=='hand_over') {
+    if ($action=='hand_over'){ //ส่งมอบงาน/ปิดงาน
         $updateRow = [
             'hand_over_date' => (date('Y-m-d H:i:s')),
             'ref_id_user_hand_over' => $_SESSION['sess_id_user'],
@@ -239,28 +435,44 @@
         $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
         if($rowID=='Success'){
             ######### รอใส่โค๊ด Update Timeline ###########
-            ##                           ใส่โค๊ดตรงนี้                              ##
+            $insert_tm = [
+                'ref_id_maintenance_request' => $ref_id,
+                'timeline_date' => date('Y-m-d H:i:s'),
+                'ref_id_user' => $_SESSION['sess_id_user'],
+                'ref_arr_timeline' => 14, //REF. $arr_timeline ส่งมอบงาน รอผู้แจ้งซ่อมประเมิณ
+                'title_timeline' => NULL,
+                'detail_timeline' => NULL,
+            ];
+            $insertTM = $obj->addRow($insert_tm, "tb_timeline");
             ######### รอใส่โค๊ด Update Timeline ###########
             echo $rowID;
             exit();
         }
     }     
 
-    if ($action=='reject_hand_over') {
+    if ($action=='reject_hand_over'){ //ยกเลิกส่งมอบงาน ตีกลับช่างซ่อม
         $updateRow = [
             'duration_serv_end' => NULL,
         ];
         $rowID = $obj->update($updateRow, "id_maintenance_request=".$_POST['ref_id']."", "tb_maintenance_request");
         if($rowID=='Success'){
             ######### รอใส่โค๊ด Update Timeline ###########
-            ##                           ใส่โค๊ดตรงนี้                              ##
+            $insert_tm = [
+                'ref_id_maintenance_request' => $ref_id,
+                'timeline_date' => date('Y-m-d H:i:s'),
+                'ref_id_user' => $_SESSION['sess_id_user'],
+                'ref_arr_timeline' => 21, //REF. $arr_timeline ยกเลิกส่งมอบ ให้ช่างแก้ไขงานซ่อมใหม่
+                'title_timeline' => NULL,
+                'detail_timeline' => NULL,
+            ];
+            $insertTM = $obj->addRow($insert_tm, "tb_timeline");
             ######### รอใส่โค๊ด Update Timeline ###########
             echo $rowID;
             exit();
         }
     }
     
-    if ($action=='update_img_after') {
+    if ($action=='update_img_after') { //แนบรูปหลังซ่อม
         if(isset($_POST['data'])){
             ##"slt_failure_code=3&txt_failure_code=xxxx&txt_caused_by=xxxxxxx&slt_repair_code=6&txt_repair_code=xxxx&txt_solution=xxxxxx
             parse_str($_POST['data'], $output); //$output['period']
@@ -292,11 +504,22 @@
                     $imgRowID = $obj->addRow($insertPhoto, "tb_attachment");
                 }
             }
+            ######### รอใส่โค๊ด Update Timeline ###########
+            $insert_tm = [
+                'ref_id_maintenance_request' => $ref_id,
+                'timeline_date' => date('Y-m-d H:i:s'),
+                'ref_id_user' => $_SESSION['sess_id_user'],
+                'ref_arr_timeline' => 12, //REF. $arr_timeline อัพเดทข้อมูลภาพถ่ายหลังซ่อม
+                'title_timeline' => NULL,
+                'detail_timeline' => NULL,
+            ];
+            $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+            ######### รอใส่โค๊ด Update Timeline ###########
         }
         exit();
     }
 
-    if ($action=='update_parts'){
+    if ($action=='update_parts'){ //อัพเดทข้อมูลรายการอะไหล่ที่เปลี่ยน
         //#tb_change_parts  id_parts, ref_id_maintenance_request, parts_serialno, parts_name, parts_description, parts_price, parts_qty, date_parts_change, ref_id_user_change, date_adddata
         //echo "<pre>";    print_r($_POST);    echo "</pre>"; //exit();
         if(isset($_POST['data'])){
@@ -334,16 +557,25 @@
             ];            
             $rowID = $obj->update($updateRow, "id_parts=".$output['id_parts']."", "tb_change_parts");
         }
+
         ######### รอใส่โค๊ด Update Timeline ###########
-        ##                           ใส่โค๊ดตรงนี้                              ##
-        ######### รอใส่โค๊ด Update Timeline ###########
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 11, //REF. $arr_timeline อัพเดทข้อมูลรายการอะไหล่ที่เปลี่ยน
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### รอใส่โค๊ด Update Timeline ###########        
+        
         $rowID = str_replace(array("\r", "\n"), '', $rowID);
         echo strip_tags($rowID);
         exit();        
     }        
-
     
-    if ($action=='outsite_repair') {
+    if ($action=='outsite_repair') {//อัพเดทข้อมูลส่งซ่อมภายนอก
         //echo "<pre>";    print_r($_POST);    echo "</pre>"; //exit();
         if(isset($_POST['data'])){
             ##"slt_failure_code=3&txt_failure_code=xxxx&txt_caused_by=xxxxxxx&slt_repair_code=6&txt_repair_code=xxxx&txt_solution=xxxxxx
@@ -376,11 +608,22 @@
             ];
             $rowID = $obj->addRow($insertRow, "tb_outsite_repair");
         }
+        ######### รอใส่โค๊ด Update Timeline ###########
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 10, //REF. $arr_timeline อัพเดทข้อมูลส่งซ่อมภายนอก
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### รอใส่โค๊ด Update Timeline ###########        
         echo json_encode($rowID);
         exit();
     }
 
-    if ($action=='report_result') {
+    if ($action=='report_result') { //อัพเดทข้อมูลสรุปผลการซ่อม
         //echo "<pre>";    print_r($_POST);    echo "</pre>"; //exit();
         //echo $_POST['data'];        echo "\r\n\r\n";        echo $_POST['action'];        echo "\r\n\r\n";        echo $_POST['ref_id'];                echo "\r\n\r\n";
         if(isset($_POST['data'])){
@@ -413,12 +656,112 @@
             ];
             $rowID = $obj->addRow($insertRow, "tb_repair_result");
         }
-        ############# บันทึกLog ################
-        /*รอเขียนโค๊ด Log เพื่อทำ Timeline*/
-        ############# จบบันทึก Log #############
+        ############# บันทึก Timeline ################
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 9, //REF. $arr_timeline
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ############# จบบันทึก Timeline  #############
         echo json_encode($rowID);
         exit();
     }
+
+    
+    if ($action=='timeline') {
+        $arr_test_tm = array();
+        $rowTM = $obj->fetchRows("SELECT tb_timeline.*, tb_user.fullname FROM tb_timeline LEFT JOIN tb_user ON (tb_user.id_user=tb_timeline.ref_id_user)
+        WHERE tb_timeline.ref_id_maintenance_request=".$ref_id." ORDER BY tb_timeline.timeline_date ASC"); // AND tb_ref_repairer.status_repairer=1 
+        if (count($rowTM)!=0){
+          foreach($rowTM as $key => $value){
+            //tb_timeline id_timeline, ref_id_maintenance_request, timeline_date, ref_id_user, ref_arr_timeline, title_timeline, detail_timeline
+              $date = explode(" ", $rowTM[$key]['timeline_date']);
+              $addArr = [
+              'date' => $date[0],
+              'id_timeline' => $rowTM[$key]['timeline_date'],
+              'ref_id_maintenance_request' => $rowTM[$key]['ref_id_maintenance_request'],
+              'timeline_date' => $rowTM[$key]['timeline_date'],
+              'ref_id_user' => $rowTM[$key]['ref_id_user'],
+              'fullname' => $rowTM[$key]['fullname'],
+              'ref_arr_timeline' => $rowTM[$key]['ref_arr_timeline'],
+              'title_timeline' => $rowTM[$key]['title_timeline'],
+              'detail_timeline' => $rowTM[$key]['detail_timeline'],
+            ];
+            array_push($arr_test_tm, $addArr);
+          }
+          $key_values = array_column($arr_test_tm, 'timeline_date'); 
+          array_multisort($key_values, SORT_ASC, $arr_test_tm);
+          //echo '<pre>'; print_r($arr_test_tm); echo '</pre>';
+        }
+        $i = 1;
+        foreach($arr_test_tm as $key => $value){
+          if($key==0){
+            $chk_date = $arr_test_tm[$key]['date'];
+          }
+          if($chk_date==$arr_test_tm[$key]['date']){
+            if($i==1){
+              $i++;
+              echo '<!-- timeline time label --><div class="time-label"><span class="bg-warning">'.nowDateShort($arr_test_tm[$key]['date']).'</span></div><!--.timeline time label -->';
+              //echo '<div class="text-bold">(A)-'.$arr_test_tm[$key]['date'].'</div>';
+              //echo 'a.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+              echo '<div>'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][2].'
+              <div class="timeline-item">
+                <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
+                <h3 class="timeline-header text-bold text-sm">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].': '.$i.'</h3>
+                <div class="timeline-body">'.((!empty($rowTM[$key]['detail_timeline']) ? '<p class="p-0 m-0 text-sm"><i class="fas fa-quote-left"></i> '.$rowTM[$key]['detail_timeline'].'  <i class="fas fa-quote-right"></i></p>' : '')).' โดย: '.$rowTM[$key]['fullname'].'</div>
+              </div>
+            </div>';
+            }else{
+              //echo 'b.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+              echo '<div>'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][2].'
+              <div class="timeline-item">
+                <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
+                <h3 class="timeline-header text-bold text-sm">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].'</h3>
+                <div class="timeline-body">'.((!empty($rowTM[$key]['detail_timeline']) ? '<p class="p-0 m-0 text-sm"><i class="fas fa-quote-left"></i> '.$rowTM[$key]['detail_timeline'].'   <i class="fas fa-quote-right"></i></p>' : '')).' โดย: '.$rowTM[$key]['fullname'].'</div>
+              </div>
+            </div>';
+              $i++;
+            }
+          }else{
+            $i = 1;
+            $chk_date=$arr_test_tm[$key]['date'];
+            if($i==1){
+              $i++;
+              //echo '<div class="text-bold">(B)-'.$arr_test_tm[$key]['date'].'</div>';
+              //echo 'a.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+              echo '<!-- timeline time label --><div class="time-label"><span class="bg-warning">'.nowDateShort($arr_test_tm[$key]['date']).'</span></div><!--.timeline time label -->';
+              echo '<div>'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][2].'
+              <div class="timeline-item">
+                <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
+                <h3 class="timeline-header text-bold text-sm">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].'</h3>
+                <div class="timeline-body">'.((!empty($rowTM[$key]['detail_timeline']) ? '<p class="p-0 m-0 text-sm"><i class="fas fa-quote-left"></i> '.$rowTM[$key]['detail_timeline'].'   <i class="fas fa-quote-right"></i></p>' : '')).' โดย: '.$rowTM[$key]['fullname'].'</div>
+              </div>
+            </div>';                                  
+            }else{
+              //echo 'b.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
+              echo '<div>'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][2].'
+              <div class="timeline-item">
+                <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
+                <h3 class="timeline-header text-bold text-sm">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].'</h3>
+                <div class="timeline-body">'.((!empty($rowTM[$key]['detail_timeline']) ? '<p class="p-0 m-0 text-sm"><i class="fas fa-quote-left"></i> '.$rowTM[$key]['detail_timeline'].'  <i class="fas fa-quote-right"></i></p>' : '')).' โดย: '.$rowTM[$key]['fullname'].'</div>
+              </div>
+            </div>';                                  
+              $i++;
+            }
+          }
+        }
+        
+        if($rowTM[$key]['ref_arr_timeline']!=16){
+            echo '<div><i class="far fa-clock bg-gray"></i></div>';
+        }else{
+            echo '<div><i class="far fa-laugh-squint bg-success"></i></div>';
+        }
+        exit();
+    }        
 
     if ($action=='update_reject') {
         $updateRow = [
@@ -438,7 +781,7 @@
         exit();
     }    
 
-    if ($action=='cancel-req') {
+    if ($action=='cancel-req'){//ยกเลิกใบแจ้งซ่อม
         $insertRow = [
             'cause_mt_request_cancel' => (!empty($_POST['cancel_statement'])) ? $_POST['cancel_statement'] : '',
             'maintenance_request_status' => 2,
@@ -448,9 +791,21 @@
         $resultUpdate = $obj->update($insertRow, "id_maintenance_request=".$ref_id."", "tb_maintenance_request");
         echo json_encode($resultUpdate);
         exit();
+
+        ######### รอใส่โค๊ด Update Timeline ###########
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 2, //REF. $arr_timeline ยกเลิกใบแจ้งซ่อม
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### รอใส่โค๊ด Update Timeline ###########        
     }
 
-    if ($action=='change_mechanic') {
+    if ($action=='change_mechanic') { //แก้ไขผู้รับผิดชอบงานซ่อม
         /*echo count($_POST['slt_select2_mechanic']);
         print_r($_POST['slt_select2_mechanic']);
         echo "\r\n";
@@ -487,6 +842,17 @@
                 $rowID = $obj->addRow($insertRow, "tb_ref_repairer");
             }
         }
+        ######### Update Timeline ###########
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 7, //REF. $arr_timeline
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### .Update Timeline ###########
         echo json_encode($rowID);
         exit();        
     }

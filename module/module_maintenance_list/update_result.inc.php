@@ -268,7 +268,7 @@ if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ])', $myString)){ //
 <!-- Select2 -->
 <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
 <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">                            
-            <label>ผู้รับผิดชอบงานซ่อม<?PHP echo $ref_id;?> / <?PHP echo $_POST['id_dept_responsibility'];?>:</label>
+            <label>ผู้รับผิดชอบงานซ่อม:</label>
             <select class="select2_mechanic" name="slt_select2_mechanic" id="slt_select2_mechanic" multiple="multiple" data-placeholder="Select a State" style="width: 100%;">
             <?PHP
                 ##เช็คว่ามีช่างซ่อม $ref_id นี้หรือยัง
@@ -474,6 +474,17 @@ $(function () {
             'allotted_date' => (date('Y-m-d H:i:s')),
         ];
         $resultUpdate = $obj->update($updateRow, "id_maintenance_request=".$ref_id."", "tb_maintenance_request");
+        ######### Update Timeline ###########
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 4, //REF. $arr_timeline
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### .Update Timeline ###########
         echo json_encode($resultUpdate);
         exit();        
     }
@@ -511,6 +522,17 @@ $(function () {
             'ref_id_mt_type' => (!empty($_POST['slt_maintenance_type'])) ? $_POST['slt_maintenance_type'] : ''
         ];
         $resultUpdate = $obj->update($insertRow, "id_maintenance_request=".$ref_id."", "tb_maintenance_request");
+        ######### Update Timeline ###########
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 18, //REF. $arr_timeline
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### .Update Timeline ###########
         echo json_encode($resultUpdate);
         exit();        
     }

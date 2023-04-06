@@ -41,30 +41,49 @@ $(document).ready(function(){
             }
         });
     }
-    $.ajax({
-        url: "module/module_maintenance_list/update_result.inc.php",
-        type: "POST",
-        data:{"action":"add_mechanic","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>, "slt_select2_mechanic":slt_select2_mechanic},
-        beforeSend: function () {
-        },
-        success: function (data) {
-            console.log(data);
-            window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
-            if(data="Success"){
-                return false;
-                //$(".modal-body-update-type").html(data);
-                //var txt_slt_maintenance_type = $("#slt_maintenance_type option:selected" ).text();   
-                //$('.span_mt_type').html('- '+txt_slt_maintenance_type);
-                //$('#modal-maintenance_type').modal('toggle');
-                //swal("สำเร็จ!", "อัพเดทประเภทใบแจ้งซ่อมแล้ว", "success");
+    swal({
+        title: "ยืนยันการอนุมัติ \r\n และจ่ายงานซ่อม ?",   text: "ใบแจ้งซ่อมเลขที่: <?PHP echo $breadcrumb_txt;?>",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "ตกลง",
+        cancelButtonText: "ไม่, ยกเลิก",        
+        closeOnConfirm: false 
+      }, function(){   
+        $.ajax({
+            url: "module/module_maintenance_list/update_result.inc.php",
+            type: "POST",
+            data:{"action":"add_mechanic","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>, "slt_select2_mechanic":slt_select2_mechanic},            
+            beforeSend: function () {
+            },success: function (data) {
+                console.log(data); //return false;
+                //event.stopPropagation();
+                $(".modal").hide().fadeOut();
+                if(data.error=='over_req'){
+                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+                    return false;
+                }
+                swal({
+                    title: "สำเร็จ!",
+                    text: "บันทึกข้อมูลเรียบร้อยแล้ว",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    console.log(data);
+                    //event.stopPropagation();
+                    //return false();
+                    //alert(ref_id);
+                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                })
+            },error: function (data) {
+                console.log(data);
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
             }
-        },
-            error: function (jXHR, textStatus, errorThrown) {
-            console.log(data);
-            //alert(errorThrown);
-            swal("Error!", ""+errorThrown+"", "error");
-        }
+        });
     });
+    event.preventDefault();    
+    event.stopPropagation();
     });
 
 });

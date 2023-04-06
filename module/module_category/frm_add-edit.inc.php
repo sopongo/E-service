@@ -34,6 +34,31 @@
                     <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p></div>
                     <div class="card-body p-3"> 
 
+
+                    <div class="row row-2">
+                        <div class="col-sm-6 col-md-6 col-xs-6">  
+                            <div class="form-group mb-2">
+                                <label>ไซต์งาน: </label> 
+                                <select class="custom-select" name="ref_id_site" id="ref_id_site" style="width:100%; font-size:0.85rem;" required>  
+                                    <?PHP
+                                    //id_menu name_menu
+                                    $rowData = $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY id_site ASC");
+                                    if (count($rowData)!=0) {
+                                        echo '<option value="" disabled>ไซต์ที่ใช้งาน</option>';
+                                        foreach($rowData as $key => $value) {
+                                            echo '<option value="'.$rowData[$key]['id_site'].'" '.($_SESSION['sess_ref_id_site']!=$rowData[$key]['id_site'] ? 'disabled' : 'selected').'>'.$rowData[$key]['site_initialname'].' - '.$rowData[$key]['site_name'].'</option>';
+                                        }
+                                    } else {
+                                        echo '<option disabled selected value="" >เลือกแผนกที่รับผิดชอบ</option>  ';
+                                    }
+                                    ?>
+                                </select>
+                                <div class="invalid-feedback">เลือกแผนกที่รับผิดชอบ</div>
+                            </div>
+                        </div>
+                        </div><!--row-2-->                    
+
+                    
                         <div class="row row-2">
                         <div class="col-sm-6 col-md-6 col-xs-6">  
                             <div class="form-group mb-2">
@@ -43,9 +68,9 @@
                                     //id_menu name_menu
                                     $rowData = $obj->fetchRows("SELECT * FROM tb_dept WHERE mt_request_manage=1 AND dept_status=1 ORDER BY id_dept ASC");
                                     if (count($rowData)!=0) {
-                                        echo '<option value="" disabled selected>เลือกแผนกที่รับผิดชอบ</option>';
+                                        echo '<option value="" disabled>เลือกแผนกที่รับผิดชอบ</option>';
                                         foreach($rowData as $key => $value) {
-                                            echo '<option value="'.$rowData[$key]['id_dept'].'">'.$rowData[$key]['dept_initialname'].' - '.$rowData[$key]['dept_name'].'</option>';
+                                            echo '<option value="'.$rowData[$key]['id_dept'].'" '.($_SESSION['sess_id_dept']!=$rowData[$key]['id_dept'] ? 'disabled' : 'selected').'>'.$rowData[$key]['dept_initialname'].' - '.$rowData[$key]['dept_name'].'</option>';
                                         }
                                     } else {
                                         echo '<option disabled selected value="" >เลือกแผนกที่รับผิดชอบ</option>  ';

@@ -40,7 +40,9 @@ div.dataTables_wrapper {
         </div>
 
 
+      <?PHP
 
+      ?>
         <div class="card-body">
         <div class="row">
                   
@@ -109,8 +111,8 @@ div.dataTables_wrapper {
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>วันที่โพส</th>
-                      <th>ประกาศ</th>
+                      <th>วันที่ประกาศ</th>
+                      <th>หัวข้อประกาศ</th>
                       <th>ผู้ประกาศ</th>
                     </tr>
                   </thead>

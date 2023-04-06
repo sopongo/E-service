@@ -10,7 +10,6 @@ switch($denied_requestid){
 @media only screen and (max-width:640px) {
     /*.card-title{ width:100%;  background-color: #000; padding-bottom:50px ;}*/
 }
-
 .showSweetAlert h2{ font-size:1.5rem;}
 .showSweetAlert p{ font-size:1rem;}
 .btn-gray {    color: #333;    background-color: #e7e7e7;    border-color: #e3e3e3;    box-shadow: none;}
@@ -185,7 +184,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                   <img class="profile-user-img img-fluid img-circle" src="dist/img/mt_request/icon_view.png" alt="User profile picture">
                 </div>
                 <h3 class="profile-username text-center">สถานะการซ่อม</h3>
-                <p class="text-muted text-center">วันที่อัพเดท: 00/00/0000</p>
+                <p class="text-muted text-center"></p>
 
                 <ul class="list-group list-group-unbordered mb-1">
                 <?PHP if($rowData['maintenance_request_status']==2){?>
@@ -198,7 +197,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                     <b>ความเร่งด่วน</b> <span class="float-right"> <?PHP echo $rowData['urgent_type']==1 ? '<i class="fas fa-lightbulb fa-1x"></i> '.$urgentArr[$rowData['urgent_type']] : '<span class="text-green">'.$urgentArr[$rowData['urgent_type']].'</span>';?></span>
                   </li>
                   <li class="list-group-item">
-                    <b>ประเภทใบแจ้งซ่อม</b> <?PHP if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL && $chk_responsibility==1){?><button type="button" class="btn btn-default btn-sm float-right btn-update-type ml-2" data-toggle="modal" data-target="#modal-maintenance_type" id="btn_maintenance_type" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button> <?PHP } ?>
+                    <b>ประเภทใบแจ้งซ่อม</b> <?PHP if((($_SESSION['sess_class_user']==2 && $chk_responsibility==1) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)) && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL){?><button type="button" class="btn btn-default btn-sm float-right btn-update-type ml-2" data-toggle="modal" data-target="#modal-maintenance_type" id="btn_maintenance_type" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button> <?PHP } ?>
                       <span class="d-block pt-2 pl-3 span_mt_type"><?PHP echo $rowData['name_mt_type']!='' ? '- '.$rowData['name_mt_type'] : '- ยังไม่ระบุ';?>	</span>
                   </li>
                   <li class="list-group-item bg-hover">
@@ -250,16 +249,6 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                     <?PHP
                       }else if($rowData['duration_serv_start']!='' && $rowData['duration_serv_end']!=NULL){
                         //echo $rowData['duration_serv_end'];
-                        function duration($begin,$end){
-                          $remain=intval(strtotime($end)-strtotime($begin));
-                          $wan=floor($remain/86400);
-                          $l_wan=$remain%86400;
-                          $hour=floor($l_wan/3600);
-                          $l_hour=$l_wan%3600;
-                          $minute=floor($l_hour/60);
-                          $second=$l_hour%60;
-                          return "".$wan." วัน ".$hour." ชั่วโมง ".$minute." นาที ".$second." วินาที";
-                      }
                       ?>
                     <b>ใช้เวลาซ่อมรวม</b> <span class="float-right text-right"><?PHP echo duration($rowData['duration_serv_start'], $rowData['duration_serv_end']);?></span>
                       <?PHP
@@ -281,7 +270,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                 <?PHP if($chk_responsibility==1 && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1 && $_SESSION['sess_class_user']==2){?>
                     <a href="#" class="btn btn-warning btn-block btn-start_repair">เริ่มซ่อม</a>
                 <?PHP } ?>
-                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
+                <?PHP if(($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
                     <a href="#" class="btn btn-warning btn-block btn-serv_end">ปิดงาน</a>
                 <?PHP } ?>
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']!=NULL  && $rowData['hand_over_date']==NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){?>
@@ -327,15 +316,15 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
             <div class="card">
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab">รายละเอียด</a></li>
-                  <li class="nav-item"><a class="nav-link active" href="#timeline" data-toggle="tab">ไทม์ไลน์</a></li>
+                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">รายละเอียด</a></li>
+                  <li class="nav-item"><a class="nav-link btn-timeline" href="#timeline" data-toggle="tab">ไทม์ไลน์</a></li>
                   <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">ติดตามงานซ่อม</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
                 <div class="tab-content">
 
-                  <div class="tab-pane" id="activity"><!--active-->
+                  <div class="tab-pane active" id="activity"><!--active-->
 
               <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2"><i class="fas fa-user"></i> ผู้แจ้งซ่อม: </div><br>
               <div class="row invoice-info linehi-170">
@@ -406,7 +395,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
 
                 <div class="col-sm-12 mt-3 ">
                 <div class="card-title d-block text-bold w-100 border-bottom pb-1 mb-2 text-red"><i class="fas fa-info-circle"></i> อาการเสีย/ปัญหาที่พบ: 
-                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || ($chk_responsibility==1)) && $rowData['maintenance_request_status']!=2 && $rowData['hand_over_date']==NULL && ($_SESSION['sess_id_dept']==$rowData['ref_id_dept_responsibility'])){ ?>
+                <?PHP if(($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || $chk_responsibility==1) && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL && $rowData['hand_over_date']==NULL && ($_SESSION['sess_id_dept']==$rowData['ref_id_dept_responsibility'])){ ?>
                 <button type="button" class="btn btn-default btn-sm btn-problem_statement"  data-toggle="modal" data-target="#modal-problem_statement" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button><?PHP } ?></div><br>
                     <p class="problem_statement"><?PHP echo $rowData['problem_statement'];?></p>
                 </div><!-- /.col -->                
@@ -633,165 +622,46 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
               
             </div><!-- /.tab-pane -->
 
-                  <div class="active tab-pane" id="timeline"><!--active-->
+                  <div class="tab-pane" id="timeline"><!--active-->
                     <!-- The timeline -->
-                    <div class="timeline timeline-inverse">
+                    <div class="timeline timeline-inverse timeline_data">
                       <!-- timeline time label -->
-                      <!--<div class="time-label"><span class="bg-danger"><?PHP echo nowDateShort(date('Y-m-d H:i:s'))?></span></div>-->
+                      <!--<div class="time-label"><span class="bg-danger">xxx</span></div>-->
                       <!-- /.timeline-label -->
                       <!-- timeline item -->
-                      <?PHP
-                            $arr_test_tm = array();
-                            $rowTM = $obj->fetchRows("SELECT * FROM tb_timeline WHERE ref_id_maintenance_request=".$rowData['id_maintenance_request']." ORDER BY timeline_date ASC"); // AND tb_ref_repairer.status_repairer=1 
-                            if (count($rowTM)!=0){
-                              foreach($rowTM as $key => $value){
-                                //tb_timeline id_timeline, ref_id_maintenance_request, timeline_date, ref_id_user, ref_arr_timeline, title_timeline, detail_timeline
-                                  $date = explode(" ", $rowTM[$key]['timeline_date']);
-                                  $addArr = [
-                                  'date' => $date[0],
-                                  'id_timeline' => $rowTM[$key]['timeline_date'],
-                                  'ref_id_maintenance_request' => $rowTM[$key]['ref_id_maintenance_request'],
-                                  'timeline_date' => $rowTM[$key]['timeline_date'],
-                                  'ref_id_user' => $rowTM[$key]['ref_id_user'],
-                                  'ref_arr_timeline' => $rowTM[$key]['ref_arr_timeline'],
-                                  'title_timeline' => $rowTM[$key]['title_timeline'],
-                                  'detail_timeline' => $rowTM[$key]['detail_timeline'],
-                                ];
-                                array_push($arr_test_tm, $addArr);
-                              }
-                              $key_values = array_column($arr_test_tm, 'timeline_date'); 
-                              array_multisort($key_values, SORT_ASC, $arr_test_tm);
-                              //echo '<pre>'; print_r($arr_test_tm); echo '</pre>';
-                            }
-
-                            $i = 1;
-                            foreach($arr_test_tm as $key => $value){
-                              if($key==0){
-                                $chk_date = $arr_test_tm[$key]['date'];
-                              }
-                              if($chk_date==$arr_test_tm[$key]['date']){
-                                if($i==1){
-                                  $i++;
-                                  echo '<!-- timeline time label --><div class="time-label"><span class="bg-warning">'.nowDateShort($arr_test_tm[$key]['date']).'</span></div><!--.timeline time label -->';
-                                  //echo '<div class="text-bold">(A)-'.$arr_test_tm[$key]['date'].'</div>';
-                                  //echo 'a.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
-                                  echo '<div>
-                                  <i class="fas fa-file-invoice bg-primary"></i>
-                                  <div class="timeline-item">
-                                    <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
-                                    <h3 class="timeline-header text-bold">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].': '.$rowData['maintenance_request_no'].'</h3>
-                                    <div class="timeline-body">หกดกหดกกดหกดห</div>
-                                  </div>
-                                </div>';
-                                }else{
-                                  //echo 'b.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
-                                  echo '<div>
-                                  <i class="fas fa-file-invoice bg-primary"></i>
-                                  <div class="timeline-item">
-                                    <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
-                                    <h3 class="timeline-header text-bold">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].'</h3>
-                                    <div class="timeline-body">ชื่อเครื่องจักร / อาการเสีย / ผู้แจ้ง</div>
-                                  </div>
-                                </div>';
-                                  $i++;
-                                }
-                              }else{
-                                $i = 1;
-                                $chk_date=$arr_test_tm[$key]['date'];
-                                if($i==1){
-                                  $i++;
-                                  //echo '<div class="text-bold">(B)-'.$arr_test_tm[$key]['date'].'</div>';
-                                  //echo 'a.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
-                                  echo '<!-- timeline time label --><div class="time-label"><span class="bg-warning">'.nowDateShort($arr_test_tm[$key]['date']).'</span></div><!--.timeline time label -->';
-                                  echo '<div>
-                                  <i class="fas fa-file-invoice bg-primary"></i>
-                                  <div class="timeline-item">
-                                    <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
-                                    <h3 class="timeline-header text-bold">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].'</h3>
-                                    <div class="timeline-body">ชื่อเครื่องจักร / อาการเสีย / ผู้แจ้ง</div>
-                                  </div>
-                                </div>';                                  
-                                }else{
-                                  //echo 'b.'.$arr_test_tm[$key]['timeline_date'].'---->id_timeline--->'.$arr_test_tm[$key]['id_timeline']."(id_timeline)----->".$i."<br />";
-                                  echo '<div>
-                                  <i class="fas fa-file-invoice bg-primary"></i>
-                                  <div class="timeline-item">
-                                    <span class="time"><i class="far fa-clock"></i> '.timeAgo($rowTM[$key]['timeline_date']).' ('.nowDateShort($rowTM[$key]['timeline_date']).' เวลา: '.nowTime($rowTM[$key]['timeline_date']).')</span>
-                                    <h3 class="timeline-header text-bold">'.$arr_timeline[$rowTM[$key]['ref_arr_timeline']][1].'</h3>
-                                    <div class="timeline-body">ชื่อเครื่องจักร / อาการเสีย / ผู้แจ้ง</div>
-                                  </div>
-                                </div>';                                  
-                                  $i++;
-                                }
-                              }
-                            }                            
-                        ?>
                       <!-- END timeline item -->
-
-                      <div>
-                        <i class="far fa-clock bg-gray"></i>
-                      </div>
                     </div>
                   </div>
                   <!-- /.timeline tab-pane -->
 
                   <div class="tab-pane" id="settings">
-                    <?PHP 
-                      if($id=='show'){
-                    ?>
                     <form class="form-horizontal">
                       <div class="form-group row">
-                        <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                        <label for="inputName" class="col-sm-2 col-form-label">ชื่อ-นามสกุล</label>
                         <div class="col-sm-10">
-                          <input type="email" class="form-control" id="inputName" placeholder="Name">
+                          <input type="email" class="form-control" id="inputName" placeholder="ชื่อ-นามสกุล" value="<?PHP echo $_SESSION['sess_fullname']; ?>" disabled>
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                        <label for="inputEmail" class="col-sm-2 col-form-label">อีเมล์</label>
                         <div class="col-sm-10">
-                          <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                          <input type="email" class="form-control" id="inputEmail" placeholder="อีเมล์" value="<?PHP echo $_SESSION['sess_email']; ?>" disabled>
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="inputName2" class="col-sm-2 col-form-label">Name</label>
+                        <label for="txt_timeline" class="col-sm-2 col-form-label">ข้อความ</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputName2" placeholder="Name">
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>
-                        <div class="col-sm-10">
-                          <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                          <textarea class="form-control" id="txt_timeline" name="txt_timeline" placeholder="พิมพ์ข้อความที่ต้องการ"></textarea>
                         </div>
                       </div>
                       <div class="form-group row">
                         <div class="offset-sm-2 col-sm-10">
-                          <div class="checkbox">
-                            <label>
-                              <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <div class="offset-sm-2 col-sm-10">
-                          <button type="submit" class="btn btn-danger">Submit</button>
+                          <button type="button" class="btn btn-danger btn-posttimeline">บันทึกไทม์ไลน์</button>
                         </div>
                       </div>
                     </form>
                   </div>
                   <!-- /.tab-pane -->
-                  <?PHP 
-                      }else{
-                        echo 'Coming Soon.';
-                      }
-                    ?>
                 </div>
                 <!-- /.tab-content -->
               </div><!-- /.card-body -->
@@ -839,6 +709,25 @@ $(document).on('click', '[data-toggle="lightbox"]', function(event) {
       });
 });
 
+$(document).on("click", ".btn-timeline", function (e){ 
+  e.stopPropagation();
+  $.ajax({
+        url: "module/module_maintenance_list/send_request.inc.php",
+        type: "POST",
+        data:{"action":"timeline","ref_id":<?PHP echo $rowData['id_maintenance_request']; ?>},
+        beforeSend: function () {
+        },
+        success: function (data) {
+            //console.log(data);
+            $('.timeline_data').html(data)
+        },
+            error: function (jXHR, textStatus, errorThrown) {
+            console.log(data);
+            //alert(errorThrown);
+            swal("Error!", ""+errorThrown+"", "error");
+        }
+    });
+});
 
 $(document).on("click", ".btn-update_outsite", function (e){ 
   if(chk_allotted_date==''){
@@ -1167,6 +1056,56 @@ $(document).on("click", ".btn-problem_statement", function (e){
           swal("Error!", ""+errorThrown+"", "error");
       }
   });
+});
+
+$(document).on("click", ".btn-posttimeline", function (event){ 
+  var txt_timeline = $('#txt_timeline').val();
+  if(txt_timeline==''){
+    sweetAlert("ผิดพลาด!", "กรอกข้อความที่ต้องการ", "error");
+    return false;
+  }
+  swal({
+        title: "ยืนยันการโพสไทม์ไลน์ ?",   text: "ใบแจ้งซ่อมเลขที่: <?PHP echo $breadcrumb_txt;?>",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "ปิดงานซ่อม",
+        cancelButtonText: "ไม่, ยกเลิก",        
+        closeOnConfirm: false 
+      }, function(){   
+        $.ajax({
+            url: "module/module_maintenance_list/send_request.inc.php",
+            type: "POST",
+            data:{ "action":"post_timeline", ref_id:<?PHP echo $rowData['id_maintenance_request']; ?>, txt_timeline:txt_timeline},
+            beforeSend: function () {
+            },success: function (data) {
+                console.log(data); //return false;
+                event.stopPropagation();
+                if(data.error=='over_req'){
+                    sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+                    return false;
+                }
+                swal({
+                    title: "บันทึกติดตามงานซ่อมแล้ว.",
+                    text: "โพสติดตามงานซ่อมเรียบร้อยแล้ว",
+                    type: "success",
+                    //timer: 3000
+                }, 
+                function(){
+                    //console.log(data);
+                    //event.stopPropagation();
+                    //return false();
+                    //alert(ref_id);
+                    window.location.href = '?module=requestid&id=<?PHP echo $rowData['id_maintenance_request']; ?>';
+                })
+            },error: function (data) {
+                console.log(data);
+                sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
+            }
+        });
+    });
+    event.preventDefault();    
+    event.stopPropagation();
 });
 
 $(document).on("click", ".btn-serv_end", function (event){ 

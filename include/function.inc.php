@@ -3,6 +3,34 @@
  // class Currency โดย http://www.goragod.com (กรกฎ วิริยะ)
  // สงวนลิขสิทธ์ ห้ามซื้อขาย ให้นำไปใช้ได้ฟรีเท่านั้น
 
+ function duration($begin,$end){
+    $remain=intval(strtotime($end)-strtotime($begin));
+    $wan=floor($remain/86400);
+    $l_wan=$remain%86400;
+    $hour=floor($l_wan/3600);
+    $l_hour=$l_wan%3600;
+    $minute=floor($l_hour/60);
+    $second=$l_hour%60;
+    return "".$wan." วัน ".$hour." ชั่วโมง ".$minute." นาที ".$second." วินาที";
+}
+
+ function  chk_iconTimeline($index) {
+    switch($index){ //$rowTM[$key]['ref_arr_timeline'];
+        case 0:
+        case 1:
+        default:
+            $icon = '<i class="fas fa-file-invoice bg-primary"></i>';
+            return $icon;
+        break;
+
+        case 4:
+            $icon = '<i class="fas fa-clipboard-check bg-success"></i>';
+            return $icon;
+        break;        
+
+    }
+ }
+
  function searchArray($arrays, $key, $search) {
     $count = 0; 
     foreach($arrays as $object) {
