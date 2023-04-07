@@ -1,5 +1,11 @@
+    <link type="text/css" rel="stylesheet" href="plugins/drawing-signature/css/bcPaint.css" />
+	<!--<link type="text/css" rel="stylesheet" href="plugins/drawing-signature/css/demo-page.css" />-->
+	<link type="text/css" rel="stylesheet" href="plugins/drawing-signature/css/bcPaint.mobile.css" />
+	<script type="text/javascript" src="plugins/drawing-signature/js/bcPaint.js"></script>
+
     <!-- Main content -->
     <section class="content">
+
     <div class="alert alert-danger alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <h5><i class="icon fas fa-ban"></i> แจ้งเตือน!</h5> -หากเลือกไซต์งาน หรือ แผนก ผิด ให้ติดต่อแผนก IT เพื่อแก้ไข <br/>- ใช้อีเมล์แอคเค้าท์ ที่มีอยู่จริง เพื่อให้ระบบสามารถส่งอีเมล์หาคุณได้
@@ -104,26 +110,6 @@
                                 </div>  
                             </div>  
 
-
-                            <div class="row row-6">
-                            <div class="col-sm-12 col-md-12 col-xs-12">  
-                                <div class="form-group">  
-                                    <label for="firstname">ระดับผู้ใช้งาน:<span class="text-danger">**</span></label>  
-                                    <div class="form-group clearfix">
-                                        <?PHP
-                                            foreach($classArr as $index=> $value){
-                                                if($index!=0){
-                                                    echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" '.($index==$_SESSION['sess_class_user'] ? 'checked' : '').' value="'.$index.'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').' name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
-                                                }
-                                            }
-                                            //$value==end($classArr) ? '<div class="invalid-feedback">เลือกระดับผู้ใช้งาน</div>
-                                        ?>
-                                        </div>
-                                </div>
-                            </div>
-                        </div><!--row-6 -->                            
-
-                            <?PHP if($_SESSION['sess_class_user']!=999){?>
                             <div class="row row-7">
                             <div class="col-sm-12 col-md-12 col-xs-12">
                                 <div class="form-group">  
@@ -133,15 +119,15 @@
                                             $rowSite= $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY site_initialname DESC");                 
                                             if (count($rowSite)>0){
                                                 foreach($rowSite as $key => $value) {
-                                                    echo '<div class="icheck-primary d-inline-block mr-4"><input type="checkbox" name="ref_id_site[]" id="ref_id_site'.$rowSite[$key]['id_site'].'" '.($rowSite[$key]['id_site']==$_SESSION['sess_ref_id_site'] ? 'checked' : '').' value="'.$rowSite[$key]['id_site'].'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').'><label for="ref_id_site'.$rowSite[$key]['id_site'].'">'.$rowSite[$key]['site_initialname'].'</label></div>'."\r\n";
+                                                    echo '<div class="icheck-primary d-inline-block mr-4"><input type="checkbox" name="ref_id_site[]" id="ref_id_site'.$rowSite[$key]['id_site'].'" value="'.$rowSite[$key]['id_site'].'" '.($rowSite[$key]['id_site']!=$_SESSION['sess_ref_id_site'] && $_SESSION['sess_class_user']!=5 ? 'disabled' : '').''.($rowSite[$key]['id_site']==$_SESSION['sess_ref_id_site'] ? 'checked disabled' : '').' required><label for="ref_id_site'.$rowSite[$key]['id_site'].'">'.$rowSite[$key]['site_initialname'].'</label></div>'."\r\n";
                                                 }
                                             }
                                         ?>
+                                            <div class="invalid-feedback">เลือกไซต์งาน</div>
                                         </div>
                                 </div>
                             </div>
                         </div><!--row-7 -->
-                        <?PHP } ?>
 
                             <div class="row mt-3"> 
                             <div class="col-sm-4 col-md-4 col-xs-12">  
@@ -154,7 +140,21 @@
                                         </div>  
                                     </div>   
                             </div>  
-                            </div>    
+                            </div>
+
+                            <div class="row">  
+                            <div class="col-sm-6 col-md-6 col-xs-6">  
+                            <div class="form-group">           
+                            <label>ลายเซ็น (ถ้ามี)</label>                         
+			<div id="bcPaint"></div>
+			<script type="text/javascript">
+				$('#bcPaint').bcPaint();
+			</script>
+    </div>
+    </div>    
+    </div>
+
+    
                                 
 
                             <div class="row">  
@@ -214,6 +214,31 @@ $(document).ready(function () {
   // add/edit user
   $(document).on("submit", ".addform", function (event) {
     event.preventDefault();  
+    //var image_object_url = URL.createObjectURL($("#img_signature").get(0).files[0]);
+    
+//
+    var canvas  = document.getElementById("bcPaintCanvas");
+    var image_data = canvas.toDataURL("image/png");
+    alert('dfsgsdfsfd'+image_data);
+
+    $.ajax({
+      url: "module/module_user/ajax_action.php",
+      type: "POST",
+      data: {imgurl:image_data, action:"image"},
+      beforeSend: function () {
+      },
+      success: function (response) {
+        console.log(response); 
+      },
+      error: function (response) {
+        console.log("ไม่สำเร็จ! มีบางอย่างผิดพลาด!"+response);
+        sweetAlert("ไม่สำเร็จ!", 'มีบางอย่างผิดพลาด', "error");
+        return false;
+      },
+    });    
+
+    //img_signature
+    return false;
     var no_user = $("#no_user").val();
     if($.isNumeric(no_user)==false){
       sweetAlert("ผิดพลาด!", 'รหัสพนักงานไม่ถูกต้อง', "error");
@@ -232,7 +257,6 @@ $(document).ready(function () {
       },
       success: function (response) {
         console.log(response); 
-        return false;
         if (response) {
           swal({
             title: "สำเร็จ!",

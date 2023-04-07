@@ -85,7 +85,7 @@ no_user     password        email       fullname        class_user      ref_id_s
                                         <?PHP
                                             foreach($classArr as $index=> $value){
                                                 if($index!=0){
-                                                    echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" '.(($index==4 || $index==5) && $_SESSION['sess_class_user']!=5 ? 'disabled' : '').' name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
+                                                    echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" '.($index==$_SESSION['sess_class_user'] ? 'checked' : '').' value="'.$index.'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').' name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
                                                 }
                                             }
                                             //$value==end($classArr) ? '<div class="invalid-feedback">เลือกระดับผู้ใช้งาน</div>
@@ -105,7 +105,7 @@ no_user     password        email       fullname        class_user      ref_id_s
                                             $rowSite= $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY site_initialname DESC");                 
                                             if (count($rowSite)>0){
                                                 foreach($rowSite as $key => $value) {
-                                                    echo '<div class="icheck-primary d-inline-block mr-4"><input type="checkbox" name="ref_id_site[]" id="ref_id_site'.$key.'" value="'.$rowSite[$key]['id_site'].'" '.($key!=$_SESSION['sess_ref_id_site'] && $_SESSION['sess_class_user']!=5 ? 'disabled' : '').''.($key==$_SESSION['sess_ref_id_site'] ? 'checked' : '').' required><label for="ref_id_site'.$key.'">'.$rowSite[$key]['site_initialname'].'</label></div>';
+                                                    echo '<div class="icheck-primary d-inline-block mr-4"><input type="checkbox" name="ref_id_site[]" id="ref_id_site'.$rowSite[$key]['id_site'].'" '.($rowSite[$key]['id_site']==$_SESSION['sess_ref_id_site'] ? 'checked' : '').' value="'.$rowSite[$key]['id_site'].'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').'><label for="ref_id_site'.$rowSite[$key]['id_site'].'">'.$rowSite[$key]['site_initialname'].'</label></div>'."\r\n";
                                                 }
                                             }
                                         ?>
@@ -189,7 +189,6 @@ $('input[type=checkbox][name^=ref_id_site]').on('change', function() {
     }
     */   
 });
-
 
 
 $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/

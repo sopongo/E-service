@@ -188,6 +188,7 @@
         $updateRow = [
             'no_user' => (!empty($_POST['no_user'])) ? $_POST['no_user'] : '',
             'fullname' => (!empty($_POST['fullname'])) ? $_POST['fullname'] : '',
+            'phone' => (!empty($_POST['phone'])) ? $_POST['phone'] : '',            
             //'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : '',
             //'ref_id_site' => (!empty($_POST['ref_id_site'])) ? $_POST['ref_id_site'] : ''
         ];
