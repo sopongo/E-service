@@ -203,6 +203,7 @@
         echo json_encode($Update);
         exit();
     }
+    
 
     if($action=='update-status'){
         //echo "------".$_POST['chk_box_value'].'----------'.$_POST['id_row']; exit();

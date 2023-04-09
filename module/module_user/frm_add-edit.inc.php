@@ -85,7 +85,7 @@ no_user     password        email       fullname        class_user      ref_id_s
                                         <?PHP
                                             foreach($classArr as $index=> $value){
                                                 if($index!=0){
-                                                    echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" '.($index==$_SESSION['sess_class_user'] ? 'checked' : '').' value="'.$index.'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').' name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
+                                                    echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" '.($index==$_SESSION['sess_class_user'] && $module="profile" ? 'checked' : '').' value="'.$index.'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').' name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
                                                 }
                                             }
                                             //$value==end($classArr) ? '<div class="invalid-feedback">เลือกระดับผู้ใช้งาน</div>
@@ -173,7 +173,7 @@ $('input[type=radio][name=class_user]').on('change', function() {
         $('input[type=checkbox][name^=ref_id_site]').attr('checked', true);
     } else{
         $('input[type=checkbox][name^=ref_id_site]').attr('checked', false);
-        $('input[type=checkbox][id^=ref_id_site<?PHP echo $_SESSION['sess_ref_id_site']; ?>]').attr('checked', true);
+        //$('input[type=checkbox][id^=ref_id_site<?PHP echo $_SESSION['sess_ref_id_site']; ?>]').attr('checked', true);
     }
 });
 
@@ -206,10 +206,13 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
         event.preventDefault();  
         event.stopPropagation();
     */
+    chk_class = $('input[name^="class_user"]:checked').val();
+    var chk_numsite = $('input[name^="ref_id_site"]:checked').length;
+
     if($("input:radio[name^=status_user]").filter(':checked').length<1){
         sweetAlert("ผิดพลาด!", "เลือกสถานะการใช้งาน", "error");
         return false;
-    }else if($('#password').val()=='' && $('#id_row').val()!=''){
+    }else if($('#password').val()=='' && $('#id_row').val()==''){
         sweetAlert("ผิดพลาด!", "กรอกรหัสผ่าน", "error");
         return false;
     }else if($('#email').val()==''){
@@ -224,11 +227,14 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
     }else if($("input:checkbox[id^=ref_id_site]").filter(':checked').length<1){
         sweetAlert("ผิดพลาด!", "เลือกไซต์งาน", "error");
         return false;
+    }else if(chk_class!=5 && chk_numsite>1){
+        sweetAlert("ผิดพลาด!", "เลือกไซต์งานได้ 1 ไซต์เท่านั้น", "error");
+        return false;
     }else if($('#slt_ref_id_dept option:selected').val()<=0){
         sweetAlert("ผิดพลาด!", "เลือกแผนก", "error");
         return false;
     }else{
-        //alert('Send Ajax'); return false;
+        alert('Send Ajax'); return false;
         $.ajax({
             url: "module/module_user/ajax_action.php",
             type: "POST",

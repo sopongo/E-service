@@ -50,7 +50,7 @@ $colunm_sort = array( //ใช้เรียงข้อมูล
 
 
 if($_SESSION['sess_class_user']==5){
-    $query_site = " tb_user.ref_id_site!='' ";
+    $query_site = " tb_user.ref_id_site!='' AND tb_user.ref_id_site=".$_SESSION['sess_ref_id_site']." AND class_user!=5";
 }else{
     $query_site = " tb_user.ref_id_site=".$_SESSION['sess_ref_id_site']." AND class_user!=5";
 }
