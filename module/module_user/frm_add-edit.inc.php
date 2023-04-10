@@ -84,8 +84,12 @@ no_user     password        email       fullname        class_user      ref_id_s
                                     <div class="form-group clearfix">
                                         <?PHP
                                             foreach($classArr as $index=> $value){
-                                                if($index!=0){
-                                                    echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" '.($index==$_SESSION['sess_class_user'] && $module="profile" ? 'checked' : '').' value="'.$index.'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').' name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
+                                                if($index!=0){//$_SESSION['sess_class_user']
+                                                    if(($index==4 || $index==5) && $_SESSION['sess_class_user']==3){
+                                                        echo '';
+                                                    }else{
+                                                        echo '<div class="icheck-success d-inline-block mr-3"><input type="radio" '.($index==$_SESSION['sess_class_user'] && $module="profile" ? 'checked' : '').' value="'.$index.'" name="class_user" id="class_user_'.$index.'" value="'.$index.'" required><label for="class_user_'.$index.'">'.$value.'</label></div>';
+                                                    }
                                                 }
                                             }
                                             //$value==end($classArr) ? '<div class="invalid-feedback">เลือกระดับผู้ใช้งาน</div>
@@ -104,8 +108,12 @@ no_user     password        email       fullname        class_user      ref_id_s
                                         <?PHP
                                             $rowSite= $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY site_initialname DESC");                 
                                             if (count($rowSite)>0){
-                                                foreach($rowSite as $key => $value) {
-                                                    echo '<div class="icheck-primary d-inline-block mr-4"><input type="checkbox" name="ref_id_site[]" id="ref_id_site'.$rowSite[$key]['id_site'].'" '.($rowSite[$key]['id_site']==$_SESSION['sess_ref_id_site'] ? 'checked' : '').' value="'.$rowSite[$key]['id_site'].'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').'><label for="ref_id_site'.$rowSite[$key]['id_site'].'">'.$rowSite[$key]['site_initialname'].'</label></div>'."\r\n";
+                                                foreach($rowSite as $key => $value){
+                                                    if(($key==$_SESSION['sess_ref_id_site']) && $_SESSION['sess_class_user']!=5){
+                                                        echo '<div class="icheck-primary d-inline-block mr-4"><input type="checkbox" name="ref_id_site[]" id="ref_id_site'.$rowSite[$key]['id_site'].'" '.($rowSite[$key]['id_site']==$_SESSION['sess_ref_id_site'] ? 'checked' : '').' value="'.$rowSite[$key]['id_site'].'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').'><label for="ref_id_site'.$rowSite[$key]['id_site'].'">'.$rowSite[$key]['site_initialname'].'</label></div>'."\r\n";
+                                                    }else if (($key==$_SESSION['sess_ref_id_site'] || $key!=$_SESSION['sess_ref_id_site']) && $_SESSION['sess_class_user']==5){
+                                                        echo '<div class="icheck-primary d-inline-block mr-4"><input type="checkbox" name="ref_id_site[]" id="ref_id_site'.$rowSite[$key]['id_site'].'" '.($rowSite[$key]['id_site']==$_SESSION['sess_ref_id_site'] ? 'checked' : '').' value="'.$rowSite[$key]['id_site'].'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').'><label for="ref_id_site'.$rowSite[$key]['id_site'].'">'.$rowSite[$key]['site_initialname'].'</label></div>'."\r\n";
+                                                    }
                                                 }
                                             }
                                         ?>
@@ -166,7 +174,7 @@ $('.numbersOnly').keyup(function () {
     this.value = this.value.replace(/[^0-9\.]/g,'');
 });
 
-
+<?PHP if($_SESSION['sess_class_user']==5){?>
 $('input[type=radio][name=class_user]').on('change', function() {
    //alert($(this).val());
    if ($(this).val()==5) {
@@ -176,6 +184,7 @@ $('input[type=radio][name=class_user]').on('change', function() {
         //$('input[type=checkbox][id^=ref_id_site<?PHP echo $_SESSION['sess_ref_id_site']; ?>]').attr('checked', true);
     }
 });
+<?PHP } ?>
 
 $('input[type=checkbox][name^=ref_id_site]').on('change', function() {
    //alert($(this).val());
@@ -234,7 +243,7 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
         sweetAlert("ผิดพลาด!", "เลือกแผนก", "error");
         return false;
     }else{
-        alert('Send Ajax'); return false;
+        //alert('Send Ajax'); return false;
         $.ajax({
             url: "module/module_user/ajax_action.php",
             type: "POST",

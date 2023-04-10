@@ -2,7 +2,7 @@
     <section class="content">
     <div class="alert alert-danger alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h5><i class="icon fas fa-ban"></i> แจ้งเตือน!</h5> -หากเลือกไซต์งาน หรือ แผนก ผิด ให้ติดต่อแผนก IT เพื่อแก้ไข <br/>- ใช้อีเมล์แอคเค้าท์ ที่มีอยู่จริง เพื่อให้ระบบสามารถส่งอีเมล์หาคุณได้
+        <h5><i class="icon fas fa-ban"></i> แจ้งเตือน!</h5> - หากต้องการเปลี่ยนไซต์งาน หรือ แผนก ติดต่อแผนก IT เพื่อแก้ไข <br/>- ใช้อีเมล์แอคเค้าท์ ที่มีอยู่จริง เพื่อให้ระบบสามารถส่งอีเมล์หาคุณได้
     </div>    
 
     <?PHP 
@@ -104,7 +104,8 @@
                                 </div>  
                             </div>  
 
-
+                            
+                            <?PHP if($_SESSION['sess_class_user']==5){?>
                             <div class="row row-6">
                             <div class="col-sm-12 col-md-12 col-xs-12">  
                                 <div class="form-group">  
@@ -123,7 +124,6 @@
                             </div>
                         </div><!--row-6 -->                            
 
-                            <?PHP if($_SESSION['sess_class_user']!=999){?>
                             <div class="row row-7">
                             <div class="col-sm-12 col-md-12 col-xs-12">
                                 <div class="form-group">  
@@ -218,6 +218,11 @@ $(document).ready(function () {
     if($.isNumeric(no_user)==false){
       sweetAlert("ผิดพลาด!", 'รหัสพนักงานไม่ถูกต้อง', "error");
       return false;
+    <?PHP if($_SESSION['sess_class_user']==5){?>
+    }else if($("input:checkbox[id^=ref_id_site]").filter(':checked').length<1){
+        sweetAlert("ผิดพลาด!", "เลือกไซต์งาน", "error");
+        return false;    
+    <?PHP } ?>
     }
     var alertmsg = "อัพเดทข้อมูลผู้ใช้งานเรียบร้อยแล้ว";
     $.ajax({
@@ -232,7 +237,7 @@ $(document).ready(function () {
       },
       success: function (response) {
         console.log(response); 
-        return false;
+        //return false;
         if (response) {
           swal({
             title: "สำเร็จ!",
@@ -252,7 +257,7 @@ $(document).ready(function () {
         }
       },
       error: function (response) {
-        console.log("ไม่สำเร็จ! มีบางอย่างผิดพลาด!"+response);
+        console.log("ไม่สำเร็จ! มีบางอย่างผิดพลาด!-----"+response);
         sweetAlert("ไม่สำเร็จ!", 'มีบางอย่างผิดพลาด', "error");
         return false;
       },

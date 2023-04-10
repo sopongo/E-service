@@ -266,7 +266,7 @@ $(document).ready(function(){
             data: frm_Data, 
             beforeSend: function () {
             },success: function (data) {
-                console.log(data); //return false;
+                console.log(data); return false;
                 var ref_id = data;
                 if(data.error=='over_req'){
                     sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");

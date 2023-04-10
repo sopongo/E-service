@@ -9,7 +9,7 @@ $title_site_4 = "E-Service";
 
 define('UPLOAD_DIR', '../../upload-signature/');
 
-$noreply_mail = "no-reply@cc.ps-plp.com";
+$noreply_mail = "no-reply@cc.pcs-plp.com";
 $pass_mail = "Pcs@1234";
 
 $req_digit = "-RQ-"; //ตัวย่อหน้าเลขที่ใบเบิก

@@ -31,7 +31,6 @@
 
         $totalRow = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master WHERE (machine_code = '".(trim($_POST['machine_code']))."' OR name_machine='".(trim($_POST['name_machine']))."') ".$query_id."");
 
-
         $countCode = 0;
         $_POST['machine_code'] = str_replace("-0000", "", $_POST['machine_code']);
         ##หารหัสเครื่องจักรล่าสุดของหมวดนั้นๆ (ORDER BY DESC เช่น MT-AS-0002) จากนั้นเอามาตัดเอาตัวเลข 4 ตัวท้าย strip 0 ออกจากนั้นเอาไป+1

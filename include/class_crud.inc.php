@@ -2,6 +2,7 @@
 require_once 'connect_db.inc.php';
 require_once 'setting.inc.php';
 
+error_reporting(error_reporting() & ~E_NOTICE);
 
 class CRUD extends Database
 {
@@ -155,16 +156,16 @@ class CRUD extends Database
     }
     
     //ลบข้อมูลตามไอดีที่ระบุ
-    public function deleteRow($id, $tableName, $conditionDel)
-    {
+    public function deleteRow($id, $tableName, $conditionDel){
         $sql = "DELETE FROM {$tableName}  WHERE $conditionDel";
         $stmt = $this->conn->prepare($sql);
         try {
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
-                return true;
+                return $stmt->rowCount();
             }
         } catch (PDOException $e) {
+            $this->conn->rollback();
             echo "Error: " . $e->getMessage();
             return false;
         }

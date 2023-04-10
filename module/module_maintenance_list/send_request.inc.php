@@ -97,7 +97,7 @@
             'detail_timeline' => NULL,
         ];
         $insertTM = $obj->addRow($insert_tm, "tb_timeline");
-        ######### .รอใส่โค๊ด Update Timeline ###########
+        ######### .จบโค๊ด Update Timeline ###########
 
         ##### ส่งอีเมล์แจ้งเตือนหัวหน้าช่าง-ผู้แจ้งซ่อม ######
         $rowData = $obj->customSelect("SELECT tb_maintenance_request.*, tb_maintenance_type.name_mt_type, tb_maintenance_request.ref_id_dept_responsibility AS id_dept_responsibility, tb_dept_responsibility.dept_initialname AS dept_responsibility,
@@ -105,7 +105,7 @@
         tb_user_cancel.fullname AS cancel_fullname, tb_user_approved.fullname AS approved_fullname, tb_failure_code.failure_code_th_name, tb_repair_code.repair_code_name, 
         tb_repair_result.txt_solution, tb_repair_result.txt_caused_by, tb_repair_result.ref_id_failure_code, tb_repair_result.ref_id_repair_code,
         tb_failure_code.id_failure_code, tb_repair_code.id_repair_code, tb_outsite_repair.*, tb_supplier.supplier_name, tb_user_survey.fullname AS fullname_survay,
-        tb_user_handover.fullname AS fullname_handover, tb_accept_request.fullname AS fullname_accept, tb_machine_site.ref_id_machine_master, tb_machine_master.name_machine FROM tb_maintenance_request 
+        tb_user_handover.fullname AS fullname_handover, tb_accept_request.fullname AS fullname_accept, tb_machine_site.ref_id_machine_master, tb_machine_site.code_machine_site, tb_machine_master.name_machine FROM tb_maintenance_request 
         LEFT JOIN tb_maintenance_type ON (tb_maintenance_type.id_mt_type=tb_maintenance_request.ref_id_mt_type)
         LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
         LEFT JOIN tb_user AS tb_user_request ON (tb_user_request.id_user=tb_maintenance_request.ref_id_user_request)    
@@ -123,8 +123,12 @@
         LEFT JOIN tb_outsite_repair ON (tb_outsite_repair.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request)   
         LEFT JOIN tb_supplier ON (tb_supplier.id_supplier=tb_outsite_repair.ref_id_supplier) WHERE tb_maintenance_request.id_maintenance_request=".$rowID.";");
 
-//ref_id_dept_responsibility
-        $rowDeptResp = $obj->customSelect("SELECT tb");
+        //คิวรี่หาหัวหน้าแผนก เพื่อส่งอีเมล์แจ้งเตือนมีใบแจ้งซ่อม
+        //$fetchRow = $obj->fetchRows($sql_fetchRow);
+        $mailBcc = '';
+        $deptResp = $obj->fetchRows("SELECT tb_user.email, tb_user.fullname, tb_site_responsibility.* FROM tb_user 
+        LEFT JOIN tb_site_responsibility ON (tb_site_responsibility.ref_id_user=tb_user.id_user) 
+        WHERE tb_site_responsibility.ref_id_site=".$rowData['ref_id_site_request']." AND tb_user.ref_id_dept=".$rowData['ref_id_dept_responsibility']." AND (tb_user.class_user=2 OR tb_user.class_user=3) AND tb_user.status_user=1");
 
         $mail = new PHPMailer();
         $mail->IsSMTP();
@@ -178,16 +182,24 @@
      $mail->MsgHTML($message);
      //$mail->AddAttachment("(Windows 7) - Wallpapers4Desktop.com 015.jpg");
      $mail->AddAddress($rowData['email']);//อีเมล์ผู้แจ้งซ่อม
-     $mail->AddBCC("it-support@jwdcoldchain.com"); //BCC ส่งอีเมล์หาหัวหน้าแผนกที่รับผิดชอบ
+    // $mail->AddBCC("it-support@jwdcoldchain.com"); //BCC ส่งอีเมล์หาหัวหน้าแผนกที่รับผิดชอบ
+    //$mail->AddBCC($mailBcc); //BCC ส่งอีเมล์หาหัวหน้าแผนกที่รับผิดชอบ
      $mail->set('X-Priority', '3'); //Priority 1 = High, 3 = Normal, 5 = low
      //$mail->Send(); //ส่งเมล์
      if(!$mail->Send()){
          //echo 'ส่งไม่ได้';
-         echo json_encode($rowID);
+         //echo json_encode($rowID);
      }else{
          //echo 'ส่งแล้วคร้าบบบบบบ';
-         echo json_encode($rowID);
+         //echo json_encode($rowID);
      }
+        if (count($deptResp)>0) {
+            foreach($deptResp as $key=>$value){
+                $mail->AddBCC($deptResp[$key]['email']); //BCC ส่งอีเมล์หาหัวหน้าแผนกที่รับผิดชอบ
+                $mail->Send();
+            }
+        }
+        echo json_encode($rowID);
         ##### ส่งอีเมล์แจ้งเตือนหัวหน้าช่าง-ผู้แจ้งซ่อม ######
         exit();
     }
@@ -444,7 +456,7 @@
                 'detail_timeline' => NULL,
             ];
             $insertTM = $obj->addRow($insert_tm, "tb_timeline");
-            ######### รอใส่โค๊ด Update Timeline ###########
+            ######### End Update Timeline ###########
             echo $rowID;
             exit();
         }

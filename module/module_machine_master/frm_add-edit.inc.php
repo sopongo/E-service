@@ -348,7 +348,7 @@ $(document).on("change", "#ref_id_dept", function (e){
             beforeSend: function () {
             },
             success: function (data) {
-                console.log(data); return false;
+                console.log(data); //return false;
                 if(data==1){
                     sweetAlert("ผิดพลาด!", "ชื่อเครื่องจักร-อุปกรณ์: '"+$("#name_machine").val()+"' ถูกใช้แล้ว", "error");
                     return false;

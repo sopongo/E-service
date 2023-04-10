@@ -200,8 +200,59 @@
             $updateRow = array_merge($updateRow, $passRow);
         }
         $Update = $obj->update($updateRow, "id_user=".$_SESSION['sess_id_user']."", "tb_user");
-        echo json_encode($Update);
-        exit();
+
+        if($_SESSION['sess_class_user']!=5){
+            echo json_encode($Update);
+            exit();
+        }else{
+            $chk_site = array_search($_SESSION['sess_ref_id_site'], $_POST['ref_id_site']);
+            if(empty($chk_site) && $chk_site!='' && count($_POST['ref_id_site'])==1){
+                //echo json_encode($chk_site.'----ไม่เปลี่ยน');
+                echo json_encode($Update);
+                exit();
+            }else{
+                //echo json_encode(array_search($_SESSION['sess_ref_id_site'], $_POST['ref_id_site']).'----เปลี่ยนไซต์----'.count($_POST['ref_id_site']));
+                $resultDel = $obj->deleteRow($_SESSION['sess_id_user'], "tb_site_responsibility", "ref_id_user=".$_SESSION['sess_id_user']."");
+                foreach($_POST['ref_id_site'] as $index => $value){
+                    $insertRow = [				
+                        'ref_id_user' => $_SESSION['sess_id_user'],
+                        'ref_id_site' => (!empty($_POST['ref_id_site'][$index])) ? $_POST['ref_id_site'][$index] : NULL,
+                    ];
+                    $rowSite = $obj->addRow($insertRow, "tb_site_responsibility");
+                }
+                echo json_encode($rowSite);
+                //exit();
+            }
+            exit();
+        }
+        /*
+        if($Update=='Success'){
+
+            echo json_encode($_POST['ref_id_site']);
+            exit();            
+
+            $delResult = deleteRow($_SESSION['sess_id_user'], 'tb_site_responsibility', 'WHERE ref_id_user='.$_SESSION['sess_id_user'].'');
+            if(count($_POST['ref_id_site'])>1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
+                    foreach($_POST['ref_id_site'] as $index => $value){
+                    $insertRow = [				
+                        'ref_id_user' => $rowID,
+                        'ref_id_site' => (!empty($_POST['ref_id_site'][$index])) ? $_POST['ref_id_site'][$index] : NULL,
+                    ];
+                    $rowSite = $obj->addRow($insertRow, "tb_site_responsibility");
+                }
+            }else{
+                $insertRow = [				
+                    'ref_id_user' => $rowID,
+                    'ref_id_site' => (!empty($_POST['ref_id_site'][0])) ? $_POST['ref_id_site'][0] : NULL,
+                ];
+                $rowSite = $obj->addRow($insertRow, "tb_site_responsibility");
+            }
+            echo json_encode($Update); exit();
+        }else{
+            echo json_encode($Update);
+            exit();
+        }
+        */
     }
     
 
