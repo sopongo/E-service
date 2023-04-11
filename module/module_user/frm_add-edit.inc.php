@@ -71,7 +71,7 @@ no_user     password        email       fullname        class_user      ref_id_s
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
                                     <label for="firstname">รหัสผ่าน:<span class="text-danger">**</span></label>  
-                                    <input type="password" id="password" name="password" placeholder="รหัสพนักงาน" class="form-control" aria-describedby="inputGroupPrepend" required />
+                                    <input type="password" id="password" name="password" placeholder="รหัสพนักงาน" class="form-control" aria-describedby="inputGroupPrepend" />
                                     <div class="invalid-feedback">กรอกรหัสผ่าน</div>
                                 </div>
                             </div>
@@ -217,11 +217,12 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
     */
     chk_class = $('input[name^="class_user"]:checked').val();
     var chk_numsite = $('input[name^="ref_id_site"]:checked').length;
+    //alert($('#id_row').val().length);
 
     if($("input:radio[name^=status_user]").filter(':checked').length<1){
         sweetAlert("ผิดพลาด!", "เลือกสถานะการใช้งาน", "error");
         return false;
-    }else if($('#password').val()=='' && $('#id_row').val()==''){
+    }else if($('#password').val()=='' && $('#id_row').val().length==0){
         sweetAlert("ผิดพลาด!", "กรอกรหัสผ่าน", "error");
         return false;
     }else if($('#email').val()==''){
@@ -252,7 +253,7 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
                 //console.log('mail_dup');
             },
             success: function (data) {
-            console.log(data);
+            console.log(data); return false;
             data = $.trim(data.replace(/\s+/g," "));
             //console.log(data==='mail_dup'); 
             if(data=='mail_dup'){

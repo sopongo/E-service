@@ -68,11 +68,12 @@
             parse_str($_POST['data'], $output); //$output['period']
         }
 
-        /*print_r($output); 
+        
+        //print_r($output); 
+        //echo "\r\n";
+        /*echo count($output['ref_id_site']);
         echo "\r\n";
-        echo count($output['ref_id_site']);
-        echo "\r\n";
-        echo $output['ref_id_site'][1];
+        echo $output['ref_id_site'][0];
         exit();*/
         
         $rowID = "";
@@ -83,15 +84,20 @@
         if($totalRow!=0){
             echo 'mail_dup';
             exit();
-        }       
-
-        $output['password'] = sha1($keygen.$output['password']); //เก็บรหัสผ่านในรูปแบบ sha1 
-        if(count($output['ref_id_site'])!=1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
-            $ref_id_site = 99; //กำหนดขึ้นมาเอง เพื่อให้รู้ว่าดูมากกว่า 1 ไซต์
-        }else{
-            $ref_id_site = $output['ref_id_site'][0];
         }
-                
+
+        !empty($output['password']) ? ($output['password'] = sha1($keygen.$output['password'])) : $output['password'] = NULL; //เก็บรหัสผ่านในรูปแบบ sha1 
+
+        if($_SESSION['sess_class_user']==5){
+            if(count($output['ref_id_site'])!=1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
+                $ref_id_site = 99; //กำหนดขึ้นมาเอง เพื่อให้รู้ว่าดูมากกว่า 1 ไซต์
+            }else{
+                $ref_id_site = $output['ref_id_site'][0];
+            }
+        }else{
+            $ref_id_site = $_SESSION['sess_ref_id_site'];
+        }        
+
     if(empty($rowID)){
         #status_user=1&no_user=&fullname=&email=it%40jwdcoldchain.comxxx&password=1234&class_user=1&ref_id_site%5B%5D=7&ref_id_site%5B%5D=1&ref_id_site%5B%5D=3&slt_ref_id_dept=8&id_row=
         $insertRow = [
@@ -115,6 +121,10 @@
             'latest_login' => NULL,
             'ip_address' => NULL,
         ];
+
+        print_r($insertRow);
+        exit();
+
         $rowID = $obj->addRow($insertRow, "tb_user");
         if(count($output['ref_id_site'])>1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
             foreach($output['ref_id_site'] as $index => $value){
@@ -133,10 +143,10 @@
         }
         echo $rowID;
         exit();
-    }else{
+    }else{ //ถ้าไม่มี $rowIDอัพเดทข้อมูลผู้ใช้งาน
         $insertRow = [            
             'no_user' => (!empty($output['no_user'])) ? $output['no_user'] : '',
-            'password' => (!empty($output['password'])) ? $output['password'] : '',
+            /*'password' => (!empty($output['password'])) ? $output['password'] : '',*/
             'email' => (!empty($output['email'])) ? $output['email'] : '',
             'line_token' => NULL,
             'fullname' => (!empty($output['fullname'])) ? $output['fullname'] : '',
@@ -150,7 +160,15 @@
             'edit_date' => (date('Y-m-d H:i:s')),
             'ref_id_user_edit' => ($_SESSION['sess_id_user']),
         ];
-        $obj->update($insertRow, "id_user=".$rowID."", "tb_user");
+        if(!empty($output['password'])){
+            $passRow = [
+                'password' => (!empty($output['password'])) ? $output['password'] : '',
+            ];
+            $insertRow = array_merge($insertRow, $passRow);
+        }
+
+        //print_r($insertRow); exit();
+        $result = $obj->update($insertRow, "id_user=".$rowID."", "tb_user");
 
         /*
         if(count($output['ref_id_site'])>1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
@@ -163,7 +181,7 @@
             }        
             */
     }
-    echo json_encode("Success");
+    echo json_encode($result);
     exit();
     }
 

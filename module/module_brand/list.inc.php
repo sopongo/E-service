@@ -42,9 +42,7 @@ for($i=14;$i<=500;$i++){
     </div>
     </div>
 
-    <?php
-      include_once 'module/module_brand/frm_add-edit.inc.php'; //หน้า add/edit
-    ?>
+    <?PHP include_once 'module/module_brand/frm_add-edit.inc.php'; //หน้า add/edit ?>
 
     <div class="card-body">
       <div class="row">
