@@ -86,7 +86,7 @@
                                             $rowData = $obj->fetchRows("SELECT * FROM tb_dept WHERE dept_status=1 ORDER BY id_dept ASC");
                                             if (count($rowData)!=0) {
                                                 foreach($rowData as $key => $value) {
-                                                    echo '<option '.($_SESSION['sess_id_dept']==$rowData[$key]['id_dept'] ? "selected" : "").' '.($_SESSION['sess_class_user']!=4 || $_SESSION['sess_class_user']!=5 ? 'disabled' : '').' value="'.($rowData[$key]['id_dept']).'">'.$rowData[$key]['dept_name'].' ('.$rowData[$key]['dept_initialname'].')</option>';
+                                                    echo '<option '.($_SESSION['sess_id_dept']==$rowData[$key]['id_dept'] ? "selected" : "").' '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').' value="'.($rowData[$key]['id_dept']).'">'.$rowData[$key]['dept_name'].' ('.$rowData[$key]['dept_initialname'].')</option>';
                                                 }
                                             } 
                                             ?>
@@ -222,8 +222,8 @@ $(document).ready(function () {
     }else if($("input:checkbox[id^=ref_id_site]").filter(':checked').length<1){
         sweetAlert("ผิดพลาด!", "เลือกไซต์งาน", "error");
         return false;    
-    <?PHP } ?>
     }
+    <?PHP } ?>
     var alertmsg = "อัพเดทข้อมูลผู้ใช้งานเรียบร้อยแล้ว";
     $.ajax({
       url: "module/module_user/ajax_action.php",

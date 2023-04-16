@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
 <style>
+.showSweetAlert  h2{ font-size:1.5rem;}  
 .dataTables_length, .form-control-sm{  font-size:0.85rem; /* 40px/16=2.5em */
 }
 .table, .dataTable tr td{  padding:0.35rem 0.50rem;  margin:0;}
@@ -51,11 +52,12 @@
       <div class="col-sm-12 p-0 m-0">
 
     <!--<a id="some_button" class="btn btn-danger">refesh</a>-->
-    
+    <form name="frm_action" id="frm_action" enctype="multipart/form-data">
     <table id="example1" class="table table-bordered table-hover dataTable dtr-inline">
       <thead>
       <tr class="bg-light">
         <th class="sorting_disabled">No</th>
+        <th width="20" class="text-center"> <div class="icheck-danger d-inline"><input type="checkbox" value="gen_qrcode_all" class="gen_qrcode_all" name="gen_qrcode_all" id="gen_qrcode_all" /><label for="gen_qrcode_all"></label></div></th>
         <th>รูป</th>
         <th>สถานะเครื่องจักร</th>
         <th>รหัสเครื่องจักร-อุปกรณ์</th>
@@ -72,7 +74,7 @@
       <tbody>
       </tbody>
     </table>
-
+    </form>
     </div>
     </div><!-- /.row -->
 
@@ -119,7 +121,7 @@
       "serverSide": true,
       "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
       "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0, 1, 2,  4, 8, 9, 10, 11] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+        { "bSortable": false, "aTargets": [0, 1, 2,  8, 9, 10, 11] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
         { "bSearchable": false, "aTargets": [0, 1, 2, 6, 7, 8, 9, 10, 11] } //คอลัมน์ที่จะไม่ให้เสริท
       ], 
       ajax: {
@@ -141,10 +143,12 @@
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      "buttons": [<?PHP       if($_SESSION['sess_class_user']!=1){  ?>"copy", "csv", "excel", "pdf", "print", <?PHP } ?> "colvis"]
+      "buttons": [<?PHP       if($_SESSION['sess_class_user']!=1){  ?>"csv", <?PHP } ?> "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {
+
+  $('<button class="btn btn-secondary buttons-qrcode buttons-html5" tabindex="0" aria-controls="example1" type="button"><span><i class="fas fa-qrcode"></i> QR Code</span></button>').insertBefore('.buttons-csv');
     
   //var table = $('#example1').DataTable();
   //var info = table.page.info();
@@ -181,6 +185,49 @@ $(document).ready(function () {
     $('form').each(function() { this.reset() });
   });
 
+  $(document).on('click','.buttons-qrcode',function(){
+    if($("input:checkbox[name^=gen_qrcode]").filter(':checked').length<1){
+        swal("ผิดพลาด!", "เลือกรหัสที่ต้องการอย่างน้อย 1 รายการ", "error");
+        return false;
+    }else{
+      swal({
+      title: "การสร้าง QR Code รายการที่เลือก !",
+      text: "ยืนยันการทำงาน ?",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "ใช่, สร้าง QR Code.",
+      cancelButtonText: "ไม่, ยกเลิก!",
+      closeOnConfirm: true,
+      closeOnCancel: true
+    },
+      function (isConfirm) {
+        if (isConfirm) {
+          $("#frm_action").attr({
+            target:"_blank", 
+            method:"post", 
+            action:"?module=gen-qrcode", 
+          }).submit();
+          //$("#frm_action").submit();
+          /*$("#frm_action").submit(function() {
+            event.preventDefault();            
+$("#frm_action").attr('target', '_blank');
+return true;
+});*/
+              
+            //window.open('?module=qrcode', '_blank');
+        } else {
+          return true;        
+          //swal("Cancelled", "Your imaginary file is safe :)", "error");
+        }
+      });      
+    }
+  });
+
+  $(document).on('change','.gen_qrcode_all',function(){
+    //alert('check');
+    $('input:checkbox[name^=gen_qrcode]').prop('checked', this.checked);    
+  });
 
   $(document).on('click','.edit-data',function(){   
     $('#exampleModalLabel span').html("แก้ไขเครื่องจักร-อุปกรณ์");

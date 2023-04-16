@@ -5,8 +5,6 @@ for($i=14;$i<=500;$i++){
 }
 */
 ?>
-
-
 <!-- DataTables -->
 <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -56,11 +54,11 @@ for($i=14;$i<=500;$i++){
     <table id="example1" class="table table-bordered table-hover dataTable dtr-inline">
       <thead>
       <tr class="bg-light">
-        <th class="sorting_disabled">No</th>
-        <th>ชื่อย่อไซต์งาน</th>
+        <th width="50" class="sorting_disabled">No</th>
+        <th width="90">ชื่อย่อไซต์งาน</th>
         <th>ชื่อไซต์งาน</th>
-        <th>สถานะ</th>
-        <th>จัดการ</th>
+        <th width="50">สถานะ</th>
+        <th width="60">จัดการ</th>
       </tr>
       </thead>
       <tbody>
@@ -127,7 +125,7 @@ for($i=14;$i<=500;$i++){
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      "buttons": ["csv", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {

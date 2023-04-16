@@ -34,7 +34,8 @@
         }else{ ##ถ้าไม่มีจะทำการเช็คว่ามี $rowID ที่ส่งมาจากฟอร์มหรือไม่ (ถ้่ามีคือการ update) ถ้าไม่มีคือ insert           
             if(empty($rowID)){
                 $insertRow = [
-                    'ref_id_dept' => (!empty($output['ref_id_dept'])) ? $output['ref_id_dept'] : '',                    
+                    'ref_id_site' => $_SESSION['sess_ref_id_site'],
+                    'ref_id_dept' => (!empty($output['ref_id_dept'])) ? $output['ref_id_dept'] : '',
                     'supplier_name' => (!empty($output['supplier_name'])) ? $output['supplier_name'] : '',
                     'supplier_phone' => (!empty($output['supplier_phone'])) ? $output['supplier_phone'] : '',
                     'supplier_remark' => (!empty($output['supplier_remark'])) ? $output['supplier_remark'] : '',

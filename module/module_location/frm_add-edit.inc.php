@@ -49,9 +49,17 @@
                                     //id_menu name_menu
                                     $rowData = $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY id_site ASC");
                                     if (count($rowData)!=0) {
-                                        echo '<option value="" disabled selected>เลือกไซต์งาน</option>';
+                                        echo '<option value=""selected>เลือกไซต์งาน</option>';
                                         foreach($rowData as $key => $value) {
-                                            echo '<option value="'.$rowData[$key]['id_site'].'">'.$rowData[$key]['site_initialname'].' - '.$rowData[$key]['site_name'].'</option>';
+                                            if($_SESSION['sess_class_user']!=5 && $_SESSION['sess_ref_id_site']==$rowData[$key]['id_site']){
+                                                $selected = ''; //disabled
+                                            }else{
+                                                $selected = ' disabled'; //disabled
+                                            }
+                                            if($_SESSION['sess_class_user']==5){
+                                                $selected = '';
+                                            }
+                                            echo '<option value="'.$rowData[$key]['id_site'].'" '.$selected.'>'.$rowData[$key]['site_initialname'].' - '.$rowData[$key]['site_name'].'</option>';
                                         }
                                     } else {
                                         echo '<option disabled selected value="" >เลือกไซต์งาน</option>  ';
@@ -145,8 +153,6 @@ $(document).on("change", "#ref_id_site", function (e){
         }
     });
 });
-
-
 
 /*ปุ่ม ADD Recive รับวัสดุเข้าระบบ <<<<<<<<<< เขียนใหม่ใช้โค๊ดนี้ สมบรูณ์กว่าไม่มีบั๊ครีเฟรชหน้าจอ*/
     $(document).on("click", ".btn-submit", function (event){

@@ -1,8 +1,8 @@
 <?PHP
     ob_start();
     session_start();
-    header('Content-Type: text/html; charset=utf-8');
-    date_default_timezone_set('Asia/Bangkok');	
+    //header('Content-Type: text/html; charset=utf-8');
+    //date_default_timezone_set('Asia/Bangkok');	
     require_once ('../../include/function.inc.php');
 
     $action = $_REQUEST['action']; #รับค่า action มาจากหน้าจัดการ
@@ -13,8 +13,6 @@
     }
 
     /*echo $action; exit();*/
-
-
     if ($action=='adddata' && !empty($_POST)) {
         //tb_brand  id_brand, brand_name, brand_remark, brand_status
 
@@ -36,6 +34,8 @@
         }else{ ##ถ้าไม่มีจะทำการเช็คว่ามี $rowID ที่ส่งมาจากฟอร์มหรือไม่ (ถ้่ามีคือการ update) ถ้าไม่มีคือ insert           
             if(empty($rowID)){
                 $insertRow = [
+                    'ref_id_site' => $_SESSION['sess_ref_id_site'],
+                    'ref_id_dept' => (!empty($output['ref_id_dept'])) ? $output['ref_id_dept'] : '',
                     'brand_name' => (!empty($output['brand_name'])) ? $output['brand_name'] : '',
                     'brand_remark' => (!empty($output['brand_remark'])) ? $output['brand_remark'] : '',
                     'brand_status' => (!empty($output['brand_status'])) ? $output['brand_status'] : '',
@@ -43,6 +43,7 @@
                 $rowID = $obj->addRow($insertRow, "tb_brand");
             }else{
                 $insertRow = [
+                    'ref_id_dept' => (!empty($output['ref_id_dept'])) ? $output['ref_id_dept'] : '',                    
                     'brand_name' => (!empty($output['brand_name'])) ? $output['brand_name'] : '',
                     'brand_remark' => (!empty($output['brand_remark'])) ? $output['brand_remark'] : '',
                     'brand_status' => (!empty($output['brand_status'])) ? $output['brand_status'] : '',

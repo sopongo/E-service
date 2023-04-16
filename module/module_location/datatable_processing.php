@@ -1,8 +1,8 @@
 <?PHP
+session_start();
 require_once '../../include/class_crud.inc.php';
 require_once '../../include/setting.inc.php';
 $obj = new CRUD();
-
 
 //EX.tb_location
 //id_location, ref_id_site, ref_id_building, location_initialname, location_name, location_status
@@ -22,7 +22,9 @@ $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 $search = $_POST["search"]["value"];
 $query_search = "";
 if(!empty($search[0])){
-    $query_search = " WHERE tb_location.location_initialname LIKE '%".$search."%' OR tb_location.location_name LIKE '%".$search."%' ";
+    $query_search = " WHERE (tb_location.location_initialname LIKE '%".$search."%' OR tb_location.location_name LIKE '%".$search."%') AND tb_location.ref_id_site=".$_SESSION['sess_ref_id_site']." ";
+}else{ 
+    $query_search = " WHERE tb_location.ref_id_site=".$_SESSION['sess_ref_id_site']." ";
 }
 
 if($_POST["start"]==0){
@@ -74,9 +76,7 @@ if (count($fetchRow)>0) {
         $dataRow[] = '<div class="check-status custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline">
         <input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['location_status']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_location'].'" id="customSwitch'.$fetchRow[$key]['id_location'].'">
         <label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_location'].'"></label></div>';
-        $dataRow[] = '<div class="btn-group dropdown"><button type="button" class="btn btn-success dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">จัดการ</button>
-        <div class="dropdown-menu" style="margin-left:-4rem;"><a class="dropdown-item edit-data" data-id="'.$fetchRow[$key]['id_location'].'" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fas fa-pencil-alt"></i> แก้ไขข้อมูล</a>
-        </div></div>'.'';//.'SELECT * FROM tb_user '.$query_search.' ORDER BY '.$orderBY.' '.$_POST['order']['0']['dir'].' LIMIT '.$_POST['start'].', '.$length.''
+        $dataRow[] = '<button type="button" class="btn btn-warning btn-sm edit-data" data-id="'.$fetchRow[$key]['id_location'].'" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button>';//.'SELECT * FROM tb_user '.$query_search.' ORDER BY '.$orderBY.' '.$_POST['order']['0']['dir'].' LIMIT '.$_POST['start'].', '.$length.''
         $arrData[] = $dataRow;
         $No--;
     }

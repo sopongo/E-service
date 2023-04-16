@@ -56,11 +56,13 @@ for($i=14;$i<=500;$i++){
     <table id="example1" class="table table-bordered table-hover dataTable dtr-inline">
       <thead>
       <tr class="bg-light">
-        <th class="sorting_disabled">No</th>
-        <th width="15%">วันที่ประกาศ</th>
-        <th width="60%">หัวข้อข่าว</th>
-        <th>แสดงผล</th>
-        <th>จัดการ</th>
+        <th width="60" class="sorting_disabled">No</th>
+        <th width="100">วันที่ประกาศ</th>
+        <th width="800">หัวข้อข่าว</th>
+        <th width="60">ปักหมุด</th>
+        <th width="60">แผนก</th>
+        <th width="60">แสดงผล</th>
+        <th width="60">จัดการ</th>
       </tr>
       </thead>
       <tbody>
@@ -101,8 +103,8 @@ for($i=14;$i<=500;$i++){
       "serverSide": true,
       "order": [1,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
       "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0,3,4] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
-        { "bSearchable": false, "aTargets": [ 0, 3, 4 ] } //คอลัมน์ที่าจะไม่ให้เสริท
+        { "bSortable": false, "aTargets": [0,3,4, 5, 6] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+        { "bSearchable": false, "aTargets": [ 0, 3, 4, 5, 6] } //คอลัมน์ที่าจะไม่ให้เสริท
       ], 
       ajax: {
         beforeSend: function () {
@@ -140,7 +142,6 @@ $(document).ready(function () {
     //$('#exampleModalLabel span').html("เพิ่มข่าวประกาศ");
   });
 
-  
   $(document).on('click','.view-news',function(){   
     var id_row = $(this).data("id");
     //alert(id_row);
@@ -166,25 +167,33 @@ $(document).ready(function () {
   });
   
   $(document).on('click','.edit-data',function(){   
+    //$('#news_detail').summernote('editor.pasteHTML', '');
     $('#exampleModalLabel span').html("แก้ไขข่าวประกาศ");
+    $('#id_row').val('');
     var id_row = $(this).data("id");
     $.ajax({
       type: 'POST',
       url: "module/module_news/ajax_action.php",
       dataType: "json",
       data:{action:"edit_news", id_row:id_row},
+      beforeSend: function () {
+      },
       success: function (data) {
         console.log(data);
         if(data){
-          $('#site_initialname').val(data.site_initialname);
-          $('#site_name').val(data.site_name);
-          $('#id_row').val(data.id_site);
-          $('#exampleModalLabel span').html("แก้ไขข่าวประกาศ: "+data.site_name);
-          if(data.site_status==1){
+          $('#news_title').val(data.news_title);
+          //$('#news_detail').html(data.news_detail);
+          $('#news_detail').summernote('code', data.news_detail);
+          $('#id_row').val(data.id_news);
+          $('#exampleModalLabel span').html("แก้ไขข่าวประกาศ: "+data.news_title);
+          if(data.pin_allpage==2){
+            $('#pin_allpage').prop('checked',true);
+          }
+          if(data.status_news==1){
             $('#status_use').prop('checked',true);
-            $('#status_hold').prop('checked',false);
+            //$('#status_hold').prop('checked',false);
           }else{
-            $('#status_use').prop('checked',false);
+            //$('#status_use').prop('checked',false);
             $('#status_hold').prop('checked',true);
           }
         }else{
@@ -200,4 +209,76 @@ $(document).ready(function () {
 
 });
 /*module/module_site/datatable_processing.php*/
+
+
+$(document).on('click','.chk_status, .chk_pinpage',function(){
+    var chk_box = $(this).parent().find('input[type="checkbox"]');
+    var id_row = $(this).parent().find('input[type="checkbox"]').data("id");
+
+    if($(this). hasClass('chk_pinpage')==true){
+      action = 'update_pinpage';
+      if(chk_box.is(":checked")==true){
+      chk_box_text = "ปักหมุดรายการนี้";
+      chk_box_value = 1;
+      }else{
+        chk_box_text = "ยกเลิกปักหมุดรายการนี้";
+        chk_box_value = 2;
+      }
+    }else{
+      action = 'update_status';
+      if(chk_box.is(":checked")==true){
+        chk_box_text = "ระงับการใช้งาน";
+        chk_box_value = 2;
+      }else{
+        chk_box_text = "ใช้งานรายการนี้";
+        chk_box_value = 1;
+      }      
+    }
+
+
+    swal({
+    title: "ยืนยันการทำงาน !",
+    text: "คุณต้องการ"+chk_box_text+". ใช่หรือไม่ ?",
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#DD6B55",
+    confirmButtonText: "ใช่, ทำรายการ!",
+    cancelButtonText: "ไม่, ยกเลิก!",
+    closeOnConfirm: false,
+    closeOnCancel: true
+   },
+    function (isConfirm) {
+      if (isConfirm) {
+        $.ajax({
+          type: 'POST',
+          url: "module/module_news/ajax_action.php",
+          data:{action:action, chk_box_value:chk_box_value, id_row:id_row},
+          success: function (data) {
+            console.log(data);
+            if(data==1){
+              swal("สำเร็จ!", "บันทึกข้อมูลเรียบร้อยแล้ว.", "success");
+              if(chk_box.is(":checked")==true){
+                ///alert("checked");
+                chk_box.prop('checked',false);
+              }else{
+                //alert("ไม่ได้ checked");
+                chk_box.prop('checked',true);
+              }
+            }else{
+              swal("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้.", "error");
+            }
+          },
+          error: function (data) {
+            swal("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้.", "error");
+          }
+        });
+      } else {
+        return true;        
+        //swal("Cancelled", "Your imaginary file is safe :)", "error");
+      }
+    });
+    return false;
+    //$(this).parent().find('input[type="checkbox"]').prop('checked',true);
+  });
+
 </script>

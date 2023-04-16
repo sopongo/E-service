@@ -36,11 +36,20 @@
                         <div class="col-sm-12 col-md-12 col-xs-12">  
                             <div class="form-group mb-2">
                                 <label>แสดงผล: </label> 
-                                <div class="form-check-inline"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="status_use" name="showall_site" value="1" aria-describedby="inputGroupPrepend" required><label class="custom-control-label text-success" for="status_use">แสดงทันที</label></div></div>
-                                <div class="form-check-inline"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="status_hold" name="showall_site" value="2" aria-describedby="inputGroupPrepend" required><label class="custom-control-label text-danger w-auto d-inline" for="status_hold">ยังไม่แสดงผล</label><div class="invalid-feedback float-right w-auto pl-3">เลือกสถานะการใช้งาน</div></div></div>
+                                <div class="form-check-inline"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="status_use" name="status_news" value="1" aria-describedby="inputGroupPrepend" required><label class="custom-control-label text-success" for="status_use">แสดงทันที</label></div></div>
+                                <div class="form-check-inline"><div class="custom-control custom-radio"><input type="radio" class="custom-control-input" id="status_hold" name="status_news" value="2" aria-describedby="inputGroupPrepend" required><label class="custom-control-label text-danger w-auto d-inline" for="status_hold">ยังไม่แสดงผล</label><div class="invalid-feedback float-right w-auto pl-3">เลือกสถานะการใช้งาน</div></div></div>
                             </div>
                         </div>  
                         </div><!--row-1-->
+
+                        <div class="row row-1">
+                        <div class="col-sm-12 col-md-12 col-xs-12">  
+                            <div class="form-group mb-2">
+                                <label>ปักหมุด: </label> 
+                                <div class="icheck-success d-inline-block mr-4"><input type="checkbox" name="pin_allpage" id="pin_allpage" value="2"><label for="pin_allpage">ปักหมุด (แสดงผลทุกหน้า)</label></div>
+                            </div>
+                        </div>  
+                        </div><!--row-1-->                        
 
                         <div class="row row-4">
                             <div class="col-sm-12 col-md-12 col-xs-12">  
@@ -54,7 +63,7 @@
 
                         <div class="row row-4">
                             <div class="col-sm-12 col-md-12 col-xs-12">  
-                            <textarea class="form-control form-control-sm mb-3" id="summernote" name="summernote">เขียน <em>ประกาศ</em> <u>ที่</u> <strong>นี่</strong></textarea>
+                            <textarea class="form-control form-control-sm mb-3" id="news_detail" name="news_detail" row="10"></textarea>
                             </div>
                         </div>
 
@@ -84,22 +93,24 @@
 <!-- Summernote -->
 <script src="plugins/summernote/summernote-bs4.min.js"></script>
 <script>
-  $(function () {
-    // Summernote
-    $('#summernote').summernote()
-
-  });
+  $('#news_detail').summernote({
+  height:250,   //set editable area's height
+  codemirror: { // codemirror options
+    theme: 'monokai'
+  }
+});
 </script>
 <script type="text/javascript">
 
 
 $(document).ready(function(){
 
-$(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
+$(document).on("click", ".close, .btn-cancel, #addData", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
     $('body').find('.was-validated').removeClass();
     $('form').each(function() { this.reset() });
+    $('#news_detail').summernote('code', '');
+    $('#id_row').val('');
 });    
-
 
 /*ปุ่ม ADD Recive รับวัสดุเข้าระบบ <<<<<<<<<< เขียนใหม่ใช้โค๊ดนี้ สมบรูณ์กว่าไม่มีบั๊ครีเฟรชหน้าจอ*/
     $(document).on("click", ".btn-submit", function (event){
@@ -118,7 +129,7 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
             beforeSend: function () {
             },
             success: function (data) {
-            console.log(data);
+            console.log(data); //return false;
                 sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
                 $('#example1').DataTable().ajax.reload();
                 $("#modal-default").modal("hide"); 

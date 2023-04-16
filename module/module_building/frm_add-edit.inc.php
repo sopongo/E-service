@@ -50,8 +50,16 @@
                                     $rowData = $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY id_site ASC");
                                     if (count($rowData)!=0) {
                                         echo '<option value="" disabled selected>เลือกไซต์งาน</option>';
-                                        foreach($rowData as $key => $value) {
-                                            echo '<option value="'.$rowData[$key]['id_site'].'">'.$rowData[$key]['site_initialname'].' - '.$rowData[$key]['site_name'].'</option>';
+                                        foreach($rowData as $key => $value){
+                                            if($_SESSION['sess_class_user']!=5 && $_SESSION['sess_ref_id_site']==$rowData[$key]['id_site']){
+                                                $selected = ' selected'; //disabled
+                                            }else{
+                                                $selected = ' disabled'; //disabled
+                                            }
+                                            if($_SESSION['sess_class_user']==5){
+                                                $selected = '';
+                                            }
+                                            echo '<option value="'.$rowData[$key]['id_site'].'" '.$selected.'>'.$rowData[$key]['site_initialname'].' - '.$rowData[$key]['site_name'].'</option>';
                                         }
                                     } else {
                                         echo '<option value="" >เลือกไซต์งาน</option>  ';

@@ -54,15 +54,15 @@ for($i=14;$i<=500;$i++){
     <table id="example1" class="table table-bordered table-hover dataTable dtr-inline">
       <thead>
       <tr class="bg-light">
-        <th class="sorting_disabled">No</th>
-        <th>รหัสพนักงาน</th>
+        <th width="60" class="sorting_disabled">No</th>
+        <th width="80">รหัสพนักงาน</th>
         <th>อีเมล์</th>
         <th>ชื่อ-นามสกุล</th>
-        <th>ไซต์</th>
-        <th>แผนก</th>
-        <th>ระดับผู้ใช้งาน</th>
-        <th>สถานะใช้งาน</th>
-        <th>จัดการ</th>
+        <th width="60">ไซต์</th>
+        <th width="60">แผนก</th>
+        <th width="90">ระดับผู้ใช้งาน</th>
+        <th width="60">สถานะ</th>
+        <th width="60">จัดการ</th>
       </tr>
       </thead>
       <tbody>
@@ -89,11 +89,11 @@ for($i=14;$i<=500;$i++){
 <script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
 
-<script src="plugins/jszip/jszip.min.js"></script>
+<!--<script src="plugins/jszip/jszip.min.js"></script>
 <script src="plugins/pdfmake/pdfmake.min.js"></script>
 <script src="plugins/pdfmake/vfs_fonts.js"></script>
+<script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>-->
 <script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 
@@ -108,8 +108,8 @@ for($i=14;$i<=500;$i++){
       "serverSide": true,
       "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
       "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0,7,8] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
-        { "bSearchable": false, "aTargets": [ 0, 5, 6, 7, 8] } //คอลัมน์ที่าจะไม่ให้เสริท
+        { "bSortable": false, "aTargets": [0,4, 5, 6, 7,8] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+        { "bSearchable": false, "aTargets": [ 0, 4, 5, 6, 7, 8] } //คอลัมน์ที่าจะไม่ให้เสริท
       ], 
       ajax: {
         beforeSend: function () {
@@ -130,7 +130,7 @@ for($i=14;$i<=500;$i++){
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      "buttons": ["csv", "pdf",  "colvis"]
+      "buttons": ["csv", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {
@@ -139,7 +139,7 @@ $(document).ready(function () {
   //var info = table.page.info();
 
   $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มผู้ใช้งาน</button></div>');
-  $('input[type=search]').attr('placeholder', 'ชื่อย่อ หรือ ชื่อผู้ใช้งาน');
+  $('input[type=search]').attr('placeholder', 'รหัสพนักงาน, อีเมล์, ชื่อผู้ใช้งาน');
   //$('#example1_filter').append('<select class="custom-select dataTables_filter" name="search" id="slt_search" aria-controls="example1"><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>');
 
 
@@ -188,7 +188,10 @@ $(document).ready(function () {
     });
   });
 
-
+  
+  $(document).on('click','.view-data',function(){
+      swal("ขออภัย อยู่ระหว่างพัฒนา", "เมนูแสดงผลผู้ใช้งาน, เครื่องจักรที่รับผิดชอบ", "error");
+  });
   $(document).on('click','.check-status',function(){
     var chk_box = $(this).parent().find('input[type="checkbox"]');
     var id_row = $(this).parent().find('input[type="checkbox"]').data("id");

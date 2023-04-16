@@ -11,18 +11,14 @@ for($i=14;$i<=500;$i++){
 <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
-<style>
+<style type="text/css">
 .dataTables_length, .form-control-sm{  font-size:0.85rem; /* 40px/16=2.5em */
 }
 .table, .dataTable tr td{  padding:0.35rem 0.50rem;  margin:0;}
-
 .btn-sm{ padding:0.10rem 0.40rem 0.20rem 0.40rem; margin:0.0rem 0.0rem;}
-
 .dt-buttons button{font-size:0.85rem; /* 40px/16=2.5em */}
-
 .dropdown-menu{  /*left:-70px;*/}
 .dropdown-menu a.dropdown-item{  font-size:0.85rem; /* 40px/16=2.5em */ }
-
 </style>
 
 <!-- Main content -->
@@ -53,11 +49,13 @@ for($i=14;$i<=500;$i++){
     <table id="example1" class="table table-bordered table-hover dataTable dtr-inline">
       <thead>
       <tr class="bg-light">
-        <th class="sorting_disabled">No</th>
+        <th width="50" class="sorting_disabled">No</th>
+        <th width="60">ไซต์งาน</th>
+        <th width="60">แผนก</th>
         <th>ชื่อแบรนด์</th>
         <th>หมายเหตุ</th>
-        <th>สถานะ</th>
-        <th>จัดการ</th>
+        <th width="60">สถานะ</th>
+        <th width="60">จัดการ</th>
       </tr>
       </thead>
       <tbody>
@@ -103,8 +101,8 @@ for($i=14;$i<=500;$i++){
       "serverSide": true,
       "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
       "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0,2, 3, 4] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
-        { "bSearchable": false, "aTargets": [ 0, 2, 3, 4] } //คอลัมน์ที่าจะไม่ให้เสริท
+        { "bSortable": false, "aTargets": [0,1, 2, 4, 5, 6] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+        { "bSearchable": false, "aTargets": [ 0, 1, 2, 4, 5, 6] } //คอลัมน์ที่าจะไม่ให้เสริท
       ], 
       ajax: {
         beforeSend: function () {
@@ -125,7 +123,7 @@ for($i=14;$i<=500;$i++){
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      "buttons": ["csv", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {

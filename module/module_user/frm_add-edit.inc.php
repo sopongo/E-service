@@ -199,7 +199,6 @@ $('input[type=checkbox][name^=ref_id_site]').on('change', function() {
     */   
 });
 
-
 $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
     $('body').find('.was-validated').removeClass();
     $('form').each(function() { this.reset() });
@@ -253,7 +252,7 @@ $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคล�
                 //console.log('mail_dup');
             },
             success: function (data) {
-            console.log(data); return false;
+            console.log(data); //return false;
             data = $.trim(data.replace(/\s+/g," "));
             //console.log(data==='mail_dup'); 
             if(data=='mail_dup'){

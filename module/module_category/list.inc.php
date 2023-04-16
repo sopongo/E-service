@@ -62,15 +62,13 @@ foreach($cate as $x => $val) {
     </div>
     </div>
 
-    <?php
+    <?PHP
       include_once 'module/module_category/frm_add-edit.inc.php'; //หน้า add/edit
     ?>
 
     <div class="testx"></div>
     <div class="card-body">
       <div class="row">
-
-   
 
     <div class="col-sm-12 p-0 m-0">
 
@@ -112,20 +110,19 @@ foreach($cate as $x => $val) {
 <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
 <script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="plugins/jszip/jszip.min.js"></script>
+<!--<script src="plugins/jszip/jszip.min.js"></script>
 <script src="plugins/pdfmake/pdfmake.min.js"></script>
 <script src="plugins/pdfmake/vfs_fonts.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
+-->
+<script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
 
 <script type="text/javascript"> 
 
   $('#some_button').click(function refreshData() {
     $('#example1').DataTable().ajax.reload();
   });
-
 
     $('#example1').DataTable({
       "processing": true,
@@ -141,7 +138,7 @@ foreach($cate as $x => $val) {
         },
         url: 'module/module_category/datatable_processing.php',
         type: 'POST',
-        data : {"action":"get"},//"slt_search":slt_search
+        data : {"action":"get",},//"slt_search":slt_search
         async: false,
         cache: false,
       },
@@ -154,7 +151,7 @@ foreach($cate as $x => $val) {
       "info": true,
       "autoWidth": false,
       "responsive": true,    
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      "buttons": ["csv", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 
@@ -164,14 +161,12 @@ $(document).ready(function () {
 
   $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มหมวดเครื่องจักร-อุปกรณ์</button></div>');
   $('input[type=search]').attr('placeholder', 'ชื่ออาคาร หรือ ชื่ออาคาร');
-  //$('#example1_filter').append('<select class="custom-select dataTables_filter" name="search" id="slt_search" aria-controls="example1"><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>');
-
+  //$('#example1_filter').append(' <select class="custom-select form-select form-select-sm w-25 dataTables_filter" name="slt_search" id="slt_search" aria-controls="example1" aria-label="size 3 select"><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>');
 
   $(document).on('click','#addData',function(){   
     $('textarea').val("");
     $('#exampleModalLabel span').html("เพิ่มหมวดเครื่องจักร-อุปกรณ์");
   });
-
   
   $(document).on('click','.edit-data',function(){   
     $('#exampleModalLabel span').html("แก้ไขหมวดเครื่องจักร-อุปกรณ์");

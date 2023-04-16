@@ -69,13 +69,13 @@ for($i=1;$i<=10;$i++){
     <table id="example1" class="table table-bordered table-hover dataTable dtr-inline">
       <thead>
       <tr class="bg-light">
-        <th class="sorting_disabled">No</th>
-        <th>ชื่อย่อสถานที่</th>
+        <th width="60" class="sorting_disabled">No</th>
+        <th width="120">ชื่อย่อสถานที่</th>
         <th>ชื่อสถานที่ใช้งาน</th>
-        <th>อาคาร</th>
-        <th>ไซต์งาน</th>
-        <th>สถานะ</th>
-        <th>จัดการ</th>
+        <th width="180">อาคาร</th>
+        <th width="100">ไซต์งาน</th>
+        <th width="60">สถานะ</th>
+        <th width="60">จัดการ</th>
       </tr>
       </thead>
       <tbody>
@@ -142,7 +142,7 @@ for($i=1;$i<=10;$i++){
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      "buttons": ["csv", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {

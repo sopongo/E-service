@@ -1,10 +1,6 @@
 <?PHP
-    ob_start();
     session_start();
-    header('Content-Type: text/html; charset=utf-8');
-    date_default_timezone_set('Asia/Bangkok');	
     require_once ('../../include/function.inc.php');
-
     $action = $_REQUEST['action']; #รับค่า action มาจากหน้าจัดการ
 
     if (!empty($action)) { ##ถ้า $action มีการส่งค่ามาจะดึงไฟล์ class.inc.php (ไฟล์ class+function) มาใช้งาน
@@ -13,8 +9,6 @@
     }
 
     /*echo $action; exit();*/
-
-
     if ($action=='adddata' && !empty($_POST)) {
         //tb_unit   id_unit, unit_name, status_unit
 

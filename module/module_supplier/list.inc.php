@@ -42,7 +42,7 @@ for($i=14;$i<=500;$i++){
     </div>
     </div>
 
-    <?php
+    <?PHP
       include_once 'module/module_supplier/frm_add-edit.inc.php'; //หน้า add/edit
     ?>
 
@@ -58,6 +58,7 @@ for($i=14;$i<=500;$i++){
         <th class="sorting_disabled">No</th>
         <th>ชื่อซัพพลายเออร์</th>
         <th>เบอร์โทรศัพท์</th>
+        <th>ไซต์งาน</th>
         <th>แผนกที่รับผิดชอบ</th>
         <th>หมายเหตุ</th>
         <th>สถานะ</th>
@@ -107,8 +108,8 @@ for($i=14;$i<=500;$i++){
       "serverSide": true,
       "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
       "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0,2, 3, 4, 5, 6] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
-        { "bSearchable": false, "aTargets": [ 0, 2, 3, 4, 5, 6] } //คอลัมน์ที่าจะไม่ให้เสริท
+        { "bSortable": false, "aTargets": [0,2, 3, 4, 5, 6, 7] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+        { "bSearchable": false, "aTargets": [ 0, 1, 2, 3, 4, 5, 6, 7] } //คอลัมน์ที่าจะไม่ให้เสริท
       ], 
       ajax: {
         beforeSend: function () {
@@ -129,7 +130,7 @@ for($i=14;$i<=500;$i++){
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      "buttons": ["csv", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {
@@ -144,7 +145,7 @@ $(document).ready(function () {
 
   $(document).on('click','#addData',function(){
     $('#id_row').val('');
-    $('#ref_id_dept option:eq(0)').prop('selected', true);
+    //$('#ref_id_dept option:eq(0)').prop('selected', true);
     $('#exampleModalLabel span').html("เพิ่มซัพพลายเออร์");
   });
   

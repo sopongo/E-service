@@ -34,7 +34,11 @@ isset($_REQUEST['id']) ? $id = intval($_REQUEST['id']) : $id = '';
 
 switch($module){  
 
-  
+  case 'gen-qrcode':
+    include('qrcode.inc.php');
+    exit();
+  break;  
+
   case 'howto':
     $title_site = "คู่มือการใช้งาน"; $title_act = "คู่มือการใช้งาน"; $breadcrumb_txt = "คู่มือการใช้งาน";
     $include_module = "module/module_howto/howto.inc.php";
@@ -451,6 +455,7 @@ $obj = new CRUD();
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=requestlist" class="nav-link <?PHP echo $active_requestlist;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ติดตาม-ประเมิณ</p> </a></li>
         <li class="nav-item"><a href="?module=news" class="nav-link <?PHP echo $active_news;?>"><i class="nav-icon fas fa-bell"></i> <p>ข่าวประกาศ</p></a></li>
+        <li class="nav-item"><a href="?module=news" class="nav-link <?PHP echo $active_news;?>"><i class="nav-icon fas fa-file-excel"></i> <p>ใบบันทึกรายงาน</p></a></li>
         <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ ?>
           <!--<li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>-->
         <?PHP } ?>

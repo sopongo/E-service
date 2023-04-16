@@ -1,10 +1,6 @@
 <?PHP
-    ob_start();
     session_start();
-    header('Content-Type: text/html; charset=utf-8');
-    date_default_timezone_set('Asia/Bangkok');	
     require_once ('../../include/function.inc.php');
-
 
     $action = $_REQUEST['action']; #รับค่า action มาจากหน้าจัดการ
 
@@ -27,7 +23,7 @@
         !empty($output['id_row']) ? ($rowID = $output["id_row"]) && ($query_id = " AND id_building!=".$output["id_row"]."") : ($query_id = "");        
 
         $output['building_initialname'] = str_replace(" ","",$output['building_initialname']);
-        $totalRow = $obj->getCount("SELECT count(id_building) AS total_row FROM tb_building WHERE building_initialname = '".(trim($output['building_initialname']))."' OR building_name='".(trim($output['building_name']))."' ".$query_id."");
+        $totalRow = $obj->getCount("SELECT count(id_building) AS total_row FROM tb_building WHERE (building_initialname = '".(trim($output['building_initialname']))."' OR building_name='".(trim($output['building_name']))."') ".$query_id."");
         
         if($totalRow!=0){ ##ถ้า $totalRow ไม่เท่ากับ 0 แสดงว่ามีในระบบแล้ว
             echo json_encode(1);

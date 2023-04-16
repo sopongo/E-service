@@ -4,7 +4,6 @@ require_once '../../include/class_crud.inc.php';
 require_once '../../include/setting.inc.php';
 $obj = new CRUD();
 
-
 //EX.tb_category
 //id_menu, menu_code, level_menu, sort_menu, ref_id_menu, ref_id_sub, ref_id_dept, name_menu, desc_menu, menu_adddate, ref_id_user_add, menu_editdate, ref_id_user_edit, status_menu
 /*
@@ -22,9 +21,18 @@ $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 $search = $_POST["search"]["value"];
 $query_search = "";
 if(!empty($search[0])){
-    $query_search = " WHERE (tb_category.menu_code LIKE '%".$search."%' OR tb_category.name_menu LIKE '%".$search."%') AND tb_category.ref_id_dept=".$_SESSION['sess_id_dept']."";
+    $query_search = " WHERE (tb_category.menu_code LIKE '%".$search."%' OR tb_category.name_menu LIKE '%".$search."%') ";
 }else{
-    $query_search = " WHERE tb_category.ref_id_dept=".$_SESSION['sess_id_dept']."";
+    $query_search = " WHERE tb_category.ref_id_site=".$_SESSION['sess_ref_id_site']." ";
+}
+
+switch($_SESSION['sess_class_user']){
+    case 5:
+        $query_search.="";
+    break;
+    default:
+    $query_search.=" AND tb_category.ref_id_dept=".$_SESSION['sess_id_dept']."";
+    break;
 }
 
 if($_POST["start"]==0){
@@ -33,7 +41,6 @@ if($_POST["start"]==0){
     $length=$_POST['length'];
 }
 $start = ($_POST["start"]-1)*$_POST['length'];
-
 
 empty($_POST['order']['0']['column']) ? $_POST['order']['0']['column']=0 : $_POST['order']['0']['column'];
 //empty($_POST['order']['0']['dir']) ? $_POST['order']['0']['dir']='desc' : $_POST['order']['0']['dir']='';

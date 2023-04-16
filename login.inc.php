@@ -367,16 +367,17 @@ $(document).ready(function () { //When the page has loaded
     LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept) 
     LEFT JOIN tb_site_responsibility ON (tb_site_responsibility.ref_id_user=tb_user.id_user) 
     LEFT JOIN tb_site ON (tb_site.id_site=".$_POST['slt_manage_site'].") 
-    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."' AND tb_site_responsibility.ref_id_site=".$_POST['slt_manage_site']."";
+    WHERE tb_user.email='".$_POST['email']."' AND tb_user.password='".$password."' AND (tb_site_responsibility.ref_id_site=".$_POST['slt_manage_site']." OR tb_user.ref_id_site=".$_POST['slt_manage_site'].")";
+    //echo $query_login;
     $Row = $obj->customSelect($query_login);   
 
-    if(empty($Row['status_user'])){
-      echo '<script>sweetAlert("ผิดพลาด...", "ชื่อผู้ใช้ระบบหรือเลือกไซต์งานไม่ถูกต้อง ", "error");</script>';
+    if(empty($Row['id_user'])){
+      echo '<script>sweetAlert("ผิดพลาด...", "ไม่พบชื่อผู้ใช้งานตามที่ระบุ", "error");</script>';
       $conn = null; //close connect db
       exit();
     }
 
-    if (((!empty($Row) && $Row['chk_ref_id_site']!='') || $Row['class_user']==5) && $Row['status_user']==1){
+    if (((!empty($Row) && ($Row['chk_ref_id_site']!='' || $Row['ref_id_site']==$_POST['slt_manage_site'])) || $Row['class_user']==5) && $Row['status_user']==1){
       //echo '22222222222'; exit();      
       //$Row['photo_name']
       /*if($_POST['remember']==1){
@@ -414,7 +415,6 @@ $(document).ready(function () { //When the page has loaded
       }
 
       //echo $_SESSION['sess_id_user']; exit();
-
     ?>
     <script type="text/javascript">
 

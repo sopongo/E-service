@@ -38,16 +38,17 @@ empty($_POST['order']['0']['column']) ? $_POST['order']['0']['column']=0 : $_POS
 $colunm_sort = array( //ใช้เรียงข้อมูล
     0=> "tb_machine_site.id_machine_site",
     1=> "tb_machine_site.id_machine_site",
-    2=> "tb_attachment.path_attachment_name",
-    3=> "tb_machine_site.status_work",    
-    4=> "tb_machine_site.code_machine_site",    
-    5=> "tb_machine_site.serial_number",        
-    6=> "tb_machine_master.name_machine",
-    7=> "tb_dept.dept_initialname",
+    2=> "tb_machine_site.id_machine_site",
+    3=> "tb_attachment.path_attachment_name",
+    4=> "tb_machine_site.status_work",    
+    5=> "tb_machine_site.code_machine_site",    
+    6=> "tb_machine_site.serial_number",        
+    7=> "tb_machine_master.name_machine",
     8=> "tb_dept.dept_initialname",
     9=> "tb_dept.dept_initialname",
     10=> "tb_dept.dept_initialname",
     11=> "tb_dept.dept_initialname",
+    12=> "tb_dept.dept_initialname",
 );
 //tb_machine_master    id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine
 
@@ -65,9 +66,9 @@ tb_site.site_initialname, tb_building.building_name, tb_location.location_name
  FROM tb_machine_site
  LEFT JOIN tb_machine_master ON (tb_machine_site.ref_id_machine_master=tb_machine_master.id_machine) 
  LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_machine_master.ref_id_dept) 
+ LEFT JOIN tb_site ON (tb_site.id_site=tb_machine_site.ref_id_site) 
  LEFT JOIN tb_building ON (tb_building.id_building=tb_machine_site.ref_id_building) 
  LEFT JOIN tb_location ON (tb_location.id_location=tb_machine_site.ref_id_location) 
- LEFT JOIN tb_site ON (tb_site.id_site=tb_machine_site.ref_id_site)  
  LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu) 
   LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine AND tb_attachment.image_cate=1) WHERE tb_machine_site.ref_id_site=".$_SESSION['sess_ref_id_site']." ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
@@ -86,6 +87,7 @@ if (count($fetchRow)>0) {
     foreach($fetchRow as $key=>$value){
         $dataRow = array();
         $dataRow[] = $No.'.';
+        $dataRow[] = '<div class="icheck-danger d-inline"><input type="checkbox" value="'.$fetchRow[$key]['id_machine_site'].'" id="gen_qrcode-'.$fetchRow[$key]['id_machine_site'].'" name="gen_qrcode[]" /><label for="gen_qrcode-'.$fetchRow[$key]['id_machine_site'].'"></label></div>';
         $dataRow[] = ($fetchRow[$key]['path_attachment_name']=='' ? '<img src="'.$path_machine_Default.'" class="img" />' : '<a href="'.$path_machine.$fetchRow[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$fetchRow[$key]['machine_code'].': '.$fetchRow[$key]['name_machine'].'"><img src="'.$path_machine.$fetchRow[$key]['path_attachment_name'].'" class="img" alt="'.$path_machine.$fetchRow[$key]['machine_code'].'"></a>');
 
         if($_SESSION['sess_class_user']!=0 && $_SESSION['sess_class_user']!=1 && $_SESSION['sess_class_user']!=2){

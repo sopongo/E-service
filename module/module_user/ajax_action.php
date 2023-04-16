@@ -67,7 +67,6 @@
 #status_user=1&no_user=&fullname=&email=it%40jwdcoldchain.comxxx&password=1234&class_user=1&ref_id_site%5B%5D=7&ref_id_site%5B%5D=1&ref_id_site%5B%5D=3&slt_ref_id_dept=8&id_row=
             parse_str($_POST['data'], $output); //$output['period']
         }
-
         
         //print_r($output); 
         //echo "\r\n";
@@ -122,24 +121,25 @@
             'ip_address' => NULL,
         ];
 
-        print_r($insertRow);
-        exit();
-
+        //print_r($insertRow); exit();
         $rowID = $obj->addRow($insertRow, "tb_user");
-        if(count($output['ref_id_site'])>1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
-            foreach($output['ref_id_site'] as $index => $value){
-                $insertRow = [				
-                    'ref_id_user' => $rowID,
-                    'ref_id_site' => (!empty($output['ref_id_site'][$index])) ? $output['ref_id_site'][$index] : NULL,
-                ];
-                $rowSite = $obj->addRow($insertRow, "tb_site_responsibility");
-            }
-        }else{
+
+        if($_SESSION['sess_class_user']!=5){
             $insertRow = [				
                 'ref_id_user' => $rowID,
-                'ref_id_site' => (!empty($output['ref_id_site'][0])) ? $output['ref_id_site'][0] : NULL,
+                'ref_id_site' => $_SESSION['sess_ref_id_site'],
             ];
             $rowSite = $obj->addRow($insertRow, "tb_site_responsibility");
+        }else{
+            if(count($output['ref_id_site'])>=1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
+                foreach($output['ref_id_site'] as $index => $value){
+                    $insertRow = [				
+                        'ref_id_user' => $rowID,
+                        'ref_id_site' => (!empty($output['ref_id_site'][$index])) ? $output['ref_id_site'][$index] : NULL,
+                    ];
+                    $rowSite = $obj->addRow($insertRow, "tb_site_responsibility");
+                }
+            }
         }
         echo $rowID;
         exit();
@@ -166,20 +166,8 @@
             ];
             $insertRow = array_merge($insertRow, $passRow);
         }
-
         //print_r($insertRow); exit();
         $result = $obj->update($insertRow, "id_user=".$rowID."", "tb_user");
-
-        /*
-        if(count($output['ref_id_site'])>1){ //ถ้า ช่าง,หัวหน้าช่าง ดู(เลือก)มากกว่า 1 ไซต์
-            foreach($output['ref_id_site'] as $index => $value){
-                $insertRow = [				
-                    'ref_id_user' => $rowID,
-                    'ref_id_site' => (!empty($output['ref_id_site'][$index])) ? $output['ref_id_site'][$index] : NULL,
-                ];
-                $rowSite = $obj->addRow($insertRow, "tb_site_responsibility");
-            }        
-            */
     }
     echo json_encode($result);
     exit();

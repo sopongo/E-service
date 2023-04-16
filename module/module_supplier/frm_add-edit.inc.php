@@ -20,7 +20,7 @@
 
     <div class="modal-body p-0 py-2">
 
-        <!--FORM 1 tb_supplier		id_supplier, ref_id_dept, supplier_name, supplier_phone, supplier_status-->
+        <!--FORM 1 tb_supplier  id_supplier, ref_id_dept, supplier_name, supplier_phone, supplier_status-->
         <form id="needs-validation" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
         <div class="container">
             <div class="row">
@@ -43,6 +43,14 @@
                         <div class="row row-4">
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                             <div class="form-group mb-2">
+                                <label>ไซต์งาน: <span class="text-red"><?PHP echo $_SESSION['sess_site_initialname'];?></span></label> 
+                            </div>
+                        </div>
+                        </div><!--row-4-->
+
+                        <div class="row row-4">
+                            <div class="col-sm-6 col-md-6 col-xs-6">  
+                            <div class="form-group mb-2">
                                 <label>แผนกที่รับผิดชอบ: </label> 
                                 <select class="custom-select" name="ref_id_dept" id="ref_id_dept" style="width:100%; font-size:0.85rem;" required>  
                                     <?PHP
@@ -51,10 +59,19 @@
                                     if (count($rowData)!=0) {
                                         echo '<option value="" disabled selected>เลือกแผนกที่รับผิดชอบ</option>';
                                         foreach($rowData as $key => $value) {
-                                            echo '<option value="'.$rowData[$key]['id_dept'].'">'.$rowData[$key]['dept_initialname'].' - '.$rowData[$key]['dept_name'].'</option>';
+                                            if($_SESSION['sess_class_user']!=5 && $_SESSION['sess_id_dept']==$rowData[$key]['id_dept']){
+                                                $selected = ' selected'; //disabled
+                                            }else{
+                                                $selected = ' disabled'; //disabled
+                                            }
+                                            if($_SESSION['sess_class_user']==5){
+                                                $selected = '';
+                                            }
+                                            echo '<option value="'.$rowData[$key]['id_dept'].'" '.$selected.'>'.$rowData[$key]['dept_initialname'].' - '.$rowData[$key]['dept_name'].'</option>';
+                                            $selected = '';
                                         }
                                     } else {
-                                        echo '<option disabled selected value="" >เลือกแผนกที่รับผิดชอบ</option>  ';
+                                        echo '<option disabled value="" >เลือกแผนกที่รับผิดชอบ</option>  ';
                                     }
                                     ?>
                                 </select>

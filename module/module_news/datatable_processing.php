@@ -1,9 +1,9 @@
 <?PHP
+session_start();
 require_once '../../include/class_crud.inc.php';
 require_once '../../include/setting.inc.php';
 require_once '../../include/function.inc.php';
 $obj = new CRUD();
-
 
 //EX.tb_news
 //id_news, site_initialname, site_name, site_status
@@ -22,7 +22,15 @@ $_POST['order']['0']['column'] = $_POST['order']['0']['column']+1;
 $search = $_POST["search"]["value"];
 $query_search = "";
 if(!empty($search[0])){
-    $query_search = " WHERE news_title LIKE '%".$search."%' OR news_detail LIKE '%".$search."%' ";
+    $query_search = " WHERE (news_title LIKE '%".$search."%' OR news_detail LIKE '%".$search."%') AND tb_news.ref_id_site=".$_SESSION['sess_ref_id_site']."";
+}else{
+    $query_search = " WHERE tb_news.ref_id_site=".$_SESSION['sess_ref_id_site']."";
+}
+
+if($_SESSION['sess_class_user']!=5){
+    $query_search.=" AND tb_news.ref_id_dept=".$_SESSION['sess_id_dept'].""; 
+}else{
+    $query_search.="";     
 }
 
 if($_POST["start"]==0){
@@ -40,9 +48,10 @@ empty($_POST['order']['0']['column']) ? $_POST['order']['0']['column']=0 : $_POS
 $colunm_sort = array( //ใช้เรียงข้อมูล
     0=> "tb_news.id_news",
     1=> "tb_news.id_news",
-    2=> "tb_news.id_news",
-    3=> "tb_news.datetime_post",
-    4=> "tb_news.news_title",
+    2=> "tb_news.datetime_post",
+    3=> "tb_news.news_title",
+    4=> "tb_news.pin_allpage",
+    5=> "tb_news.showall_site",
 );
 
 $orderBY = $colunm_sort[$_POST['order']['0']['column']];
@@ -51,7 +60,10 @@ $arrData = array();
 
 $numRow = $obj->getCount("SELECT count(id_news) AS total_row FROM tb_news ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
 
-$fetchRow = $obj->fetchRows("SELECT * FROM tb_news ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
+$fetchRow = $obj->fetchRows("SELECT tb_news.*, tb_dept.dept_initialname, tb_site.site_initialname FROM tb_news 
+ LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_news.ref_id_dept) 
+ LEFT JOIN tb_site ON (tb_site.id_site=tb_news.ref_id_site) 
+".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
 
 //id_news, site_initialname, site_name, site_status
@@ -62,7 +74,11 @@ if (count($fetchRow)>0) {
         $dataRow[] = $No.'.';
         $dataRow[] = nowDate($fetchRow[$key]['datetime_post']);
         $dataRow[] = '<a href="#" data-toggle="modal" data-target="#modal-news" id="addData" data-id="'.$fetchRow[$key]['id_news'].'" data-backdrop="static" data-keyboard="false" class="view-news">'.$fetchRow[$key]['news_title'].'</a>';
-        $dataRow[] = '<div class="check-status custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline"><input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['status_news']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_news'].'" id="customSwitch'.$fetchRow[$key]['id_news'].'"><label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_news'].'"></label></div>';
+
+        $dataRow[] = '<div class="custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline chk_pinpage"><input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['pin_allpage']==2 ? ' checked value="2" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_news'].'" id="custom_Switch'.$fetchRow[$key]['id_news'].'"><label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_news'].'"></label></div>';
+
+        $dataRow[] = ($fetchRow[$key]['dept_initialname']=='' ? '-' : $fetchRow[$key]['dept_initialname']);
+        $dataRow[] = '<div class="custom-control custom-switch custom-switch-on-success custom-switch-off-danger d-inline chk_status"> <input type="checkbox" class="custom-control-input" '.($fetchRow[$key]['status_news']==1 ? 'checked value="1" disabled' : ' disabled ').' data-id="'.$fetchRow[$key]['id_news'].'" id="custom_Switch'.$fetchRow[$key]['id_news'].'"><label class="custom-control-label custom-control-label" for="customSwitch'.$fetchRow[$key]['id_news'].'"></label></div>';        
         $dataRow[] = '<button type="button" class="btn btn-success btn-sm view-news" data-id="'.$fetchRow[$key]['id_news'].'" data-toggle="modal" data-target="#modal-news" id="viewData" data-backdrop="static" data-keyboard="false" title="ดูข้อมูล"><i class="fa fa-file-alt"></i></button> <button type="button" class="btn btn-warning btn-sm edit-data" data-id="'.$fetchRow[$key]['id_news'].'" data-toggle="modal" data-target="#modal-default" id="edit-data" data-backdrop="static" data-keyboard="false" title="แก้ไขข้อมูล"><i class="fa fa-pencil-alt"></i></button>';
         $arrData[] = $dataRow;
         $No--;
