@@ -1,4 +1,5 @@
 <?PHP
+session_start();
 switch($denied_requestid){
   case 1:
 ?>
@@ -151,7 +152,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
 
             <!-- Profile Image -->
             <div class="card card-main card-primary card-outline position-relative ">
-                  <?PHP if($rowData['status_approved']==NULL && $rowData['maintenance_request_status']!=2){?>
+                  <?PHP if($rowData['status_approved']==0 && $rowData['maintenance_request_status']==1){?>
                   <div class="ribbon-wrapper ribbon-lg"><div class="ribbon bg-warning text-lg">รออนุมัติ</div></div>
                   <?PHP } ?>
                   <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']==NULL && !empty($rowMechanic)){?>
@@ -257,7 +258,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                   </li>
                 </ul>
 
-                <?PHP if($rowData['status_approved']==NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)){ //รออนุมัติ/หรือไม่อนุมัติ?>
+                <?PHP if(($rowData['status_approved']==0 && $rowData['maintenance_request_status']==1) && ($_SESSION['sess_class_user']==5 || $_SESSION['sess_class_user']==3)){ //รออนุมัติ/หรือไม่อนุมัติ?>
                     <button type="button" class="btn btn-success btn-block btn-approved" data-toggle="modal" data-target="#modal-approved" id="addData" data-backdrop="static" data-keyboard="false"> อนุมัติ, จ่ายงานซ่อม</button>
                     <a href="#" class="btn btn-warning btn-block btn-disapprove">ไม่อนุมัติใบแจ้งซ่อม</a>
                 <?PHP }?>

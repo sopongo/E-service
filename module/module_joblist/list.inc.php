@@ -1,4 +1,5 @@
 <?PHP
+session_start();
 //$obj = new CRUD();
 $sql_fetch_Accept= "SELECT tb_maintenance_request.*, tb_ref_repairer.* FROM tb_maintenance_request 
 LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 

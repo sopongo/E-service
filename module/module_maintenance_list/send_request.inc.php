@@ -199,8 +199,8 @@
                 $mail->Send();
             }
         }
-        echo json_encode($rowID);
         ##### ส่งอีเมล์แจ้งเตือนหัวหน้าช่าง-ผู้แจ้งซ่อม ######
+        echo json_encode($rowID);
         exit();
     }
     
