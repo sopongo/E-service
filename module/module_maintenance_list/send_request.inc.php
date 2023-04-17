@@ -292,6 +292,28 @@
         exit();        
     }
 
+    if ($action=='noapproved') {
+        $updateRow = [
+            'status_approved' => 2,
+            'ref_id_user_approver' => $_SESSION['sess_id_user'],
+            'detail_note_approved' => (!empty($_POST['detail_note_approved'])) ? $_POST['detail_note_approved'] : '',
+            'allotted_date' => date('Y-m-d H:i:s'),            
+        ];
+        $rowID = $obj->update($updateRow, "id_maintenance_request=".$ref_id."", "tb_maintenance_request");
+        ######### Update Timeline ###########
+        $insert_tm = [
+            'ref_id_maintenance_request' => $ref_id,
+            'timeline_date' => date('Y-m-d H:i:s'),
+            'ref_id_user' => $_SESSION['sess_id_user'],
+            'ref_arr_timeline' => 24, //REF. $arr_timeline ไม่อนุมัติใบแจ้งซ่อม
+            'title_timeline' => NULL,
+            'detail_timeline' => NULL,
+        ];
+        $insertTM = $obj->addRow($insert_tm, "tb_timeline");
+        ######### .Update Timeline ###########
+        echo $rowID;
+        exit();        
+    }
 
     if ($action=='problem_statement') {
         //echo $ref_id.'----xxx------'.$_POST['problem_statement']; exit();

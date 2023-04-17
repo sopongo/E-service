@@ -408,6 +408,47 @@ $(function () {
 <?PHP
     }
 ?>
+
+<?PHP
+    if($action=='noapproved'){
+?>
+    <form id="needs-validation_2" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
+    <div class="container">
+        <div class="row">
+        <div class="offset-md-0 col-md-12 offset-md-0">  
+            <div class="card">  
+                <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p> <span class="float-right editby"></span></div>
+                <div class="card-body p-3">
+                    <!--ajax data hear-->
+                    <div class="row row-4">
+                        <div class="col-sm-12 col-md-12 col-xs-12">  
+                            <div class="form-group">  
+                                <label for="problem_statement"><span class="text-red font-size-sm"></span> ผู้ไม่อนุมัติ:</label> <?PHP echo $_SESSION['sess_fullname']; ?>
+                            </div>
+                        </div>
+                    </div><!--row-4-->
+                    <div class="row row-5">
+                        <div class="col-sm-12 col-md-12 col-xs-12">  
+                            <div class="form-group">  
+                                <label for="problem_statement">สาเหตุที่ไม่อนุมัติ:<span class="text-red font-size-sm">**</span></label>  
+                                <textarea class="form-control" rows="5" id="detail_note_approved" maxlength="145" name="detail_note_approved" placeholder="Enter ..." required></textarea>
+                                <!--<input type="hidden" name="action" id="action" value="noapproved" />-->
+                                <input type="hidden" name="ref_id" id="ref_id" value="<?PHP echo $ref_id; ?>" />
+                                <div class="invalid-feedback">กรอกสาเหตุที่ไม่อนุมัติ</div>
+                            </div>
+                        </div>
+                    </div><!--row-5-->
+                </div><!--card-body-->
+            </div><!--card-->
+        </div>                
+        </div><!--row-->
+    </div><!--container-->
+    </form><!--FORM 1-->
+<?PHP
+        //echo 'ยกเลิกใบแจ้งซ่อม'; exit();
+    }
+?>
+
 <?PHP
     if($action=='cancel'){
 ?>

@@ -442,8 +442,8 @@ $obj = new CRUD();
         </div>
         <div class="info">
           <a href="#" class="d-block"><?PHP echo $_SESSION['sess_fullname'];?></a>
-          <span class="text-white">ระดับ: <?PHP echo $classArr[$_SESSION['sess_class_user']]; ?> / <?PHP echo $_SESSION['sess_dept_initialname'];?></span><br />
-          <span class="text-white">ไซต์งาน: <?PHP echo $_SESSION['sess_site_initialname'];?></span>
+          <span class="text-white">ระดับ: <?PHP echo $classArr[$_SESSION['sess_class_user']]; ?></span><br />
+          <span class="text-white">ไซต์งาน: <?PHP echo $_SESSION['sess_site_initialname'];?> แผนก: <?PHP echo $_SESSION['sess_dept_initialname'];?></span>
           <a href="?module=profile" class="d-block text-yellow">[แก้ไขข้อมูลส่วนตัว]</a>
         </div>
       </div>
@@ -455,7 +455,7 @@ $obj = new CRUD();
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
         <li class="nav-item"><a href="?module=requestlist" class="nav-link <?PHP echo $active_requestlist;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ติดตาม-ประเมิณ</p> </a></li>
         <li class="nav-item"><a href="?module=news" class="nav-link <?PHP echo $active_news;?>"><i class="nav-icon fas fa-bell"></i> <p>ข่าวประกาศ</p></a></li>
-        <li class="nav-item"><a href="?module=news" class="nav-link <?PHP echo $active_news;?>"><i class="nav-icon fas fa-file-excel"></i> <p>ใบบันทึกรายงาน</p></a></li>
+        <!--<li class="nav-item"><a href="?module=news" class="nav-link <?PHP echo $active_news;?>"><i class="nav-icon fas fa-file-excel"></i> <p>ใบบันทึกรายงาน</p></a></li>-->
         <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){ ?>
           <!--<li class="nav-item"><a href="?module=requisition" class="nav-link <?PHP echo $active_req; ?>"><i class="nav-icon fa fa-fist-raised"></i><p>จ่ายงานซ่อม</p></a></li>-->
         <?PHP } ?>
@@ -466,7 +466,7 @@ $obj = new CRUD();
               WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.status_approved=0 AND tb_maintenance_request.maintenance_request_status!=2"); 
 
               ##$numRow_accept ===== จำนวนงานที่รอกดรับงาน (งานที่ได้รับมอบหมายให้ซ่อม)
-              $numRow_accept = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NULL"); 
+              $numRow_accept = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.status_approved=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NULL"); 
 
               ##$numRow_handover ===== จำนวนงานที่รอส่งมอบ
               $numRow_handover = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_end IS NOT NULL AND tb_maintenance_request.hand_over_date IS NULL");                           
@@ -481,6 +481,7 @@ $obj = new CRUD();
           <li class="nav-item"><a href="?module=waitapprove" class="nav-link <?PHP echo $active_waitapprove;?>"><i class="nav-icon fas fa-hourglass-half"></i> <p>งานรออนุมัติซ่อม</p><span class="float-right badge bg-light"><?PHP echo $numRow_waitapprove; ?></span></a></li>
           <li class="nav-item"><a href="?module=waitaccept" class="nav-link <?PHP echo $active_waitaccept;?>"><i class="nav-icon fas fa-handshake"></i> <p>งานรอช่างรับงาน</p><span class="float-right badge bg-light"><?PHP echo $numRow_accept; ?></span></a></li>
           <li class="nav-item"><a href="?module=handover" class="nav-link <?PHP echo $active_handover;?>"><i class="nav-icon fas fa-flag-checkered"></i> <p>งานรอส่งมอบ</p><span class="float-right badge bg-success"><?PHP echo $numRow_handover; ?></span></a></li>
+          <li class="nav-item"><a href="?module=allrequestlist" class="nav-link <?PHP //echo $active_handover;?>"><i class="nav-icon fas fa-file-invoice"></i> <p>ใบแจ้งซ่อมทั้งหมด</p></a></li>          
             <?PHP }?>
         <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning"><?PHP echo $total_alljob; ?></span></a></li>
         <?PHP }##11 ?>

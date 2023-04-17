@@ -42,6 +42,7 @@
                     'sort_menu' => NULL,
                     'ref_id_menu' => (!empty($output['ref_id_menu'])) ? $output['ref_id_menu'] : NULL,
                     'ref_id_sub' => NULL,
+                    'ref_id_site' => (!empty($output['ref_id_site'])) ? $output['ref_id_site'] : NULL,
                     //'ref_id_dept' => (!empty($output['ref_id_dept'])) ? $output['ref_id_dept'] : NULL,
                     'ref_id_dept' => $_SESSION['sess_id_dept'],
                     'name_menu' => (!empty($output['name_menu'])) ? $output['name_menu'] : NULL,
@@ -52,7 +53,7 @@
                     'ref_id_user_edit' => NULL,
                     'status_menu' => (!empty($output['status_menu'])) ? $output['status_menu'] : NULL,
                 ];
-                $rowID = $obj->addRow($insertRow, "tb_category");
+                $result = $obj->addRow($insertRow, "tb_category");
             }else{
                 $insertRow = [
                     'menu_code' => (!empty($output['menu_code'])) ? $output['menu_code'] : NULL,
@@ -71,9 +72,9 @@
                     'ref_id_user_edit' => NULL,
                     'status_menu' => (!empty($output['status_menu'])) ? $output['status_menu'] : NULL,
                 ];
-                $obj->update($insertRow, "id_menu=".$rowID."", "tb_category");
+                $result = $obj->update($insertRow, "id_menu=".$rowID."", "tb_category");
             }
-            echo json_encode("Success");
+            echo json_encode($result);
             exit();
         }
     }

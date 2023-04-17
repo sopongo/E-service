@@ -145,8 +145,8 @@
                         <div class="row row-5">
                             <div class="col-sm-6 col-md-6 col-xs-6">  
                                 <div class="form-group">  
-                                    <label for="firstname">รายละเอียด(ถ้ามี):</label>  
-                                    <textarea class="form-control" id="desc_menu" name="desc_menu" rows="3" placeholder="รายละเอียด ..."></textarea>
+                                    <label for="firstname">รายละเอียดไม่เกิน 50 ตัวอักษร (ถ้ามี):</label>  
+                                    <textarea class="form-control" id="desc_menu" name="desc_menu" rows="3" maxlength="50" placeholder="รายละเอียดไม่เกิน 50 ตัวอักษร..."></textarea>
                                 </div>
                             </div>
                         </div><!--row-5-->
@@ -256,7 +256,7 @@ $(document).on("change", "#ref_id_dept", function (){
             beforeSend: function () {
             },
             success: function (data) {
-            //console.log(data);
+            console.log(data); //return false;
             if(data==1){
                 sweetAlert("ผิดพลาด!", "ชื่อย่อ'"+$("#menu_code").val()+"' ถูกใช้แล้ว", "error");
                 return false;

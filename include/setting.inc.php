@@ -91,6 +91,7 @@ $arr_timeline = array(
     array(21,'ยกเลิกส่งมอบ ให้ช่างแก้ไขงานซ่อมใหม่', '<i class="fas fa-undo-alt bg-red"></i>'),    
     array(22,'ลบข้อมูลรายการอะไหล่ที่เปลี่ยน', '<i class="fas fa-comments bg-blue"></i>'),    
     array(23,'ลบรูปถ่ายใบแจ้งซ่อม', '<i class="fas fa-comments bg-blue"></i>'),    
+    array(24,'ไม่อนุมัติใบแจ้งซ่อม', '<i class="fas fa-comments bg-blue"></i>'),    
 );
 
 

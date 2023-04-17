@@ -11,8 +11,6 @@ switch($denied_requestid){
 @media only screen and (max-width:640px) {
     /*.card-title{ width:100%;  background-color: #000; padding-bottom:50px ;}*/
 }
-.showSweetAlert h2{ font-size:1.5rem;}
-.showSweetAlert p{ font-size:1rem;}
 .btn-gray {    color: #333;    background-color: #e7e7e7;    border-color: #e3e3e3;    box-shadow: none;}
 .btn-gray:hover {    background-color: #cccccc;}
 .bg-pcs{ background-color:#00387C;} 
@@ -65,6 +63,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
   }
   include_once 'module/module_maintenance_list/frm_update_result.inc.php'; #หน้าอัพเดทผลการซ่อม
   include_once 'module/module_maintenance_list/frm_cancel.inc.php'; #หน้ายกเลิกใบแจ้งซ่อม
+  include_once 'module/module_maintenance_list/frm_noapproved.inc.php'; #หน้าไม่อนุมัติใบแจ้งซ่อม
   include_once 'module/module_maintenance_list/frm_maintenance_type.inc.php'; #อัพเดทประเภทใบแจ้งซ่อม
   include_once 'module/module_maintenance_list/frm_problem_statement.inc.php'; #อัพเดทอาการเสีย/ปัญหาที่พบ
   include_once 'module/module_maintenance_list/frm_outsite_repair.inc.php'; #อัพเดทส่งซ่อมภายนอก
@@ -155,6 +154,9 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                   <?PHP if($rowData['status_approved']==0 && $rowData['maintenance_request_status']==1){?>
                   <div class="ribbon-wrapper ribbon-lg"><div class="ribbon bg-warning text-lg">รออนุมัติ</div></div>
                   <?PHP } ?>
+                  <?PHP if($rowData['status_approved']==2 && $rowData['maintenance_request_status']==1){?>
+                  <div class="ribbon-wrapper ribbon-lg"><div class="ribbon bg-danger text-lg">ไม่อนุมัติ</div></div>
+                  <?PHP } ?>
                   <?PHP if($rowData['allotted_date']!=NULL && $rowData['allotted_accept_date']==NULL && !empty($rowMechanic)){?>
                   <div class="ribbon-wrapper ribbon-lg">
                   <div class="ribbon bg-warning text-lg">รอช่างรับงาน</div>
@@ -188,10 +190,16 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                 <p class="text-muted text-center"></p>
 
                 <ul class="list-group list-group-unbordered mb-1">
+                <?PHP if($rowData['status_approved']==2 && $rowData['maintenance_request_status']==1){?>
+                  <li class="list-group-item">
+                    <b class="text-red">ใบแจ้งซ่อมไม่อนุมัติ</b> 
+                      <span class="d-block pt-2 pl-3"><strong>สาเหตุ:</strong> <?PHP echo $rowData['detail_note_approved']." วันที่ไม่อนุมัติ: ".nowDate($rowData['allotted_date'])." เวลา:".nowTime($rowData['allotted_date']).")";?>	</span>
+                  </li>
+                <?PHP } ?>
                 <?PHP if($rowData['maintenance_request_status']==2){?>
                   <li class="list-group-item">
                     <b class="text-red">ใบแจ้งซ่อมถูกยกเลิก</b> 
-                      <span class="d-block pt-2 pl-3">สาเหตุ: <?PHP echo $rowData['cause_mt_request_cancel']." (".$rowData['cancel_fullname']." วันที่ยกเลิก: ".nowDate($rowData['date_mt_request_cancel'])." เวลา:".nowTime($rowData['date_mt_request_cancel']).")";?>	</span>
+                      <span class="d-block pt-2 pl-3"><strong>สาเหตุ:</strong> <?PHP echo $rowData['cause_mt_request_cancel']." (".$rowData['cancel_fullname']." วันที่ยกเลิก: ".nowDate($rowData['date_mt_request_cancel'])." เวลา:".nowTime($rowData['date_mt_request_cancel']).")";?>	</span>
                   </li>
                 <?PHP } ?>
                 <li class="list-group-item text-red">
@@ -258,10 +266,11 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                   </li>
                 </ul>
 
-                <?PHP if(($rowData['status_approved']==0 && $rowData['maintenance_request_status']==1) && ($_SESSION['sess_class_user']==5 || $_SESSION['sess_class_user']==3)){ //รออนุมัติ/หรือไม่อนุมัติ?>
+                <?PHP if(($rowData['status_approved']==0 && $rowData['maintenance_request_status']==1) && ($_SESSION['sess_class_user']==3 && $_SESSION['sess_id_dept']==$rowData['ref_id_dept_responsibility'] || $_SESSION['sess_class_user']==5)){  //รออนุมัติหรือไม่อนุมัติ ?>
                     <button type="button" class="btn btn-success btn-block btn-approved" data-toggle="modal" data-target="#modal-approved" id="addData" data-backdrop="static" data-keyboard="false"> อนุมัติ, จ่ายงานซ่อม</button>
-                    <a href="#" class="btn btn-warning btn-block btn-disapprove">ไม่อนุมัติใบแจ้งซ่อม</a>
+                    <button type="button" class="btn btn-warning btn-block btn-noapproved" data-toggle="modal" data-target="#modal-noapproved" id="noapproved" data-backdrop="static" data-keyboard="false"> ไม่อนุมัติใบแจ้งซ่อม</button>                    
                 <?PHP }?>
+
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']==NULL && $rowData['maintenance_request_status']==1){ ?>
                     <?PHP if(($chk_responsibility==1 && $rowData['status_approved']==1) || $_SESSION['sess_class_user']==5){ ##เช็คว่าคนที่เปิดดูหน้านี้ใช้ผู้รับผิดชอบหรือไม่ ?>
                       <a href="#" class="btn btn-success btn-block btn-accept_date">รับทราบ, รับงานซ่อม</a>
@@ -278,7 +287,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                     <a href="#" class="btn btn-success btn-block btn-hand_over">ส่งมอบงาน</a>
                     <a href="#" class="btn btn-warning btn-block btn-reject_hand_over">ยกเลิกการส่งมอบงาน</a>
                 <?PHP } ?>
-                <?PHP if(($_SESSION['sess_class_user']==1 && $rowData['ref_id_dept_request']==$_SESSION['sess_id_dept']) || (($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user']))  && $rowData['hand_over_date']==NULL && $rowData['maintenance_request_status']==1){?>
+                <?PHP if(($_SESSION['sess_class_user']==1 && $rowData['ref_id_dept_request']==$_SESSION['sess_id_dept']) || (($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) || ($rowData['ref_id_user_request']==$_SESSION['sess_id_user']))  && $rowData['hand_over_date']==NULL && $rowData['maintenance_request_status']==1 && $rowData['status_approved']!=2){?>
                 <button type="button" class="btn btn-danger btn-block btn-cancel" data-toggle="modal" data-target="#modal-cancel" id="addData" data-backdrop="static" data-keyboard="false"> ยกเลิกใบแจ้งซ่อม</button>
                 <?PHP } ?>
               </div>
@@ -1413,6 +1422,26 @@ $(document).on("click", ".btn-repair_results", function (e){
       }
   });  
   }
+});
+
+$(document).on("click", ".btn-noapproved", function (e){
+  e.stopPropagation();
+  $.ajax({
+      url: "module/module_maintenance_list/update_result.inc.php",
+      type: "POST",
+      data:{"action":"noapproved","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"id_dept_responsibility":<?PHP echo $rowData['id_dept_responsibility']?>},
+      beforeSend: function () {
+      },
+      success: function (data) {
+          $(".modal-body-noapproved").html(data);
+          console.log(data);
+      },
+          error: function (jXHR, textStatus, errorThrown) {
+          console.log(data);
+          //alert(errorThrown);
+          swal("Error!", ""+errorThrown+"", "error");
+      }
+  });  
 });
 
 $(document).on("click", ".btn-approved", function (e){
