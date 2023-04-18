@@ -111,20 +111,27 @@ div.dataTables_wrapper {
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>วันที่ประกาศ</th>
-                      <th>หัวข้อประกาศ</th>
-                      <th>ผู้ประกาศ</th>
+                      <th width="10%">วันที่ประกาศ</th>
+                      <th width="60%">หัวข้อประกาศ</th>
+                      <th width="10%">ไซต์งาน</th>
+                      <th width="10%">แผนก</th>
+                      <th width="10%">ผู้ประกาศ</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?PHP
-                        $rowNews = $obj->fetchRows("SELECT tb_news.*, tb_user.fullname FROM tb_news 
-                        LEFT JOIN tb_user ON (tb_user.id_user=tb_news.ref_id_user_post) WHERE tb_news.ref_id_site=".$_SESSION['sess_ref_id_site']." ORDER BY tb_news.datetime_post DESC LIMIT 5;");
+                        $rowNews = $obj->fetchRows("SELECT tb_news.*, tb_user.fullname, tb_user.ref_id_dept, tb_user.ref_id_site , tb_site.site_initialname, tb_dept.dept_initialname FROM tb_news 
+                        LEFT JOIN tb_user ON (tb_user.id_user=tb_news.ref_id_user_post)
+                        LEFT JOIN tb_site ON (tb_site.id_site=tb_user.ref_id_site) 
+                        LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept) 
+                        WHERE tb_news.ref_id_site=".$_SESSION['sess_ref_id_site']." ORDER BY tb_news.datetime_post DESC LIMIT 5;");
                         if (count($rowNews)!=0) {
                             foreach($rowNews as $key => $value) {
                                 echo '<tr>
                                 <td><i class="fas fa-caret-right"></i> '.nowDate($rowNews[$key]['datetime_post']).'</td>
-                                <td width="75%"><a href="#" data-toggle="modal" data-target="#modal-news" id="addData" data-id="'.$rowNews[$key]['id_news'].'" data-backdrop="static" data-keyboard="false" class="view-news">'.$rowNews[$key]['news_title'].'</a></td>
+                                <td><a href="#" data-toggle="modal" data-target="#modal-news" id="addData" data-id="'.$rowNews[$key]['id_news'].'" data-backdrop="static" data-keyboard="false" class="view-news">'.$rowNews[$key]['news_title'].'</a></td>
+                                <td>'.$rowNews[$key]['site_initialname'].'</td>
+                                <td>'.$rowNews[$key]['dept_initialname'].'</td>
                                 <td><span class="tag tag-success">'.$rowNews[$key]['fullname'].'</span></td>
                               </tr>';
                             }
@@ -137,7 +144,7 @@ div.dataTables_wrapper {
                   </div>
               </div>
 
-<h3 class="card-title mb-2 mt-5 text-bold"><i class="fas fa-file-invoice"></i> ติดตาม-ประเมิณ (5 ใบแจ้งซ่อมล่าสุด)</h3>
+<h3 class="card-title mb-2 mt-5 text-bold"><i class="fas fa-file-invoice"></i> ติดตาม-ประเมิน (5 ใบแจ้งซ่อมล่าสุด)</h3>
 <div class="w-100 d-inline-block overflow-auto">
 <table class="table table-hover table-bordered dataTable text-nowrap">
                   <thead>

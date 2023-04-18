@@ -5,7 +5,6 @@ switch($denied_requestid){
 ?>
 <script src='plugins/multifile/jquery.MultiFile.js'></script><!--ใช้กับหน้า update_result.inc.php / $action=img_after_repair  -->
 <style type="text/css">
-
 .sur_hover:hover { background-color:#eee;}
  
 @media only screen and (max-width:640px) {
@@ -37,9 +36,7 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
 .card-title{ font-size:1rem;}
 .select2-selection__choice{ font-size:1rem; background-color: #ffc107; color:#000;}
 .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove {    color:#000;}
-
 .hv:hover{ background-color:#eaeaea;}
-
 .img-wrap {    position: relative; cursor: pointer;}
 .img-wrap .close {
     position: absolute;

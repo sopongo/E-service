@@ -273,7 +273,7 @@ if(preg_match('([a-zA-Zก-ฮ].*[0-9]|[0-9].*[a-zA-Zก-ฮ])', $myString)){ //
             <?PHP
                 ##เช็คว่ามีช่างซ่อม $ref_id นี้หรือยัง
                 //$chk_repairer = $obj->customSelect("SELECT * FROM tb_ref_repairer WHERE ref_id_maintenance_request=".$ref_id."");
-                $rowMechanic = $obj->fetchRows("SELECT id_user, fullname FROM tb_user WHERE ref_id_dept=".$_POST['id_dept_responsibility']." AND (class_user=2 OR class_user=3) ORDER BY fullname ASC");
+                $rowMechanic = $obj->fetchRows("SELECT id_user, fullname FROM tb_user WHERE ref_id_site=".$_SESSION['sess_ref_id_site']." AND  ref_id_dept=".$_POST['id_dept_responsibility']." AND (class_user=2 OR class_user=3) ORDER BY fullname ASC");
                 if (count($rowMechanic)!=0) {
                     foreach($rowMechanic as $key => $value) {
                         echo '<option value="'.$rowMechanic[$key]['id_user'].'">'.$rowMechanic[$key]['fullname'].'</option>';
