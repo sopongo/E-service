@@ -27,23 +27,32 @@
                 break;
 
                 case 3:
+                  include_once('module/module_howto/howto_all.inc.php');
                 break;
 
                 case 4:
                 break; 
 
                 case 5:
+                  include_once('module/module_howto/howto_all.inc.php');
                 break;
             }
         ?>
         </div><!-- /.card-body -->
 
-        <div class="card-footer">
-          Footer
-        </div>
-        <!-- /.card-footer-->
       </div>
       <!-- /.card -->
 
     </section>
     <!-- /.content -->
+
+    <!-- Ekko Lightbox -->
+<script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>  
+<script type="text/javascript"> 
+    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+      event.preventDefault();
+      $(this).ekkoLightbox({
+        alwaysShowClose: true
+      });
+    });
+</script>

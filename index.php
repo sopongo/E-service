@@ -66,7 +66,7 @@ switch($module){
     case 'create-request':
     $title_site = "แจ้งซ่อม"; $title_act = "แจ้งซ่อม"; $breadcrumb_txt = "แจ้งซ่อม";
     $include_module = "module/module_maintenance_list/frm_add-edit.inc.php";
-    $module=="site" ? ($active_createrequest="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_createrequest=""); #ไฮไลท์เมนูด้านซ้าย
+    $module=="create-request" ? ($active_createrequest="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_createrequest=""); #ไฮไลท์เมนูด้านซ้าย
   break;
 
   case 'requestlist':

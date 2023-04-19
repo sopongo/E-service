@@ -1,4 +1,7 @@
 <?PHP
+function isMobile() {
+    return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
+}
 ?>
 <!-- Select2 -->
 <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
@@ -52,6 +55,9 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                     <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p></div>
                     <div class="card-body p-3"> 
 
+                    <?PHP
+                        if(isMobile()){
+                    ?>
                     <div class="row row-1">
                         <div class="col-sm-4 col-md-4 col-xs-4">  
                             <div class="form-group">
@@ -61,6 +67,9 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                             </div>
                         </div>
                     </div><!--row-1 -->
+                    <?PHP
+                        }
+                    ?>
 
                     <div class="row row-2 d-block">
                             <div class="col-sm-4 col-md-4 col-xs-4 p-0 m-0">  
@@ -229,6 +238,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
 <script>
 $(document).ready(function(){
 
+
     $(document).on("click", ".btn-submit", function (event){
         var slt_machine = $("#slt_machine option:selected" ).val();
         //alert($('.select2').select2().val());
@@ -306,6 +316,8 @@ $(document).ready(function(){
         if(ref_id_dept==''){
             swal("ผิดพลาด!", "เลือกแผนกที่รับผิดชอบก่อน", "error");
             return false;
+        }else{
+            $('input[class^=select2-search]').attr('placeholder','พิมพ์ค้นหาเครื่องจักร-อุปกรณ์ที่นี่');
         }
     });
 

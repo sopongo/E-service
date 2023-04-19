@@ -57,6 +57,7 @@ echo var_dump($bbb);*/
         <th>รุ่น/โมเดล</th>
         <th>ชื่อเครื่อง-อุปกรณ์</th>
         <th>หมวดหลัก</th>
+        <th>ไซต์งาน</th>
         <th>แผนกที่รับผิดชอบ</th>
         <th>สถานะใช้งาน</th>
         <th>จัดการ</th>
@@ -93,8 +94,6 @@ echo var_dump($bbb);*/
 <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- Ekko Lightbox -->
 <script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>  
-
-
 <script type="text/javascript"> 
     $(document).on('click', '[data-toggle="lightbox"]', function(event) {
       event.preventDefault();
@@ -112,7 +111,7 @@ echo var_dump($bbb);*/
       "serverSide": true,
       "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
       "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0, 1, 7, 8] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+        { "bSortable": false, "aTargets": [0, 1, 6, 7, 8] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
         { "bSearchable": false, "aTargets": [0, 1, 5, 6, 7, 8] } //คอลัมน์ที่จะไม่ให้เสริท
       ], 
       ajax: {

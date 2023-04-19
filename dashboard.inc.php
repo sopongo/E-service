@@ -136,7 +136,7 @@ div.dataTables_wrapper {
                               </tr>';
                             }
                         } else {
-                          echo '<tr><td width="100%" colspan="3" align="center" class="text-bold text-md text-gray">ยังไม่มีข่าวประกาศ</td></tr>';
+                          echo '<tr><td width="100%" colspan="5" align="center" class="text-bold text-md text-gray">ยังไม่มีข่าวประกาศ</td></tr>';
                         }
                     ?>
                   </tbody>

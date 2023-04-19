@@ -56,9 +56,6 @@ $orderBY = $colunm_sort[$_POST['order']['0']['column']];
 
 $arrData = array();	
 
-$numRow = $obj->getCount("SELECT count(tb_machine_site.id_machine_site) AS total_row FROM tb_machine_site 
-LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master) WHERE tb_machine_site.ref_id_site=".$_SESSION['sess_ref_id_site']." ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
-
 $fetchRow = $obj->fetchRows("SELECT tb_machine_master.id_machine, tb_machine_master.machine_code, tb_machine_master.model_name, tb_machine_master.name_machine, tb_machine_master.status_machine,  
 tb_category.name_menu, tb_dept.dept_initialname, tb_attachment.path_attachment_name, 
 tb_machine_site.serial_number, tb_machine_site.code_machine_site, tb_machine_site.id_machine_site, tb_machine_site.status_work,
@@ -72,16 +69,9 @@ tb_site.site_initialname, tb_building.building_name, tb_location.location_name
  LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu) 
   LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine AND tb_attachment.image_cate=1) WHERE tb_machine_site.ref_id_site=".$_SESSION['sess_ref_id_site']." ".$query_search." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
-//ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
-//EX.tb_machine_master
-//tb_category	id_menu, menu_code, level_menu, sort_menu, ref_id_menu, ref_id_sub, ref_id_dept, name_menu, desc_menu, menu_adddate, ref_id_user_add, menu_editdate, ref_id_user_edit, status_menu
-//tb_attachment 	id_attachment, ref_id_used, attachment_sort, path_attachment_name, attachment_type
-//tb_machine_master     id_machine, machine_code, ref_id_dept, ref_id_menu, ref_id_sub_menu, name_machine, detail_machine, mc_adddate, ref_id_user_add, mc_editdate, ref_id_user_edit, status_machine
-//id_machine_site, code_machine_site, serial_number, recived_date, ref_id_used_master, ref_id_building, ref_id_location, ref_id_site, ref_id_supplier, status_work, detail_machine_site, mcs_adddate, ref_id_user_add, mcs_editdate, ref_id_user_edit, status_machine_site
-//tb_dept	id_dept, dept_initialname, mt_request_manage, dept_name, dept_status
-//id_site, site_initialname, site_name, site_status
-//id_location, ref_id_site, ref_id_building, location_initialname, location_name, location_status
-//id_building, ref_id_site, building_initialname, building_name, building_status
+  $numRow = $obj->getCount("SELECT count(tb_machine_site.id_machine_site) AS total_row FROM tb_machine_site 
+LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master) WHERE tb_machine_site.ref_id_site=".$_SESSION['sess_ref_id_site']." ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด
+
 if (count($fetchRow)>0) {
     $No = ($numRow-$_POST['start']);
     foreach($fetchRow as $key=>$value){

@@ -49,6 +49,7 @@
                 //echo 'new add-'.$machine_code; exit();
                 $insertRow = [
                     'machine_code' => (!empty($machine_code)) ? $machine_code : "Not found.",
+                    'ref_id_site' => $_SESSION['sess_ref_id_site'],
                     'ref_id_dept' => (!empty($_POST['ref_id_dept'])) ? $_POST['ref_id_dept'] : NULL,
                     'ref_id_menu' => (!empty($_POST['ref_id_menu'])) ? $_POST['ref_id_menu'] : NULL,
                     'ref_id_sub_menu' => (!empty($_POST['ref_id_sub_menu'])) ? $_POST['ref_id_sub_menu'] : NULL,
