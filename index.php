@@ -583,4 +583,19 @@ if ( window.history.replaceState ) {
 </html>
 <?PHP 
 //$text;
+/*
+    if($_SESSION['sess_class_user']==5){
+      $id_del = array( 8);
+      foreach($id_del as $index=>$value){
+        //echo $value;        echo '<hr />';
+        echo 'DELETE FROM tb_maintenance_request WHERE id_maintenance_request='.$value.';<br />
+        DELETE FROM tb_attachment WHERE ref_id_used='.$value.';<br />
+        DELETE FROM tb_timeline WHERE ref_id_maintenance_request='.$value.';<br />
+        DELETE FROM tb_ref_repairer WHERE ref_id_maintenance_request='.$value.';<br />
+        DELETE FROM tb_satisfaction_survey WHERE ref_id_maintenance_request='.$value.';<br />
+        DELETE FROM tb_change_parts WHERE ref_id_maintenance_request='.$value.';<br />
+        DELETE FROM tb_outsite_repair WHERE ref_id_maintenance_request='.$value.';<br />';
+      }
+    }
+    */
 ?>

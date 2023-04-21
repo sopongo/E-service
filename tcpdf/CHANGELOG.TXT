@@ -1,3 +1,268 @@
+6.6.2 (2022-12-17)
+	- Ensure pregSplit return type is always array.
+	- Add ability to run tests on various operating systems (#566)
+	- Avoid a deprecated error from PHP8.1 (#573)
+
+6.6.1 (2022-12-12)
+	- Add PHPStan and fix level 1 errors (#307)
+
+6.6.0 (2022-12-06)
+	- Multi-byte character support for filename during output (#561). (#562)
+	- Fix garbage collection (#509)
+	- FIX: PDF417 corrupt output problem, solution set bcmath scale parameter to zero (#534)
+	- Fix TypeError: count() in PHP8 (#556)
+	- Fix-getHTMLFontUnits (#547)
+	- Improved embedded image in HTML allowing src="data:..." format (#552)
+	- Fix image abscissa when in RTL (#510)
+	- fix: php 8.1 notices (#548)
+	- Optimize PNG files (#563)
+	- Update documentation for a known issue. (#569)
+	- Fix for PHP 8.1 (#571)
+
+6.5.0 (2022-08-12)
+	- encodeUrlQuery takes into account the port (#493)
+	- Fixing undefined offset error in writeHTML() when last DOM element ha…
+	- correct some type hints (#495)
+	- fix: php 8.1 notices (#481)
+	- Fixed: null check for PHP 8.1 (#476)
+	- Fix Infinite Loop in Multicell with Auto Page Breaks Off (#473)
+	- GetCssBorderStyle Has Problem When !important Is Specified (#467)
+	- Support Apache 2.4 directives in htaccess file (#530)
+	- Remove examples from dist package (#542)
+
+6.4.4 (2021-12-31)
+	- PHP 8.1 fixes
+
+6.4.3 (2021-12-28)
+	- Fix MultiCell PHPDoc typehint (#407)
+	- Fix type hint for \TCPDF_STATIC::_freadint (#414)
+	- Footer and Header font phpdoc fixes + constructor $pdfa phpdoc fix + setHeaderData lw param fix (#402)
+	- Fix text-annotation state options (#412)
+	- Fix - Named links have been broken. This fixes. (#415)
+	- Fixed type in comment for $lw header image logo width in mm
+	- Change Set to set. Fixes #419 (#421)
+	- Fix failing tests and failing tests not marking exit code as 1 (#426)
+	- Fix phpdoc and prefer null as default value (#444)
+	- Run on PHP 8.1 normally and add nightly PHP as allowed to fail (#452)
+	- Fix AES128 encryption if the OpenSSL extension is installed (#453)
+	- Explicitly cast values to int for imagesetpixel (#460)
+	- Fix cell_height_ratio type (#405)
+	- Leave &NBSP; lowercase when using text-transform (#403)
+
+6.4.2 (2021-07-20)
+	- Fix PHP 8.1 type error with TCPDF_STATIC::pregSplit on preg_split
+	- Fix a PHP array offset error
+	- Fixed phpdoc blocks
+	- Drop a PHP 4 polyfill and add a .gitattributes file
+	- Added a test-suite
+	- Removed pointless assignments
+	- Fix docblock spelling error
+	- Update version info
+	- Fix color being filled to type 0 with PHP 8
+	- Fix warnings for undefined tags for $lineStyle
+	- Normalized composer.json
+	- Allowed transparency in PDF/A-2 and PDF/A-3
+	- Add a TCPDF composer example
+	- Fixed implicit conversion from float to int for PHP 8.1
+	- Removed status.txt from font directories, because of filesize
+	- Fixed type hints
+	- Removed "U" modifier from regexes
+
+6.4.1 (2021-03-27)
+	- Update tcpdf version (no code changes)
+
+6.4.0 (2021-03-27)
+	- allow styles on <HR> tags
+	- check if file exists before calling unlink
+	- Fix image file type for urls with query params
+	- Fix SVGPath should accept 1.19.30 (equiv 1.19,.30) compacted values list
+	- Fix Second parameter of TCPDF::cell() must be a number
+	- PHP 8.0 function signature fixes
+	- Fix vulnerability to roman numeral bombs
+	- Optimized a regular expression
+	- Cache file get contents calls
+	- Remove mb_internal encoding handling
+
+6.3.5 (2020-02-14)
+	- Fixed curly braces in pdf417
+	- Fixed a syntax error issue when accessing an index of a casted variable
+
+6.3.4 (2020-02-12)
+	- Check if imagekeys exist
+	- Unlink only images in cache
+
+6.3.3 (2020-02-12)
+	- Fixed PHP 7.4 - cannot use array offset on integers
+	- Fixed PDF/A-3B validation issue caused by missing pdfaSchema:property.
+	- Removed backup changelog files from repo
+	- Prevents the deletion of non-existent files in /tmp
+	- Prevent crash in case of no list access in cache path
+	- Check existence of file before delete it
+	- Fixed erase users pictures
+	- Fixed problem with $imagekeys undefined or unlinked
+	- Fix SVGPath elliptical arc with rx/ry=0 + z should return to initial point
+	- Fixed PHP 7.4 errors
+	- handle integers for pages
+	- Fixed background image doesn't work in RTL
+	- Fixed PDF/A validity
+	- Fixed datamatrix.php for PHP 7.4
+	- Fixed deprecated PHP features
+
+6.3.2 (2019-09-20)
+	- Update ICC profile
+
+6.3.1 (2019-09-20)
+	- Fix reported version
+	- Fix Undefined property: GLPIPDF::$imagekeys
+
+6.3.0 (2019-09-19)
+	- fix SpotColor handling in HTML
+	- Add an additional empty test to prevent error in PHP 7.2
+	- Fix the documentation how to calculate the cell height
+	- Drop duplicated array indices
+	- Fix TCPDF_STATIC::fileGetContents()
+	- Introduce other version of pdfA (2 and 3)
+	- Add UF and AFRelationship missing
+	- Fix performance issue of cloned instances
+	- Change glob to readdir which performs better
+	- URI in PDF can result in E_NOTICE
+	- Fix a warning for PHP 7.4
+	- Fixed gradient offsets for percentage-based stops.
+	- Fixed file_get_contents return value should also be checked for a non-empty string
+	- Fix Array and string offset access syntax with curly braces is deprecated
+	- Fix PHP Warning: chr() expects parameter 1 to be int
+	- Add a VERSION file
+
+6.2.26 (2018-10-16)
+	- Update sRGB.icc with the one from the Debian package icc-profiles-free
+	- Fix unsupported operand types error when codepoints arrays are merged
+
+6.2.25 (2018-09-23)
+	- Fix support for image URLs.
+
+6.2.24
+	- Support remote urls when checking if file exists.
+
+6.2.23 (2018-09-22)
+	- Simplify file_exists function.
+
+6.2.22 (2018-09-14)
+	- Fixes on `include/tcpdf_images.php`, `include/tcpdf_static.php` and `tcpdf.php` about file handling
+
+6.2.21 (2018-09-14)
+	- _no code changes_
+
+6.2.20 (2018-09-14)
+	- Fix for security vulnerability: Using the phar:// wrapper it was possible to trigger the unserialization of user provided data.
+
+6.2.19 (2018-09-14)
+	- Merge various fixes for PHP 7.3 compatibility and security.
+
+6.2.13 (2016-06-10)
+	- IMPORTANT: A new version of this library is under development at https://github.com/tecnickcom/tc-lib-pdf and as a consequence this version will not receive any additional development or support. This version should be considered obsolete, new projects should use the new version as soon it will become stable.
+
+6.2.12 (2015-09-12)
+	- fix composer package name to tecnickcom/tcpdf
+
+6.2.11 (2015-08-02)
+	- Bug #1070 "PNG regression in 6.2.9 (they appear as their alpha channel)" was fixed.
+	- Bug #1069 "Encoded SRC URLs in <img> tags don't work anymore" was fixed.
+
+6.2.10 (2015-07-28)
+	- Minor mod to PNG parsing.
+	- Make dependency on mcrypt optional.
+
+6.2.8 (2015-04-29)
+	- Removed unwanted file.
+
+6.2.7 (2015-04-28)
+	- Merged PR 17: Avoid warning when iterating a non-array variable.
+	- Merged PR 16: Improve MuliCell param definition.
+	- Improved column check (PR 15).
+	- Merged PR 11: Use stream_is_local instead of limit to file://.
+	- Merged PR 10: ImageMagick link on README.txt.
+
+6.2.6 (2015-01-28)
+	- Bug #1008 "UTC offset sing breaks PDF/A-1b compliance" was fixed.
+
+6.2.5 (2015-01-24)
+	- Bug #1019 "$this in static context" was fixed.
+	- Bug #1015 "Infinite loop in getIndirectObject method of parser" was fixed.
+
+6.2.4 (2015-01-08)
+	- fix warning related to empty K_PATH_URL.
+	- fix error when a $table_colwidths key is not set.
+
+6.2.3 (2014-12-18)
+	- New comment.
+	- Moved the K_PATH_IMAGES definition in tcpdf_autoconfig.
+
+6.2.2 (2014-12-18)
+	- Fixed mispelled words.
+	- Fixed version number.
+
+6.2.1 (2014-12-18)
+	- The constant K_TCPDF_THROW_EXCEPTION_ERROR is now set to false in the default configuration file.
+	- An issue with the _destroy() method was fixed.
+
+6.2.0 (2014-12-10)
+	- Bug #1005 "Security Report, LFI posting internal files externally abusing default parameter" was fixed.
+	- Static methods serializeTCPDFtagParameters() and unserializeTCPDFtagParameters() were moved as non static to the main TCPDF class (see changes in example n. 49).
+	- Deprecated methods were removed, please use the equivalents defined in other classes (i.e. TCPDF_STATIC and TCPDF_FONTS).
+	- The constant K_TCPDF_CALLS_IN_HTML is now set by default to FALSE.
+	- DLE, DLX and DLP page format was added.
+	- Page format are now defined as a public property in TCPDF_STATIC.
+
+6.1.1 (2014-12-09)
+	- Fixed bug with the register_shutdown_function().
+
+6.1.0 (2014-12-07)
+	- The method TCPDF_STATIC::getRandomSeed() was improved.
+	- The disk caching feature was removed.
+	- Bug #1003 "Backslashes become duplicated in table, using WriteHTML" was fixed.
+	- Bug #1002 "SVG radialGradient within non-square Rect" was fixed.
+
+6.0.099 (2014-11-15)
+	- Added basic support for nested SVG images (adapted PR from SamMousa).
+	- A bug related to setGDImageTransparency() was fixed (thanks to Maarten Boerema).
+
+6.0.098 (2014-11-08)
+	- Bug item #996 "getCharBBox($char) returns incorrect results for TTF glyphs without outlines" was fixed.
+	- Bug item #991 "Text problem with SVG" was fixed (only the font style part).
+
+6.0.097 (2014-10-20)
+	- Bug item #988 "hyphenateText - charmin parameter not work" was fixed.
+	- New 1D barcode method to print pre-formatted IMB - Intelligent Mail Barcode - Onecode - USPS-B-3200.
+
+6.0.096 (2014-10-06)
+	- Bug item #982 "Display style is not inherited in SVG" was fixed.
+	- Bug item #984 "Double quote url in CSS" was fixed.
+
+6.0.095 (2014-10-02)
+	- Bug item #979 "New Timezone option overwriting current timezone" was fixed.
+
+6.0.094 (2014-09-30)
+	- Bug item #978 "Variable Undefined: $cborder" was fixed.
+
+6.0.093 (2014-09-02)
+	- Security fix: some serialize/unserialize methods were replaced with json_encode/json_decode to avoid a potential object injection with user supplied content. Thanks to ownCloud Inc. for reporting this issue.
+	- K_TIMEZONE constant was added to the default configuration to suppress date-time warnings.
+
+6.0.092 (2014-09-01)
+	- Bug item #956 "Monospaced fonts are not alignd at the baseline" was fixed.
+	- Bug item #964 "Problem when changing font size" was fixed.
+	- Bug item #969 "ImageSVG with radialGradient problem" was fixed.
+	- sRGB.icc file was replaced with the one from the Debian package icc-profiles-free (2.0.1+dfsg-1) 
+
+6.0.091 (2014-08-13)
+	- Issue #325"Division by zero when css fontsize equals 0" was fixed.
+
+6.0.090 (2014-08-08)
+	- Starting from this version TCPDF is also available in GitHub at https://github.com/tecnickcom/TCPDF
+	- Function getmypid() was removed for better compatibility with shared hosting environments.
+	- Support for pulling SVG stroke opacity value from RGBa color was mergeg [adf006].
+	- Bug item #951 "HTML Table within TCPDF columns doesnt flow correctly on page break ..." was fixed. 
+
 6.0.089 (2014-07-16)
 	- Bug item #948 "bottom line of rowspan cell not work correctly" was fixed.
 
@@ -336,7 +601,7 @@
 	- Image method was improved.
 
 5.9.208 (2013-03-15)
-	- objclone fuction was patched to support old imagick extensions.
+	- objclone function was patched to support old imagick extensions.
 	- tcpdf_parser was improved to support Cross-Reference Streams and large streams.
 
 5.9.207 (2013-03-04)
@@ -413,7 +678,7 @@
 	- barcodes.php file was resynced.
 	- Methods SetAbsX, SetAbsY, SetAbsXY where added to set the absolute pointer coordinates.
 	- Method getCharBBox were added to get single character bounding box.
-	- Signature of addTTFfont method was changed ($addcbbox paramter was added).
+	- Signature of addTTFfont method was changed ($addcbbox parameter was added).
 
 5.9.185 (2012-09-12)
 	- Method _putfontwidths() was fixed.
@@ -815,7 +1080,7 @@
 
 5.9.080 (2011-05-17)
 	- A problem related to file path calculation for images was fixed.
-	- A problem related to unsupressed getimagesize() error was fixed.
+	- A problem related to unsuppressed getimagesize() error was fixed.
 
 5.9.079 (2011-05-16)
 	- Footer() method was changed to use C128 barcode as default (instead of the previous C128B).
@@ -1169,7 +1434,7 @@
 	- Alignment problem on write2DBarcode was fixed.
 
 5.8.015 (2010-08-24)
-	- A problem arised with the latest bugfix was fixed.
+	- A problem arose with the latest bugfix was fixed.
 
 5.8.014 (2010-08-23)
 	- Method _getxobjectdict() was added for better compatibility with external extensions.
@@ -1631,7 +1896,7 @@
 	- Bug item #2938412 "Table related problems - thead, nobr, table width" was fixed.
 
 4.8.026 (2010-01-19)
-	- The misspelled word "lenght" was replaced with "length" in some variables and comments.
+	- The misspelled word "length" was replaced with "length" in some variables and comments.
 
 4.8.025 (2010-01-18)
 	- addExtGState() method was improved to reuse existing ExtGState objects.
@@ -1713,7 +1978,7 @@
 4.8.006 (2009-09-23)
 	- Bug item #2864522 "No images if DOCUMENT_ROOT=='/'" was fixed.
 	- Support for text-indent CSS attribute was added.
-	- Method rollbackTransaction() was changed to support self-reassigment of previous object (check source code documentation).
+	- Method rollbackTransaction() was changed to support self-reassignment of previous object (check source code documentation).
 	- Support for the HTML "nobr" attribute was added to avoid splitting a table or a table row on two pages (i.e.: <tr nobr="true">...</tr>).
 
 4.8.005 (2009-09-17)
@@ -1884,7 +2149,7 @@
 	- WARNING: THIS VERSION CHANGES THE BEHAVIOUR OF $x and $y parameters for several TCPDF methods:
 		zero coordinates for $x and $y are now valid coordinates;
 		set $x and $y as empty strings to get the current value.
-	- Some error caused by 'empty' funtion were fixed.
+	- Some error caused by 'empty' function were fixed.
 	- Default color for convertHTMLColorToDec() method was changed to white and the return value for invalid color is false.
 	- HTML on footer bug was fixed.
 	- The following examples were fixed: 5,7,10,17,19,20,21,33,42,43.
@@ -1903,8 +2168,8 @@
 		C128A : CODE 128 A
 		C128B : CODE 128 B
 		C128C : CODE 128 C
-		EAN2 : 2-Digits UPC-Based Extention
-		EAN5 : 5-Digits UPC-Based Extention
+		EAN2 : 2-Digits UPC-Based Extension
+		EAN5 : 5-Digits UPC-Based Extension
 		EAN8 : EAN 8
 		EAN13 : EAN 13
 		UPCA : UPC-A

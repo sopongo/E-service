@@ -55,9 +55,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                     <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p></div>
                     <div class="card-body p-3"> 
 
-                    <?PHP
-                        if(isMobile()){
-                    ?>
+
                     <div class="row row-1">
                         <div class="col-sm-4 col-md-4 col-xs-4">  
                             <div class="form-group">
@@ -67,9 +65,6 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                             </div>
                         </div>
                     </div><!--row-1 -->
-                    <?PHP
-                        }
-                    ?>
 
                     <div class="row row-2 d-block">
                             <div class="col-sm-4 col-md-4 col-xs-4 p-0 m-0">  

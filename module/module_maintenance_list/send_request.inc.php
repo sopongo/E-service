@@ -128,7 +128,7 @@
         $mailBcc = '';
         $deptResp = $obj->fetchRows("SELECT tb_user.email, tb_user.fullname, tb_site_responsibility.* FROM tb_user 
         LEFT JOIN tb_site_responsibility ON (tb_site_responsibility.ref_id_user=tb_user.id_user) 
-        WHERE tb_site_responsibility.ref_id_site=".$rowData['ref_id_site_request']." AND tb_user.ref_id_dept=".$rowData['ref_id_dept_responsibility']." AND (tb_user.class_user=2 OR tb_user.class_user=3) AND tb_user.status_user=1");
+        WHERE tb_site_responsibility.ref_id_site=".$rowData['ref_id_site_request']." AND tb_user.ref_id_dept=".$rowData['ref_id_dept_responsibility']." AND (tb_user.class_user=2 OR tb_user.class_user=3 OR tb_user.class_user=5) AND tb_user.status_user=1");
 
         $mail = new PHPMailer();
         $mail->IsSMTP();
@@ -139,7 +139,7 @@
         $mail->Port = 465; //$smtp_port
         $mail->CharSet = 'UTF-8';
         $mail->Username = "no-reply@cc.pcs-plp.com"; //$noreply_mail
-        $mail->Password = "Pcs@1234"; //$pass_mail
+        $mail->Password = "shv'gpHo#23"; //$pass_mail
         $mail->SetFrom("no-reply@cc.pcs-plp.com", "E-service (แจ้งซ่อมออนไลน์)");
         //$mail->AddBCC("it-support@jwdcoldchain.com", "หัว จม.(เทส ส่งใบแจ้งซ่อมนะต๊ะ) มีผู้แจ้งซ่อมผ่านระบบ E-service เลขที่ใบแจ้งซ่อม");
         //$mail->AddAttachment($upload_pdf."invoice_".$inv_no.".pdf");
@@ -185,18 +185,16 @@
     // $mail->AddBCC("it-support@jwdcoldchain.com"); //BCC ส่งอีเมล์หาหัวหน้าแผนกที่รับผิดชอบ
     //$mail->AddBCC($mailBcc); //BCC ส่งอีเมล์หาหัวหน้าแผนกที่รับผิดชอบ
      $mail->set('X-Priority', '3'); //Priority 1 = High, 3 = Normal, 5 = low
-     //$mail->Send(); //ส่งเมล์
-     if(!$mail->Send()){
-         //echo 'ส่งไม่ได้';
-         //echo json_encode($rowID);
-     }else{
-         //echo 'ส่งแล้วคร้าบบบบบบ';
-         //echo json_encode($rowID);
-     }
+     @$mail->Send(); //ส่งเมล์
+    $mail->ClearAllRecipients();
+    $mail->ClearAddresses();
+
         if (count($deptResp)>0) {
             foreach($deptResp as $key=>$value){
-                $mail->AddBCC($deptResp[$key]['email']); //BCC ส่งอีเมล์หาหัวหน้าแผนกที่รับผิดชอบ
-                $mail->Send();
+                $mail->ClearAllRecipients();
+                $mail->ClearAddresses();
+                @$mail->AddAddress($deptResp[$key]['email']); //BCC ส่งอีเมล์หาหัวหน้าแผนกที่รับผิดชอบ
+                @$mail->Send();
             }
         }
         ##### ส่งอีเมล์แจ้งเตือนหัวหน้าช่าง-ผู้แจ้งซ่อม ######
