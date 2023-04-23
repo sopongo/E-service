@@ -16,7 +16,7 @@
     }    
 
     if ($action=='adddata' && !empty($_POST)) {    
-        
+        //echo json_encode(1);        exit();
         //echo "<pre>";    print_r($_POST);    echo "</pre>";
         //echo "<pre>";    print_r($_FILES);    echo "</pre>";
 
@@ -105,7 +105,7 @@
         tb_user_cancel.fullname AS cancel_fullname, tb_user_approved.fullname AS approved_fullname, tb_failure_code.failure_code_th_name, tb_repair_code.repair_code_name, 
         tb_repair_result.txt_solution, tb_repair_result.txt_caused_by, tb_repair_result.ref_id_failure_code, tb_repair_result.ref_id_repair_code,
         tb_failure_code.id_failure_code, tb_repair_code.id_repair_code, tb_outsite_repair.*, tb_supplier.supplier_name, tb_user_survey.fullname AS fullname_survay,
-        tb_user_handover.fullname AS fullname_handover, tb_accept_request.fullname AS fullname_accept, tb_machine_site.ref_id_machine_master, tb_machine_site.code_machine_site, tb_machine_master.name_machine FROM tb_maintenance_request 
+        tb_user_handover.fullname AS fullname_handover, tb_accept_request.fullname AS fullname_accept, tb_machine_site.ref_id_machine_master, tb_machine_site.code_machine_site, tb_machine_master.name_machine, tb_building.building_name, tb_location.location_name FROM tb_maintenance_request 
         LEFT JOIN tb_maintenance_type ON (tb_maintenance_type.id_mt_type=tb_maintenance_request.ref_id_mt_type)
         LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
         LEFT JOIN tb_user AS tb_user_request ON (tb_user_request.id_user=tb_maintenance_request.ref_id_user_request)    
@@ -116,6 +116,8 @@
         LEFT JOIN tb_user AS tb_user_handover ON (tb_user_handover.id_user=tb_maintenance_request.ref_id_user_hand_over) 
         LEFT JOIN tb_dept AS tb_user_dept_request ON (tb_user_dept_request.id_dept=tb_user_request.ref_id_dept)
         LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)    
+        LEFT JOIN tb_building ON (tb_building.id_building=tb_machine_site.ref_id_building) 
+        LEFT JOIN tb_location ON (tb_location.id_location=tb_machine_site.ref_id_location) 
         LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)          
         LEFT JOIN tb_repair_result ON (tb_repair_result.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request)
         LEFT JOIN tb_failure_code ON (tb_failure_code.id_failure_code=tb_repair_result.ref_id_failure_code)   
@@ -132,7 +134,7 @@
 
         $mail = new PHPMailer();
         $mail->IsSMTP();
-        $mail->SMTPDebug = 1;
+        $mail->SMTPDebug = false;
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = "ssl"; // Enable "tls" encryption, "ssl" also accepted
         $mail->Host = "mail.cc.pcs-plp.com"; //$smtp

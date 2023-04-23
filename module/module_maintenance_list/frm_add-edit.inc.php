@@ -270,6 +270,7 @@ $(document).ready(function(){
             contentType: false,
             data: frm_Data, 
             beforeSend: function () {
+                $('.confirm').attr('disabled', true).text("รอ...");
             },success: function (data) {
                 console.log(data); //return false;
                 var ref_id = data;
@@ -291,7 +292,7 @@ $(document).ready(function(){
                     event.stopPropagation();
                 })
             },error: function (data) {
-                console.log(data);
+                console.log(data); 
                 sweetAlert("ผิดพลาด!", "ไม่สามารถบันทึกข้อมูลได้", "error");
             }
         });

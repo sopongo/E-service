@@ -1,3 +1,10 @@
+<?PHP
+
+/*$result = mb_substr('อีเมล์ sopongo@gmail.com', 0, 6);
+echo $result;
+return;
+*/
+?>
 <style type="text/css">
 .p-howto{  font-size:0.90rem;  }
 .card-info{ cursor: pointer;}
