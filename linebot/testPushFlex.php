@@ -29,13 +29,21 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 	*/
 	/*******************************/
 
-	if(is_null($data)){		return;	}
+	if(is_null($data)){ return;	}
 	
 	//$userId = 'Uf14e2ebc73e0510f21574d31797ebc1a'; //userId ของผู้ใช้ที่เราต้องการส่งข้อความไปแสดง **บรรทัดนี้ไอดีบ๊วยครับ
-	$userId = $data['events'][0]['source']['userId']; //userId ของผู้ใช้ที่เราต้องการส่งข้อความไปแสดง
-	$groupId = $data['events'][0]['source']['groupId']; //groupId ของกรุ๊ปที่เราต้องการส่งข้อความไปแสดง
-	$to_id = '';
+	//$userId = $data['events'][0]['source']['userId']; //userId ของผู้ใช้ที่เราต้องการส่งข้อความไปแสดง
+	//$groupId = $data['events'][0]['source']['groupId']; //groupId ของกรุ๊ปที่เราต้องการส่งข้อความไปแสดง
+	//$roomId = $data['events'][0]['source']['roomId']; //groupId ของกรุ๊ปที่เราต้องการส่งข้อความไปแสดง	
 
+	//รับ id ว่ามาจากไหน
+	if(isset($data['events'][0]['source']['userId'])){
+		$to_id = $data['events'][0]['source']['userId'];
+	}else if(isset($data['events'][0]['source']['groupId'])){
+		$to_id = $data['events'][0]['source']['groupId'];
+	}else if(isset($data['events'][0]['source']['room'])){
+		$to_id = $data['events'][0]['source']['room'];
+	}
 	$replyToken = $data['events'][0]['replyToken'];
 	$messageType = $data['events'][0]['message']['type'];	
 
@@ -51,7 +59,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 				$typeMsg = 0;
 				$flexDataJson = '{
 					"type": "text",
-					"text": "groupId นี้คือ--> '.$data['events'][0]['source']['groupId'].(!empty($data['events'][0]['source']['userId']) ? ' userId ผู้พิมพ์คำสั่ง-->'.$data['events'][0]['source']['userId'] : '').'"
+					"text": "groupId นี้คือ--> '.$data['events'][0]['source']['groupId'].(!empty($data['events'][0]['source']['userId']) ? ' userId ผู้พิมพ์คำสั่ง-->'.$data['events'][0]['source']['userId'] : '').'----'.$data['events'][0]['source']['userId'].'-|-'.$data['events'][0]['source']['groupId'].'-|-'.$data['events'][0]['source']['room'].'"
 				}';
 				//$userId = $data['events'][0]['source']['groupId'];
 			break;
@@ -68,9 +76,9 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 					if(filter_var($result[1], FILTER_VALIDATE_EMAIL)) {
 						$to_id = $userId;
 						$rowData = $obj->customSelect("SELECT id_user, email, line_token, status_user FROM tb_user WHERE email='".$result[1]."' AND status_user=1");
-						if($rowData['email']==$result[1] && ($rowData['line_token']=='' && $rowData['line_token']=NULL)){
+						if($rowData['email']==$result[1] && is_null($rowData['line_token'])){
 							$updateRow = [
-							  'line_token' => 'xxxx',
+							  'line_token' => $data['events'][0]['source']['userId'],
 							];
 							$obj->update($updateRow, "id_user=".$rowData['id_user']."", "tb_user");
 							$typeMsg = 0;
@@ -78,7 +86,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 							  "type": "text",
 							  "text": "อีเมล์ของคุณคือ: '.$result[1].' ระบบลงทะเบียนเรียบร้อยแล้ว คุณสามารถรับการแจ้งเตือนใบแจ้งซ่อมผ่านทางไลน์นี้, หรือไลน์กลุ่มของคุณ"
 							}';
-						  }else if($rowData['email']==$result[1] && ($rowData['line_token']!='' && $rowData['line_token']!=NULL)){
+						  }else if($rowData['email']==$result[1] && !is_null($rowData['line_token'])){
 							$typeMsg = 0;
 							$flexDataJson = '{
 							  "type": "text",
@@ -102,7 +110,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 			break;
 
 			case 'req':
-				$to_id = $userId;
+				//strlen($groupId)>1 ? $to_id = $groupId : $to_id = $userId;
 				$typeMsg = '';
 				$flexDataJson = '{
 					"type": "flex",
@@ -309,7 +317,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 									},
 									{
 									  "type": "text",
-									  "text": "xxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x x",
+									  "text": "xxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x x"'.'----'.$data['events'][0]['source']['userId'].'-|-'.$data['events'][0]['source']['groupId'].'-|-'.$data['events'][0]['source']['room'].'",
 									  "wrap": true,
 									  "color": "#666666",
 									  "size": "xs",
@@ -348,7 +356,8 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 			break;
 
 			case 'sreq':
-				$to_id = $userId;
+				//strlen($groupId)>1 ? $to_id = $groupId : $to_id = $userId;
+				//$to_id = $groupId;
 				$typeMsg = '';
 				$flexDataJson = '{
 					"type": "flex",
@@ -555,7 +564,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 									},
 									{
 									  "type": "text",
-									  "text": "xxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x x",
+									  "text": "xxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x x"'.'----'.$data['events'][0]['source']['userId'].'-|-'.$data['events'][0]['source']['groupId'].'-|-'.$data['events'][0]['source']['room'].'",
 									  "wrap": true,
 									  "color": "#666666",
 									  "size": "xs",
@@ -594,7 +603,8 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 			break;
 
 			case 'fol':
-				$to_id = $userId;
+				//strlen($groupId)>1 ? $to_id = $groupId : $to_id = $userId;
+				//$to_id = $groupId;		
 				$typeMsg = '';
 				$flexDataJson = '{
 					"type": "flex",
@@ -802,7 +812,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 									},
 									{
 									  "type": "text",
-									  "text": "xxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x x",
+									  "text": "xxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x x"'.'----'.$data['events'][0]['source']['userId'].'-|-'.$data['events'][0]['source']['groupId'].'-|-'.$data['events'][0]['source']['room'].'",
 									  "wrap": true,
 									  "color": "#666666",
 									  "size": "xs",
@@ -865,7 +875,6 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 				  }';
 			break;			
 
-			
 			default:
 				return;
 		  	break;
@@ -881,8 +890,8 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 	$flexDataJsonDeCode = json_decode($flexDataJson,true);
 	$datas['url'] = "https://api.line.me/v2/bot/message/push"; //https://api.line.me/v2/bot/message/reply //https://api.line.me/v2/bot/message/push
 	$datas['token'] = "vlyHEJbLorZxAFI50gm7BS4K4ae2TLUwJdReRsed/ce4XPdWT63R634iq8U4LQMI9Ka4h0EcpnfVMMWhiWCQT60l5q7hHx4QoTblP3gsmrZcxj8lFxts7AB4byB/cYBEBmYb36X/basqyoRKiryalwdB04t89/1O/w1cDnyilFU=";//<access token>
-	$messages['to'] = $to_id;//<user id>, <group id>,
-	$messages['messages'][0] = $flexDataJsonDeCode;
+	$messages['to'] = $to_id; //<user id>, <group id>,
+	$messages['messages'][$typeMsg] = $flexDataJsonDeCode;
 	$encodeJson = json_encode($messages);
 	
 	sentMessage($encodeJson,$datas);

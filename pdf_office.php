@@ -49,10 +49,10 @@ class MYPDF extends TCPDF {
         $this->SetY(-50);
         //Set font
 		$this->SetFont('thsarabun', '', 12, '', false);
-		$this->setCellHeightRatio(1.1);		
+		$this->setCellHeightRatio(1.2);		
         //$this->Cell(0, 0, "Authorized by sdfaasfasdf", 0, 0, 'L');
 		$this->writeHTML('');		
-		$this->writeHTML('<div style="width:100%; display:block; font-size:12px; line-height:14px; ">**หมายเหตุ 1) {data}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) {data}</div><table width="100%" border="1" cellspacing="0" cellpadding="4" bordercolor="#FFFFFF">
+		$this->writeHTML('<div style="width:100%; display:block; font-size:12px; line-height:14px; ">**หมายเหตุ 1) {data}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) {data}</div><table width="100%" border="1" cellspacing="0" cellpadding="5" bordercolor="#ff00ff">
 		<tr>
 		<td width="25%" style="text-align:center;">
 			<strong>ผู้แจ้งซ่อม, ผู้ประเมิณ:</strong><br />
@@ -62,8 +62,8 @@ class MYPDF extends TCPDF {
 		</td>
 		<td width="25%">ประเมินผลการซ่อม:<br/><strong style="text-align: left; vertical-align:middle; font-size:60px;">100%</strong><br />		วันที่ประเมิน DD/MM/YYYY</td>
 		<td width="25%" style="text-align:center;">
-		<strong>ช่างซ่อม:</strong><br />
-		<img src="upload-signature/signature.png" width="200" /><br />
+		<strong>ช่างซ่อม:</strong>
+		<div style="border-bottom:1px solid #333333; padding-bottom:10px; display:block;"><img src="upload-signature/signature.png" width="200" /></div>
 		ชื่อ ({data name})<br />
 		วันที่ DD/MM/YYYY
 		</td>

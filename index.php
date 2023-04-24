@@ -545,6 +545,17 @@ $obj = new CRUD();
     <?PHP
     //echo "<pre>".print_r($_SESSION)."</pre>";
     include($include_module);
+
+/*    echo 'INSERT INTO `tb_category` (`id_menu`, `menu_code`, `level_menu`, `sort_menu`, `ref_id_menu`, `ref_id_sub`, `ref_id_site`, `ref_id_dept`, `name_menu`, `desc_menu`, `menu_adddate`, `ref_id_user_add`, `menu_editdate`, `ref_id_user_edit`, `status_menu`) VALUES';
+    $fetchRow = $obj->fetchRows("SELECT * FROM tb_category WHERE ref_id_site=1 AND ref_id_dept=7 ORDER BY id_menu ASC");
+    echo '<br />';
+    foreach($fetchRow as $key=>$value){
+      //$fetchRow[$key]['id_menu']
+      //(2, NULL, 1, NULL, NULL, NULL, 1, 7, 'Standard Weight (F1) (ตุ้มน้ำหนัก)', NULL, '2023-03-24 12:12:12', 1, NULL, NULL, 1),
+      echo "(NULL, NULL, 1, NULL, NULL, NULL, 5, 8, '".$fetchRow[$key]['name_menu']."', NULL, '2023-04-24 14:14:14', 1, NULL, NULL, 1),";
+      echo '<br />';
+    }*/
+    
     ?>
     <!-- Main content -->
 
@@ -585,7 +596,7 @@ if ( window.history.replaceState ) {
 //$text;
 /*
     if($_SESSION['sess_class_user']==5){
-      $id_del = array( 8);
+      $id_del = array(103, 104);
       foreach($id_del as $index=>$value){
         //echo $value;        echo '<hr />';
         echo 'DELETE FROM tb_maintenance_request WHERE id_maintenance_request='.$value.';<br />
@@ -596,6 +607,6 @@ if ( window.history.replaceState ) {
         DELETE FROM tb_change_parts WHERE ref_id_maintenance_request='.$value.';<br />
         DELETE FROM tb_outsite_repair WHERE ref_id_maintenance_request='.$value.';<br />';
       }
-    }
-    */
+    }*/
+    
 ?>
