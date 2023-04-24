@@ -1446,7 +1446,7 @@ $(document).on("click", ".btn-approved", function (e){
   $.ajax({
       url: "module/module_maintenance_list/update_result.inc.php",
       type: "POST",
-      data:{"action":"approved","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"id_dept_responsibility":<?PHP echo $rowData['id_dept_responsibility']?>},
+      data:{"action":"approved","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"ref_id_dept_responsibility":<?PHP echo $rowData['ref_id_dept_responsibility']?>},
       beforeSend: function () {
       },
       success: function (data) {

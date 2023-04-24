@@ -208,7 +208,6 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
 <script>
 
   $(function () {
-
     $('#our-test').MultiFile({
         max: 6,
         onFileChange: function(){
@@ -217,13 +216,10 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
     });
 
     //Initialize Select2 Elements
-    $('.select2').select2({
-    });
+    $('.select2').select2({});
 
     //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
+    $('.select2bs4').select2({ theme: 'bootstrap4'})
   });
 
   //select2-search__field
@@ -403,7 +399,7 @@ docReady(function () {
             //console.log(`Scan result ${decodedText}`, decodedResult);
             //resultContainer.innerHTML += `<div>[${countResults}] - ${decodedText}</div>`;        
             // Optional: To close the QR code scannign after the result is found
-            //html5QrcodeScanner.clear();            
+            //html5QrcodeScanner.clear();
         }
     }
 

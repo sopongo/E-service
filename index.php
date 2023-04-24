@@ -543,7 +543,7 @@ $obj = new CRUD();
 
     <!-- Main content -->
     <?PHP
-    //echo "<pre>".print_r($_SESSION)."</pre>";
+    echo "<pre>".print_r($_SESSION)."</pre>";
     include($include_module);
 
 /*    echo 'INSERT INTO `tb_category` (`id_menu`, `menu_code`, `level_menu`, `sort_menu`, `ref_id_menu`, `ref_id_sub`, `ref_id_site`, `ref_id_dept`, `name_menu`, `desc_menu`, `menu_adddate`, `ref_id_user_add`, `menu_editdate`, `ref_id_user_edit`, `status_menu`) VALUES';
