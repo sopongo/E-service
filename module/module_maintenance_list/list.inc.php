@@ -11,6 +11,15 @@ for($i=14;$i<=500;$i++){
 */
 //echo $_SESSION['module_access'];
 //echo $_SESSION['sess_id_dept'].'-------------'.$_SESSION['sess_class_user'];
+
+
+$query_search ='';
+$sql_fetchRow = "SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility, tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine, tb_attachment.path_attachment_name FROM tb_maintenance_request 
+LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
+LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)
+LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_maintenance_request.id_maintenance_request AND tb_attachment.attachment_type=1 AND tb_attachment.image_cate=2) 
+LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND ".$query_search." GROUP BY tb_maintenance_request.id_maintenance_request";
 ?>
 
 <!-- DataTables -->

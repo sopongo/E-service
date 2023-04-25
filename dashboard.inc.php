@@ -40,8 +40,7 @@ div.dataTables_wrapper {
         </div>
 
 
-      <?PHP
-
+      <?PHP     
       ?>
         <div class="card-body">
         <div class="row">
