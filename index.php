@@ -39,6 +39,11 @@ switch($module){
     exit();
   break;  
 
+  case 'report-coldchain':
+    $title_site = "xxxxxxxxxx"; $title_act = "xxxxxxxxxx"; $breadcrumb_txt = "xxxxxxxxxx";
+    $include_module = "module/module_en_report/frm_FM-EN-71-00.inc.php";
+  break;  
+
   case 'howto':
     $title_site = "คู่มือการใช้งาน"; $title_act = "คู่มือการใช้งาน"; $breadcrumb_txt = "คู่มือการใช้งาน";
     $include_module = "module/module_howto/howto.inc.php";
@@ -294,6 +299,11 @@ $obj = new CRUD();
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<?PHP
+  if($module=='report-coldchain'){
+    
+  }
+?>
 <meta name="robots" content="noindex, nofollow">
 <meta name="googlebot" content="noindex, nofollow">
 <title><?PHP echo $title_site; ?></title>
@@ -399,7 +409,7 @@ $obj = new CRUD();
 
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed"><!--sidebar-collapse sidebar-mini layout-fixed layout-navbar-fixed sidebar-closed sidebar-collapse layout-navbar-fixed-->
+<body class="hold-transition sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed"><!--sidebar-collapse sidebar-mini layout-fixed layout-navbar-fixed sidebar-closed sidebar-collapse layout-navbar-fixed-->
 <div class="wrapper">
 
   <!-- Preloader -->
@@ -455,7 +465,7 @@ $obj = new CRUD();
       </div>
  
       <!-- Sidebar Menu active-->
-      <nav class="mt-2">
+      <nav class="mt-2 nav-compact"><!--nav-compact-->
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item"><a href="./" class="nav-link <?PHP echo $active_dashbord;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
