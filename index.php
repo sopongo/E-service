@@ -465,7 +465,7 @@ $obj = new CRUD();
       </div>
  
       <!-- Sidebar Menu active-->
-      <nav class="mt-2 nav-compact"><!--nav-compact-->
+      <nav class="mt-2"><!--nav-compact-->
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item"><a href="./" class="nav-link <?PHP echo $active_dashbord;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>

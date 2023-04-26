@@ -1,0 +1,22 @@
+.keypad  p {
+    /*margin: 1%;
+    height:auto;*/
+    width:25%; display: inline-block;
+    cursor: pointer;
+    /*background: #eee;
+    border: 1px solid black;
+    border-radius: 5px;*/
+    font-size:2em;
+    margin: 5px;
+    padding:10px 2px;
+    text-align:center;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+.keypad  p.delete,
+.keypad  p.submit {
+    background: black;
+    color: white;
+}
