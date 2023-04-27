@@ -37,11 +37,18 @@ table.FM-EN-76-00 thead tr th:last-child{ background-color:#fafafa; width:5%; }
 table.FM-EN-76-00 tbody tr td{ padding:2px 2px; font-size:0.85rem;  }
 table.FM-EN-76-00 tbody tr td:nth-child(2){ width: 120px;} 
 table.FM-EN-76-00 tbody tr:hover{ /*background-color:#cce7e8;*/ }
+table.FM-EN-76-00 tbody tr td input{ color:#333;}
 table.FM-EN-76-00 tbody tr td:hover input{ background-color:#cce7e8; }
 table.FM-EN-76-00 tbody tr td input{ width: 100%; border:none; background-color:#fff; padding:1px 1px; cursor:pointer; text-align:center; font-size:0.80rem; font-family:arial;}
 table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none; outline: none;}
 
 .btn-sm{ padding:1px 6px;}
+
+.table-none{  border:none; display: block;}
+.table-none thead{  border:none;}
+.table-none thead tr th{ border:none;}
+
+.testxxx{ display: block; width:40%; max-width:40%; background-color: rgba(255, 0, 0, 0.3); position: absolute; left:50%; margin:auto; margin-top:-10px;margin-left:50px; text-align:center; }
 </style>
 
   <!-- Ion Slider -->
@@ -71,19 +78,21 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
 </div>-->
 
 <!--<img src="module/module_en_report/img_test/FM-EN-76-00.jpg" class="img" width="100%"><br /><br />-->
-
-
-<table class="table-bordered">
-  <thead>
-    <tr>
-      <th><img src="dist/img/logo_2.png" class="img" width="20%"></th>
-      <th>Pacific Cold Storage Co. Ltd<br/>(Mahachai) 47/19 Moo2, Nadee, Muang, Samutsakorn 74000 Tel. +66 3411 7899</th>
-      <th><h6>ใบ Report 9 (Compessor 1-2)</h6></th>
-    </tr>
-  </thead>
-</table>
 <table class="FM-EN-76-00 table-bordered">
     <thead>
+    <tr>
+      <th colspan="28">
+        <table class="table-borderless">
+          <thead>
+            <tr>
+              <th width="20%"><img src="dist/img/logo_2.png" width="250"></th>
+              <th width="50%" style="text-align:left; padding:30px 10px;">Pacific Cold Storage Co. Ltd (Mahachai) <br/> 47/19 Moo2, Nadee, Muang, Samutsakorn 74000 Tel. +66 3411 7899</th>
+              <th width="30%" style="text-align:right; font-size:0.90rem;"><strong>ใบ Report 9 (Compessor 1-2)<br />ประจำวันที่:</strong></th>
+            </tr>
+          </thead>
+        </table>
+      </th>
+    </tr>
     <tr>
     <th rowspan="2">TIME</th>
     <th colspan="13">COMPESSOR 29</th>
@@ -122,35 +131,37 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
     <tbody>
   <?PHP
   foreach($time_schedule as $key=>$value){
+    //data-target="#modal-default"
     echo '
     <tr>
     <td>'.($value<10 ? 0 : '').number_format($value,2).'</td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp_'.$value.'" id="col_com_29_sp_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_sp_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_dp_'.$value.'" id="col_com_29_dp_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_dp_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_op_'.$value.'" id="col_com_29_op_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_op_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_afp_'.$value.'" id="col_com_29_afp_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_afp_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_st_'.$value.'" id="col_com_29_st_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_st_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_dt_'.$value.'" id="col_com_29_dt_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_dt_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_ot_'.$value.'" id="col_com_29_ot_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_ot_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_dop_'.$value.'" id="col_com_29_dop_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_dop_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_it_'.$value.'" id="col_com_29_it_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_it_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_ip_'.$value.'" id="col_com_29_ip_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_ip_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_svp_'.$value.'" id="col_com_29_svp_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_svp_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_lsv_'.$value.'" id="col_com_29_lsv_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_lsv_'.$value.'"></td>
+    <td><input type="text" name="col_com_29_ma_'.$value.'" id="col_com_29_ma_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_29_ma_'.$value.'"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    '.($value==18 ? '<td><div class="testxxx">STOP</div></td>' : '<td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>').'
+    
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
+    <td><input type="text" name="xxxxxxxxx" id="xxxxxxxxx" maxlength="10" placeholder="" readonly class="show_numpad"></td>
     <td><button type="button" class="btn btn-warning btn-sm edit-data" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-copy"></i></button> <button type="button" class="btn btn-danger btn-sm edit-data" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-undo"></i></button></td>
   </tr>
     ';
@@ -172,7 +183,16 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
 <!-- Page specific script -->
 <script>
 
-//plugins/
+$(document).on('click','.show_numpad',function(e){ 
+  var col_name = $(this).data('id');
+  var col_val  = $(this).val();
+  if(col_val!=''){
+    $('#display_num').val(col_val);  
+  }
+  $('#col_name').val(col_name);
+  //$('.modal-title').text(col_name);
+  $("#modal-default").modal("show");
+});
 
   $(function () {
     /* BOOTSTRAP SLIDER */
@@ -192,4 +212,6 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
     })
 
   })
+
+  
 </script>
