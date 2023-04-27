@@ -2,18 +2,50 @@
 
 </script> 
 
+
 <style type="text/css">
-.text-size-1{
- font-size:0.90rem;
+
+.no-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+.text-size-1{ font-size:0.90rem;}
+
+.display_num:disabled{ background-color:#FFF;}
+
+ul.numpad{ width: 100%; padding: 0; margin: 0; list-style: none;}
+ul.numpad li{  width:29% ; padding:7px 5px; margin:5px 5px; text-align:left;  font-size:2rem; display:inline-block;
+    -webkit-border-radius:6px;
+-moz-border-radius: 6px;
+border-radius: 6px;
+border:none; text-indent:10px;
+background:#eaeaea; 
+vertical-align:top;
+}
+
+ul.numpad li:hover{ background:#ddd; cursor: pointer;}
+ul.numpad li.display_num{ width: 100%; margin: auto; }
+
+ul.numpad li.btn_cel{ font-size:1.5rem; padding:15px 5px;  width: 31%; }
+ul.numpad li.btn_stop{ font-size:1.5rem;  width: 60%; padding:15px 5px;}
+ul.numpad li.btn_text{ font-size:1rem; width:97%;}
+
+input.display_num{ font-size:2rem; font-weight:bold; width:100%; display: block; border:1px solid #DDD;  text-align:right;
+    -webkit-border-radius:6px;
+-moz-border-radius: 6px;
+border-radius: 6px;
+-webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 </style>
-
 
 <div class="modal modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="dataformLabel" aria-hidden="true">
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
     <div class="modal-header">
-        <p class="modal-title" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span>กรอกข้อมูล</span></p>
+        <h4 class="modal-title" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span>กรอกข้อมูล</span></h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
@@ -25,24 +57,30 @@
         <form id="needs-validation" class="addform" name="addform" method="POST" enctype="multipart/form-data" autocomplete="off" novalidate="">
         <div class="container">
             <div class="row">
-            <button type="button" class="btn btn-block numpad bg-light btn-flat">7</button>
-            <button type="button" class="btn btn-block numpad bg-light btn-flat">8</button>
-            <button type="button" class="btn btn-block numpad bg-light btn-flat">9</button>
-            <button type="button" class="btn btn-block numpad bg-light btn-flat">4</button>
-            <button type="button" class="btn btn-block numpad bg-light btn-flat">5</button>
-            <button type="button" class="btn btn-block numpad bg-light btn-flat">6</button>
-            <button type="button" class="btn btn-block numpad bg-light btn-flat">1</button>
-            <button type="button" class="btn btn-block numpad bg-light btn-flat">2</button>
-            <button type="button" class="btn btn-block numpad bg-light btn-flat">3</button>
-            <button type="button" class="btn btn-block numpad bg-light btn-flat">0</button>
-            <button type="button" class="btn btn-block numpad bg-danger btn-flat"><i class="fas fa-arrow-left"></i></button>
-            <button type="button" class="btn btn-block numpad bg-success btn-flat">OK</button>
-            <button type="button" class="btn btn-block numpad btn-cel bg-warning btn-flat">-/+ °C</button>
-            <button type="button" class="btn btn-block numpad bg-danger btn-flat">STOP</button>
-            
+                <div class="col-sm-12 col-md-12 col-xs-12">  
+                    <div class="form-group mb-2">
+                        <ul class="numpad">
+                            <li class="display_num"><input type="text" class="d-block display_num no-select" name="display_num" readonly disabled value="0" /></li>
+                            <li class="no-select numpad-7">7</li>
+                            <li class="no-select numpad-8">8</li>
+                            <li class="no-select numpad-9">9</li>
+                            <li class="no-select numpad-4">4</li>
+                            <li class="no-select numpad-5">5</li>
+                            <li class="no-select numpad-6">6</li>
+                            <li class="no-select numpad-1">1</li>
+                            <li class="no-select numpad-2">2</li>
+                            <li class="no-select numpad-3">3</li>
+                            <li class="no-select numpad-0">0</li>
+                            <li class="bg-danger no-select btn_del"><i class="fas fa-arrow-left"></i></li>
+                            <li class="bg-success no-select btn_ok">OK</li>
+                            <li class="bg-warning no-select btn_cel">-/+ °C</li>
+                            <li class="bg-danger btn_stop">STOP</li>
+                            <li class="bg-gray btn_text">พิมพ์ข้อความ</li>
+                        </ul>
+                    </div>
+                </div>
             </div><!--row-->
         </div><!--container-->
-            <input type="hidden" value="" name="id_row" id="id_row" />
         </form>
         <!--FORM 1-->
 
@@ -61,10 +99,15 @@
 
 $(document).ready(function(){
 
-$(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
-    $('body').find('.was-validated').removeClass();
-    $('form').each(function() { this.reset() });
-});    
+    $(document).on("click", "li[class^=numpad]", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
+            alert('xxxx');
+    });
+
+
+    $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
+        $('body').find('.was-validated').removeClass();
+        $('form').each(function() { this.reset() });
+    });    
 
 
 /*ปุ่ม ADD Recive รับวัสดุเข้าระบบ <<<<<<<<<< เขียนใหม่ใช้โค๊ดนี้ สมบรูณ์กว่าไม่มีบั๊ครีเฟรชหน้าจอ*/

@@ -1,9 +1,6 @@
 <style type="text/css"> 
-.modal{ top:15%;}
+.modal{ top:0%;}
 
-.numpad{  width:28% ; padding:5px 5px; margin:5px 5px; text-align:left; }
-
-.btn-cel{ font-size:0.5rem;}
 </style>
 
 <!-- Main content -->
@@ -41,8 +38,10 @@ table.FM-EN-76-00 tbody tr td{ padding:2px 2px; font-size:0.85rem;  }
 table.FM-EN-76-00 tbody tr td:nth-child(2){ width: 120px;} 
 table.FM-EN-76-00 tbody tr:hover{ /*background-color:#cce7e8;*/ }
 table.FM-EN-76-00 tbody tr td:hover input{ background-color:#cce7e8; }
-table.FM-EN-76-00 tbody tr td input{ width: 100%; border:none; padding:1px 1px; cursor:pointer; text-align:center; font-size:0.80rem; font-family:arial;}
+table.FM-EN-76-00 tbody tr td input{ width: 100%; border:none; background-color:#fff; padding:1px 1px; cursor:pointer; text-align:center; font-size:0.80rem; font-family:arial;}
 table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none; outline: none;}
+
+.btn-sm{ padding:1px 6px;}
 </style>
 
   <!-- Ion Slider -->
@@ -65,12 +64,12 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
 ?>
 
 <div class="card-body">
-  <div class="col-sm-6">
+
+  <!--<div class="col-sm-6">
         <span class="irs-bar irs-bar--single" style="left: 0px; width: 50%;"></span><span class="irs-shadow shadow-single" style="display: none;"></span><span class="irs-handle single" style="left: 47.6744%;"><i></i><i></i><i></i></span></span><input id="range_6" type="text" name="range_6" value="" class="irs-hidden-input" tabindex="-1" readonly="">
   </div>
-</div>
+</div>-->
 
-<div class="card-body">
 <!--<img src="module/module_en_report/img_test/FM-EN-76-00.jpg" class="img" width="100%"><br /><br />-->
 
 
@@ -127,32 +126,32 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
     <tr>
     <td>'.($value<10 ? 0 : '').number_format($value,2).'</td>
     <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" disabled class="xxxx"></td>
-    <td>xxxxx</td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><input type="text" name="col_com_29_sp" id="col_com_29_sp" maxlength="10" readonly class="xxxx"></td>
+    <td><button type="button" class="btn btn-warning btn-sm edit-data" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-copy"></i></button> <button type="button" class="btn btn-danger btn-sm edit-data" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-undo"></i></button></td>
   </tr>
     ';
   }
