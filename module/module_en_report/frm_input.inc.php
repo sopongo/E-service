@@ -99,9 +99,21 @@ border-radius: 6px;
 </div>
 <!-- /.modal-default -->
 
+<span class="xxxxxx"></span>
+
 <script type="text/javascript">
 
 $(document).ready(function(){
+
+
+    $(document).keypress(function (event) {            
+        if (event.keyCode == 49) {
+            $('.xxxxxx').text('xxxxxxxxxxxxxxxxxx');
+            $('#display_num').val(event.keyCode);
+            event.preventDefault();
+        }
+    });
+
 
         $(document).on('click','li[class^=numpad]',function(e){ 
             e.stopPropagation();
