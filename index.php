@@ -40,9 +40,14 @@ switch($module){
   break;  
 
   case 'report-coldchain':
-    $title_site = "xxxxxxxxxx"; $title_act = "xxxxxxxxxx"; $breadcrumb_txt = "xxxxxxxxxx";
+    $title_site = "frm_FM-EN-71-00"; $title_act = "frm_FM-EN-71-00"; $breadcrumb_txt = "frm_FM-EN-71-00";
     $include_module = "module/module_en_report/frm_FM-EN-71-00.inc.php";
   break;  
+
+  case 'report-coldchain-2':
+    $title_site = "frm_FM-EN-77-01"; $title_act = "frm_FM-EN-77-01"; $breadcrumb_txt = "frm_FM-EN-77-01";
+    $include_module = "module/module_en_report/frm_FM-EN-77-01.inc.php";
+  break;    
 
   case 'howto':
     $title_site = "คู่มือการใช้งาน"; $title_act = "คู่มือการใช้งาน"; $breadcrumb_txt = "คู่มือการใช้งาน";
