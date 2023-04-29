@@ -1,3 +1,4 @@
+<script src="plugins/autoNumeric/autoNumeric.js"></script>
 <style type="text/css"> 
 .modal{ top:0%;}
 
@@ -38,10 +39,11 @@ table.FM-EN-76-00 thead tr th:last-child{ background-color:#fafafa; width:5%; }
 table.FM-EN-76-00 thead tr th.col{ width: 180px; }
 
 table.FM-EN-76-00 tbody tr td{ padding:2px 2px; font-size:0.85rem;  }
+table.FM-EN-76-00 tbody tr td.td_stop{ background-color:#F00;  }
 /*table.FM-EN-76-00 tbody tr td:nth-child(2){ width: 120px;} */
-table.FM-EN-76-00 tbody tr:hover{ /*background-color:#cce7e8;*/ }
+/*table.FM-EN-76-00 tbody tr:hover{ background-color:#cce7e8; }*/
 table.FM-EN-76-00 tbody tr td input{ color:#333; font-size:10px;}
-table.FM-EN-76-00 tbody tr td:hover input{ background-color:#cce7e8; }
+/*table.FM-EN-76-00 tbody tr td:hover input{ background-color:#cce7e8; }*/
 table.FM-EN-76-00 tbody tr td input{ width: 100%; border:none; background-color:#fff; padding:1px 1px; cursor:pointer; text-align:center; font-size:0.80rem; font-family:arial;}
 table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none; outline: none;}
 
@@ -188,6 +190,20 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
 <!-- Page specific script -->
 <script>
 
+//$(document).on('hover','table.FM-EN-76-00 tbody tr',function(){ 
+$('table.FM-EN-76-00 tbody tr').mouseover(function() {
+  //$(this).remove();
+  $(this).css('background-color','#cce7e8');//cce7e8
+  $(this).find('input').css('background-color','#cce7e8');
+});
+
+$('table.FM-EN-76-00 tbody tr').mouseout(function() {
+  //$(this).remove();
+  $(this).css('background-color','#fff');//cce7e8
+  $(this).find('input').css('background-color','#fff');
+});
+
+
 $(document).on('click','.show_numpad',function(e){ 
 
   var col_name = $(this).data('id');
@@ -197,7 +213,7 @@ $(document).on('click','.show_numpad',function(e){
   }
   $('#col_name').val(col_name);
   //$('.modal-title').text(col_name);
-  $("#modal-default").modal("show");
+  $("#modal-default").modal({backdrop: 'static', keyboard: false});
 });
 
   $(function () {

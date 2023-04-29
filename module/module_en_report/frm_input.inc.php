@@ -1,10 +1,10 @@
+<script src="plugins/autoNumeric/autoNumeric.js"></script>
 <script type="text/javascript">  
 
 </script> 
 
 
 <style type="text/css">
-
 .no-select {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */
@@ -15,7 +15,7 @@
 .display_num:disabled{ background-color:#FFF;}
 
 ul.numpad{ width: 100%; padding: 0; margin: 0; list-style: none;}
-ul.numpad li{  width:29% ; padding:7px 5px; margin:5px 5px; text-align:left;  font-size:2rem; display:inline-block;
+ul.numpad li{  width:29% ; padding:5px 5px; line-height:2.5rem; margin:5px 5px; text-align:left;  font-size:2rem; display:inline-block; 
     -webkit-border-radius:6px;
 -moz-border-radius: 6px;
 border-radius: 6px;
@@ -27,9 +27,9 @@ vertical-align:top;
 ul.numpad li:hover{ background:#ddd; cursor: pointer;}
 ul.numpad li.display_num{ width: 100%; margin: auto; }
 
-ul.numpad li.btn_cel{ font-size:1.5rem; padding:15px 5px;  width: 31%; }
-ul.numpad li.btn_stop, ul.numpad li.btn_start, ul.numpad li.btn_clear{ font-size:1.2rem;  width: 29%; padding:15px 5px;}
-ul.numpad li.btn_ok{ font-size:1.5rem;  width: 60%; padding:15px 5px;}
+ul.numpad li.btn_cel{ font-size:1.5rem; width: 31%; }
+ul.numpad li.btn_stop, ul.numpad li.btn_start, ul.numpad li.btn_clear{ font-size:1.2rem;  width: 29%; }
+ul.numpad li.btn_ok{ font-size:1.5rem;  width: 60%; }
 
 ul.numpad li.btn_text{ font-size:1rem; width:97%;}
 
@@ -76,7 +76,7 @@ border-radius: 6px;
                             <li class="numpad-dot no-select">.</li>
                             <li class="bg-danger no-select btn_del"><i class="fas fa-arrow-left"></i></li>
                             <li class="bg-warning no-select btn_cel">-/+ °C</li>
-                            <li class="bg-success no-select btn_ok">OK</li>
+                            <li class="bg-success no-select btn_ok">OK &crarr;</li>
                             <li class="bg-danger btn_stop">STOP</li>
                             <li class="bg-success btn_start">START</li>
                             <li class="bg-warning btn_clear">CLEAR</li>
@@ -99,21 +99,58 @@ border-radius: 6px;
 </div>
 <!-- /.modal-default -->
 
-<span class="xxxxxx"></span>
-
 <script type="text/javascript">
+/* เช็คแพทเทินค่าที่กรอกเข้ามา ไม่ให้มีตัวอักษร */
+function validateStrings(string) {
+	var pattern = /^[-0-9.]+$/;
+	return $.trim(string).match(pattern) ? string : ''; //true false
+}
 
 $(document).ready(function(){
+    
+    $(document).keydown(function (event) {            
+            var value = String.fromCharCode(event.which);
+            var display_num = $('#display_num').val();
+            var col_name = $('#col_name').val();
+            if (event.which===8) {
+                $('#display_num').val(display_num.slice(0,-1));
+            }
+            if (event.which===46) {
+                $('#display_num').val('');
+            }            
+            if(event.which===13){
+                if($.isNumeric(display_num)){
+                    event.stopPropagation();
+                    $('#'+col_name+'').val(display_num);
+                    $('form#frm_input').trigger("reset");
+                    $("#modal-default").modal("hide");  
+                }else{
+                    $('#'+col_name+'').val('');                    
+                    sweetAlert("แจ้งเตือน", "กรอกค่าไม่ถูกต้อง", "warning");
+                    return false;
+                }
+            }else{
+                return true;
+                //alert($(this).text());
+            }
+    });    
 
-
-    $(document).keypress(function (event) {            
-        if (event.keyCode == 49) {
-            $('.xxxxxx').text('xxxxxxxxxxxxxxxxxx');
-            $('#display_num').val(event.keyCode);
-            event.preventDefault();
+    $(document).keypress(function (event) {
+        var value = validateStrings(String.fromCharCode(event.which));           
+        var display_num = $('#display_num').val();
+        //$('#display_num').val(event.which+'---'+value);
+        event.preventDefault();
+        if(display_num.length>=6 && event.which!=8){
+            return false;
+        }else{
+            if (event.which===8) {
+                $('#display_num').val(display_num.slice(0,-1));
+            }else{
+                $('#display_num').val(display_num+value);
+                //alert($(this).text());
+            }
         }
     });
-
 
         $(document).on('click','li[class^=numpad]',function(e){ 
             e.stopPropagation();
@@ -126,17 +163,32 @@ $(document).ready(function(){
             }
         });
 
+        var btn_reset = '<button type="button" class="btn btn-success btn-sm btn-reset-stop" title="เคลียร์ค่า STOP"><i class="fa fa-xs fa-undo"></i></button>';
+
+        $(document).on('click','.btn-reset-stop',function(e){ 
+            var col_name = $('#col_name').val();
+            var chk_col_name = col_name.slice(0,10);
+            $('#'+col_name+'').closest('tr').find('td[class^='+chk_col_name+'] input').val('').show();
+
+            if(chk_col_name=='col_com_29'){
+                $('#'+col_name+'').closest('tr td:nth-child(2)').find('button.btn-reset-stop').remove();
+            }else{
+                $('#'+col_name+'').closest('tr td:nth-child(15)').find('button.btn-reset-stop').remove();
+            }
+            $('#'+col_name+'').closest('tr').find('td[class^='+chk_col_name+']').removeClass('td_stop');
+        });
+
         $(document).on('click','.btn_stop',function(e){ 
             var col_name = $('#col_name').val();
             var chk_col_name = col_name.slice(0,10);
-            $('#'+col_name+'').closest('tr').find('td[class^='+chk_col_name+'] input').hide();
+            $('#'+col_name+'').closest('tr').find('td[class^='+chk_col_name+'] input').val('').hide();
             if(chk_col_name=='col_com_29'){
-                $('#'+col_name+'').closest('tr').find('td:nth-child(2)').append(' <button type="button" class="btn btn-success btn-sm" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-undo"></i></button>');
+                $('#'+col_name+'').closest('tr').find('td:nth-child(2)').append(btn_reset);
             }else{
-                $('#'+col_name+'').closest('tr').find('td:nth-child(15)').append(' <button type="button" class="btn btn-success btn-sm" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-undo"></i></button>');
+                $('#'+col_name+'').closest('tr').find('td:nth-child(15)').append(btn_reset);
             }
-            $('#'+col_name+'').closest('tr').find('td[class^='+chk_col_name+']').css('background-color', '#F00').css('opacity', '0.5');
-            //$('#'+col_name+'').closest('tr').find('td[class^=col_com_29]').text('STOP').css('text-align', 'center');
+            $('#'+col_name+'').closest('tr').find('td[class^='+chk_col_name+']').addClass('td_stop');
+            $('#display_num').val('');
             $("#modal-default").modal("hide");
         });
 
@@ -152,13 +204,19 @@ $(document).ready(function(){
         });                
 
         $(document).on('click','.btn_ok',function(e){ 
-            var col_name = $('#col_name').val();
-            //alert('xxxxx---'+col_name);
             e.stopPropagation();
+            var col_name = $('#col_name').val();
             var display_num = $('#display_num').val();
-            $('form#frm_input').trigger("reset");
-            $('#'+col_name+'').val(display_num);
-            $("#modal-default").modal("hide");
+            if($.isNumeric(display_num)){
+                event.stopPropagation();
+                $('#'+col_name+'').val(display_num);
+                $('form#frm_input').trigger("reset");
+                $("#modal-default").modal("hide");  
+            }else{
+                $('#'+col_name+'').val('');                    
+                sweetAlert("แจ้งเตือน", "กรอกค่าไม่ถูกต้อง", "warning");
+                return false;
+            }
         });            
 
         $(document).on('click','.btn_del',function(e){ 
@@ -184,57 +242,6 @@ $(document).ready(function(){
             //display_num = display_num.slice(0,-1);
         });                
         
-
-    $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
-        $('body').find('.was-validated').removeClass();
-        $('form').each(function() { this.reset() });
-    });    
-
-
-/*ปุ่ม ADD Recive รับวัสดุเข้าระบบ <<<<<<<<<< เขียนใหม่ใช้โค๊ดนี้ สมบรูณ์กว่าไม่มีบั๊ครีเฟรชหน้าจอ*/
-    $(document).on("click", ".btn-submit", function (event){
-    var formAdd = document.getElementById('needs-validation');  
-
-    var frmData = $("form#needs-validation").serialize();
-    if(formAdd.checkValidity()===false) {  
-        event.preventDefault();  
-        event.stopPropagation();
-    }else{
-        //alert('Send Ajax'); return false;
-        $.ajax({
-            url: "module/module_site/x_ajax_action.php",
-            type: "POST",
-            data:{"data":frmData, "action":"adddata"},
-            beforeSend: function () {
-            },
-            success: function (data) {
-            console.log(data);
-            if(data==1){
-                sweetAlert("ผิดพลาด!", "ชื่อย่อไซต์ '"+$("#site_initialname").val()+"' ถูกใช้แล้ว", "error");
-                return false;
-            }else{
-                sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
-                $('#example1').DataTable().ajax.reload();
-                $("#modal-default").modal("hide"); 
-                $(".modal-backdrop").hide().fadeOut();
-                sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
-                $('body').find('.was-validated').removeClass();
-                $('form').each(function() { this.reset() });
-            }   
-                event.preventDefault();
-            },
-                error: function (jXHR, textStatus, errorThrown) {
-                //console.log(data);
-                alert(errorThrown);
-            }
-        });    
-        event.preventDefault();    
-    }
-    //alert('Ajax'); return false;
-    formAdd.classList.add('was-validated');      
-    return false;
-});
-
 
 });//document
 </script>
