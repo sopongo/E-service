@@ -121,9 +121,11 @@ $(document).ready(function(){
             if(event.which===13){
                 if($.isNumeric(display_num)){
                     event.stopPropagation();
+                    $(this).prop('disabled', true);
                     $('#'+col_name+'').val(display_num);
                     $('form#frm_input').trigger("reset");
                     $("#modal-default").modal("hide");  
+                    $(this).prop('disabled', false);
                 }else{
                     $('#'+col_name+'').val('');                    
                     sweetAlert("แจ้งเตือน", "กรอกค่าไม่ถูกต้อง", "warning");
@@ -205,6 +207,7 @@ $(document).ready(function(){
 
         $(document).on('click','.btn_ok',function(e){ 
             e.stopPropagation();
+            $(this).prop('disabled', true);
             var col_name = $('#col_name').val();
             var display_num = $('#display_num').val();
             if($.isNumeric(display_num)){
@@ -217,6 +220,7 @@ $(document).ready(function(){
                 sweetAlert("แจ้งเตือน", "กรอกค่าไม่ถูกต้อง", "warning");
                 return false;
             }
+            $(this).prop('disabled', false);
         });            
 
         $(document).on('click','.btn_del',function(e){ 

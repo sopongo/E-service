@@ -39,6 +39,11 @@ switch($module){
     exit();
   break;  
 
+    case 'testable':
+    $title_site = "frm_FM-EN-71-00"; $title_act = "frm_FM-EN-71-00"; $breadcrumb_txt = "frm_FM-EN-71-00";
+    $include_module = "module/module_en_report/test_table.inc.php";
+  break;    
+
   case 'report-coldchain':
     $title_site = "frm_FM-EN-71-00"; $title_act = "frm_FM-EN-71-00"; $breadcrumb_txt = "frm_FM-EN-71-00";
     $include_module = "module/module_en_report/frm_FM-EN-71-00.inc.php";
@@ -414,7 +419,7 @@ $obj = new CRUD();
 
 </head>
 
-<body class="hold-transition sidebar-mini sidebar-collapse layout-fixed layout-navbar-fixed"><!--sidebar-collapse sidebar-mini layout-fixed layout-navbar-fixed sidebar-closed sidebar-collapse layout-navbar-fixed-->
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed"><!--sidebar-collapse sidebar-mini layout-fixed layout-navbar-fixed sidebar-closed sidebar-collapse layout-navbar-fixed-->
 <div class="wrapper">
 
   <!-- Preloader -->

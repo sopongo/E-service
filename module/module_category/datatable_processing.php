@@ -68,7 +68,7 @@ LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_category.ref_id_dept)".$query_search."
 ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
 //ORDER BY tb_user.".$_POST['order']['0']['column']." tb_user.".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length."
-
+empty($_GET['slt_search']) ? $_GET['slt_search'] = '' : $_GET['slt_search'];
 //EX.tb_category
 ////id_menu, menu_code, level_menu, sort_menu, ref_id_menu, ref_id_sub, ref_id_dept, name_menu, desc_menu, menu_adddate, ref_id_user_add, menu_editdate, ref_id_user_edit, status_menu
 if (count($fetchRow)>0) {
@@ -76,7 +76,7 @@ if (count($fetchRow)>0) {
     foreach($fetchRow as $key=>$value){
         $dataRow = array();
         $dataRow[] = $No.'.';
-        $dataRow[] = ($fetchRow[$key]['menu_code']=='' ? '-' : $fetchRow[$key]['menu_code']);
+        $dataRow[] = ($fetchRow[$key]['menu_code']=='' ? '-' : $fetchRow[$key]['menu_code']).'--xx---'.$_GET['slt_search'].'---'.(rand(0,99)).'---'.$search;
         $dataRow[] = ($fetchRow[$key]['name_menu']=='' ? '-' : $fetchRow[$key]['name_menu']);
         $dataRow[] = ($fetchRow[$key]['desc_menu']=='' ? '-' : $fetchRow[$key]['desc_menu']);        
         $dataRow[] = ($fetchRow[$key]['level_menu']==1 ? 'หมวดหลัก' : 'หมวดรอง &#129078; '.$fetchRow[$key]['cate_name_menu']);

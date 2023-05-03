@@ -32,18 +32,10 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 	if(is_null($data)){ return;	}
 	
 	//$userId = 'Uf14e2ebc73e0510f21574d31797ebc1a'; //userId ของผู้ใช้ที่เราต้องการส่งข้อความไปแสดง **บรรทัดนี้ไอดีบ๊วยครับ
-	//$userId = $data['events'][0]['source']['userId']; //userId ของผู้ใช้ที่เราต้องการส่งข้อความไปแสดง
-	//$groupId = $data['events'][0]['source']['groupId']; //groupId ของกรุ๊ปที่เราต้องการส่งข้อความไปแสดง
-	//$roomId = $data['events'][0]['source']['roomId']; //groupId ของกรุ๊ปที่เราต้องการส่งข้อความไปแสดง	
+	$userId = $data['events'][0]['source']['userId']; //userId ของผู้ใช้ที่เราต้องการส่งข้อความไปแสดง
+	$groupId = $data['events'][0]['source']['groupId']; //groupId ของกรุ๊ปที่เราต้องการส่งข้อความไปแสดง
+	$roomId = $data['events'][0]['source']['roomId']; //groupId ของกรุ๊ปที่เราต้องการส่งข้อความไปแสดง	
 
-	//รับ id ว่ามาจากไหน
-	if(isset($data['events'][0]['source']['userId'])){
-		$to_id = $data['events'][0]['source']['userId'];
-	}else if(isset($data['events'][0]['source']['groupId'])){
-		$to_id = $data['events'][0]['source']['groupId'];
-	}else if(isset($data['events'][0]['source']['room'])){
-		$to_id = $data['events'][0]['source']['room'];
-	}
 	$replyToken = $data['events'][0]['replyToken'];
 	$messageType = $data['events'][0]['message']['type'];	
 
@@ -55,13 +47,13 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 
 		   switch($result[0]){
 			case 'gid'; // ถ้าพิมพ์เข้ามาแล้ว $groupId ไม่เท่ากับค่าว่าง แสดงว่าพิมพ์มาจากไลน์กรุ๊ป
-				$groupId!='' ? $to_id = $groupId : exit;  //ถ้าเช็คแล้วส่งมาจากกรุ๊ปให้เปลี่ยนค่า userId เป็น groupId
+				//$groupId!='' ? $to_id = $groupId : exit;  //ถ้าเช็คแล้วส่งมาจากกรุ๊ปให้เปลี่ยนค่า userId เป็น groupId
 				$typeMsg = 0;
 				$flexDataJson = '{
 					"type": "text",
-					"text": "groupId นี้คือ--> '.$data['events'][0]['source']['groupId'].(!empty($data['events'][0]['source']['userId']) ? ' userId ผู้พิมพ์คำสั่ง-->'.$data['events'][0]['source']['userId'] : '').'----'.$data['events'][0]['source']['userId'].'-|-'.$data['events'][0]['source']['groupId'].'-|-'.$data['events'][0]['source']['room'].'"
-				}';
-				//$userId = $data['events'][0]['source']['groupId'];
+					"text": "groupId นี้คือ--> '.$data['events'][0]['source']['groupId'].'----'.(!empty($data['events'][0]['source']['userId']) ? ' userId ผู้พิมพ์คำสั่ง-->'.$data['events'][0]['source']['userId'] : 'NULL').'"}';
+					//$userId = $data['events'][0]['source']['groupId'];
+					$to_id = $data['events'][0]['source']['groupId'];
 			break;
 
 			case 'ลงทะเบียน';
@@ -111,501 +103,10 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 
 			case 'req':
 				//strlen($groupId)>1 ? $to_id = $groupId : $to_id = $userId;
-				$typeMsg = '';
-				$flexDataJson = '{
-					"type": "flex",
-					"altText": "Open Ticket: เปิดใบแจ้งซ่อม: PCS-XXX-XXXX-XXXX",
-					"contents": {
-					  "type": "carousel",
-					  "contents": [
-						{
-						  "type": "bubble",
-						  "hero": {
-							"type": "image",
-							"url": "https://ebooking.jwdcoldchain.com/sopon_test/linebot/eservice_carousel.png", 
-							"size": "full",
-							"aspectRatio": "20:6",
-							"aspectMode": "cover"
-						  },
-						  "body": {
-							  "type": "box",
-							  "layout": "vertical",
-							  "contents": [
-								{
-								  "type": "text",
-								  "text": "Open Ticket",
-								  "weight": "bold",
-								  "size": "xl"
-								},
-								{
-								  "type": "text",
-								  "text": "PCS-XX-0000-0000",
-								  "size": "lg",
-								  "color": "#1C3379",
-								  "weight": "bold",
-								  "decoration": "none",
-								  "align": "start",
-								  "gravity": "bottom"
-								},
-								{
-								  "type": "text",
-								  "text": "คุณได้เปิดแจ้งซ่อมผ่านระบบ E-service",
-								  "size": "xs",
-								  "color": "#000000"
-								},
-								{
-								  "type": "separator"
-								},
-								{
-								  "type": "box",
-								  "layout": "vertical",
-								  "margin": "lg",
-								  "spacing": "sm",
-								  "contents": [
-									{
-									  "type": "box",
-									  "layout": "baseline",
-									  "spacing": "sm",
-									  "contents": [
-										{
-										  "type": "text",
-										  "text": "แจ้งเมื่อ:",
-										  "color": "#333333",
-										  "size": "xs",
-										  "flex": 4,
-										  "margin": "xs"
-										},
-										{
-										  "type": "text",
-										  "text": "00/00/00 00:00:00",
-										  "wrap": true,
-										  "color": "#666666",
-										  "size": "xs",
-										  "flex": 5
-										}
-									  ]
-									},
-									{
-										"type": "box",
-										"layout": "baseline",
-										"spacing": "sm",
-										"contents": [
-										  {
-											"type": "text",
-											"text": "ไซต์งาน:",
-											"color": "#333333",
-											"size": "xs",
-											"flex": 4
-										  },
-										  {
-											"type": "text",
-											"text": "xxxxxxxxxx",
-											"wrap": true,
-											"color": "#666666",
-											"size": "xs",
-											"flex": 5,
-											"margin": "xs"
-										  }
-										]
-									  },									
-									{
-									  "type": "box",
-									  "layout": "baseline",
-									  "spacing": "sm",
-									  "contents": [
-										{
-										  "type": "text",
-										  "text": "รหัสเครื่องจักร-อุปกรณ์:",
-										  "color": "#333333",
-										  "size": "xs",
-										  "flex": 4
-										},
-										{
-										  "type": "text",
-										  "text": "xxxxxxxxxx",
-										  "wrap": true,
-										  "color": "#666666",
-										  "size": "xs",
-										  "flex": 5,
-										  "margin": "xs"
-										}
-									  ]
-									},
-									{
-									  "type": "box",
-									  "layout": "baseline",
-									  "spacing": "sm",
-									  "contents": [
-										{
-										  "type": "text",
-										  "text": "ชื่อเครื่องจักร-อุปกรณ์:",
-										  "color": "#333333",
-										  "size": "xs",
-										  "flex": 4
-										},
-										{
-										  "type": "text",
-										  "text": "xxxxxxxxxx",
-										  "wrap": true,
-										  "color": "#666666",
-										  "size": "xs",
-										  "flex": 5,
-										  "margin": "xs"
-										}
-									  ]
-									},
-									{
-									  "type": "box",
-									  "layout": "baseline",
-									  "spacing": "sm",
-									  "contents": [
-										{
-										  "type": "text",
-										  "color": "#333333",
-										  "size": "xs",
-										  "flex": 4,
-										  "text": "อาคาร:"
-										},
-										{
-										  "type": "text",
-										  "text": "xxxxxxxxxx",
-										  "wrap": true,
-										  "color": "#666666",
-										  "size": "xs",
-										  "flex": 5,
-										  "margin": "xs"
-										}
-									  ]
-									}
-								  ]
-								},
-								{
-								  "type": "box",
-								  "layout": "baseline",
-								  "spacing": "sm",
-								  "contents": [
-									{
-									  "type": "text",
-									  "text": "สถานที่:",
-									  "color": "#333333",
-									  "size": "xs",
-									  "flex": 4
-									},
-									{
-									  "type": "text",
-									  "text": "xxxxxxxxxx",
-									  "wrap": true,
-									  "color": "#666666",
-									  "size": "xs",
-									  "flex": 5,
-									  "margin": "xs"
-									}
-								  ]
-								},
-								{
-								  "type": "box",
-								  "layout": "vertical",
-								  "spacing": "sm",
-								  "contents": [
-									{
-									  "type": "text",
-									  "text": "อาการเสีย-ปัญหาที่พบ:",
-									  "color": "#333333",
-									  "size": "xs",
-									  "flex": 4,
-									  "margin": "md"
-									},
-									{
-									  "type": "text",
-									  "text": "xxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x x"'.'----'.$data['events'][0]['source']['userId'].'-|-'.$data['events'][0]['source']['groupId'].'-|-'.$data['events'][0]['source']['room'].'",
-									  "wrap": true,
-									  "color": "#666666",
-									  "size": "xs",
-									  "flex": 5,
-									  "margin": "xs",
-									  "maxLines": 5
-									}
-								  ]
-								},
-								{
-								  "type": "separator"
-								}
-							  ]
-						  },
-						  "footer": {
-							  "type": "box",
-							  "layout": "vertical",
-							  "spacing": "sm",
-							  "contents": [
-								{
-								  "type": "text",
-								  "text": "โปรดรอแผนก XXXXXX ดำเนินการอนุมัติ",
-								  "size": "xs",
-								  "margin": "xs",
-								  "align": "center",
-								  "color": "#1C3379",
-								  "gravity": "top"
-								}
-							  ],
-							  "flex": 0
-						  }
-						}
-					  ]
-					}
-				  }';
-			break;
-
-			case 'sreq':
-				//strlen($groupId)>1 ? $to_id = $groupId : $to_id = $userId;
-				//$to_id = $groupId;
-				$typeMsg = '';
-				$flexDataJson = '{
-					"type": "flex",
-					"altText": "Open Ticket: เปิดใบแจ้งซ่อม: PCS-XXX-XXXX-XXXX",
-					"contents": {
-					  "type": "carousel",
-					  "contents": [
-						{
-						  "type": "bubble",
-						  "hero": {
-							"type": "image",
-							"url": "https://ebooking.jwdcoldchain.com/sopon_test/linebot/eservice_carousel.png", 
-							"size": "full",
-							"aspectRatio": "20:6",
-							"aspectMode": "cover"
-						  },
-						  "body": {
-							  "type": "box",
-							  "layout": "vertical",
-							  "contents": [
-								{
-								  "type": "text",
-								  "text": "Open Ticket",
-								  "weight": "bold",
-								  "size": "xl"
-								},
-								{
-								  "type": "text",
-								  "text": "PCS-XX-0000-0000",
-								  "size": "lg",
-								  "color": "#1C3379",
-								  "weight": "bold",
-								  "decoration": "none",
-								  "align": "start",
-								  "gravity": "bottom"
-								},
-								{
-								  "type": "text",
-								  "text": "มีผู้ใช้งานแจ้งซ่อมผ่านระบบ E-service",
-								  "size": "xs",
-								  "color": "#000000"
-								},
-								{
-								  "type": "separator"
-								},
-								{
-								  "type": "box",
-								  "layout": "vertical",
-								  "margin": "lg",
-								  "spacing": "sm",
-								  "contents": [
-									{
-									  "type": "box",
-									  "layout": "baseline",
-									  "spacing": "sm",
-									  "contents": [
-										{
-										  "type": "text",
-										  "text": "แจ้งเมื่อ:",
-										  "color": "#333333",
-										  "size": "xs",
-										  "flex": 4,
-										  "margin": "xs"
-										},
-										{
-										  "type": "text",
-										  "text": "00/00/00 00:00:00",
-										  "wrap": true,
-										  "color": "#666666",
-										  "size": "xs",
-										  "flex": 5
-										}
-									  ]
-									},
-									{
-										"type": "box",
-										"layout": "baseline",
-										"spacing": "sm",
-										"contents": [
-										  {
-											"type": "text",
-											"text": "ไซต์งาน:",
-											"color": "#333333",
-											"size": "xs",
-											"flex": 4
-										  },
-										  {
-											"type": "text",
-											"text": "xxxxxxxxxx",
-											"wrap": true,
-											"color": "#666666",
-											"size": "xs",
-											"flex": 5,
-											"margin": "xs"
-										  }
-										]
-									  },									
-									{
-									  "type": "box",
-									  "layout": "baseline",
-									  "spacing": "sm",
-									  "contents": [
-										{
-										  "type": "text",
-										  "text": "รหัสเครื่องจักร-อุปกรณ์:",
-										  "color": "#333333",
-										  "size": "xs",
-										  "flex": 4
-										},
-										{
-										  "type": "text",
-										  "text": "xxxxxxxxxx",
-										  "wrap": true,
-										  "color": "#666666",
-										  "size": "xs",
-										  "flex": 5,
-										  "margin": "xs"
-										}
-									  ]
-									},
-									{
-									  "type": "box",
-									  "layout": "baseline",
-									  "spacing": "sm",
-									  "contents": [
-										{
-										  "type": "text",
-										  "text": "ชื่อเครื่องจักร-อุปกรณ์:",
-										  "color": "#333333",
-										  "size": "xs",
-										  "flex": 4
-										},
-										{
-										  "type": "text",
-										  "text": "xxxxxxxxxx",
-										  "wrap": true,
-										  "color": "#666666",
-										  "size": "xs",
-										  "flex": 5,
-										  "margin": "xs"
-										}
-									  ]
-									},
-									{
-									  "type": "box",
-									  "layout": "baseline",
-									  "spacing": "sm",
-									  "contents": [
-										{
-										  "type": "text",
-										  "color": "#333333",
-										  "size": "xs",
-										  "flex": 4,
-										  "text": "อาคาร:"
-										},
-										{
-										  "type": "text",
-										  "text": "xxxxxxxxxx",
-										  "wrap": true,
-										  "color": "#666666",
-										  "size": "xs",
-										  "flex": 5,
-										  "margin": "xs"
-										}
-									  ]
-									}
-								  ]
-								},
-								{
-								  "type": "box",
-								  "layout": "baseline",
-								  "spacing": "sm",
-								  "contents": [
-									{
-									  "type": "text",
-									  "text": "สถานที่:",
-									  "color": "#333333",
-									  "size": "xs",
-									  "flex": 4
-									},
-									{
-									  "type": "text",
-									  "text": "xxxxxxxxxx",
-									  "wrap": true,
-									  "color": "#666666",
-									  "size": "xs",
-									  "flex": 5,
-									  "margin": "xs"
-									}
-								  ]
-								},
-								{
-								  "type": "box",
-								  "layout": "vertical",
-								  "spacing": "sm",
-								  "contents": [
-									{
-									  "type": "text",
-									  "text": "อาการเสีย-ปัญหาที่พบ:",
-									  "color": "#333333",
-									  "size": "xs",
-									  "flex": 4,
-									  "margin": "md"
-									},
-									{
-									  "type": "text",
-									  "text": "xxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x x"'.'----'.$data['events'][0]['source']['userId'].'-|-'.$data['events'][0]['source']['groupId'].'-|-'.$data['events'][0]['source']['room'].'",
-									  "wrap": true,
-									  "color": "#666666",
-									  "size": "xs",
-									  "flex": 5,
-									  "margin": "xs",
-									  "maxLines": 5
-									}
-								  ]
-								},
-								{
-								  "type": "separator"
-								}
-							  ]
-						  },
-						  "footer": {
-							  "type": "box",
-							  "layout": "vertical",
-							  "spacing": "sm",
-							  "contents": [
-								{
-								  "type": "text",
-								  "text": "เข้าสู่ระบบ E-service เพื่อดูรายละเอียดใบแจ้งซ่อม",
-								  "size": "xs",
-								  "margin": "xs",
-								  "align": "center",
-								  "color": "#1C3379",
-								  "gravity": "top"
-								}
-							  ],
-							  "flex": 0
-						  }
-						}
-					  ]
-					}
-				  }';
-			break;
-
-			case 'fol':
-				//strlen($groupId)>1 ? $to_id = $groupId : $to_id = $userId;
-				//$to_id = $groupId;		
-				$typeMsg = '';
+				$to_id = $groupId;
+				//$typeMsg = 0;
+				//$flexDataJson = '{"type": "text","text": "ใบแจ้งซ่อม"}';
+				$typeMsg = 0;
 				$flexDataJson = '{
 					"type": "flex",
 					"altText": "Follow UP: ติดตามใบแจ้งซ่อม: PCS-XXX-XXXX-XXXX",
@@ -812,7 +313,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 									},
 									{
 									  "type": "text",
-									  "text": "xxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x xxxxxxxxxxx xxx x x x x"'.'----'.$data['events'][0]['source']['userId'].'-|-'.$data['events'][0]['source']['groupId'].'-|-'.$data['events'][0]['source']['room'].'",
+									  "text": "zzzzzzzzzz",
 									  "wrap": true,
 									  "color": "#666666",
 									  "size": "xs",
@@ -873,6 +374,196 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 					  ]
 					}
 				  }';
+				/*$flexDataJson = '{
+					"type": "flex",
+					"altText": "Flex Message",
+					"contents": {
+					  "type": "carousel",
+					  "contents": [
+						{
+						  "type": "bubble",
+						  "hero": {
+							"type": "image",
+							"url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_5_carousel.png",
+							"size": "full",
+							"aspectRatio": "20:13",
+							"aspectMode": "cover"
+						  },
+						  "body": {
+							"type": "box",
+							"layout": "vertical",
+							"spacing": "sm",
+							"contents": [
+							  {
+								"type": "text",
+								"text": "Arm Chair, White",
+								"size": "xl",
+								"weight": "bold",
+								"wrap": true
+							  },
+							  {
+								"type": "box",
+								"layout": "baseline",
+								"contents": [
+								  {
+									"type": "text",
+									"text": "$49",
+									"flex": 0,
+									"size": "xl",
+									"weight": "bold",
+									"wrap": true
+								  },
+								  {
+									"type": "text",
+									"text": ".99",
+									"flex": 0,
+									"size": "sm",
+									"weight": "bold",
+									"wrap": true
+								  }
+								]
+							  }
+							]
+						  },
+						  "footer": {
+							"type": "box",
+							"layout": "vertical",
+							"spacing": "sm",
+							"contents": [
+							  {
+								"type": "button",
+								"action": {
+								  "type": "uri",
+								  "label": "Add to Cart",
+								  "uri": "https://linecorp.com"
+								},
+								"style": "primary"
+							  },
+							  {
+								"type": "button",
+								"action": {
+								  "type": "uri",
+								  "label": "Add to whishlist",
+								  "uri": "https://linecorp.com"
+								}
+							  }
+							]
+						  }
+						},
+						{
+						  "type": "bubble",
+						  "hero": {
+							"type": "image",
+							"url": "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_6_carousel.png",
+							"size": "full",
+							"aspectRatio": "20:13",
+							"aspectMode": "cover"
+						  },
+						  "body": {
+							"type": "box",
+							"layout": "vertical",
+							"spacing": "sm",
+							"contents": [
+							  {
+								"type": "text",
+								"text": "Metal Desk Lamp",
+								"size": "xl",
+								"weight": "bold",
+								"wrap": true
+							  },
+							  {
+								"type": "box",
+								"layout": "baseline",
+								"flex": 1,
+								"contents": [
+								  {
+									"type": "text",
+									"text": "$11",
+									"flex": 0,
+									"size": "xl",
+									"weight": "bold",
+									"wrap": true
+								  },
+								  {
+									"type": "text",
+									"text": ".99",
+									"flex": 0,
+									"size": "sm",
+									"weight": "bold",
+									"wrap": true
+								  }
+								]
+							  },
+							  {
+								"type": "text",
+								"text": "Temporarily out of stock",
+								"flex": 0,
+								"margin": "md",
+								"size": "xxs",
+								"color": "#FF5551",
+								"wrap": true
+							  }
+							]
+						  },
+						  "footer": {
+							"type": "box",
+							"layout": "vertical",
+							"spacing": "sm",
+							"contents": [
+							  {
+								"type": "button",
+								"action": {
+								  "type": "uri",
+								  "label": "Add to Cart",
+								  "uri": "https://linecorp.com"
+								},
+								"flex": 2,
+								"color": "#AAAAAA",
+								"style": "primary"
+							  },
+							  {
+								"type": "button",
+								"action": {
+								  "type": "uri",
+								  "label": "Add to wish list",
+								  "uri": "https://linecorp.com"
+								}
+							  }
+							]
+						  }
+						},
+						{
+						  "type": "bubble",
+						  "body": {
+							"type": "box",
+							"layout": "vertical",
+							"spacing": "sm",
+							"contents": [
+							  {
+								"type": "button",
+								"action": {
+								  "type": "uri",
+								  "label": "See more",
+								  "uri": "https://linecorp.com"
+								},
+								"flex": 1,
+								"gravity": "center"
+							  }
+							]
+						  }
+						}
+					  ]
+					}
+				  }';
+				  */
+
+				  break;
+
+			case 'sreq':
+
+			break;
+
+			case 'fol':
 			break;			
 
 			default:
@@ -890,7 +581,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 	$flexDataJsonDeCode = json_decode($flexDataJson,true);
 	$datas['url'] = "https://api.line.me/v2/bot/message/push"; //https://api.line.me/v2/bot/message/reply //https://api.line.me/v2/bot/message/push
 	$datas['token'] = "vlyHEJbLorZxAFI50gm7BS4K4ae2TLUwJdReRsed/ce4XPdWT63R634iq8U4LQMI9Ka4h0EcpnfVMMWhiWCQT60l5q7hHx4QoTblP3gsmrZcxj8lFxts7AB4byB/cYBEBmYb36X/basqyoRKiryalwdB04t89/1O/w1cDnyilFU=";//<access token>
-	$messages['to'] = $to_id; //<user id>, <group id>,
+	$messages['to'] = $to_id;
 	$messages['messages'][$typeMsg] = $flexDataJsonDeCode;
 	$encodeJson = json_encode($messages);
 	

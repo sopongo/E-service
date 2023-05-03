@@ -72,8 +72,7 @@ foreach($cate as $x => $val) {
 
     <div class="col-sm-12 p-0 m-0">
 
-    <!--<a id="some_button" class="btn btn-danger">refesh</a>-->
-
+    <!--<a id="some_button" class="btn btn-danger">refesh</a>-->        
     <table id="example1" class="table table-bordered table-hover dataTable dtr-inline">
       <thead>
       <tr class="bg-light">
@@ -120,48 +119,60 @@ foreach($cate as $x => $val) {
 
 <script type="text/javascript"> 
 
-  $('#some_button').click(function refreshData() {
-    $('#example1').DataTable().ajax.reload();
-  });
-
-    $('#example1').DataTable({
-      "processing": true,
-      "serverSide": true,
-      "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
-      "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0, 1, 3, 4, 5, 6] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
-        { "bSearchable": false, "aTargets": [0, 1, 3, 4, 5, 6] } //คอลัมน์ที่าจะไม่ให้เสริท
-      ], 
-      ajax: {
-        beforeSend: function () {
-          //จะให้ทำอะไรก่อนส่งค่าไปหรือไม่
-        },
-        url: 'module/module_category/datatable_processing.php',
-        type: 'POST',
-        data : {"action":"get",},//"slt_search":slt_search
-        async: false,
-        cache: false,
-      },
-      "paging": true,
-      "lengthChange": true, //ออฟชั่นแสดงผลต่อหน้า
-      "pagingType": "simple_numbers",
-      "pageLength": 10,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,    
-      "buttons": ["csv", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 
+ 
 $(document).ready(function () {
-  //var table = $('#example1').DataTable();
+
+  var slt_search = $("#slt_search option:selected").val();
+
+$('#some_button').click(function refreshData() {
+  $('#example1').DataTable().ajax.reload();
+});
+
+  $('#example1').DataTable({
+    "processing": true,
+    "serverSide": true,
+    "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
+    "aoColumnDefs": [
+      { "bSortable": false, "aTargets": [0, 1, 3, 4, 5, 6] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+      { "bSearchable": false, "aTargets": [0, 1, 3, 4, 5, 6] } //คอลัมน์ที่าจะไม่ให้เสริท
+    ], 
+    ajax: {
+      beforeSend: function () {
+        //จะให้ทำอะไรก่อนส่งค่าไปหรือไม่
+      },
+      url: 'module/module_category/datatable_processing.php',
+      type: 'POST',
+      data : {"action":"get"},//"slt_search":slt_search
+      async: false,
+      cache: false,
+    },
+    "paging": true,
+    "lengthChange": true, //ออฟชั่นแสดงผลต่อหน้า
+    "pagingType": "simple_numbers",
+    "pageLength": 10,
+    "searching": true,
+    "ordering": true,
+    "info": true,
+    "autoWidth": false,
+    "responsive": true,    
+    "buttons": ["csv", "colvis"]
+  }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+  var table = $('#example1').DataTable();  
   //var info = table.page.info();
+
+  $(document).on('change','#slt_search',function(){   
+      //alert($(this).val());
+      //table.ajax.reload();
+      //table.ajax.data({xxx:1234});
+      table.search( this.value+'|'+$('input[name=search]').val()).draw();      
+    });        
 
   $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มหมวดเครื่องจักร-อุปกรณ์</button></div>');
   $('input[type=search]').attr('placeholder', 'ชื่ออาคาร หรือ ชื่ออาคาร');
-  //$('#example1_filter').append(' <select class="custom-select form-select form-select-sm w-25 dataTables_filter" name="slt_search" id="slt_search" aria-controls="example1" aria-label="size 3 select"><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>');
+  $('#example1_filter').append('<div class="col-sm-12 w-100"><select class="custom-select form-select form-select-sm w-100 dataTables_filter" name="slt_search" id="slt_search" aria-controls="example1" aria-label="size 3 select"><option value="0">Select ALL</option><option value="1">Option 1</option><option value="2">Option 2</option><option value="auto">Option 3</option></select></div> ');
 
   $(document).on('click','#addData',function(){   
     $('textarea').val("");

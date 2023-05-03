@@ -23,6 +23,7 @@
 <style type="text/css">
 table.FM-EN-76-00{border-collapse: collapse; border-spacing:0px; 
     width:100%;
+    min-width: 1200px;
     table-layout: fixed;
 }
 table.FM-EN-76-00 thead tr th{ padding:6px 6px; }
@@ -83,6 +84,7 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
 </div>-->
 
 <!--<img src="module/module_en_report/img_test/FM-EN-76-00.jpg" class="img" width="100%"><br /><br />-->
+
 <table class="FM-EN-76-00 table-bordered">
     <thead>
     <tr>
