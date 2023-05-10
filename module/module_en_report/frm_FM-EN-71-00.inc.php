@@ -171,7 +171,7 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
     <td class="col_com_30"><input type="text" name="col_com_30_lsv_'.$value.'" id="col_com_30_lsv_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_30_lsv_'.$value.'"></td>
     <td class="col_com_30"><input type="text" name="col_com_30_ma_'.$value.'" id="col_com_30_ma_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_30_ma_'.$value.'"></td>
 
-    <td><button type="button" class="btn btn-warning btn-sm edit-data" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-copy"></i></button> <button type="button" class="btn btn-danger btn-sm edit-data" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-undo"></i></button></td>
+    <td>???</td>
   </tr>
     ';
   }

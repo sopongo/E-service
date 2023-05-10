@@ -159,7 +159,7 @@ $(document).on('change','.JobID',function(){
       "info": true,
       //"autoWidth": false,
       //"responsive": true,
-      "buttons": ["csv", "colvis"]
+      "buttons": ["excel", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
 $(document).ready(function () {
