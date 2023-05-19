@@ -39,7 +39,7 @@ switch($module){
     exit();
   break;  
 
-    case 'testable':
+  case 'testable':
     $title_site = "frm_FM-EN-71-00"; $title_act = "frm_FM-EN-71-00"; $breadcrumb_txt = "frm_FM-EN-71-00";
     $include_module = "module/module_en_report/test_table.inc.php";
   break;    

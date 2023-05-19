@@ -111,7 +111,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 					"type": "flex",
 					"altText": "Follow UP: ติดตามใบแจ้งซ่อม: PCS-XXX-XXXX-XXXX",
 					"contents": {
-					  "type": "carousel",
+					  "type": "bubble",
 					  "contents": [
 						{
 						  "type": "bubble",
