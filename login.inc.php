@@ -241,10 +241,13 @@ $(document).ready(function () { //When the page has loaded
         $('form#frm_register').fadeIn(1000).show();
   });
 
+  var emailDomains = [<?PHP foreach($domainEmail as $index=> $value){ echo "'".$value."', ";}?>];
 
   //$("#frm_register").on('click', '#chk_register', function(e){
   $(document).on('click','#chk_register',function(e){    
-    //alert('111111111');
+    var chkdomain = $("#email_regis").val().split('@')[1];
+    //alert($("#email_regis").val()+'------------'+chkdomain+'---xxxx'+emailDomains.indexOf(chkdomain, 0)); return false;
+
     if($("#no_user").val()==""){
       sweetAlert("ผิดพลาด...", "กรุณากรอกรหัสพนักงาน", "error"); //The error will display
       return false;
@@ -253,6 +256,9 @@ $(document).ready(function () { //When the page has loaded
       return false;
     }else if (!isEmail($("#email_regis").val())){
       sweetAlert("ผิดพลาด...", "รูปแบบอีเมล์ไม่ถูกต้อง!", "error"); //The error will display
+      return false;
+    }else if(emailDomains.indexOf(chkdomain, 0)<0){
+      sweetAlert("ผิดพลาด...", "อีเมล์แอดเดรสต้องเป็น \n<?PHP foreach($domainEmail as $index=> $value){ echo '@'.$value.', ';}?> \n เท่านั้น", "error"); //The error will display
       return false;
     }else if($("#password_regis").val()==""){
       sweetAlert("ผิดพลาด...", "กรุณากรอกรหัสผ่าน", "error"); //The error will display

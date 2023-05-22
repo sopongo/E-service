@@ -4,10 +4,20 @@ session_start();
 header('Content-Type: text/html; charset=utf-8');
 date_default_timezone_set('Asia/Bangkok');	
 
-require_once ('include/connect_db.inc.php');
-require_once ('include/function.inc.php');
 require_once ('include/setting.inc.php');
+
+if(empty($_SESSION['sess_id_user'])){ 
+  $_SESSION = []; //empty array. 
+  require_once ('include/connect_db.inc.php');   //echo "ถ้ายังไม่ Login จะเชื่อมฐาน E-service เพื่อใช้ Login";
+  session_destroy(); die(include('login.inc.php')); 
+}else{
+  require_once ('include/connect_db.inc.php'); //echo "ถ้า Login ผ่านจะเชื่อมฐานข้อมูล db_report";
+  //exit();
+}
+
+//require_once ('include/connect_db.inc.php');
 require_once ('include/class_crud.inc.php');
+require_once ('include/function.inc.php');
 require_once ('include/timer.inc.php');
 require_once ('include/query_class.inc.php');
 

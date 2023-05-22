@@ -25,6 +25,9 @@
             echo 'mail_dup';
             exit();
         }
+
+        echo '<pre>'; print_r($output); echo '</pre>'; exit();
+
         $output['password_regis'] = sha1($keygen.$output['password_regis']); //เก็บรหัสผ่านในรูปแบบ sha1 
         $insertRow = [
             'no_user' => (!empty($output['no_user'])) ? $output['no_user'] : '',
