@@ -102,11 +102,6 @@ echo var_dump($bbb);*/
       });
     });
 
-/*--------------------------------------------------------------*/
-
-/*--------------------------------------------------------------*/
-
-
   $('#some_button').click(function refreshData() {
     $('#example1').DataTable().ajax.reload();
   });
@@ -305,31 +300,4 @@ $(document).ready(function () {
   
 
     /*module/module_machine_master/datatable_processing.php*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>

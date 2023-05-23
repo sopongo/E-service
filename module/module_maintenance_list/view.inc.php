@@ -1116,11 +1116,11 @@ $(document).on("click", ".btn-posttimeline", function (event){
 });
 
 $(document).on("click", ".btn-serv_end", function (event){ 
-  var chk_caused_by = '<?PHP echo  $rowData['txt_caused_by']; ?>';
-  var chk_failure_code = '<?PHP echo $rowData['ref_id_failure_code']; ?>';
-  var chk_failure_code_th = '<?PHP echo $rowData['failure_code_th_name'];?>';
-  var chk_repair_code = '<?PHP echo $rowData['repair_code_name'];?>';
-  var chk_txt_solution = '<?PHP echo $rowData['txt_solution'];?>';
+  var chk_caused_by = '<?PHP echo  trim($rowData['txt_caused_by']); ?>';
+  var chk_failure_code = '<?PHP echo trim($rowData['ref_id_failure_code']); ?>';
+  var chk_failure_code_th = '<?PHP echo trim($rowData['failure_code_th_name']);?>';
+  var chk_repair_code = '<?PHP echo trim($rowData['repair_code_name']);?>';
+  var chk_txt_solution = '<?PHP echo trim($rowData['txt_solution']);?>';
   if(chk_caused_by=='' && (chk_failure_code=='' || chk_failure_code_th=='') && chk_repair_code=='' && chk_txt_solution==''){
     sweetAlert("ผิดพลาด!", "ต้องสรุปผลการซ่อมก่อน \r\n ถึงจะปิดงานซ่อมได้", "error");
     return false;
