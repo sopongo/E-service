@@ -57,7 +57,6 @@ $colunm_sort = array( //ใช้เรียงข้อมูล
 $orderBY = $colunm_sort[$_POST['order']['0']['column']];
 
 $arrData = array();	
-
 $fetchRow = $obj->fetchRows("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
 $fetchRow = $obj->fetchRows("SELECT tb_machine_master.id_machine, tb_machine_master.machine_code, tb_machine_master.model_name, tb_machine_master.name_machine, tb_machine_master.status_machine, tb_site.site_initialname, 
 tb_category.name_menu, tb_dept.dept_initialname, tb_attachment.path_attachment_name
@@ -68,7 +67,10 @@ tb_category.name_menu, tb_dept.dept_initialname, tb_attachment.path_attachment_n
  LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_machine_master.id_machine) ".$query_search." GROUP BY tb_machine_master.id_machine ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." LIMIT ".$_POST['start'].", ".$length." ");
 
 $numRow = $obj->getCount("SELECT count(id_machine) AS total_row FROM tb_machine_master ".$query_search."");    //ถ้าจำนวน Row ทั้งหมด 
-
+/*
+INSERT INTO `tb_machine_site` (`id_machine_site`, `code_machine_site`, `serial_number`, `recived_date`, `ref_id_machine_master`, `ref_id_building`, `ref_id_location`, `ref_id_site`, `ref_id_supplier`, `status_work`, `detail_machine_site`, `mcs_adddate`, `ref_id_user_add`, `mcs_editdate`, `ref_id_user_edit`, `status_machine_site`) VALUES
+(NULL, '".$fetchRow[$key]['machine_code']."', NULL, NULL, ".$fetchRow[$key]['id_machine'].", NULL, NULL, 4, NULL, 1, NULL, '2023-05-30 17:17:17', 3, NULL, NULL, 1),
+*/
 if (count($fetchRow)>0) {
     $No = ($numRow-$_POST['start']);
     foreach($fetchRow as $key=>$value){
@@ -76,7 +78,7 @@ if (count($fetchRow)>0) {
         $dataRow[] = $No.'.';
         $dataRow[] = ($fetchRow[$key]['path_attachment_name']=='' ? '<img src="'.$path_machine_Default.'" class="img" />' : '<a href="'.$path_machine.$fetchRow[$key]['path_attachment_name'].'" data-toggle="lightbox" data-title="'.$fetchRow[$key]['machine_code'].': '.$fetchRow[$key]['name_machine'].'"><img src="'.$path_machine.$fetchRow[$key]['path_attachment_name'].'" class="img" alt="'.$path_machine.$fetchRow[$key]['machine_code'].'"></a>');
         $dataRow[] = ($fetchRow[$key]['machine_code']=='' ? '-' : $fetchRow[$key]['machine_code']);
-        $dataRow[] = ($fetchRow[$key]['model_name']=='' ? '-' : $fetchRow[$key]['model_name']);
+        $dataRow[] = ($fetchRow[$key]['model_name']=='' ? "-" : $fetchRow[$key]['model_name']);
         $dataRow[] = ($fetchRow[$key]['name_machine']=='' ? '-' : $fetchRow[$key]['name_machine']);
         $dataRow[] = ($fetchRow[$key]['name_menu']=='' ? '-' : $fetchRow[$key]['name_menu']);
         $dataRow[] = ($fetchRow[$key]['site_initialname']=='' ? '-' : $fetchRow[$key]['site_initialname']);
