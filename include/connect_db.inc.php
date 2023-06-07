@@ -3,7 +3,7 @@
 class Database
 {
     ####localhost 
-    private $dbServer = 'localhost'; private $dbUser = 'root'; private $dbPassword = ''; private $dbName = 'db_e-service';
+    private $dbServer = 'localhost'; private $dbUser = 'root'; private $dbPassword = ''; private $dbName = 'db_eservice';
     //private $dbServer = 'mail.cc.pcs-plp.com'; private $dbUser = 'itpcs'; private $dbPassword = 'Pcs@1234'; private $dbName = 'db_eservice_new'; //ON SERVER;
     
     
