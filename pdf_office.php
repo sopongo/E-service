@@ -29,7 +29,9 @@ class MYPDF extends TCPDF {
 		<tr>
 		<td width="70%" style="text-align: left; vertical-align:middle;"><strong style="font-size:22px;"><img src="logo_pdf.jpg" style="border:none; " border="0" width="100" /><br />บริษัท แปซิฟิค ห้องเย็น จำกัด (มหาชัย)</strong>
 		<br />47/19 หมู่ 2 ตำบลนาดี อำเภอเมือง จังหวัด สมุทรสาคร 74000 โทร. (+66) 3411-789-9</td>
-		<td width="30%" style="text-align:right; vertical-align:middle;"><strong style="font-size:24px;">ใบแจ้งซ่อม แผนก: {data}</strong><br /><span style="font-size:18px;">เลขที่ใบแจ้งซ่อม: 00000000000<br />วันที่แจ้งซ่อม: DD/MM/YYYY</span><div style="font-size:18px;">สถานะใบแจ้งซ่อม: {data status}</div></td>
+		<td width="30%" style="text-align:right; vertical-align:middle;"><strong style="font-size:24px;">ใบแจ้งซ่อม แผนก: {data}</strong><br /><span style="font-size:18px;">เลขที่ใบแจ้งซ่อม: xxxxxx<br />วันที่แจ้งซ่อม: DD/MM/YYYY</span>
+		<span style="text-align:right; vertical-align:middle;">'.$this->getAliasNumPage().'of'. $this->getAliasNbPages().'</span>
+		<div style="font-size:18px;">สถานะใบแจ้งซ่อม: {data status}</div></td>
 		</tr>
 		</table><hr />');
         // We need to adjust the x and y positions of this text ... first two parameters
