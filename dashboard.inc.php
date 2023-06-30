@@ -1,22 +1,44 @@
 <style>
-.dataTables_length, .form-control-sm{  font-size:0.85rem; /* 40px/16=2.5em */
+.dataTables_length,
+.form-control-sm {
+  font-size: 0.85rem;
+  /* 40px/16=2.5em */
 }
-.table, .dataTable tr td{  padding:0.35rem 0.50rem;  margin:0;}
 
-.btn-sm{ padding:0.10rem 0.40rem 0.20rem 0.40rem; margin:0.0rem 0.0rem;}
+.table,
+.dataTable tr td {
+  padding: 0.35rem 0.50rem;
+  margin: 0;
+}
 
-.dt-buttons button{font-size:0.85rem; /* 40px/16=2.5em */}
+.btn-sm {
+  padding: 0.10rem 0.40rem 0.20rem 0.40rem;
+  margin: 0.0rem 0.0rem;
+}
 
-.dropdown-menu{  /*left:-70px;*/}
-.dropdown-menu a.dropdown-item{  font-size:0.85rem; /* 40px/16=2.5em */ }
+.dt-buttons button {
+  font-size: 0.85rem;
+  /* 40px/16=2.5em */
+}
+
+.dropdown-menu {
+  /*left:-70px;*/
+}
+
+.dropdown-menu a.dropdown-item {
+  font-size: 0.85rem;
+  /* 40px/16=2.5em */
+}
 
 div.dataTables_wrapper {
-        width:100%;
-        /*background-color:#FCC;*/
-        margin:0 auto;
-    }
+  width: 100%;
+  /*background-color:#FCC;*/
+  margin: 0 auto;
+}
 
-.dataTables_scrollBody{ margin-bottom:5px;}
+.dataTables_scrollBody {
+  margin-bottom: 5px;
+}
 </style>
 <!-- Ekko Lightbox -->
 <script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>  
@@ -40,17 +62,56 @@ div.dataTables_wrapper {
         </div>
 
 
+<<<<<<< Updated upstream
       <?PHP     
+=======
+      <?PHP
+
+      $query_dept ='';
+      $query_user ='';
+      $query_repairer='';
+      if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || $_SESSION['sess_class_user']==5){ ##11
+        if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3){
+          $query_dept = " AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']."";
+          $query_repairer = " AND tb_ref_repairer.ref_id_user_repairer = ".$_SESSION['sess_id_user']." ";
+        }if($_SESSION['sess_class_user']==1){
+          $query_user = " AND tb_maintenance_request.ref_id_user_request = ".$_SESSION['sess_id_user']."";          
+        }if($_SESSION['sess_class_user']==5){
+          $query_repairer = " AND tb_ref_repairer.ref_id_user_repairer = ".$_SESSION['sess_id_user']." ";       
+        }
+        ##$numRow_waitapprove ===== นับงานรออนุมัติ
+        $numRow_waitapprove = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
+        WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].$query_dept.$query_user." AND tb_maintenance_request.status_approved=0 AND tb_maintenance_request.maintenance_request_status=1"); 
+      
+        ##$numRow_repairing ===== นับงานกำลังซ่อม
+        $numRow_repairing = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
+        LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request = tb_maintenance_request.id_maintenance_request)
+        WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].$query_dept.$query_user.$query_repairer." 
+        AND tb_maintenance_request.status_approved=1 
+        AND tb_maintenance_request.maintenance_request_status=1 
+        AND tb_maintenance_request.duration_serv_start IS NOT NULL 
+        AND tb_maintenance_request.duration_serv_end IS NULL");
+    
+        ##$numRow_hand_over ===== นับงานที่ส่งมอบแล้ว
+        $numRow_hand_over = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
+        WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].$query_dept.$query_user." AND tb_maintenance_request.status_approved=1 AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.duration_serv_start IS NOT NULL AND tb_maintenance_request.duration_serv_end IS NOT NULL AND tb_maintenance_request.hand_over_date IS NOT NULL AND tb_maintenance_request.survay_date IS NOT NULL");
+
+        ##$numRow_cancel ===== นับงานที่ยกเลิก
+        $numRow_cancel = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
+        WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].$query_dept.$query_user." AND tb_maintenance_request.maintenance_request_status=2");
+    }
+
+>>>>>>> Stashed changes
       ?>
+      
         <div class="card-body">
         <div class="row">
-                  
           <div class="col-lg-3 col-6">
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
                 <h5>รออนุมัติ<br /></h5>
-                <p>จำนวน ?? รายการ</p>
+                <p>จำนวน <?php echo $numRow_waitapprove?> รายการ</p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-cart"></i>
@@ -65,7 +126,7 @@ div.dataTables_wrapper {
             <div class="small-box bg-warning">
               <div class="inner">
                 <h5>กำลังซ่อม<br /></h5>
-                <p>จำนวน ?? รายการ</p>
+                <p>จำนวน <?php echo $numRow_repairing?> รายการ</p>
               </div>
               <div class="icon">
                 <i class="ion ion-home"></i>
@@ -80,7 +141,7 @@ div.dataTables_wrapper {
             <div class="small-box bg-success">
               <div class="inner">
                 <h5>ส่งมอบงานแล้ว</h5>
-                <p>จำนวน ?? รายการ</p>
+                <p>จำนวน <?php echo $numRow_hand_over ?> รายการ</p>
               </div>
               <div class="icon">
                 <i class="ion ion-clipboard"></i>
@@ -93,7 +154,7 @@ div.dataTables_wrapper {
             <div class="small-box bg-danger">
               <div class="inner">
                 <h5>ยกเลิก</h5>
-                <p>จำนวน ?? รายการ</p>
+                <p>จำนวน <?php echo $numRow_cancel?> รายการ</p>
               </div>
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>

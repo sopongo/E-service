@@ -121,6 +121,7 @@ $(document).ready(function(){
             if(event.which===13){
                 if($.isNumeric(display_num)){
                     event.stopPropagation();
+<<<<<<< Updated upstream
                     $(this).prop('disabled', true);
                     $('#'+col_name+'').val(display_num);
                     $('form#frm_input').trigger("reset");
@@ -128,6 +129,12 @@ $(document).ready(function(){
                     $(this).prop('disabled', false);
                 }else{
                     $('#'+col_name+'').val('');                    
+=======
+                    $('#'+col_name+'').val(display_num);
+                    $('form#frm_input').trigger("reset");
+                    $("#modal-default").modal("hide");  
+                }else{
+>>>>>>> Stashed changes
                     sweetAlert("แจ้งเตือน", "กรอกค่าไม่ถูกต้อง", "warning");
                     return false;
                 }
@@ -138,9 +145,16 @@ $(document).ready(function(){
     });    
 
     $(document).keypress(function (event) {
+<<<<<<< Updated upstream
         var value = validateStrings(String.fromCharCode(event.which));           
         var display_num = $('#display_num').val();
         //$('#display_num').val(event.which+'---'+value);
+=======
+
+            var value = validateStrings(String.fromCharCode(event.which));           
+            var display_num = $('#display_num').val();
+            //$('#display_num').val(event.which+'---'+value);
+>>>>>>> Stashed changes
         event.preventDefault();
         if(display_num.length>=6 && event.which!=8){
             return false;
@@ -154,6 +168,10 @@ $(document).ready(function(){
         }
     });
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
         $(document).on('click','li[class^=numpad]',function(e){ 
             e.stopPropagation();
             var display_num = $('#display_num').val();
@@ -165,6 +183,7 @@ $(document).ready(function(){
             }
         });
 
+<<<<<<< Updated upstream
         var btn_reset = '<button type="button" class="btn btn-success btn-sm btn-reset-stop" title="เคลียร์ค่า STOP"><i class="fa fa-xs fa-undo"></i></button>';
 
         $(document).on('click','.btn-reset-stop',function(e){ 
@@ -191,6 +210,19 @@ $(document).ready(function(){
             }
             $('#'+col_name+'').closest('tr').find('td[class^='+chk_col_name+']').addClass('td_stop');
             $('#display_num').val('');
+=======
+        $(document).on('click','.btn_stop',function(e){ 
+            var col_name = $('#col_name').val();
+            var chk_col_name = col_name.slice(0,10);
+            $('#'+col_name+'').closest('tr').find('td[class^='+chk_col_name+'] input').hide();
+            if(chk_col_name=='col_com_29'){
+                $('#'+col_name+'').closest('tr').find('td:nth-child(2)').append(' <button type="button" class="btn btn-success btn-sm" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-undo"></i></button>');
+            }else{
+                $('#'+col_name+'').closest('tr').find('td:nth-child(15)').append(' <button type="button" class="btn btn-success btn-sm" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-undo"></i></button>');
+            }
+            $('#'+col_name+'').closest('tr').find('td[class^='+chk_col_name+']').css('background-color', '#F00').css('opacity', '0.5');
+            //$('#'+col_name+'').closest('tr').find('td[class^=col_com_29]').text('STOP').css('text-align', 'center');
+>>>>>>> Stashed changes
             $("#modal-default").modal("hide");
         });
 
@@ -206,6 +238,7 @@ $(document).ready(function(){
         });                
 
         $(document).on('click','.btn_ok',function(e){ 
+<<<<<<< Updated upstream
             e.stopPropagation();
             $(this).prop('disabled', true);
             var col_name = $('#col_name').val();
@@ -221,6 +254,15 @@ $(document).ready(function(){
                 return false;
             }
             $(this).prop('disabled', false);
+=======
+            var col_name = $('#col_name').val();
+            //alert('xxxxx---'+col_name);
+            e.stopPropagation();
+            var display_num = $('#display_num').val();
+            $('form#frm_input').trigger("reset");
+            $('#'+col_name+'').val(display_num);
+            $("#modal-default").modal("hide");
+>>>>>>> Stashed changes
         });            
 
         $(document).on('click','.btn_del',function(e){ 
@@ -247,5 +289,59 @@ $(document).ready(function(){
         });                
         
 
+<<<<<<< Updated upstream
+=======
+    $(document).on("click", ".close, .btn-cancel", function (e){ /*ถ้าคลิกปุ่ม Close ให้รีเซ็ตฟรอร์ม และเคลียร์ validated*/
+        $('body').find('.was-validated').removeClass();
+        $('form').each(function() { this.reset() });
+    });    
+
+
+/*ปุ่ม ADD Recive รับวัสดุเข้าระบบ <<<<<<<<<< เขียนใหม่ใช้โค๊ดนี้ สมบรูณ์กว่าไม่มีบั๊ครีเฟรชหน้าจอ*/
+    $(document).on("click", ".btn-submit", function (event){
+    var formAdd = document.getElementById('needs-validation');  
+
+    var frmData = $("form#needs-validation").serialize();
+    if(formAdd.checkValidity()===false) {  
+        event.preventDefault();  
+        event.stopPropagation();
+    }else{
+        //alert('Send Ajax'); return false;
+        $.ajax({
+            url: "module/module_site/x_ajax_action.php",
+            type: "POST",
+            data:{"data":frmData, "action":"adddata"},
+            beforeSend: function () {
+            },
+            success: function (data) {
+            console.log(data);
+            if(data==1){
+                sweetAlert("ผิดพลาด!", "ชื่อย่อไซต์ '"+$("#site_initialname").val()+"' ถูกใช้แล้ว", "error");
+                return false;
+            }else{
+                sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
+                $('#example1').DataTable().ajax.reload();
+                $("#modal-default").modal("hide"); 
+                $(".modal-backdrop").hide().fadeOut();
+                sweetAlert("สำเร็จ...", "บันทึกข้อมูลเรียบร้อยแล้ว", "success"); //The error will display
+                $('body').find('.was-validated').removeClass();
+                $('form').each(function() { this.reset() });
+            }   
+                event.preventDefault();
+            },
+                error: function (jXHR, textStatus, errorThrown) {
+                //console.log(data);
+                alert(errorThrown);
+            }
+        });    
+        event.preventDefault();    
+    }
+    //alert('Ajax'); return false;
+    formAdd.classList.add('was-validated');      
+    return false;
+});
+
+
+>>>>>>> Stashed changes
 });//document
 </script>

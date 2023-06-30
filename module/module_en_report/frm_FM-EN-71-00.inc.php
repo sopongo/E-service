@@ -23,7 +23,10 @@
 <style type="text/css">
 table.FM-EN-76-00{border-collapse: collapse; border-spacing:0px; 
     width:100%;
+<<<<<<< Updated upstream
     min-width: 1200px;
+=======
+>>>>>>> Stashed changes
     table-layout: fixed;
 }
 table.FM-EN-76-00 thead tr th{ padding:6px 6px; }
@@ -40,7 +43,10 @@ table.FM-EN-76-00 thead tr th:last-child{ background-color:#fafafa; width:5%; }
 table.FM-EN-76-00 thead tr th.col{ width: 180px; }
 
 table.FM-EN-76-00 tbody tr td{ padding:2px 2px; font-size:0.85rem;  }
+<<<<<<< Updated upstream
 table.FM-EN-76-00 tbody tr td.td_stop{ background-color:#F00;  }
+=======
+>>>>>>> Stashed changes
 /*table.FM-EN-76-00 tbody tr td:nth-child(2){ width: 120px;} */
 /*table.FM-EN-76-00 tbody tr:hover{ background-color:#cce7e8; }*/
 table.FM-EN-76-00 tbody tr td input{ color:#333; font-size:10px;}
@@ -84,7 +90,10 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
 </div>-->
 
 <!--<img src="module/module_en_report/img_test/FM-EN-76-00.jpg" class="img" width="100%"><br /><br />-->
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 <table class="FM-EN-76-00 table-bordered">
     <thead>
     <tr>
@@ -171,7 +180,11 @@ table.FM-EN-76-00 tbody tr td input:focus{ background-color:#cce7e8; border:none
     <td class="col_com_30"><input type="text" name="col_com_30_lsv_'.$value.'" id="col_com_30_lsv_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_30_lsv_'.$value.'"></td>
     <td class="col_com_30"><input type="text" name="col_com_30_ma_'.$value.'" id="col_com_30_ma_'.$value.'" maxlength="10" placeholder="" readonly class="show_numpad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-id="col_com_30_ma_'.$value.'"></td>
 
+<<<<<<< Updated upstream
     <td>???</td>
+=======
+    <td><button type="button" class="btn btn-warning btn-sm edit-data" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-copy"></i></button> <button type="button" class="btn btn-danger btn-sm edit-data" data-id="00000" data-toggle="modal" data-target="#modal-default" id="xxxxxxx" data-backdrop="static" data-keyboard="false" title="xxxxxx"><i class="fa fa-xs fa-undo"></i></button></td>
+>>>>>>> Stashed changes
   </tr>
     ';
   }

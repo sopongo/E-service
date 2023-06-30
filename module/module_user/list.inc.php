@@ -145,6 +145,8 @@ $(document).ready(function () {
 
   $(document).on('click','#addData',function(){   
     $('#exampleModalLabel span').html("เพิ่มผู้ใช้งาน");
+    $('body').find('.was-validated').removeClass();
+    $('form').each(function() { this.reset() });
   });
 
   

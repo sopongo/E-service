@@ -275,4 +275,27 @@ function print_mem()
    echo ' ใช้หน่วยความจำไป: <strong>' . round($mem_usage / 1024) . 'KB</strong>.';
 }
 
+function dateRange( $first, $last, $step = '+1 day', $format = 'Y-m-d' ) {
+    $dates = [];
+    $current = strtotime( $first );
+    $last = strtotime( $last );
+
+    while( $current <= $last ) {
+
+        $dates[] = date( $format, $current );
+        $current = strtotime( $step, $current );
+    }
+
+    return $dates;
+}
+
+function timeDifference($date,$date2){
+    $from_time = strtotime($date); 
+    $to_time = strtotime($date2); 
+    $diff_minutes = round(abs($from_time - $to_time) / 60,2);
+
+    return $diff_minutes;
+}
+
+
 ?>

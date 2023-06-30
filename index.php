@@ -267,6 +267,30 @@ switch($module){
     $module=="machine-site" ? ($active_machine_site="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_machine_site=""); #ไฮไลท์เมนูด้านซ้าย
   break;
 
+  case 'report':
+    $title_site = "รายงานใบแจ้งซ่อม"; $title_act = "รายงานใบแจ้งซ่อม"; $breadcrumb_txt = "รายงานใบแจ้งซ่อม";
+    $include_module = "module/module_report/list.inc.php";
+    $module=="report" ? ($active_report="active") && ($active_treeview_2="menu-open") : ($active_treeview_2="menu-close") && ($active_report=""); #ไฮไลท์เมนูด้านซ้าย
+  break;
+
+  case 'machine_report':
+    $title_site = "รายงานเครื่องจักร-อุปกรณ์"; $title_act = "รายงานเครื่องจักร-อุปกรณ์"; $breadcrumb_txt = "รายงานเครื่องจักร-อุปกรณ์";
+    $include_module = "module/module_report/list_machine.inc.php";
+    $module=="machine_report" ? ($active_machine_report="active") && ($active_treeview_2="menu-open") : ($active_treeview_2="menu-close") && ($active_machine_report=""); #ไฮไลท์เมนูด้านซ้าย
+  break;
+
+  case 'user_report':
+    $title_site = "สถิติผู้ใช้งานแจ้งซ่อม"; $title_act = "สถิติผู้ใช้งานแจ้งซ่อม"; $breadcrumb_txt = "สถิติผู้ใช้งานแจ้งซ่อม";
+    $include_module = "module/module_report/list_user.inc.php";
+    $module=="user_report" ? ($active_user_report="active") && ($active_treeview_2="menu-open") : ($active_treeview_2="menu-close") && ($active_user_report=""); #ไฮไลท์เมนูด้านซ้าย
+  break;
+
+  case 'request_report':
+    $title_site = "สถานะใบแจ้งซ่อม"; $title_act = "สถานะใบแจ้งซ่อม"; $breadcrumb_txt = "สถานะใบแจ้งซ่อม";
+    $include_module = "module/module_report/list_request.inc.php";
+    $module=="request_report" ? ($active_request_report="active") && ($active_treeview_2="menu-open") : ($active_treeview_2="menu-close") && ($active_request_report=""); #ไฮไลท์เมนูด้านซ้าย
+  break;
+
   case 'profile':
     $title_site = "แก้ไขข้อมูลส่วนตัว"; $title_act = "แก้ไขข้อมูลส่วนตัว"; $breadcrumb_txt = "แก้ไขข้อมูลส่วนตัว";
     $include_module = "module/module_user/profile.inc.php";
@@ -348,8 +372,8 @@ $obj = new CRUD();
 <!-- Customize Theme style -->
 <link rel="stylesheet" href="dist/css/adminlte_cus.css">
 <!-- fontface -->
-<link rel="stylesheet" href="dist/css/fontface.css">
-<!-- overlayScrollbars -->
+<link rel="stylesheet" href="dist/css/fontface.css">  
+<!-- overlayScrollbars -->  
 <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
 <!-- jQuery jQuery v3.6.0 -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -509,7 +533,7 @@ $obj = new CRUD();
               $numRow_accept = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE  tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].$query_dept." AND tb_maintenance_request.status_approved=1 AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.status_approved=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NULL"); 
 
               ##$numRow_handover ===== จำนวนงานที่รอส่งมอบ
-              $numRow_handover = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_end IS NOT NULL AND tb_maintenance_request.hand_over_date IS NULL");
+              $numRow_handover = $obj->getCount("SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." ".$query_dept." AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.allotted_date IS NOT NULL AND tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_end IS NOT NULL AND tb_maintenance_request.hand_over_date IS NULL");
 
 
               ##$total_alljob ===== จำนวนงานทั้งหมดของคุณ
@@ -528,6 +552,21 @@ $obj = new CRUD();
         <li class="nav-item"><a href="?module=joblist" class="nav-link <?PHP echo $active_joblist;?>"><i class="nav-icon fas fa-wrench"></i> <p>งานซ่อมของคุณ</p><span class="float-right badge bg-warning"><?PHP echo $total_alljob; ?></span></a></li>
         <?PHP }##11 ?>
         <li class="nav-item"><a href="?module=machine-site" class="nav-link <?PHP echo $active_machine_site;?>"><i class="nav-icon fas fa-industry"></i> <p>เครื่องจักร-อุปกรณ์รายไซต์</p></a></li>
+        
+    
+        <li class="nav-item <?PHP echo $active_treeview_2; ?>"><!--ถ้าจะให้เปิดใส่คลาส menu-open-->
+            <a href="#" class="nav-link"><i class="nav-icon fa fa-file-alt"></i><p>รายงาน<i class="right fas fa-angle-left"></i></p></a>
+            <ul class="nav nav-treeview">
+            <li class="nav-item"><a href="?module=request_report" class="nav-link <?PHP echo $active_request_report;?>"><i class="nav-icon fa fas fa-chart-pie"></i> <p>สถานะใบแจ้งซ่อม</p></a></li>
+              <li class="nav-item"><a href="?module=report" class="nav-link <?PHP echo $active_report;?>"><i class="nav-icon fa fas fa-file-invoice"></i> <p>รายงานใบแจ้งซ่อม</p></a></li>
+              <li class="nav-item"><a href="?module=machine_report" class="nav-link <?PHP echo $active_machine_report;?>"><i class="nav-icon fa fa-chart-bar"></i> <p>รายงานเครื่องจักร-อุปกรณ์</p></a></li>
+              <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || $_SESSION['sess_class_user']==5){?>
+              <li class="nav-item"><a href="?module=user_report" class="nav-link <?PHP echo $active_user_report;?>"><i class="nav-icon fa fas fa-users"></i> <p>สถิติผู้ใช้งานแจ้งซ่อม</p></a></li>
+              <?php } ?>
+            </ul>
+        </li>
+    
+
         <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){?>
         <li class="nav-item <?PHP echo $active_treeview_1; ?>"><!--ถ้าจะให้เปิดใส่คลาส menu-open-->
             <a href="#" class="nav-link"><i class="nav-icon fas fa-sitemap"></i><p>จัดการระบบ<i class="right fas fa-angle-left"></i></p></a>

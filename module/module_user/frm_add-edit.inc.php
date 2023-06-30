@@ -6,6 +6,12 @@
 .text-size-1{
  font-size:0.90rem;
 }
+
+fieldset{ border:1px solid #ddd; background-color: #fafafa; }
+fieldset{ margin:0; padding:0px 5px ; margin-top:10px; display: block; }
+fieldset:hover{ background-color:#f3f3f3;}
+fieldset legend{ padding: 0px; margin:0; display: block; width: 100%; font-size:1.2rem; color:#1C3379; font-weight:bold;}
+
 </style>
 <!--
 id_user, no_user, password, email, line_token, fullname, sex, phone, photo, class_user, ref_id_site, ref_id_dept, ref_id_position, status_user, create_date, ref_id_user_add, edit_date, ref_id_user_edit, latest_login, ip_address
@@ -17,7 +23,7 @@ no_user     password        email       fullname        class_user      ref_id_s
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title font-weight-bold" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span>เพิ่มหน่วยนับ</span></h5>
+        <h5 class="modal-title font-weight-bold" id="exampleModalLabel"><i class="fas fa-angle-double-right"></i> <span>เพิ่มผู้ใช้งาน</span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
@@ -103,10 +109,10 @@ no_user     password        email       fullname        class_user      ref_id_s
                         <div class="row row-7">
                             <div class="col-sm-12 col-md-12 col-xs-12">
                                 <div class="form-group">  
-                                    <label for="firstname">ไซต์งาน:<span class="text-danger">**</span></label>  
+                                    <label for="firstname">ไซต์งานหลัก:<span class="text-danger">**</span></label>  
                                     <div class="form-group clearfix">
                                         <?PHP
-                                            $rowSite= $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY site_initialname DESC");                 
+                                            $rowSite= $obj->fetchRows("SELECT * FROM tb_site WHERE site_status=1 ORDER BY site_initialname DESC");
                                             if (count($rowSite)>0){
                                                 foreach($rowSite as $key => $value){
                                                     if(($key==$_SESSION['sess_ref_id_site']) && $_SESSION['sess_class_user']!=5){
@@ -144,6 +150,35 @@ no_user     password        email       fullname        class_user      ref_id_s
                                 </div>
                             </div>
                         </div><!--row-8-->
+
+                        <!--
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-xs-12">
+                                <div class="form-group">  
+                                    <label for="firstname">สิทธิ์การใช้ระบบที่ไซต์งานอื่น:<span class="text-danger">**</span></label>  
+                                    <?PHP
+                                            /*
+                                            $rowWebApp = $obj->fetchRows("SELECT * FROM tb_web_application WHERE status_webapp=1 ORDER BY id_webapp DESC");
+                                            if(count($rowWebApp)>0){
+                                                foreach($rowWebApp as $index => $value) {
+                                                    echo '<fieldset><legend>'.$rowWebApp[$index]['name_webapp'].'</legend>';
+                                                        if (count($rowSite)>0){
+                                                            foreach($rowSite as $key => $value){
+                                                                if(($key==$_SESSION['sess_ref_id_site']) && $_SESSION['sess_class_user']!=5){
+                                                                    echo '<div class="icheck-danger d-inline-block mr-4"><input type="checkbox" name="ref_site_app[]" id="ref_site_app_'.$rowWebApp[$index]['id_webapp'].'_'.$rowSite[$key]['id_site'].'" value="'.$rowSite[$key]['id_site'].'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').'><label for="ref_site_app_'.$rowWebApp[$index]['id_webapp'].'_'.$rowSite[$key]['id_site'].'">'.$rowSite[$key]['site_initialname'].'</label></div>'."\r\n";
+                                                                }else if (($key==$_SESSION['sess_ref_id_site'] || $key!=$_SESSION['sess_ref_id_site']) && $_SESSION['sess_class_user']==5){
+                                                                    echo '<div class="icheck-danger d-inline-block mr-4"><input type="checkbox" name="ref_site_app[]" id="ref_site_app_'.$rowWebApp[$index]['id_webapp'].'_'.$rowSite[$key]['id_site'].'" value="'.$rowSite[$key]['id_site'].'" '.($_SESSION['sess_class_user']!=5 ? 'disabled' : '').'><label for="ref_site_app_'.$rowWebApp[$index]['id_webapp'].'_'.$rowSite[$key]['id_site'].'">'.$rowSite[$key]['site_initialname'].'</label></div>'."\r\n";
+                                                                }
+                                                            }
+                                                        }
+                                                    echo '</fieldset>';
+                                                }
+                                            }
+                                            */
+                                        ?>
+                                </div>
+                            </div>
+                        </div>-->
 
                     </div><!--card-body-->
                 </div><!--card-->

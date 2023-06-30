@@ -5,6 +5,8 @@ date_default_timezone_set('Asia/Bangkok');
 error_reporting(error_reporting() & ~E_NOTICE);
 
 require_once ('include/class_crud.inc.php');
+require_once ('include/setting.inc.php');
+require_once ('include/function.inc.php');
 
 $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเรียกใช้งานคลาส,ฟังก์ชั่นต่างๆ
 ?>
@@ -420,6 +422,22 @@ $(document).ready(function () { //When the page has loaded
         //$fetchPermission[$key]['module_name']
       }
 
+      $fetchChkReqStatus = $obj->fetchRows("SELECT tb_maintenance_request.id_maintenance_request, tb_maintenance_request.ref_id_user_request, tb_maintenance_request.ref_id_user_hand_over, tb_maintenance_request.hand_over_date , tb_maintenance_request.ref_id_user_survey, tb_maintenance_request.survay_date
+      FROM tb_maintenance_request 
+      WHERE tb_maintenance_request.hand_over_date IS NOT NULL
+      AND tb_maintenance_request.survay_date IS NULL;");
+      
+      foreach($fetchChkReqStatus as $key => $value){
+        $diff_minutes = timeDifference($value['hand_over_date'],date('Y-m-d H:i:s'));
+        if($diff_minutes >= $timeDiff){
+          $updateRow = [
+            'ref_id_user_survey' => 0,
+            'survay_date' => date('Y-m-d H:i:s'),
+          ];
+          $Update = $obj->update($updateRow, "id_maintenance_request=".$value['id_maintenance_request']."", "db_eservice_new.tb_maintenance_request");
+        }
+      }
+// exit();
       //echo $_SESSION['sess_id_user']; exit();
     ?>
     <script type="text/javascript">

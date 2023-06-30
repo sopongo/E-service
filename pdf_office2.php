@@ -27,7 +27,11 @@ class MYPDF extends TCPDF {
         $this->SetY(5);
         $this->writeHTML('<table width="100%" border="0" cellspacing="0" cellpadding="0"> 
 		<tr>
+<<<<<<< Updated upstream
 		<td width="70%" style="text-align: left; vertical-align:middle;"><strong style="font-size:22px;"><img src="logo_pdf.jpg" style="border:none; " border="0" width="100" /><br />บริษัท แปซิฟิค ห้องเย็น จำกัด (มหาชัย)</strong>
+=======
+		<td width="70%" style="text-align: left; vertical-align:middle;"><strong style="font-size:22px;"><br />บริษัท แปซิฟิค ห้องเย็น จำกัด (มหาชัย)</strong>
+>>>>>>> Stashed changes
 		<br />47/19 หมู่ 2 ตำบลนาดี อำเภอเมือง จังหวัด สมุทรสาคร 74000 โทร. (+66) 3411-789-9</td>
 		<td width="30%" style="text-align:right; vertical-align:middle;"><strong style="font-size:24px;">ใบแจ้งซ่อม แผนก: {data}</strong><br /><span style="font-size:18px;">เลขที่ใบแจ้งซ่อม: xxxxxx<br />วันที่แจ้งซ่อม: DD/MM/YYYY</span>
 		<span style="text-align:right; vertical-align:middle;">'.$this->getAliasNumPage().'of'. $this->getAliasNbPages().'</span>
@@ -98,7 +102,11 @@ $pdf->SetKeywords('PDF, ใบแจ้งซ่อม {เลขที่ใบ
 
 // remove default header/footer
 $pdf->setPrintHeader(true);
+<<<<<<< Updated upstream
 $pdf->setPrintFooter(true);
+=======
+$pdf->setPrintFooter(false);
+>>>>>>> Stashed changes
 
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);

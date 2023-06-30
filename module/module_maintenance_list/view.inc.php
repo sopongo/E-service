@@ -326,6 +326,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                   <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">รายละเอียด</a></li>
                   <li class="nav-item"><a class="nav-link btn-timeline" href="#timeline" data-toggle="tab">ไทม์ไลน์</a></li>
                   <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">ติดตามงานซ่อม</a></li>
+                  <li class="nav-item"><a class="nav-link btn-print" target="_blank"><i class="fas fa-print"></i>&nbsp;พิมพ์ใบแจ้งซ่อม</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
@@ -734,6 +735,25 @@ $(document).on("click", ".btn-timeline", function (e){
             swal("Error!", ""+errorThrown+"", "error");
         }
     });
+});
+
+$(document).on("click", ".btn-print", function (e){ 
+
+  swal({
+        title: "พิมพ์ใบแจ้งซ่อม ?",   text: "ใบแจ้งซ่อมเลขที่: <?PHP echo $breadcrumb_txt;?>",
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        cancelButtonText: "ไม่, ยกเลิก",
+        confirmButtonText: "ตกลง",
+        closeOnConfirm: true 
+      }, 
+      function(){
+                  // window.location.href="pdf_office.php?idreq=<?php echo $rowData['id_maintenance_request']?>"
+                  var PrintWindow = window.open('pdf_office.php?idreq=<?php echo $rowData['id_maintenance_request']?>', '_blank');
+                  PrintWindow.print();
+                })
+
 });
 
 $(document).on("click", ".btn-update_outsite", function (e){ 
