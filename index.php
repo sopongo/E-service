@@ -4,20 +4,10 @@ session_start();
 header('Content-Type: text/html; charset=utf-8');
 date_default_timezone_set('Asia/Bangkok');	
 
-require_once ('include/setting.inc.php');
-
-if(empty($_SESSION['sess_id_user'])){ 
-  $_SESSION = []; //empty array. 
-  require_once ('include/connect_db.inc.php');   //echo "ถ้ายังไม่ Login จะเชื่อมฐาน E-service เพื่อใช้ Login";
-  session_destroy(); die(include('login.inc.php')); 
-}else{
-  require_once ('include/connect_db.inc.php'); //echo "ถ้า Login ผ่านจะเชื่อมฐานข้อมูล db_report";
-  //exit();
-}
-
-//require_once ('include/connect_db.inc.php');
-require_once ('include/class_crud.inc.php');
+require_once ('include/connect_db.inc.php');
 require_once ('include/function.inc.php');
+require_once ('include/setting.inc.php');
+require_once ('include/class_crud.inc.php');
 require_once ('include/timer.inc.php');
 require_once ('include/query_class.inc.php');
 
@@ -48,21 +38,6 @@ switch($module){
     include('qrcode.inc.php');
     exit();
   break;  
-
-  case 'testable':
-    $title_site = "frm_FM-EN-71-00"; $title_act = "frm_FM-EN-71-00"; $breadcrumb_txt = "frm_FM-EN-71-00";
-    $include_module = "module/module_en_report/test_table.inc.php";
-  break;    
-
-  case 'report-coldchain':
-    $title_site = "frm_FM-EN-71-00"; $title_act = "frm_FM-EN-71-00"; $breadcrumb_txt = "frm_FM-EN-71-00";
-    $include_module = "module/module_en_report/frm_FM-EN-71-00.inc.php";
-  break;  
-
-  case 'report-coldchain-2':
-    $title_site = "frm_FM-EN-77-01"; $title_act = "frm_FM-EN-77-01"; $breadcrumb_txt = "frm_FM-EN-77-01";
-    $include_module = "module/module_en_report/frm_FM-EN-77-01.inc.php";
-  break;    
 
   case 'howto':
     $title_site = "คู่มือการใช้งาน"; $title_act = "คู่มือการใช้งาน"; $breadcrumb_txt = "คู่มือการใช้งาน";
@@ -267,6 +242,12 @@ switch($module){
     $module=="machine-site" ? ($active_machine_site="active") && ($active_treeview_1="menu-close") : ($active_treeview_1="menu-close") && ($active_machine_site=""); #ไฮไลท์เมนูด้านซ้าย
   break;
 
+  case 'dashboard_report':
+    $title_site = " รายงาน E-Service | Dashboard"; $title_act = " รายงาน E-Service | Dashboard"; $breadcrumb_txt = " รายงาน E-Service | Dashboard";
+    $include_module = "module/module_report/dashboard.inc.php";
+    $module=="dashboard_report" ? ($active_dashboard_report="active") && ($active_treeview_2="menu-open") : ($active_treeview_2="menu-close") && ($active_dashboard_report=""); #ไฮไลท์เมนูด้านซ้าย
+  break;
+
   case 'report':
     $title_site = "รายงานใบแจ้งซ่อม"; $title_act = "รายงานใบแจ้งซ่อม"; $breadcrumb_txt = "รายงานใบแจ้งซ่อม";
     $include_module = "module/module_report/list.inc.php";
@@ -343,11 +324,6 @@ $obj = new CRUD();
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<?PHP
-  if($module=='report-coldchain'){
-    
-  }
-?>
 <meta name="robots" content="noindex, nofollow">
 <meta name="googlebot" content="noindex, nofollow">
 <title><?PHP echo $title_site; ?></title>
@@ -509,7 +485,7 @@ $obj = new CRUD();
       </div>
  
       <!-- Sidebar Menu active-->
-      <nav class="mt-2"><!--nav-compact-->
+      <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item"><a href="./" class="nav-link <?PHP echo $active_dashbord;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
         <li class="nav-item"><a href="?module=create-request" class="nav-link <?PHP echo $active_createrequest;?>"><i class="nav-icon fas fa-tools"></i> <p>แจ้งซ่อม</p></a></li>
@@ -557,8 +533,9 @@ $obj = new CRUD();
         <li class="nav-item <?PHP echo $active_treeview_2; ?>"><!--ถ้าจะให้เปิดใส่คลาส menu-open-->
             <a href="#" class="nav-link"><i class="nav-icon fa fa-file-alt"></i><p>รายงาน<i class="right fas fa-angle-left"></i></p></a>
             <ul class="nav nav-treeview">
-            <li class="nav-item"><a href="?module=request_report" class="nav-link <?PHP echo $active_request_report;?>"><i class="nav-icon fa fas fa-chart-pie"></i> <p>สถานะใบแจ้งซ่อม</p></a></li>
+              <li class="nav-item"><a href="?module=dashboard_report" class="nav-link <?PHP echo $active_dashboard_report;?>"><i class="nav-icon fa fa-solid fa-chalkboard"></i> <p>แดชบอร์ด</p></a></li>
               <li class="nav-item"><a href="?module=report" class="nav-link <?PHP echo $active_report;?>"><i class="nav-icon fa fas fa-file-invoice"></i> <p>รายงานใบแจ้งซ่อม</p></a></li>
+              <li class="nav-item"><a href="?module=request_report" class="nav-link <?PHP echo $active_request_report;?>"><i class="nav-icon fa fas fa-chart-pie"></i> <p>สถานะใบแจ้งซ่อม</p></a></li>
               <li class="nav-item"><a href="?module=machine_report" class="nav-link <?PHP echo $active_machine_report;?>"><i class="nav-icon fa fa-chart-bar"></i> <p>รายงานเครื่องจักร-อุปกรณ์</p></a></li>
               <?PHP if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || $_SESSION['sess_class_user']==5){?>
               <li class="nav-item"><a href="?module=user_report" class="nav-link <?PHP echo $active_user_report;?>"><i class="nav-icon fa fas fa-users"></i> <p>สถิติผู้ใช้งานแจ้งซ่อม</p></a></li>
@@ -614,17 +591,6 @@ $obj = new CRUD();
     <?PHP
     //echo "<pre>".print_r($_SESSION)."</pre>";
     include($include_module);
-
-/*    echo 'INSERT INTO `tb_category` (`id_menu`, `menu_code`, `level_menu`, `sort_menu`, `ref_id_menu`, `ref_id_sub`, `ref_id_site`, `ref_id_dept`, `name_menu`, `desc_menu`, `menu_adddate`, `ref_id_user_add`, `menu_editdate`, `ref_id_user_edit`, `status_menu`) VALUES';
-    $fetchRow = $obj->fetchRows("SELECT * FROM tb_category WHERE ref_id_site=1 AND ref_id_dept=7 ORDER BY id_menu ASC");
-    echo '<br />';
-    foreach($fetchRow as $key=>$value){
-      //$fetchRow[$key]['id_menu']
-      //(2, NULL, 1, NULL, NULL, NULL, 1, 7, 'Standard Weight (F1) (ตุ้มน้ำหนัก)', NULL, '2023-03-24 12:12:12', 1, NULL, NULL, 1),
-      echo "(NULL, NULL, 1, NULL, NULL, NULL, 5, 8, '".$fetchRow[$key]['name_menu']."', NULL, '2023-04-24 14:14:14', 1, NULL, NULL, 1),";
-      echo '<br />';
-    }*/
-    
     ?>
     <!-- Main content -->
 
@@ -663,19 +629,4 @@ if ( window.history.replaceState ) {
 </html>
 <?PHP 
 //$text;
-/*
-    if($_SESSION['sess_class_user']==5){
-      $id_del = array(103, 104);
-      foreach($id_del as $index=>$value){
-        //echo $value;        echo '<hr />';
-        echo 'DELETE FROM tb_maintenance_request WHERE id_maintenance_request='.$value.';<br />
-        DELETE FROM tb_attachment WHERE ref_id_used='.$value.';<br />
-        DELETE FROM tb_timeline WHERE ref_id_maintenance_request='.$value.';<br />
-        DELETE FROM tb_ref_repairer WHERE ref_id_maintenance_request='.$value.';<br />
-        DELETE FROM tb_satisfaction_survey WHERE ref_id_maintenance_request='.$value.';<br />
-        DELETE FROM tb_change_parts WHERE ref_id_maintenance_request='.$value.';<br />
-        DELETE FROM tb_outsite_repair WHERE ref_id_maintenance_request='.$value.';<br />';
-      }
-    }*/
-    
 ?>

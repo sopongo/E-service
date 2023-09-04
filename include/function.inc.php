@@ -297,5 +297,129 @@ function timeDifference($date,$date2){
     return $diff_minutes;
 }
 
+function dates_month($month, $year) {
+    $num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    $dates_month = array();
+
+    for ($i = 1; $i <= $num; $i++) {
+        $mktime = mktime(0, 0, 0,   $year,$month,$i,);
+        $date = $year.'-'.$month.'-'.$i;
+        $dates_month[$i] = $date;
+    }
+
+    return $dates_month;
+}
+
+function nowDates_month($month, $year) {
+    $num = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    $dates_month = array();
+    $nowDate = date('d');
+
+    for ($i = 1; $i <= $nowDate; $i++) {
+        $mktime = mktime(0, 0, 0,   $year,$month,$i,);
+        $date = $year.'-'.$month.'-'.$i;
+        $dates_month[$i] = $date;
+    }
+
+    return $dates_month;
+}
+
+function SortStatus($fetch){
+
+    $TotalWait_approved = 0;
+    $TotalNo_approved = 0;
+    $TotalRepairing = 0;
+    $TotalWait_repair = 0;
+    $TotalWait_accept = 0;
+    $TotalWait_hand_over = 0;
+    $TotalHand_over = 0;
+    $TotalCancel = 0;
+
+    foreach ($fetch as $key => $value) {
+
+        if ($value['status_approved'] == 0 && $value['allotted_date'] == null && $value['maintenance_request_status'] == 1
+            && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+            $TotalWait_approved++;
+        } else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+            && $value['allotted_accept_date'] == null && $value['ref_user_id_accept_request'] == null && $value['duration_serv_start'] == null
+            && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+            $TotalWait_accept++;
+        } else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+            && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] == null
+            && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+            $TotalWait_repair++;
+        } else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+            && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] != null
+            && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+            $TotalRepairing++;
+        } else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+            && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] != null
+            && $value['duration_serv_end'] != null && $value['hand_over_date'] == null) {
+            $TotalWait_hand_over++;
+        } else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+            && $value['duration_serv_start'] != null && $value['duration_serv_end'] != null && $value['hand_over_date'] != null) {
+            $TotalHand_over++;
+        } else if ($value['status_approved'] == 2 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+            && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+            $TotalNo_approved++;
+        } else if ($value['maintenance_request_status'] == 2) {
+            $TotalCancel++;
+        }
+
+    }
+
+    $arrTotal = array(
+        "Wait_approved" => $TotalWait_approved,
+        "Wait_accept" => $TotalWait_accept,
+        "Wait_repair" => $TotalWait_repair,
+        "Repairing" => $TotalRepairing,
+        "Wait_hand_over" => $TotalWait_hand_over,
+        "Hand_over" => $TotalHand_over,
+        "No_approved" => $TotalNo_approved,
+        "Cancel" => $TotalCancel,
+    );
+
+    return $arrTotal;
+
+}
+
+function DataTableStatus($value){
+
+    if ($value['status_approved'] == 0 && $value['allotted_date'] == null && $value['maintenance_request_status'] == 1
+    && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+    $req_textstatus = '<span class="text-bold text-danger">รออนุมัติ/จ่ายงาน</span>';
+} else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+    && $value['allotted_accept_date'] == null && $value['ref_user_id_accept_request'] == null && $value['duration_serv_start'] == null 
+    && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+    $req_textstatus = '<span class="text-bold text-danger">รอช่างรับงานซ่อม</span>';
+} else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+    && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] == null 
+    && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+$req_textstatus = '<span class="text-bold text-danger">รอซ่อม</span>';
+} else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+    && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] != null 
+    && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+    $req_textstatus = '<span class="text-bold text-success">กำลังซ่อม</span>';
+} else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+    && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] != null
+    && $value['duration_serv_end'] != null && $value['hand_over_date'] == null) {
+    $req_textstatus = '<span class="text-bold text-success"> งานรอส่งมอบ</span>';
+} else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+    && $value['duration_serv_start'] != null && $value['duration_serv_end'] != null && $value['hand_over_date'] != null) {
+    $req_textstatus = '<span class="text-bold text-success"> ปิดงานและส่งมอบแล้ว</span>';
+} else if ($value['status_approved'] == 2 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+    && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+    $req_textstatus = '<span class="text-bold text-danger">ไม่อนุมัติ</span>';
+} else if ($value['maintenance_request_status'] == 2) {
+    $req_textstatus = '<span class="text-bold text-gray">ยกเลิกใบแจ้งซ่อม</span>';
+} else {
+    $req_textstatus = '-';
+}
+
+return $req_textstatus;
+
+}
+
+
 
 ?>

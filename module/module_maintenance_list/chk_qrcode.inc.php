@@ -64,7 +64,6 @@
             LEFT JOIN tb_building ON (tb_building.id_building=tb_machine_site.ref_id_building) 
             LEFT JOIN tb_location ON (tb_location.id_location=tb_machine_site.ref_id_location) 
             WHERE tb_machine_site.ref_id_site=".$_SESSION['sess_ref_id_site']." AND tb_machine_master.ref_id_dept=".$_POST['ref_id_dept']."  AND tb_machine_site.status_machine_site=1 ");
-            ///AND (tb_machine_master.ref_id_site=".$_SESSION['sess_ref_id_site'].
             if (!empty($fetchMC)) {
                 $slt_machine.='<option value="">เลือกเครื่องจักร-อุปกรณ์</option>'; //disabled
                 foreach($fetchMC as $key=>$value) {

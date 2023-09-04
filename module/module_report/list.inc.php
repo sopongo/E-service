@@ -1,16 +1,20 @@
 <!-- Ekko Lightbox -->
-<script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>
-<!-- Ekko Lightbox -->
 <link rel="stylesheet" href="plugins/ekko-lightbox/ekko-lightbox.css">
 <!-- DataTables -->
 <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-<script src="plugins/autoNumeric/autoNumeric.js"></script>
 <!-- daterange picker -->
 <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
 <!-- SweetAlert2 -->
 <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+<!-- Select2 -->
+<link rel="stylesheet" href="plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+<!-- Ekko Lightbox -->
+<script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>
+<script src="plugins/autoNumeric/autoNumeric.js"></script>
 
 <style>
 .dataTables_length,
@@ -55,19 +59,39 @@ div.dataTables_wrapper {
 }
 
 .radioGroup {
-        display: inline-block;
-        margin-bottom: 10px;
-        margin-right: 10px;
-    }
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.container {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0px;
+}
 
 </style>
 
+<?php 
+    $fetchSelect = $obj -> fetchRows("SELECT DISTINCT(tb_dept.id_dept), tb_dept.dept_name
+    FROM tb_dept
+    LEFT JOIN tb_maintenance_request ON (tb_maintenance_request.ref_id_dept_responsibility = tb_dept.id_dept)
+    WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].";");
+
+    $fetchDept = $obj->fetchRows("SELECT tb_dept.* 
+    FROM tb_dept
+    WHERE dept_status=1");
+
+    $customDept = $obj-> customSelect("SELECT tb_dept.*
+    FROM tb_dept
+    WHERE tb_dept.id_dept = ".$_SESSION['sess_id_dept']."");
+
+?>
+
 <!-- Main content -->
 <section class="content">
-
     <!-- Default box -->
     <div class="card">
-
         <div class="card-header">
             <h6 class="display-8 d-inline-block font-weight-bold"><i class="fas fa-file-invoice"></i>
                 <?PHP echo $title_act; ?>
@@ -82,56 +106,59 @@ div.dataTables_wrapper {
             </div>
         </div>
 
-
-
         <div class="card-body">
-
             <form id="needs-validation" class="addform " name="addform" method="POST" enctype="multipart/form-data"
                 autocomplete="off" novalidate="">
 
                 <?php if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || $_SESSION['sess_class_user']==5){?>
-                <div class="row">
-                    <div class="col-12">
-                        <label for="exampleSelectRounded0">ประเภทใบแจ้งซ่อม:</label>
-                        <!-- radio -->
-                        <div class="form-group clearfix">
-
-                            <div class="radioGroup">
-                                <div class="icheck-primary d-inline">
-                                    <input type="radio" name="radio" id="all" value="all" checked>
-                                    <label for="all">
-                                        ทั้งหมด
-                                    </label>
-                                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4 col-xs-12">
+                            <div class="form-group">
+                                <label for="exampleSelectRounded0">ประเภทใบแจ้งซ่อม:</label>
+                                <select class="form-control select2" id="selectType" name="selectType">
+                                    <option selected="selected" id="all" value="all">ทั้งหมด</option>
+                                    <option id="person" value="person">ใบแจ้งซ่อมของคุณ</option>
+                                    <?php if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3){ ?>
+                                    <option id="responsible" value="responsible">ใบแจ้งซ่อมที่คุณรับผิดชอบ</option>
+                                    <?php }?>
+                                    <?php if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || $_SESSION['sess_class_user']==5){ ?>
+                                    <option id="dept" value="dept">ใบแจ้งซ่อมแผนก</option>
+                                    <?php }?>
+                                </select>
                             </div>
-                            <div class="radioGroup">
-                                <div class="icheck-success d-inline">
-                                    <input type="radio" name="radio" id="person" value="person">
-                                    <label for="person">
-                                        ใบแจ้งซ่อมของคุณ
-                                    </label>
-                                </div>
-                            </div>
-                            <?php if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5){?>
-                            <div class="radioGroup">
-                                <div class="icheck-success d-inline">
-                                    <input type="radio" name="radio" id="responsible" value="responsible">
-                                    <label for="responsible">
-                                        ใบแจ้งซ่อมที่คุณรับผิดชอบ
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="radioGroup">
-                                <div class="icheck-success d-inline">
-                                    <input type="radio" name="radio" id="dept" value="dept">
-                                    <label for="dept">
-                                        ใบแจ้งซ่อมแผนก
-                                    </label>
-                                </div>
-                            </div>
-                            <?php }?>
                         </div>
-                        <!-- radio -->
+                        <?php if($_SESSION['sess_class_user']==4 || $_SESSION['sess_class_user']==5){ ?>
+                        <div class="col-sm-4 col-md-4 col-xs-12 deptFilter" id="deptFilter">
+                            <div class="form-group">
+                                <label for="dept_request">แผนกที่รับผิดชอบงานแจ้งซ่อม:</label>
+                                <select class="form-control select2" id="selectDept_responsible"
+                                    name="selectDept_responsible">
+                                    <option selected="selected" value="0">ทั้งหมด</option>
+                                    <?php 
+                                            foreach($fetchSelect as $key=>$value){
+                                                echo '<option value="'.$value['id_dept'].'" >'.$value['dept_name'].'</option>';
+                                            }
+                                        ?>
+                                </select>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <?php if($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || $_SESSION['sess_class_user']==5){ ?>
+                        <div class="col-sm-4 col-md-4 col-xs-12 deptFilter" id="deptFilter">
+                            <div class="form-group">
+                                <label for="dept_request">แผนกที่ส่งใบแจ้งซ่อม:</label>
+                                <select class="form-control select2" id="selectDept_request" name="selectDept_request">
+                                    <option selected="selected" value="0">ทั้งหมด</option>
+                                    <?php 
+                                        foreach($fetchDept as $key=>$value){
+                                            echo '<option value="'.$value['id_dept'].'" >'.$value['dept_name'].'</option>';
+                                        }
+                                        ?>
+                                </select>
+                            </div>
+                        </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <?php }?>
@@ -141,7 +168,6 @@ div.dataTables_wrapper {
                         <label for="exampleSelectRounded0">สถานะ:</label>
                         <!-- radio -->
                         <div class="form-group clearfix">
-
                             <div class="radioGroup" id="checkGroup">
                                 <div class="icheck-primary d-inline">
                                     <input type="checkbox" class="checkbox" name="total" id="total" value="checked"
@@ -183,9 +209,8 @@ div.dataTables_wrapper {
                             </div>
                             <div class="radioGroup" id="checkGroup">
                                 <div class="icheck-warning d-inline">
-                                    <input type="checkbox" class="checkbox totalCheck" name="repairing"
-                                        id="repairing" value="checked" onclick="javascript:UncheckTotal(this)"
-                                        checked>
+                                    <input type="checkbox" class="checkbox totalCheck" name="repairing" id="repairing"
+                                        value="checked" onclick="javascript:UncheckTotal(this)" checked>
                                     <label for="repairing">
                                         กำลังซ่อม
                                     </label>
@@ -229,12 +254,9 @@ div.dataTables_wrapper {
                                     </label>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
-
                 <div class="row">
                     <div class="col-md-3">
                         <label for="exampleSelectRounded0">ช่วงวันที่แจ้งซ่อม:</label>
@@ -249,17 +271,16 @@ div.dataTables_wrapper {
                 </div>
             </form>
 
-            <!-- <a href="#" class="btn btn-success btn-block w-auto d-inline-block btn-send">
-                <b>ค้นหา</b>
-            </a> -->
+            <div class="row pt-3 p-2">
+                <a href="#" class="btn btn-success btn-block w-auto d-inline-block btn-showData">
+                    <b>ค้นหา</b>
+                </a>
+            </div>
 
             <div class="row pt-3 p-2">
                 <div class="col-sm-12 p-0 m-0">
-
                     <table id="example1" class="table table-bordered table-hover dataTable dtr-inline display nowrap"
                         style="width:1000px">
-                        <!-- dataTable dtr-inline -->
-                        <!--<table id="example1" class="display nowrap" style="width:100%">-->
                         <thead>
                             <tr class="bg-light">
                                 <th scope="col" class="sorting_disabled">No</th>
@@ -279,14 +300,10 @@ div.dataTables_wrapper {
                         <tbody>
                         </tbody>
                     </table>
-
                 </div>
             </div><!-- /.row -->
-
         </div><!-- /.card-body -->
-
     </div><!-- /.card -->
-
 </section>
 <!-- /.content -->
 
@@ -313,8 +330,34 @@ div.dataTables_wrapper {
 <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- SweetAlert2 -->
 <script src="plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- Select2 -->
+<script src="plugins/select2/js/select2.full.min.js"></script>
 
 <script type="text/javascript">
+
+$('.select2').select2({
+    theme: 'bootstrap4'
+})
+
+$(document).ready(function () {
+    // Disable the "deptFilter" elements initially
+    $("#selectDept_responsible").prop('disabled', true);
+    $("#selectDept_request").prop('disabled', true);
+    // Handle the change event of the select element
+    $("#selectType").change(function () {
+        // Check the selected value
+        var selectedValue = $(this).val();
+
+        // Enable or disable the "deptFilter" elements based on the selected value
+        if (selectedValue === "dept") {
+            $("#selectDept_responsible").prop('disabled', false);
+            $("#selectDept_request").prop('disabled', false);
+        } else {
+            $("#selectDept_responsible").prop('disabled', true);
+            $("#selectDept_request").prop('disabled', true);
+        }
+    });
+});
 
 function UncheckTotal(o) {
     var boxes = document.getElementsByName("total");
@@ -334,43 +377,42 @@ function checkAll(o) {
     }
 }
 
-$(document).ready(function () {
-    var startDate = moment().subtract(1, 'month');
-    var endDate = moment();
-    var maxDate = moment();
-    var Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timerProgressBar: true,
-        timer: 2000
-    });
-
-    $('#reservationtime').daterangepicker({
-        startDate: startDate,
-        endDate: endDate,
-        maxDate: maxDate,
-        timePicker: false,
-        timePicker24Hour: false,
-        locale: {
-            format: 'DD/MM/YYYY',
-            language: "th"
-        }
-    }).on('apply.daterangepicker', function (ev, picker) {
-        startDate = picker.startDate;
-        endDate = picker.endDate;
-        var diffInDays = endDate.diff(startDate, 'days');
-        var maxRangeInDays = moment.duration(1, 'month').asDays();
-        if (diffInDays > maxRangeInDays) {
-            endDate = startDate.clone().add(1, 'month');
-            Toast.fire({
-                icon: 'warning',
-                title: 'เลือกช่วงวันแจ้งซ่อมได้ไม่เกิน 1 เดือน'
-            })
-        }
-        $(this).data('daterangepicker').setEndDate(endDate);
-    });
+var startDate = moment().subtract(1, 'month');
+var endDate = moment();
+var maxDate = moment();
+var Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timerProgressBar: true,
+    timer: 2000
 });
+
+$('#reservationtime').daterangepicker({
+    startDate: startDate,
+    endDate: endDate,
+    maxDate: maxDate,
+    timePicker: false,
+    timePicker24Hour: false,
+    locale: {
+        format: 'DD/MM/YYYY',
+        language: "th"
+    }
+});
+// .on('apply.daterangepicker', function (ev, picker) {
+//     startDate = picker.startDate;
+//     endDate = picker.endDate;
+//     var diffInDays = endDate.diff(startDate, 'days');
+//     var maxRangeInDays = moment.duration(1, 'month').asDays();
+//     if (diffInDays > maxRangeInDays) {
+//         endDate = startDate.clone().add(1, 'month');
+//         Toast.fire({
+//             icon: 'warning',
+//             title: 'เลือกช่วงวันแจ้งซ่อมได้ไม่เกิน 1 เดือน'
+//         })
+//     }
+//     $(this).data('daterangepicker').setEndDate(endDate);
+// });
 
 $('#example1').DataTable({
     "scrollX": true,
@@ -394,6 +436,7 @@ $('#example1').DataTable({
         type: 'POST',
         data: function (data) {
             data.formData = $('#needs-validation').serialize();
+            data.dept = $('#dept').val();
             data.action = "module_list";
         },
         error: function (xhr, error, code) {
@@ -402,7 +445,11 @@ $('#example1').DataTable({
         async: false,
         cache: false,
     },
-    "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "ทั้งหมด"] ],
+    "lengthMenu": [
+        [10, 25, 50, 100, -1],
+        [10, 25, 50, 100, "ทั้งหมด"]
+    ],
+   
     "paging": true,
     "lengthChange": true, //ออฟชั่นแสดงผลต่อหน้า
     "pagingType": "simple_numbers",
@@ -415,8 +462,9 @@ $('#example1').DataTable({
     "buttons": ["excel", "colvis"]
 }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
-$(document).on("change", "input", function (event) {
+$('input[type=search]').attr('placeholder', 'ชื่อเครื่องจักร/อุปกรณ์, เลขที่ใบแจ้งซ่อม');
+
+$(document).on("click", ".btn-showData", function (event) {
     $('#example1').DataTable().ajax.reload();
 });
-
 </script>

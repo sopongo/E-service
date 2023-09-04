@@ -125,6 +125,7 @@ $(document).on('change','.JobID',function(){
     //$('#example1').DataTable().ajax.reload();
   });
 
+
   $('#some_button').click(function refreshData() {
     $('#example1').DataTable().ajax.reload();
   });

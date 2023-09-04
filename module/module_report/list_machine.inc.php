@@ -1,4 +1,3 @@
-<script src="plugins/autoNumeric/autoNumeric.js"></script>
 <!-- daterange picker -->
 <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
   <!-- Select2 -->
@@ -8,11 +7,19 @@
 <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <!-- SweetAlert2 -->
 <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+<link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+
+<!-- Google Chart -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<!-- HTML2 Canvas -->
+<script src="plugins/html2canvas/html2canvas.js"></script>
+<script src="plugins/html2canvas/html2canvas.min.js"></script>
+<script src="plugins/autoNumeric/autoNumeric.js"></script>
 
 <style type="text/css">
+
 .dataTables_length,
 .form-control-sm {
     font-size: 0.85rem;
@@ -76,17 +83,37 @@ a.disabled {
     pointer-events: none;
     cursor: default;
 }
-</style>
 
-<link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+.btn-saveChart {
+    cursor: pointer;
+}
+
+.nav-link {
+    cursor: pointer;
+}
+
+.btn-export {
+    width: auto;
+
+}
+
+@media screen and (max-width: 767px) {
+    div.dt-buttons {
+        float: none;
+        width: 100%;
+        text-align: left;
+        margin-bottom: .5em;
+    }
+}
+   
+</style>
 
 <?php 
 if($_SESSION['sess_class_user']==4 || $_SESSION['sess_class_user']==5){
     $fetchSelect = $obj -> fetchRows("SELECT DISTINCT(tb_dept.id_dept), tb_dept.dept_name
     FROM tb_dept
-    LEFT JOIN tb_machine_master ON (tb_machine_master.ref_id_dept = tb_dept.id_dept)
-    WHERE tb_machine_master.ref_id_site=".$_SESSION['sess_ref_id_site'].";");
+    LEFT JOIN tb_maintenance_request ON (tb_maintenance_request.ref_id_dept_responsibility = tb_dept.id_dept)
+    WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].";");
 }
 if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3){
     $fetchCategory = $obj->fetchRows("SELECT DISTINCT(tb_category.name_menu), tb_category.id_menu
@@ -100,9 +127,7 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
 ?>
 
 <section class="content">
-
     <div class="card">
-
         <div class="card-header">
             <h6 class="display-8 d-inline-block font-weight-bold"><i class="fas fa-chart-bar"></i>
                 <?PHP echo $title_act; ?>
@@ -118,7 +143,6 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
         </div>
 
         <div class="card-body">
-
             <form id="needs-validation" class="addform " name="addform" method="POST" enctype="multipart/form-data"
                 autocomplete="off" novalidate="">
 
@@ -131,9 +155,7 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
                                 <option selected="selected" value="0">ทั้งหมด</option>
                                 <?php 
                                 foreach($fetchSelect as $key=>$value){
-
                                     echo '<option value="'.$value['id_dept'].'" >'.$value['dept_name'].'</option>';
-
                                 }
                                 ?>
                             </select>
@@ -169,7 +191,7 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
                                     }
                                 }
                                 ?>
-                                <option value="none">ไม่ระบุ</option>
+                                <option value="none">ไม่ทราบชื่อ, ไม่ระบุ</option>
                             </select>
                         </div>
                     </div>
@@ -215,6 +237,12 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
                                             <div class="align-text-top ml-2 text-bold pt-2">Loading...</div>
                                         </div>
                                     </div>
+                                    <div class="dt-buttons btn-export flex-wrap">
+                                        <button class="btn btn-secondary buttons-excel buttons-html5 btn-saveChart"
+                                            type="button">
+                                            <i class="fas fa-download"></i><span> Export PNG</span>
+                                        </button>
+                                    </div>
                                     <div id="chart_script"></div>
                                     <div id="dashboard_div" class="dashboard_div d-none">
                                         <div class="chart">
@@ -229,9 +257,7 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
                                 </div>
                                 <!-- /.tab-pane -->
                                 <div class="tab-pane" id="tab_2">
-
                                     <div class="col-sm-12 p-0 m-0">
-
                                         <table id="example1"
                                             class="table table-bordered table-hover dataTable dtr-inline display nowrap"
                                             style="width:1000px">
@@ -256,9 +282,7 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
                                             <tbody>
                                             </tbody>
                                         </table>
-
                                     </div>
-
                                 </div>
                                 <!-- /.tab-pane -->
                             </div>
@@ -269,11 +293,8 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
                 </div>
                 <!-- /.col -->
             </div>
-
         </div>
-
     </div>
-
 </section>
 
 <!-- InputMask -->
@@ -308,42 +329,44 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
         theme: 'bootstrap4'
     })
 
-    $(document).ready(function () {
-        var startDate = moment().subtract(1, 'month');
-        var endDate = moment();
-        var maxDate = moment();
-        var Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timerProgressBar: true,
-            timer: 2000
-        });
+    var startDate = moment().subtract(1, 'month');
+    var endDate = moment();
+    var maxDate = moment();
+    var Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 2000
+    });
 
-        $('#reservationtime').daterangepicker({
-            startDate: startDate,
-            endDate: endDate,
-            maxDate: maxDate,
-            timePicker: false,
-            timePicker24Hour: false,
-            locale: {
-                format: 'DD/MM/YYYY',
-                language: "th"
-            }
-        }).on('apply.daterangepicker', function (ev, picker) {
-            startDate = picker.startDate;
-            endDate = picker.endDate;
-            var diffInDays = endDate.diff(startDate, 'days');
-            var maxRangeInDays = moment.duration(1, 'month').asDays();
-            if (diffInDays > maxRangeInDays) {
-                endDate = startDate.clone().add(1, 'month');
-                Toast.fire({
-                    icon: 'warning',
-                    title: 'เลือกช่วงวันแจ้งซ่อมได้ไม่เกิน 1 เดือน'
-                })
-            }
-            $(this).data('daterangepicker').setEndDate(endDate);
-        });
+    $('#reservationtime').daterangepicker({
+        startDate: startDate,
+        endDate: endDate,
+        maxDate: maxDate,
+        timePicker: false,
+        timePicker24Hour: false,
+        locale: {
+            format: 'DD/MM/YYYY',
+            language: "th"
+        }
+    });
+    // .on('apply.daterangepicker', function (ev, picker) {
+    //     startDate = picker.startDate;
+    //     endDate = picker.endDate;
+    //     var diffInDays = endDate.diff(startDate, 'days');
+    //     var maxRangeInDays = moment.duration(1, 'month').asDays();
+    //     if (diffInDays > maxRangeInDays) {
+    //         endDate = startDate.clone().add(1, 'month');
+    //         Toast.fire({
+    //             icon: 'warning',
+    //             title: 'เลือกช่วงวันแจ้งซ่อมได้ไม่เกิน 1 เดือน'
+    //         })
+    //     }
+    //     $(this).data('daterangepicker').setEndDate(endDate);
+    // });
+
+    $(document).ready(function () {
 
         var frmData = $("form#needs-validation").serialize();
 
@@ -369,7 +392,6 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
                 $("#barChart").fadeIn(500);
                 $(".loading").addClass('d-none').fadeOut(500);
                 event.stopPropagation();
-                console.log(data);
             },
             error: function (data) {
                 console.log(data);
@@ -383,7 +405,6 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
 
         var dept = dept.value;
 
-
         $.ajax({
             url: "module/module_report/ajax_action.php",
             type: "POST",
@@ -393,7 +414,6 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
             },
             success: function (data) {
                 $("#menu").html(data);
-                console.log(data);
                 //return false;
             },
             error: function (data) {
@@ -401,13 +421,11 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
                 sweetAlert("ผิดพลาด!", "ไม่สามารถแสดงผลข้อมูลได้", "error");
             }
         });
-
     }
 
     $(document).on("click", ".btn-showData", function () {
 
         $('#example1').DataTable().ajax.reload();
-
         var frmData = $("form#needs-validation").serialize();
 
         $.ajax({
@@ -420,33 +438,47 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
             beforeSend: function () {
                 $("#dept").prop("disabled", true);
                 $("#menu").prop("disabled", true);
-                // $(".dashboard_div").addClass('d-none');
-                // $(".loading").removeClass('d-none').fadeIn(50);
-                // $("#barChart").hide();
             },
             success: function (data) {
                 $("#dept").prop("disabled", false);
                 $("#menu").prop("disabled", false);
                 $("#chart_script").html(data);
-                // $(".dashboard_div").removeClass('d-none');
-                // $("#barChart").fadeIn(500);
-                // $(".loading").addClass('d-none').fadeOut(500);
                 event.stopPropagation();
-                console.log(data);
             },
             error: function (data) {
                 console.log(data);
                 sweetAlert("ผิดพลาด!", "ไม่สามารถแสดงผลข้อมูลได้", "error");
             }
         });
+    });
 
+    $(document).on("click", ".btn-saveChart", function (event) {
 
+        var dashboardElement = document.getElementById("dashboard_div");
+        // สร้างองค์ประกอบแคนวาส
+        var canvas = document.createElement("canvas");
+        canvas.width = dashboardElement.offsetWidth;
+        canvas.height = dashboardElement.offsetHeight;
+
+        // แสดงผลลัพธ์ขององค์ประกอบ "dashboard" บนแคนวาส
+        html2canvas(dashboardElement).then(function (canvas) {
+            // แปลงแคนวาสเป็นรูปภาพ PNG
+            var imageData = canvas.toDataURL("image/png");
+
+            // สร้างองค์ประกอบลิงก์ชั่วคราว
+            var link = document.createElement("a");
+            link.href = imageData;
+            link.download = Date.now() + ".png";
+            link.target = "_blank";
+
+            // เรียกใช้การดาวน์โหลด
+            link.click();
+        });
     });
 
     $(document).on("click", "#tab", function (event) {
 
         $('#example1').DataTable().ajax.reload();
-
         var frmData = $("form#needs-validation").serialize();
 
         $.ajax({
@@ -467,20 +499,20 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
             success: function (data) {
                 $("#dept").prop("disabled", false);
                 $("#menu").prop("disabled", false);
-                $("#tab").removeClass('disabled');
+                setTimeout(function () {
+                    $("#tab").removeClass('disabled');
+                }, 1000);
                 $("#chart_script").html(data);
                 $(".dashboard_div").removeClass('d-none');
                 $("#barChart").fadeIn(500);
                 $(".loading").addClass('d-none').fadeOut(500);
                 event.stopPropagation();
-                console.log(data);
             },
             error: function (data) {
                 console.log(data);
                 sweetAlert("ผิดพลาด!", "ไม่สามารถแสดงผลข้อมูลได้", "error");
             }
         });
-
     });
 
     $('#example1').DataTable({
@@ -505,6 +537,7 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
             type: 'POST',
             data: function (data) {
                 data.formData = $('#needs-validation').serialize();
+                data.dept = $("#dept").val();
                 data.action = "module_machine";
             },
             error: function (xhr, error, code) {
@@ -528,4 +561,6 @@ if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSI
         //"responsive": true,
         "buttons": ["excel", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+    $('input[type=search]').attr('placeholder', 'ชื่อเครื่องจักร/อุปกรณ์, เลขที่ใบแจ้งซ่อม');
 </script>

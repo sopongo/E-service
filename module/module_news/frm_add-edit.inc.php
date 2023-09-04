@@ -49,7 +49,7 @@
                                 <div class="icheck-success d-inline-block mr-4"><input type="checkbox" name="pin_allpage" id="pin_allpage" value="2"><label for="pin_allpage">ปักหมุด (แสดงผลทุกหน้า)</label></div>
                             </div>
                         </div>  
-                        </div><!--row-1-->
+                        </div><!--row-1-->                        
 
                         <div class="row row-4">
                             <div class="col-sm-12 col-md-12 col-xs-12">  

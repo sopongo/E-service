@@ -96,7 +96,7 @@ if ($action=="edit") {
         //tb_category   id_menu, menu_code, level_menu, sort_menu, ref_id_menu, ref_id_sub, ref_id_dept, name_menu, desc_menu, menu_adddate, ref_id_user_add, menu_editdate, ref_id_user_edit, status_menu
 
         $slt_ref_id_menu = '';
-        $fetchRow = $obj->fetchRows("SELECT * FROM tb_category WHERE tb_category.ref_id_dept=".$rowData['ref_id_dept']." AND tb_category.level_menu=1 AND tb_category.status_menu=1");
+        $fetchRow = $obj->fetchRows("SELECT * FROM tb_category WHERE tb_category.ref_id_dept=".$rowData['ref_id_dept']." AND tb_category.level_menu=1 AND tb_category.status_menu=1 AND ref_id_site = ".$_SESSION['sess_ref_id_site']." ");
         if (!empty($fetchRow)) {
             $slt_ref_id_menu.='<option value="" selected>เลือกหมวดหลัก</option>'; //disabled
             foreach($fetchRow as $key=>$value) {
@@ -116,7 +116,7 @@ if ($action=="edit") {
         $slt_ref_id_menu = '';
         $id_dept_val = (!empty($_POST['id_dept_val'])) ? $_POST['id_dept_val'] : '';
         if (!empty($id_dept_val)){        
-            $fetchRow = $obj->fetchRows("SELECT * FROM tb_category WHERE tb_category.ref_id_dept=".$id_dept_val." AND tb_category.level_menu=1 AND tb_category.status_menu=1");
+            $fetchRow = $obj->fetchRows("SELECT * FROM tb_category WHERE tb_category.ref_id_dept=".$id_dept_val." AND tb_category.level_menu=1 AND tb_category.status_menu=1 AND ref_id_site = ".$_SESSION['sess_ref_id_site']." ");
             if (!empty($fetchRow)) {
                 $slt_ref_id_menu.='<option value="" selected>เลือกหมวดหลัก</option>'; //disabled
                 foreach($fetchRow as $key=>$value) {

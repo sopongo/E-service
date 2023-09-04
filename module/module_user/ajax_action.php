@@ -25,9 +25,6 @@
             echo 'mail_dup';
             exit();
         }
-
-        //echo '<pre>'; print_r($output); echo '</pre>'; exit();
-
         $output['password_regis'] = sha1($keygen.$output['password_regis']); //เก็บรหัสผ่านในรูปแบบ sha1 
         $insertRow = [
             'no_user' => (!empty($output['no_user'])) ? $output['no_user'] : '',
@@ -51,16 +48,6 @@
             'ip_address' => NULL,
         ];
         $rowID = $obj->addRow($insertRow, "tb_user");
-
-        if($rowID!=NULL){
-            $insertRow = [				
-                'ref_id_user' => $rowID,
-                'ref_id_webapp' => (!empty($output['ref_id_webapp'])) ? $output['ref_id_webapp'] : '',
-                'status_license' => 2,
-            ];
-            $rowLicense = $obj->addRow($insertRow, "tb_user_license");
-        }
-
         if($rowID!=NULL){
             $insertRow = [				
                 'ref_id_user' => $rowID,

@@ -1,62 +1,104 @@
 <!-- Ekko Lightbox -->
-<script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>
-<!-- Ekko Lightbox -->
 <link rel="stylesheet" href="plugins/ekko-lightbox/ekko-lightbox.css">
 <!-- DataTables -->
 <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-<script src="plugins/autoNumeric/autoNumeric.js"></script>
 <!-- daterange picker -->
 <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
 <!-- Select2 -->
 <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
 <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <!-- SweetAlert2 -->
 <link rel="stylesheet" href="plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 
+<!-- Ekko Lightbox -->
+<script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>
+<!-- HTML2 Canvas -->
+<script src="plugins/html2canvas/html2canvas.js"></script>
+<script src="plugins/html2canvas/html2canvas.min.js"></script>
+<!-- Google Chart -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="plugins/autoNumeric/autoNumeric.js"></script>
+
 <style>
-.dataTables_length, .form-control-sm{  font-size:0.85rem; /* 40px/16=2.5em */
+.dataTables_length,
+.form-control-sm {
+    font-size: 0.85rem;
+    /* 40px/16=2.5em */
 }
-.table, .dataTable tr td{  padding:0.55rem 0.50rem;  margin:0;}
 
-.btn-sm{ padding:0.10rem 0.40rem 0.20rem 0.40rem; margin:0.0rem 0.0rem;}
+.table,
+.dataTable tr td {
+    padding: 0.55rem 0.50rem;
+    margin: 0;
+}
 
-.dt-buttons button{font-size:0.85rem; /* 40px/16=2.5em */}
+.btn-sm {
+    padding: 0.10rem 0.40rem 0.20rem 0.40rem;
+    margin: 0.0rem 0.0rem;
+}
 
-.dropdown-menu{  /*left:-70px;*/}
-.dropdown-menu a.dropdown-item{  font-size:0.85rem; /* 40px/16=2.5em */ }
+.dt-buttons button {
+    font-size: 0.85rem;
+    /* 40px/16=2.5em */
+}
+
+.dropdown-menu {
+    /*left:-70px;*/
+}
+
+.dropdown-menu a.dropdown-item {
+    font-size: 0.85rem;
+    /* 40px/16=2.5em */
+}
 
 div.dataTables_wrapper {
-        width:100%;
-        /*background-color:#FCC;*/
-        margin:0 auto;
-    }
+    width: 100%;
+    /*background-color:#FCC;*/
+    margin: 0 auto;
+}
 
-.dataTables_scrollBody{ margin-bottom:5px;}
+.dataTables_scrollBody {
+    margin-bottom: 5px;
+}
 
 .radioGroup {
-        display: inline-block;
-        margin-bottom: 10px;
-        margin-right: 10px;
-    }
-    .divloading {
-        height: 500px;
-        width: 100%;
-    }
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
 
-    .center {
-        justify-content: center;
-        align-items: center;
-        display: flex;
-        height: 250px;
+.divloading {
+    height: 500px;
+    width: 100%;
+}
+
+.center {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 250px;
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+.btn-export {
+    width: auto;
+
+}
+
+@media screen and (max-width: 767px) {
+    div.dt-buttons {
+        float: none;
+        width: 100%;
+        text-align: left;
+        margin-bottom: .5em;
     }
-    a.disabled {
-        pointer-events: none;
-        cursor: default;
-    }
-   
+}   
 </style>
 
 <?php 
@@ -68,12 +110,10 @@ WHERE tb_dept.dept_status=1 ;");
 ?>
 <!-- Main content -->
 <section class="content">
-
     <!-- Default box -->
     <div class="card">
-
         <div class="card-header">
-            <h6 class="display-8 d-inline-block font-weight-bold"><i class="fas fa-file-invoice"></i>
+            <h6 class="display-8 d-inline-block font-weight-bold"><i class="fas fa-users"></i>
                 <?PHP echo $title_act; ?>
             </h6>
             <div class="card-tools">
@@ -87,10 +127,8 @@ WHERE tb_dept.dept_status=1 ;");
         </div>
 
         <div class="card-body">
-
             <form id="needs-validation" class="addform " name="addform" method="POST" enctype="multipart/form-data"
                 autocomplete="off" novalidate="">
-
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
@@ -130,10 +168,12 @@ WHERE tb_dept.dept_status=1 ;");
                     <div class="card card-warning card-outline staticData">
                         <div class="card-header d-flex p-0">
                             <h3 class="card-title p-3"><i class="far fa-chart-bar"></i>
-                                สถิติการแจ้งซ่อมของผู้ใช้งานตามแต่ละแผนก</h3>
+                                สถิติการแจ้งซ่อมของผู้ใช้งานแต่ละแผนก</h3>
                             <ul class="nav nav-pills ml-auto p-2">
-                                <li class="nav-item"><a class="nav-link active" href="#tab_1" id="tab" data-toggle="tab">แผนภูมิ</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#tab_2" id="tab" data-toggle="tab">ตาราง</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="#tab_1" id="tab"
+                                        data-toggle="tab">แผนภูมิ</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#tab_2" id="tab"
+                                        data-toggle="tab">ตาราง</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -144,6 +184,12 @@ WHERE tb_dept.dept_status=1 ;");
                                             <div class="align-text-top ml-2 text-bold pt-2">Loading...</div>
                                         </div>
                                     </div>
+                                    <div class="flex-wrap btn-export dt-buttons">
+                                        <button class="btn btn-secondary buttons-excel buttons-html5 btn-saveChart"
+                                            type="button">
+                                            <i class="fas fa-download"></i> Export PNG
+                                        </button>
+                                    </div>
                                     <div id="chart_script"></div>
                                     <div id="dashboard_div" class="dashboard_div d-none">
                                         <div class="chart">
@@ -153,37 +199,35 @@ WHERE tb_dept.dept_status=1 ;");
                                 </div>
                                 <!-- /.tab-pane -->
                                 <div class="tab-pane" id="tab_2">
-        
-                                        <div class="col-sm-12 p-0 m-0">
 
-                                            <table id="example1"
-                                                class="table table-bordered table-hover dataTable dtr-inline display nowrap"
-                                                style="width:1000px">
-                                                <!-- dataTable dtr-inline -->
-                                                <!--<table id="example1" class="display nowrap" style="width:100%">-->
-                                                <thead>
-                                                    <tr class="bg-light">
-                                                        <th scope="col" class="sorting_disabled">No</th>
-                                                        <th scope="col">แผนกที่แจ้งซ่อม</th>
-                                                        <th scope="col">เลขที่ใบแจ้งซ่อม</th>
-                                                        <th scope="col">วันที่แจ้งซ่อม</th>
-                                                        <th scope="col">สถานะ</th>
-                                                        <th scope="col">รหัสเครื่องจักร-อุปกรณ์</th>
-                                                        <th scope="col">ชื่อเครื่องจักร-อุปกรณ์</th>
-                                                        <th scope="col">ประเภทเครื่องจักร-อุปกรณ์</th>
-                                                        <th scope="col">อาการเสีย/ปัญหาที่พบ</th>
-                                                        <th scope="col">ภาพแจ้งซ่อม</th>
-                                                        <th scope="col">แผนกที่รับผิดชอบ</th>
-                                                        <th scope="col">ประเภทงานซ่อม</th>
-                                                        <th scope="col">เกี่ยวกับความปลอดภัย</th>  
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
+                                    <div class="col-sm-12 p-0 m-0">
 
-                                        </div>
-                                 
+                                        <table id="example1"
+                                            class="table table-bordered table-hover dataTable dtr-inline display nowrap"
+                                            style="width:1000px">
+                                            <!-- dataTable dtr-inline -->
+                                            <!--<table id="example1" class="display nowrap" style="width:100%">-->
+                                            <thead>
+                                                <tr class="bg-light">
+                                                    <th scope="col" class="sorting_disabled">No</th>
+                                                    <th scope="col">แผนกที่แจ้งซ่อม</th>
+                                                    <th scope="col">เลขที่ใบแจ้งซ่อม</th>
+                                                    <th scope="col">วันที่แจ้งซ่อม</th>
+                                                    <th scope="col">สถานะ</th>
+                                                    <th scope="col">รหัสเครื่องจักร-อุปกรณ์</th>
+                                                    <th scope="col">ชื่อเครื่องจักร-อุปกรณ์</th>
+                                                    <th scope="col">ประเภทเครื่องจักร-อุปกรณ์</th>
+                                                    <th scope="col">อาการเสีย/ปัญหาที่พบ</th>
+                                                    <th scope="col">ภาพแจ้งซ่อม</th>
+                                                    <th scope="col">แผนกที่รับผิดชอบ</th>
+                                                    <th scope="col">ประเภทงานซ่อม</th>
+                                                    <th scope="col">เกี่ยวกับความปลอดภัย</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 <!-- /.tab-pane -->
                             </div>
@@ -194,11 +238,8 @@ WHERE tb_dept.dept_status=1 ;");
                 </div>
                 <!-- /.col -->
             </div>
-
         </div><!-- /.card-body -->
-
     </div><!-- /.card -->
-
 </section>
 <!-- /.content -->
 
@@ -234,19 +275,18 @@ $('.select2').select2({
     theme: 'bootstrap4'
 })
 
-$(document).ready(function () {
-    var startDate = moment().subtract(1, 'month');
-    var endDate = moment();
-    var maxDate = moment();
-    var Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timerProgressBar: true,
-        timer: 2000
-    });
+var startDate = moment().subtract(1, 'month');
+var endDate = moment();
+var maxDate = moment();
+var Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timerProgressBar: true,
+    timer: 2000
+});
 
-    $('#reservationtime').daterangepicker({
+$('#reservationtime').daterangepicker({
         startDate: startDate,
         endDate: endDate,
         maxDate: maxDate,
@@ -256,28 +296,33 @@ $(document).ready(function () {
             format: 'DD/MM/YYYY',
             language: "th"
         }
-    }).on('apply.daterangepicker', function (ev, picker) {
-        startDate = picker.startDate;
-        endDate = picker.endDate;
-        var diffInDays = endDate.diff(startDate, 'days');
-        var maxRangeInDays = moment.duration(1, 'month').asDays();
-        if (diffInDays > maxRangeInDays) {
-            endDate = startDate.clone().add(1, 'month');
-            Toast.fire({
-                icon: 'warning',
-                title: 'เลือกช่วงวันแจ้งซ่อมได้ไม่เกิน 1 เดือน'
-            })
-        }
-        $(this).data('daterangepicker').setEndDate(endDate);
     });
+    // .on('apply.daterangepicker', function (ev, picker) {
+    //     startDate = picker.startDate;
+    //     endDate = picker.endDate;
+    //     var diffInDays = endDate.diff(startDate, 'days');
+    //     var maxRangeInDays = moment.duration(1, 'month').asDays();
+    //     if (diffInDays > maxRangeInDays) {
+    //         endDate = startDate.clone().add(1, 'month');
+    //         Toast.fire({
+    //             icon: 'warning',
+    //             title: 'เลือกช่วงวันแจ้งซ่อมได้ไม่เกิน 1 เดือน'
+    //         })
+    //     };
+    //     $('#reservationtime').data('daterangepicker').setEndDate(endDate);
+    // });
+
+$(document).ready(function () {
 
     var frmData = $("form#needs-validation").serialize();
+    var dept = $("#dept").val();
 
     $.ajax({
         url: "module/module_report/ajax_action.php",
         type: "POST",
         data: {
             "data": frmData,
+            "dept": dept,
             "action": 'user_chart'
         },
         beforeSend: function () {
@@ -295,91 +340,101 @@ $(document).ready(function () {
             $("#barChart").fadeIn(500);
             $(".loading").addClass('d-none').fadeOut(500);
             event.stopPropagation();
-            //  console.log(data);
         },
         error: function (data) {
             console.log(data);
             sweetAlert("ผิดพลาด!", "ไม่สามารถแสดงผลข้อมูลได้", "error");
         }
     });
-
 });
 
-$(document).on("change", "form", function (event) {
+$(document).on("change", "form#needs-validation", function (event) {
 
     $('#example1').DataTable().ajax.reload();
-
     var frmData = $("form#needs-validation").serialize();
+    var dept = $("#dept").val();
 
     $.ajax({
         url: "module/module_report/ajax_action.php",
         type: "POST",
         data: {
             "data": frmData,
+            "dept": dept,
             "action": 'user_chart'
         },
         beforeSend: function () {
             $("#dept").prop("disabled", true);
             $("#menu").prop("disabled", true);
-            // $(".dashboard_div").addClass('d-none');
-            // $(".loading").removeClass('d-none').fadeIn(50);
-            // $("#barChart").hide();
         },
         success: function (data) {
             $("#dept").prop("disabled", false);
             $("#menu").prop("disabled", false);
             $("#chart_script").html(data);
-            // $(".dashboard_div").removeClass('d-none');
-            // $("#barChart").fadeIn(500);
-            // $(".loading").addClass('d-none').fadeOut(500);
+            console.log(data);
             event.stopPropagation();
-            // console.log(data);
         },
         error: function (data) {
             console.log(data);
             sweetAlert("ผิดพลาด!", "ไม่สามารถแสดงผลข้อมูลได้", "error");
         }
+    });
+});
+
+$(document).on("click", ".btn-saveChart", function (event) {
+
+    var dashboardElement = document.getElementById("dashboard_div");
+    // สร้างองค์ประกอบแคนวาส
+    var canvas = document.createElement("canvas");
+    canvas.width = dashboardElement.offsetWidth;
+    canvas.height = dashboardElement.offsetHeight;
+
+    // แสดงผลลัพธ์ขององค์ประกอบ "dashboard" บนแคนวาส
+    html2canvas(dashboardElement).then(function (canvas) {
+        // แปลงแคนวาสเป็นรูปภาพ PNG
+        var imageData = canvas.toDataURL("image/png");
+
+        // สร้างองค์ประกอบลิงก์ชั่วคราว
+        var link = document.createElement("a");
+        link.href = imageData;
+        link.download = Date.now() + ".png";
+        link.target = "_blank";
+
+        // เรียกใช้การดาวน์โหลด
+        link.click();
     });
 });
 
 $(document).on("click", "#tab", function (event) {
 
     $('#example1').DataTable().ajax.reload();
-
     var frmData = $("form#needs-validation").serialize();
+    var dept = $("#dept").val();
 
     $.ajax({
         url: "module/module_report/ajax_action.php",
         type: "POST",
         data: {
             "data": frmData,
+            "dept": dept,
             "action": 'user_chart'
         },
         beforeSend: function () {
             $("#dept").prop("disabled", true);
             $("#menu").prop("disabled", true);
             $("#tab").addClass('disabled');
-            $(".dashboard_div").addClass('d-none');
-            $(".loading").removeClass('d-none').fadeIn(50);
-            $("#barChart").hide();
         },
         success: function (data) {
             $("#dept").prop("disabled", false);
             $("#menu").prop("disabled", false);
             $("#tab").removeClass('disabled');
             $("#chart_script").html(data);
-            $(".dashboard_div").removeClass('d-none');
-            $("#barChart").fadeIn(500);
-            $(".loading").addClass('d-none').fadeOut(500);
             event.stopPropagation();
-            // console.log(data);
         },
         error: function (data) {
             console.log(data);
             sweetAlert("ผิดพลาด!", "ไม่สามารถแสดงผลข้อมูลได้", "error");
         }
     });
-
 });
 
 $('#example1').DataTable({
@@ -404,6 +459,7 @@ $('#example1').DataTable({
         type: 'POST',
         data: function (data) {
             data.formData = $('#needs-validation').serialize();
+            data.dept = $("#dept").val();
             data.action = "module_user";
         },
         error: function (xhr, error, code) {
@@ -427,4 +483,6 @@ $('#example1').DataTable({
     //"responsive": true,
     "buttons": ["excel", "colvis"]
 }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+$('input[type=search]').attr('placeholder', 'ชื่อเครื่องจักร/อุปกรณ์, เลขที่ใบแจ้งซ่อม');
 </script>

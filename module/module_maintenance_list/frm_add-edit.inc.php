@@ -55,10 +55,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
                     <div class="card-header bg-primary text-white p-2"><p class="card-title text-size-1">กรอกรายละเอียด</p></div>
                     <div class="card-body p-3"> 
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
                     <div class="row row-1">
                         <div class="col-sm-4 col-md-4 col-xs-4">  
                             <div class="form-group">
@@ -212,6 +209,7 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
 <script>
 
   $(function () {
+
     $('#our-test').MultiFile({
         max: 6,
         onFileChange: function(){
@@ -220,10 +218,13 @@ img.MultiFile-preview{ display:block; padding:6px; border:1px solid #ccc; margin
     });
 
     //Initialize Select2 Elements
-    $('.select2').select2({});
+    $('.select2').select2({
+    });
 
     //Initialize Select2 Elements
-    $('.select2bs4').select2({ theme: 'bootstrap4'})
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
   });
 
   //select2-search__field
@@ -403,7 +404,7 @@ docReady(function () {
             //console.log(`Scan result ${decodedText}`, decodedResult);
             //resultContainer.innerHTML += `<div>[${countResults}] - ${decodedText}</div>`;        
             // Optional: To close the QR code scannign after the result is found
-            //html5QrcodeScanner.clear();
+            //html5QrcodeScanner.clear();            
         }
     }
 

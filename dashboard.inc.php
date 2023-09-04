@@ -39,6 +39,18 @@ div.dataTables_wrapper {
 .dataTables_scrollBody {
   margin-bottom: 5px;
 }
+@media (min-width: 100px) {
+  .testw{ width: 100%; }
+}
+@media (min-width: 391px) {
+  .testw{ width: 50%; }
+}
+@media (min-width: 768px) {
+  .testw{ width: 30%; }
+}
+@media (min-width: 1200px) {
+  .testw{ width: 20%; }
+}
 </style>
 <!-- Ekko Lightbox -->
 <script src="plugins/ekko-lightbox/ekko-lightbox.js"></script>  
@@ -62,106 +74,153 @@ div.dataTables_wrapper {
         </div>
 
 
-<<<<<<< Updated upstream
-      <?PHP     
-=======
       <?PHP
+        $query_req = '';
+        $TotalWait_approved = 0;
+        $TotalNo_approved = 0;
+        $TotalRepairing = 0;
+        $TotalWait_repair = 0;
+        $TotalWait_accept = 0;
+        $TotalWait_hand_over = 0;
+        $TotalHand_over = 0;
+        $TotalCancel = 0;
+        
+        switch($_SESSION['sess_class_user']){
+          case 1:
+              $query_req = "AND (tb_maintenance_request.ref_id_user_request=".$_SESSION['sess_id_user'].")";
+          break;
+          case 2:
+          case 3:
+              $query_req = "AND (tb_ref_repairer.ref_id_user_repairer=" . $_SESSION['sess_id_user'] . " OR tb_maintenance_request.ref_id_user_request=" . $_SESSION['sess_id_user'] . ")";
+          break;
+          case 4:
+          case 5:
+              $query_req = "AND tb_maintenance_request.id_maintenance_request IS NOT NULL ";
+          break;
+      }
 
-      $query_dept ='';
-      $query_user ='';
-      $query_repairer='';
-      if($_SESSION['sess_class_user']==1 || $_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==4 || $_SESSION['sess_class_user']==5){ ##11
-        if($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3){
-          $query_dept = " AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']."";
-          $query_repairer = " AND tb_ref_repairer.ref_id_user_repairer = ".$_SESSION['sess_id_user']." ";
-        }if($_SESSION['sess_class_user']==1){
-          $query_user = " AND tb_maintenance_request.ref_id_user_request = ".$_SESSION['sess_id_user']."";          
-        }if($_SESSION['sess_class_user']==5){
-          $query_repairer = " AND tb_ref_repairer.ref_id_user_repairer = ".$_SESSION['sess_id_user']." ";       
+      $sql_fetchRow = "SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
+      tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine FROM tb_maintenance_request
+      LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
+      LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
+      LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)
+      LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
+      LEFT JOIN tb_ref_repairer ON (tb_maintenance_request.id_maintenance_request = tb_ref_repairer.ref_id_maintenance_request)
+      WHERE tb_maintenance_request.ref_id_site_request=" . $_SESSION['sess_ref_id_site'] . " 
+      " . $query_req . "" ;
+
+      $fetchRowTotal = $obj->fetchRows($sql_fetchRow);
+
+      if(!empty($fetchRowTotal)){
+        foreach($fetchRowTotal as $key => $value){
+
+            if ($fetchRowTotal[$key]['status_approved'] == 0 && $fetchRowTotal[$key]['allotted_date'] == null && $fetchRowTotal[$key]['maintenance_request_status'] == 1
+              && $fetchRowTotal[$key]['duration_serv_end'] == null && $fetchRowTotal[$key]['hand_over_date'] == null) {
+                $TotalWait_approved++;
+            } else if ($fetchRowTotal[$key]['status_approved'] == 1 && $fetchRowTotal[$key]['allotted_date'] != null && $fetchRowTotal[$key]['maintenance_request_status'] == 1
+              && $fetchRowTotal[$key]['allotted_accept_date'] == null && $fetchRowTotal[$key]['ref_user_id_accept_request'] == null && $fetchRowTotal[$key]['duration_serv_start'] == null 
+              && $fetchRowTotal[$key]['duration_serv_end'] == null && $fetchRowTotal[$key]['hand_over_date'] == null) {
+                $TotalWait_accept++;
+            } else if ($fetchRowTotal[$key]['status_approved'] == 1 && $fetchRowTotal[$key]['allotted_date'] != null && $fetchRowTotal[$key]['maintenance_request_status'] == 1
+              && $fetchRowTotal[$key]['allotted_accept_date'] != null && $fetchRowTotal[$key]['ref_user_id_accept_request'] != null && $fetchRowTotal[$key]['duration_serv_start'] == null 
+              && $fetchRowTotal[$key]['duration_serv_end'] == null && $fetchRowTotal[$key]['hand_over_date'] == null) {
+                $TotalWait_repair++;
+            } else if ($fetchRowTotal[$key]['status_approved'] == 1 && $fetchRowTotal[$key]['allotted_date'] != null && $fetchRowTotal[$key]['maintenance_request_status'] == 1
+              && $fetchRowTotal[$key]['allotted_accept_date'] != null && $fetchRowTotal[$key]['ref_user_id_accept_request'] != null && $fetchRowTotal[$key]['duration_serv_start'] != null 
+              && $fetchRowTotal[$key]['duration_serv_end'] == null && $fetchRowTotal[$key]['hand_over_date'] == null) {
+                $TotalRepairing++;
+            } else if ($fetchRowTotal[$key]['status_approved'] == 1 && $fetchRowTotal[$key]['allotted_date'] != null && $fetchRowTotal[$key]['maintenance_request_status'] == 1
+              && $fetchRowTotal[$key]['allotted_accept_date'] != null && $fetchRowTotal[$key]['ref_user_id_accept_request'] != null && $fetchRowTotal[$key]['duration_serv_start'] != null
+              && $fetchRowTotal[$key]['duration_serv_end'] != null && $fetchRowTotal[$key]['hand_over_date'] == null ) {
+                $TotalWait_hand_over++;
+            } else if ($fetchRowTotal[$key]['status_approved'] == 1 && $fetchRowTotal[$key]['allotted_date'] != null && $fetchRowTotal[$key]['maintenance_request_status'] == 1
+              && $fetchRowTotal[$key]['duration_serv_start'] != null && $fetchRowTotal[$key]['duration_serv_end'] != null) {
+                $TotalHand_over++;
+            } else if ($fetchRowTotal[$key]['status_approved'] == 2 && $fetchRowTotal[$key]['allotted_date'] != null && $fetchRowTotal[$key]['maintenance_request_status'] == 1
+              && $fetchRowTotal[$key]['duration_serv_end'] == null && $fetchRowTotal[$key]['hand_over_date'] == null) {
+                $TotalNo_approved++;
+            } else if ($fetchRowTotal[$key]['maintenance_request_status'] == 2) {
+                $TotalCancel++;
+            } 
+
         }
-        ##$numRow_waitapprove ===== นับงานรออนุมัติ
-        $numRow_waitapprove = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
-        WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].$query_dept.$query_user." AND tb_maintenance_request.status_approved=0 AND tb_maintenance_request.maintenance_request_status=1"); 
-      
-        ##$numRow_repairing ===== นับงานกำลังซ่อม
-        $numRow_repairing = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
-        LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request = tb_maintenance_request.id_maintenance_request)
-        WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].$query_dept.$query_user.$query_repairer." 
-        AND tb_maintenance_request.status_approved=1 
-        AND tb_maintenance_request.maintenance_request_status=1 
-        AND tb_maintenance_request.duration_serv_start IS NOT NULL 
-        AND tb_maintenance_request.duration_serv_end IS NULL");
-    
-        ##$numRow_hand_over ===== นับงานที่ส่งมอบแล้ว
-        $numRow_hand_over = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
-        WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].$query_dept.$query_user." AND tb_maintenance_request.status_approved=1 AND tb_maintenance_request.maintenance_request_status=1 AND tb_maintenance_request.duration_serv_start IS NOT NULL AND tb_maintenance_request.duration_serv_end IS NOT NULL AND tb_maintenance_request.hand_over_date IS NOT NULL AND tb_maintenance_request.survay_date IS NOT NULL");
 
-        ##$numRow_cancel ===== นับงานที่ยกเลิก
-        $numRow_cancel = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request 
-        WHERE tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site'].$query_dept.$query_user." AND tb_maintenance_request.maintenance_request_status=2");
     }
-
->>>>>>> Stashed changes
       ?>
       
         <div class="card-body">
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h5>รออนุมัติ<br /></h5>
-                <p>จำนวน <?php echo $numRow_waitapprove?> รายการ</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-ios-cart"></i>
+          <div class="row justify-content-center">
+            <div class="pr-3 pl-3 testw">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                <div class="inner">
+                  <h5>รออนุมัติ<br /></h5>
+                  <p>จำนวน <?php echo $TotalWait_approved?> รายการ</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-ios-cart"></i>
+                </div>
               </div>
             </div>
-          </div>
-          <!-- ./col -->
+            <!-- ./col -->
 
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h5>กำลังซ่อม<br /></h5>
-                <p>จำนวน <?php echo $numRow_repairing?> รายการ</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-home"></i>
-                <ion-icon name="heart"></ion-icon>
+            <div class="pr-3 pl-3 testw">
+              <!-- small box -->
+              <div class="small-box bg-lightblue">
+                <div class="inner">
+                  <h5>รอช่างรับงาน<br /></h5>
+                  <p>จำนวน <?php echo $TotalWait_accept?> รายการ</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-settings"></i>
+                  <ion-icon name="heart"></ion-icon>
+                </div>
               </div>
             </div>
-          </div>
-          <!-- ./col -->          
+            <!-- ./col -->
 
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h5>ส่งมอบงานแล้ว</h5>
-                <p>จำนวน <?php echo $numRow_hand_over ?> รายการ</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-clipboard"></i>
+            <!-- ./col -->
+            <div class="pr-3 pl-3 testw">
+              <!-- small box -->
+              <div class="small-box bg-warning">
+                <div class="inner">
+                  <h5>กำลังซ่อม<br /></h5>
+                  <p>จำนวน <?php echo $TotalRepairing?> รายการ</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-home"></i>
+                  <ion-icon name="heart"></ion-icon>
+                </div>
               </div>
             </div>
-          </div>
+            <!-- ./col -->
 
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h5>ยกเลิก</h5>
-                <p>จำนวน <?php echo $numRow_cancel?> รายการ</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
+            <div class="pr-3 pl-3 testw">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h5>ส่งมอบงานแล้ว</h5>
+                  <p>จำนวน <?php echo $TotalHand_over ?> รายการ</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-clipboard"></i>
+                </div>
               </div>
             </div>
-          </div>
-          <!-- ./col -->
+
+            <div class="pr-3 pl-3 testw">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <h5>ยกเลิก</h5>
+                  <p>จำนวน <?php echo $TotalCancel?> รายการ</p>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                </div>
+              </div>
+            </div>
+            <!-- ./col -->
           </div>
 
               <h3 class="card-title mb-2 mt-4 text-bold"><i class="fas fa-bell"></i> ข่าวประกาศ</h3>

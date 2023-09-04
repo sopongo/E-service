@@ -1,16 +1,10 @@
 <?PHP
 session_start();
-<<<<<<< Updated upstream
-//include_once('include/function.inc.php');
-//include_once('include/connect.inc.php');
-//include_once('include/config.inc.php');
-=======
 include_once('include/function.inc.php');
 include_once('include/connect.inc.php');
 //include_once('include/config.inc.php');
 include_once('include/class_crud.inc.php');
 include_once('include/setting.inc.php');
->>>>>>> Stashed changes
 include_once('tcpdf/tcpdf.php');
 //include_once('include/system.inc.php');
 //include_once('include/language.inc.php');
@@ -18,31 +12,10 @@ ob_clean();// ถ้าไม่ใส่จะมีปัญหาการ in
 
 //$fontname = TCPDF_FONTS::addTTFfont('fonts/PSL005_1.TTF', 'TrueTypeUnicode', '', 96);
 //$fontname_bold = TCPDF_FONTS::addTTFfont('fonts/PSL005_1.TTF', 'TrueTypeUnicode', 'B', 100,'B');
-
-<<<<<<< Updated upstream
-
-class MYPDF extends TCPDF {
-    //Page header
-    public function Header() {
-		global $img;		
-        // Logo
-        //$image_file = 'logo_2.png'; // *** Very IMP: make sure this image is available on given path on your server
-		//$img = @imagecreatefrompng($image_file);
-        // Set font
-		//http://fonts.snm-portal.com/
-		
-		$this->SetFont('thsarabun', '', 12, '', false);
-		$this->setCellHeightRatio(1.1);		
-        $this->SetY(5);
-        $this->writeHTML('<table width="100%" border="0" cellspacing="0" cellpadding="0"> 
-		<tr>
-		<td width="70%" style="text-align: left; vertical-align:middle;"><strong style="font-size:22px;"><img src="logo_pdf.jpg" style="border:none; " border="0" width="100" /><br />บริษัท แปซิฟิค ห้องเย็น จำกัด (มหาชัย)</strong>
-		<br />47/19 หมู่ 2 ตำบลนาดี อำเภอเมือง จังหวัด สมุทรสาคร 74000 โทร. (+66) 3411-789-9</td>
-		<td width="30%" style="text-align:right; vertical-align:middle;"><strong style="font-size:24px;">ใบแจ้งซ่อม แผนก: {data}</strong><br /><span style="font-size:18px;">เลขที่ใบแจ้งซ่อม: xxxxxx<br />วันที่แจ้งซ่อม: DD/MM/YYYY</span>
-		<span style="text-align:right; vertical-align:middle;">'.$this->getAliasNumPage().'of'. $this->getAliasNbPages().'</span>
-		<div style="font-size:18px;">สถานะใบแจ้งซ่อม: {data status}</div></td>
-=======
 $id_req = $_GET['idreq'];
+// $id_req = 265;
+// $_SESSION['sess_fullname'] = 'asdasd';
+// $_SESSION['sess_ref_id_site'] = 1;
 $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเรียกใช้งานคลาส,ฟังก์ชั่นต่างๆ
 $rowData = $obj->customSelect("SELECT tb_maintenance_request.*, tb_maintenance_type.name_mt_type, tb_maintenance_request.ref_id_dept_responsibility AS id_dept_responsibility, tb_dept_responsibility.dept_initialname AS dept_responsibility,
 tb_user_request.no_user, tb_user_request.email, tb_user_request.fullname, tb_user_request.ref_id_dept AS ref_id_dept_request, tb_user_dept_request.dept_initialname AS dept_user_request,
@@ -150,16 +123,14 @@ class MYPDF extends TCPDF {
 		$totalPage = 1;
 		$PgNo= '';
 
-		if($RowcountPart > 5){
+		if($RowcountPart > 3){
 			$totalPage = 2;
 			if(($Rowcount1 > 3) || ($Rowcount2 > 3)){
 				$totalPage = 3;
 			}
-		}else if( ($RowcountPart > 2) && ((!empty($Rowcount1)) || (!empty($Rowcount2)) ) ){
+		}else if( ($RowcountPart != 0) && (($Rowcount1 >= 1) || ($Rowcount2 >= 1)) ){
 			$totalPage = 2;
-		}else if( ($RowcountPart != 0) && (($Rowcount1 > 3) || ($Rowcount2 > 3)) ){
-			$totalPage = 2;
-		}else if(($Rowcount1 > 3) || ($Rowcount2 > 3)) {
+		}else if(($RowcountPart == 0) && ($Rowcount1 >= 1) || ($Rowcount2 >= 1)) {
 			$totalPage = 2;
 		}
 
@@ -172,31 +143,30 @@ class MYPDF extends TCPDF {
 		<img src="dist/img/logo.png" width="150"></td>
 		<td width="60%" style="text-align: left; vertical-align:top;">
 			<strong style="font-size:22px;"><br>
-			 บริษัท แปซิฟิค ห้องเย็น จำกัด (มหาชัย)</strong><br>
+			 บริษัท แปซิฟิค ห้องเย็น จำกัด</strong><br>
 			  47/19 หมู่ 2 ตำบลนาดี อำเภอเมือง จังหวัด สมุทรสาคร 74000 โทร. (+66) 3411-789-9</td>
-		<td align="right" width="30%" style="text-align:right; vertical-align:middle;">
+		<td align="right" width="30%" style="text-align:right; vertical-align:middle;"> 
 		<strong style="font-size:24px;">ใบแจ้งซ่อม แผนก: '.$rowData['dept_user_request'].'</strong><br />
 		<span style="font-size:18px;float: right;" align="right">เลขที่ใบแจ้งซ่อม: '.$rowData['maintenance_request_no'].'</span><br>
 		<span style="font-size:18px;float: right;" align="right">วันที่แจ้งซ่อม: '.$mt_req_date.''.$PgNo.'</span>
 		<div style="font-size:18px;">สถานะใบแจ้งซ่อม: '.$req_textstatus.'</div></td>
->>>>>>> Stashed changes
 		</tr>
 		</table><hr />');
         // We need to adjust the x and y positions of this text ... first two parameters
 		// set bacground image
 		// restore auto-page-break status
 		// set the starting point for the page content
+		
 		$this->setPageMark();
     }
 	
     // Page footer
     public function Footer() {
-<<<<<<< Updated upstream
-=======
 		
 		global $rowData;
 		global $arrTopicSurvey;
 		global $rowSurvey;
+		global $ISORev;
 
 		if (count($rowSurvey)!=0) {
 		  $score = 0;
@@ -204,42 +174,26 @@ class MYPDF extends TCPDF {
 				$score+=$rowSurvey[$key]['score_result'];
 			}
 			$score_result = $score/count($arrTopicSurvey)*100;
+			if (floor($score_result) == $score_result) {
+				// ไม่มีทศนิยม
+				$score_result;
+			} else {
+				// มีทศนิยม
+				$score_result = number_format($score_result, 2);
+			}
 		}else{
 		  $score_result = 0;
 		}
 
->>>>>>> Stashed changes
         if ($this->page!=4) {
 			global $fontname;
 			global $text_ref_abb;
         // Position at 25 mm from bottom
-<<<<<<< Updated upstream
-
-=======
 		
->>>>>>> Stashed changes
         $this->SetY(-50);
         //Set font
 		$this->SetFont('thsarabun', '', 12, '', false);
 		$this->setCellHeightRatio(1.2);		
-<<<<<<< Updated upstream
-        //$this->Cell(0, 0, "Authorized by sdfaasfasdf", 0, 0, 'L');
-		$this->writeHTML('');		
-		$this->writeHTML('<div style="width:100%; display:block; font-size:12px; line-height:14px; ">**หมายเหตุ 1) {data}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) {data}</div><table width="100%" border="1" cellspacing="0" cellpadding="5" bordercolor="#ff00ff">
-		<tr>
-		<td width="25%" style="text-align:center;">
-			<strong>ผู้แจ้งซ่อม, ผู้ประเมิณ:</strong><br />
-			<img src="upload-signature/signature.png" width="200" /><br />
-			ชื่อ ({data name})<br />
-			วันที่ DD/MM/YYYY
-		</td>
-		<td width="25%">ประเมินผลการซ่อม:<br/><strong style="text-align: left; vertical-align:middle; font-size:60px;">100%</strong><br />		วันที่ประเมิน DD/MM/YYYY</td>
-		<td width="25%" style="text-align:center;">
-		<strong>ช่างซ่อม:</strong>
-		<div style="border-bottom:1px solid #333333; padding-bottom:10px; display:block;"><img src="upload-signature/signature.png" width="200" /></div>
-		ชื่อ ({data name})<br />
-		วันที่ DD/MM/YYYY
-=======
         //$this->Cell(0, 0, "Authorized by sdfaasfasdf", 0, 0, 'L');	
 		$this->writeHTML('<div style="width:100%; display:block; font-size:12px; line-height:14px; ">**หมายเหตุ 1) {data}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) {data}</div>
 		<table width="100%" border="1" cellspacing="0" cellpadding="5" bordercolor="#ff00ff">
@@ -256,29 +210,22 @@ class MYPDF extends TCPDF {
 		<div style="border-bottom:1px solid #333333; padding-bottom:10px; display:block;"><img src="upload-signature/signature.png" width="200" /></div>
 		ชื่อ ('.($rowData['fullname_accept']!='' ? $rowData['fullname_accept'] : '-').')<br />
 		วันที่ '.($rowData['allotted_accept_date']!='' ? nowDate($rowData['allotted_accept_date']) : '-').'
->>>>>>> Stashed changes
 		</td>
 		<td width="25%" style="text-align:center;">
 		<strong>หัวหน้าช่าง, ผู้อนุมัติซ่อม, ส่งมอบงาน:</strong><br />
 		<img src="upload-signature/signature.png" width="200" /><br />
-<<<<<<< Updated upstream
-		ชื่อ ({data name})<br />
-		วันที่ DD/MM/YYYY		
-		</td>
-		</tr>
-		</table><div style="width:100%; display:block; font-size:12px; line-height:14px; text-align:right;">FM-EN-9999/23<br />DOC. DATE.DD/MM/YYYY </div>');
-=======
 		ชื่อ ('.($rowData['fullname_handover']!='' ? $rowData['fullname_handover'] : '-').')<br />
 		วันที่ '.($rowData['hand_over_date']!='' ? nowDate($rowData['hand_over_date']) : '-').'		
 		</td>
 		</tr>
 		</table>
-		<div style="width:100%; display:block; font-size:12px; line-height:14px; text-align:right;">FM-EN-9999/23<br />DOC. DATE.'.date('d/m/Y').' </div>');
->>>>>>> Stashed changes
+		<div style="width:100%; display:block; font-size:12px; line-height:14px; text-align:right;">'.$ISORev[$_SESSION['sess_ref_id_site']].'</div>');
 		//'ไปขวา ,xxx ,xxx ,xxx ,xxx ,xxx ,xxx ,xxx ,xxx ,xxx ,xxx ,xxx ,xxx ,xxx ,xxx'
 		//$this->Image($img_file, 125, 120, 0, 0, '', '', '', true, 300, '', false, false, 0);
 		}
     }
+
+
 }
 
 //create new PDF document
@@ -289,31 +236,21 @@ $pageDimensions = $pdf->getPageDimensions();
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
-<<<<<<< Updated upstream
-$pdf->SetAuthor('Sopon Gomonchonlamas');
-$pdf->SetTitle("ใบแจ้งซ่อม {เลขที่ใบแจ้งซ่อม} {ไซต์งาน}");
-$pdf->SetSubject('ใบแจ้งซ่อม {เลขที่ใบแจ้งซ่อม}');
-$pdf->SetKeywords('PDF, ใบแจ้งซ่อม {เลขที่ใบแจ้งซ่อม}');
-=======
 $pdf->SetAuthor($_SESSION['sess_fullname']);
 $pdf->SetTitle("ใบแจ้งซ่อม ".$rowData['maintenance_request_no']." ".$rowData['site_initialname']."");
 $pdf->SetSubject('ใบแจ้งซ่อม '.$rowData['maintenance_request_no'].'');
 $pdf->SetKeywords('PDF, ใบแจ้งซ่อม '.$rowData['maintenance_request_no'].'');
->>>>>>> Stashed changes
 
 // remove default header/footer
 $pdf->setPrintHeader(true);
 $pdf->setPrintFooter(true);
 
+
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 //set margins
-<<<<<<< Updated upstream
-$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-=======
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT, PDF_MARGIN_BOTTOM);
->>>>>>> Stashed changes
 $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 $pdf->SetMargins(6, 32, 6, 6); //ซ้าย บน ล่าง ขวา
@@ -348,6 +285,7 @@ $pdf->AddPage();
 // create some HTML content
 
 $stylesheet ='<!-- EXAMPLE OF CSS STYLE -->
+<link rel="stylesheet" href="plugins/fontawesome-5.15.4/css/all.min.css">
 <style>
 td.td_border{ border: 5px solid red;}
 body{
@@ -428,19 +366,6 @@ $html = '<table width="100%" border="0" cellspacing="0" cellpadding="4">
 $html.= '<table width="100%" border="0" cellspacing="3" cellpadding="3">
 <tr>
 <td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">รหัสพนักงาน:</td>
-<<<<<<< Updated upstream
-<td width="10%">{data}</td>
-<td colspan="2" width="13%" style="text-align: left; vertical-align:middle; font-weight: bold;">ชื่อผู้แจ้งซ่อม:</td>
-<td width="27%">{data}</td>
-<td width="8%" style="text-align: left; vertical-align:middle; font-weight: bold;">อีเมล์:</td>
-<td width="30%">{data}</td>
-</tr>
-<tr>
-<td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">ไซต์งาน:</td>
-<td width="15%">{data}</td>
-<td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">แผนก:</td>
-<td width="15%">{data}</td>
-=======
 <td width="10%">'.($rowData['no_user']).'</td>
 <td colspan="2" width="13%" style="text-align: left; vertical-align:middle; font-weight: bold;">ชื่อผู้แจ้งซ่อม:</td>
 <td width="27%">'.($rowData['fullname']).'</td>
@@ -452,7 +377,6 @@ $html.= '<table width="100%" border="0" cellspacing="3" cellpadding="3">
 <td width="15%">'.($rowData['site_initialname']).'</td>
 <td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">แผนก:</td>
 <td width="15%">'.($rowData['dept_user_request']).'</td>
->>>>>>> Stashed changes
 <td width="8%" style="text-align: left; vertical-align:middle; font-weight: bold;"></td>
 <td width="30%"></td>
 </tr>
@@ -463,27 +387,6 @@ $html.= '<table width="100%" border="0" cellspacing="0" cellpadding="4"><tr><td 
 $html.= '<table width="100%" border="0" cellspacing="3" cellpadding="3">
 <tr>
 <td colspan="3" width="17%" style="text-align: left; vertical-align:middle; font-weight: bold;">ประเภทเครื่องจักร:</td>
-<<<<<<< Updated upstream
-<td width="33%">{data}</td>
-<td colspan="3" width="18%" style="text-align: left; vertical-align:middle; font-weight: bold;">ชื่อเครื่องจักร์-อุปกรณ์:</td>
-<td width="32%">{data}</td>
-</tr>
-<tr>
-<td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">รหัสเครื่องจักร:</td>
-<td width="24%">{data}</td>
-<td colspan="2" width="13%" style="text-align: left; vertical-align:middle; font-weight: bold;">ซีเรียลนัมเบอร์:</td>
-<td width="22%">{data}</td>
-<td width="7%" style="text-align: left; vertical-align:middle; font-weight: bold;">ชื่อรุ่น:</td>
-<td width="22%">{data}</td>
-</tr>
-<tr>
-<td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">ไซต์งาน:</td>
-<td width="14%">{data}</td>
-<td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">อาคาร:</td>
-<td width="30%">{data}</td>
-<td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">สถานที่:</td>
-<td width="20%">{data}</td>
-=======
 <td width="33%">'.(!empty($rowMachine['name_menu']) ? $rowMachine['name_menu'] : '-').'</td>
 <td colspan="3" width="18%" style="text-align: left; vertical-align:middle; font-weight: bold;">ชื่อเครื่องจักร-อุปกรณ์:</td>
 <td width="32%">'.(!empty($rowMachine['name_machine']) ? $rowMachine['name_machine'] : 'ไม่ทราบชื่อ, ไม่ระบุ').'</td>
@@ -503,56 +406,18 @@ $html.= '<table width="100%" border="0" cellspacing="3" cellpadding="3">
 <td width="30%">'.(!empty($rowMachine['building_name']) ? $rowMachine['building_name'] : '-').'</td>
 <td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">สถานที่:</td>
 <td width="20%">'.(!empty($rowMachine['location_name']) ? $rowMachine['location_name'] : '-').'</td>
->>>>>>> Stashed changes
 </tr>
 </table>';
 
 $html.= '<table width="100%" border="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#EAEAEA"><strong>::อาการเสีย/ปัญหาที่พบ</strong></td></tr></table>';
 
-<<<<<<< Updated upstream
-$html.= '<table width="100%" border="0" cellspacing="3" cellpadding="3"><tr><td>ราวกั้น กันกระแทก น๊อตหลุด บริเวณที่จัดเก็บรางคอนเวเยอร์ อาคาร 8</td></tr></table>';
-=======
 $html.= '<table width="100%" border="0" cellspacing="3" cellpadding="3"><tr><td>'.(!empty($rowData['problem_statement']) ? $rowData['problem_statement'] : '-' ).'</td></tr></table>';
->>>>>>> Stashed changes
 
 $html.= '<table width="100%" border="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#EAEAEA"><strong>:: สรุปผลการซ่อม</strong></td></tr></table>';
 
 $html.= '<table width="100%" border="0" cellspacing="3" cellpadding="3">
 <tr>
 <td colspan="2" width="14%" style="text-align: left; vertical-align:middle; font-weight: bold;">ประเภทใบแจ้งซ่อม:</td>
-<<<<<<< Updated upstream
-<td width="36%">{data}</td>
-<td colspan="2" width="14%" style="text-align: left; vertical-align:middle; font-weight: bold;">ประเภทงานซ่อม:</td>
-<td width="36%">{data}</td>
-</tr>
-<tr>
-<td colspan="2" width="10%" style="text-align: left; vertical-align:middle; font-weight: bold;">วันที่อนุมัติ:</td>
-<td width="20%">{DD/MM/YYYY HH:MM:SS}</td>
-<td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">วันที่ช่างรับงาน:</td>
-<td width="20%">{DD/MM/YYYY HH:MM:SS}</td>
-<td colspan="2" width="10%" style="text-align: left; vertical-align:middle; font-weight: bold;">วันที่เริ่มซ่อม:</td>
-<td width="20%">{DD/MM/YYYY HH:MM:SS}</td>
-</tr>
-<tr>
-<td colspan="2" width="12%" style="text-align: left; vertical-align:middle; font-weight: bold;">วันที่ซ่อมเสร็จ:</td>
-<td width="20%">{DD/MM/YYYY HH:MM:SS}</td>
-<td colspan="2" width="15%" style="text-align: left; vertical-align:middle; font-weight: bold;">วันที่ส่งมอบงาน:</td>
-<td width="18%">{DD/MM/YYYY HH:MM:SS}</td>
-<td width="14%" style="text-align: left; vertical-align:middle; font-weight: bold;">รวมเวลาซ่อม:</td>
-<td width="18%">{DD/MM/YYYY HH:MM:SS}</td>
-</tr>
-<tr>
-<td colspan="2" width="15%" style="text-align: left; vertical-align:middle; font-weight: bold;">รหัสอาการเสีย:</td>
-<td width="35%">{Detail Detail Detail}</td>
-<td colspan="2" width="15%" style="text-align: left; vertical-align:middle; font-weight: bold;">สาเหตุของปัญหา:</td>
-<td width="35%">{Detail Detail Detail}</td>
-</tr>
-<tr>
-<td colspan="2" width="15%" style="text-align: left; vertical-align:middle; font-weight: bold;">รหัสซ่อม:</td>
-<td width="35%">{Detail Detail Detail}</td>
-<td colspan="2" width="15%" style="text-align: left; vertical-align:middle; font-weight: bold;">วิธีการแก้ไข:</td>
-<td width="35%">{Detail Detail Detail}</td>
-=======
 <td width="36%">'.($rowData['name_mt_type']!='' ? $rowData['name_mt_type'] : 'ยังไม่ระบุ').'</td>
 <td colspan="2" width="14%" style="text-align: left; vertical-align:middle; font-weight: bold;">ประเภทงานซ่อม:</td>
 <td width="36%">'.($rowData['ref_id_job_type']!=NULL ? $ref_id_job_typeArr[$rowData['ref_id_job_type']] : '-').'</td>
@@ -584,7 +449,6 @@ $html.= '<table width="100%" border="0" cellspacing="3" cellpadding="3">
 <td width="35%">'.($rowData['repair_code_name']=='' ? ($rowData['ref_id_repair_code']=='' ? '-' : $rowData['ref_id_repair_code']) : $rowData['repair_code_name']).'</td>
 <td colspan="2" width="15%" style="text-align: left; vertical-align:middle; font-weight: bold;">วิธีการแก้ไข:</td>
 <td width="35%">'.($rowData['txt_solution']=='' ? '-' : $rowData['txt_solution']).'</td>
->>>>>>> Stashed changes
 </tr>
 </table>';
 
@@ -593,17 +457,6 @@ $html.= '<table width="100%" border="0" cellspacing="0" cellpadding="4"><tr><td 
 $html.= '<table width="100%" border="0" cellspacing="3" cellpadding="3">
 <tr>
 <td colspan="2" width="13%" style="text-align: left; vertical-align:middle; font-weight: bold;">สาเหตุที่ส่งซ่อม:</td>
-<<<<<<< Updated upstream
-<td width="52%">{Detail Detail Detail}</td>
-<td colspan="2" width="10%" style="text-align: left; vertical-align:middle; font-weight: bold;">ซัพพลายเออร์:</td>
-<td width="25%">{Detail Detail Detail }</td>
-</tr>
-<tr>
-<td colspan="2" width="15%" style="text-align: left; vertical-align:middle; font-weight: bold;">วันที่ส่งซ่อม:</td>
-<td width="35%">{Detail Detail Detail}</td>
-<td colspan="2" width="15%" style="text-align: left; vertical-align:middle; font-weight: bold;">วันที่ส่งคืน:</td>
-<td width="35%">{Detail Detail Detail}</td>
-=======
 <td width="52%">'.($rowData['caused_outsite_repair']=='' ? '-' : $rowData['caused_outsite_repair']).'</td>
 <td colspan="2" width="10%" style="text-align: left; vertical-align:middle; font-weight: bold;">ซัพพลายเออร์:</td>
 <td width="25%">'.($rowData['supplier_name']=='' ? ($rowData['ref_id_supplier']=='' ? '-' : $rowData['ref_id_supplier']) : $rowData['supplier_name']).'</td>
@@ -613,7 +466,6 @@ $html.= '<table width="100%" border="0" cellspacing="3" cellpadding="3">
 <td width="35%">'.($rowData['datesent_repair']=='' ? '-' : nowDateShort($rowData['datesent_repair'])).'</td>
 <td colspan="2" width="15%" style="text-align: left; vertical-align:middle; font-weight: bold;">วันที่ส่งคืน:</td>
 <td width="35%">'.($rowData['dateresive_repair']=='' ? '-' : nowDateShort($rowData['dateresive_repair'])).'</td>
->>>>>>> Stashed changes
 </tr>
 </table>';
 
@@ -629,69 +481,6 @@ $html.= '<table width="100%" border="0" cellspacing="0" cellpadding="6" borderco
 <td bordercolor="#EAEAEA" width="9%" style="text-align: right; vertical-align:middle; font-weight: bold;">จำนวน/ชิ้น</td>
 <td bordercolor="#EAEAEA" width="10%" style="text-align: right; vertical-align:middle; font-weight: bold;">รวม/บาท</td>
 </tr>';
-<<<<<<< Updated upstream
-$html.='
-<tr>
-<td colspan="7" style="text-align:center; "> {Not found data}</td>
-</tr>';
-for($i=1;$i<=2;$i++){
-$html.='
-<tr>
-<td style="text-align:right;">'.$i.'.</td>
-<td class="td_border"> {data}</td>
-<td > {data}</td>
-<td > {data}</td>
-<td style="text-align:right;">999,999.00.-</td>
-<td style="text-align:right;">99</td>
-<td style="text-align:right;">999,999.00.-</td>
-</tr>';
-}
-$html.='
-<tr bgcolor="#F3F3F3">
-<td colspan="5"></td>
-<td style="text-align:right;">99</td>
-<td style="text-align:right;">999,999</td>
-</tr>';
-$html.= '</table>** หากรายการอะไหล่มีมากกว่า 2 รายการ ระบบจะพิมพ์แยกหน้ารายการอะไหล่ให้อัตโนมัติ<br /><br />';
-
-$html.= '<table width="100%" border="0" cellspacing="0" cellpadding="4">
-<tr>
-<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภายถ่ายอาการเสีย/ปัญหาที่พบ (เฉพาะ 3 แรกที่แนบ)</strong></td>
-<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภายถ่ายหลังซ่อม (เฉพาะ 3 แรกที่แนบ)</strong></td>
-</tr>
-<tr>
-<td><img src="upload-pic-req/0230a8d37e9bab84ff945644b4b1c077.jpg" width="100" /></td>
-<td><img src="upload-pic-req/0230a8d37e9bab84ff945644b4b1c077.jpg" width="100" /></td>
-<td></td>
-<td><img src="upload-pic-req/0230a8d37e9bab84ff945644b4b1c077.jpg" width="100" /></td>
-<td><img src="upload-pic-req/0230a8d37e9bab84ff945644b4b1c077.jpg" width="100" /></td>
-<td><img src="upload-pic-req/0230a8d37e9bab84ff945644b4b1c077.jpg" width="100" /></td>
-</tr>
-</table>';
-
-// output the HTML content
-$pdf->WriteHTML($stylesheet, 1);
-$pdf->writeHTML($html,  true, 0, true, 0);
-// Start First Page Group
-$pdf->startPageGroup();
-
-/*
-// reset pointer to the last page
-$pdf->lastPage();
-
-$pdf->AddPage();
-// output the HTML content
-$pdf->WriteHTML($stylesheet, 1);
-// Start First Page Group
-$pdf->startPageGroup();
-$pdf->writeHTML($html_copy,  true, 0, true, 0);
-*/
-
-// ---------------------------------------------------------
-
-//Close and output PDF document
-$pdf->Output("test.pdf", "I");
-=======
 
 $grand_total = 0;
 $qty_total = 0;
@@ -702,10 +491,8 @@ $after ='';
 $html2 = '';
 $html3 = '';
 //-------------------เช็คเงื่อนไขเพื่อเข้า Switch Case------------------------
-if(count($rowParts) > 5){
-	$countPart = '>5'; 
-}else if(count($rowParts) > 2){
-	$countPart = '>2';
+if(count($rowParts) > 3){
+	$countPart = '>3';
 }else if(count($rowParts) != 0){
 	$countPart = '!0';
 }else{
@@ -742,59 +529,51 @@ if(!empty($countPart)){
 	$partTable.='</table>';
 }
 
-//----------------------กำหนดตารางรูปภาพ------------------------------
-if((count($arrImg['before']) > 3) || (count($arrImg['after']) > 3)){
+//----------------------กำหนดตารางประเมิน------------------------------
+// $rowSurvey;
+$fetchSurvey = $obj -> fetchRows("SELECT * FROM tb_satisfaction_survey 
+WHERE tb_satisfaction_survey.ref_id_maintenance_request=".$id_req." 
+ORDER BY tb_satisfaction_survey.ref_topic_survey ASC");
+function getSurveyScore($data, $topic){
+	if(empty($data)){
+		return '-';
+	}
+	$index = array_search($topic, array_column($data, 'ref_topic_survey'));
+	$scoreResult = $data[$index]['score_result'];
+	if ($scoreResult == 1){
+		return 'ผ่าน';
+	} else {
+		return 'ไม่ผ่าน';
+	}
+};
 
-	$imgFullTable = '<table width="100%" border="0" cellspacing="0" cellpadding="4">
-	<tr>
-	<td bgcolor="#EAEAEA" colspan="3"><strong>::ภาพถ่ายอาการเสีย/ปัญหาที่พบ</strong></td>
-	</tr>
+$partSurvey='';
+$partSurvey.='<table width="100%" border="0" cellspacing="0" cellpadding="4">
+<tr>
+	<td bgcolor="#EAEAEA" colspan="3"><strong>:: ประเมินผลการซ่อม</strong></td>
+</tr>
+<tr>
+	<td width="30%"><strong>แบบประเมินประสิทธิภาพในการซ่อม</strong></td>
+	<td><strong>การปฏิบัติตามข้อกำหนด (Food Safety)</strong></td>
+</tr>
+<br>
+<tr>
+	<td width="20%"><strong>'.$arrTopicSurvey[0].'</strong></td><td width="10%"><strong>'.getSurveyScore($fetchSurvey, 0).'</strong></td>
+	<td width="30%"><strong>'.$arrTopicSurvey[3].'</strong></td><td><strong>'.getSurveyScore($fetchSurvey, 3).'</strong></td>
+</tr>
+<tr>
+	<td width="20%"><strong>'.$arrTopicSurvey[1].'</strong></td><td width="10%"><strong>'.getSurveyScore($fetchSurvey, 1).'</strong></td>
+	<td width="30%"><strong>'.$arrTopicSurvey[4].'</strong></td><td><strong>'.getSurveyScore($fetchSurvey, 4).'</strong></td>
+</tr>
+<tr>
+	<td width="20%"><strong>'.$arrTopicSurvey[2].'</strong></td><td width="10%"><strong>'.getSurveyScore($fetchSurvey, 2).'</strong></td>
+	<td width="30%"><strong>'.$arrTopicSurvey[5].'</strong></td><td><strong>'.getSurveyScore($fetchSurvey, 5).'</strong></td>
+</tr>
+</table>';
 
-	<tr>
-	<td align="center">'.(count($arrImg['before']) != 0 ? (!empty($arrImg['before'][0] ) ? '<img src="upload-pic-req/'.$arrImg['before'][0].'" height="200" />' : '') : '').'</td>
-	<td align="center">'.(count($arrImg['before']) != 0 ? (!empty($arrImg['before'][1] ) ? '<img src="upload-pic-req/'.$arrImg['before'][1].'" height="200" />' : '') : '').'</td>
-	<td align="center">'.(count($arrImg['before']) != 0 ? (!empty($arrImg['before'][2] ) ? '<img src="upload-pic-req/'.$arrImg['before'][2].'" height="200" />' : '') : '').'</td>
-	</tr>
-
-	<tr>
-	<td align="center">'.(count($arrImg['before']) != 0 ? (!empty($arrImg['before'][3] ) ? '<img src="upload-pic-req/'.$arrImg['before'][3].'" height="200" />' : '') : '').'</td>
-	<td align="center">'.(count($arrImg['before']) != 0 ? (!empty($arrImg['before'][4] ) ? '<img src="upload-pic-req/'.$arrImg['before'][4].'" height="200" />' : '') : '').'</td>
-	<td align="center">'.(count($arrImg['before']) != 0 ? (!empty($arrImg['before'][5] ) ? '<img src="upload-pic-req/'.$arrImg['before'][5].'" height="200" />' : '') : '').'</td>
-	</tr>
-
-	</table>
-	<table width="100%" border="0" cellspacing="0" cellpadding="4">
-	<tr>
-	<td bgcolor="#EAEAEA" colspan="3"><strong>::ภาพถ่ายอาการเสีย/ปัญหาที่พบ</strong></td>
-	</tr>
-
-	<tr>
-	<td align="center">'.(count($arrImg['after']) != 0 ? (!empty($arrImg['after'][0] ) ? '<img src="upload-pic-req/'.$arrImg['after'][0].'" height="200" />' : '') : '').'</td>
-	<td align="center">'.(count($arrImg['after']) != 0 ? (!empty($arrImg['after'][1] ) ? '<img src="upload-pic-req/'.$arrImg['after'][1].'" height="200" />' : '') : '').'</td>
-	<td align="center">'.(count($arrImg['after']) != 0 ? (!empty($arrImg['after'][2] ) ? '<img src="upload-pic-req/'.$arrImg['after'][2].'" height="200" />' : '') : '').'</td>
-	</tr>
-
-	<tr>
-	<td align="center">'.(count($arrImg['after']) != 0 ? (!empty($arrImg['after'][3] ) ? '<img src="upload-pic-req/'.$arrImg['after'][3].'" height="200" />' : '') : '').'</td>
-	<td align="center">'.(count($arrImg['after']) != 0 ? (!empty($arrImg['after'][4] ) ? '<img src="upload-pic-req/'.$arrImg['after'][4].'" height="200" />' : '') : '').'</td>
-	<td align="center">'.(count($arrImg['after']) != 0 ? (!empty($arrImg['after'][5] ) ? '<img src="upload-pic-req/'.$arrImg['after'][5].'" height="200" />' : '') : '').'</td>
-	</tr>
-
-	</table>';
-
-	$nextImgtable = '<table width="100%" border="0" cellspacing="0" cellpadding="4">
-	<tr>
-	<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภาพถ่ายอาการเสีย/ปัญหาที่พบ</strong></td>
-	<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภาพถ่ายหลังซ่อม</strong></td>
-	</tr>
-	<tr><td></td></tr>
-	<tr>
-	<td style="text-align:center" colspan="6"><strong>**ไฟล์แนบรูปภาพอยู่หน้าถัดไป**</strong></td>
-	</tr>
-	</table>';
-}else if((empty($arrImg['before'])) && (empty($arrImg['after']))){
-
-	$noImgTable = '<table width="100%" border="0" cellspacing="0" cellpadding="4">
+//----------------------กำหนดตารางรูปภาพ--------------------------------------------
+Class NoImg {
+	public $noImg =  '<table width="100%" border="0" cellspacing="0" cellpadding="4">
 	<tr>
 	<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภาพถ่ายอาการเสีย/ปัญหาที่พบ</strong></td>
 	<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภาพถ่ายหลังซ่อม</strong></td>
@@ -803,82 +582,175 @@ if((count($arrImg['before']) > 3) || (count($arrImg['after']) > 3)){
 	<tr class="bg-white"><td colspan="6" style="text-align:center;color:grey;">ไม่มีภาพถ่าย</td></tr>
 	</table>';
 
-}else{
-
-	if(!empty($arrImg['before'])){
-		if(count($arrImg['before']) == 1){
-			foreach($arrImg['before'] as $value) {
-				$before.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
-			}
-			$before.= '<td></td>
-						<td></td>';
-		} else if(count($arrImg['before']) == 2){
-			foreach($arrImg['before'] as $value) {
-				$before.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
-			}
-			$before.= '
-						<td></td>';
-		} else if(count($arrImg['before']) == 3){
-			foreach($arrImg['before'] as $value) {
-				$before.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
+	public function countarrImg($array, $key){
+		if(count($array)!=0){
+			if(!empty($array[$key])){
+				return '<td align="center"><img src="upload-pic-req/'.$array[$key].'" height="200" /></td>';
+			}else{
+				return '<td align="center"></td>';
 			}
 		}
-	} else {
-		$before.= '<td></td>
-					<td></td>
-					<td></td>';
 	}
-
-	if(!empty($arrImg['after'])){
-		if(count($arrImg['after']) == 1){
-			foreach($arrImg['after'] as $value) {
-				$after.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
-			}
-			$after.= '<td></td>
-						<td></td>';
-		} else if(count($arrImg['after']) == 2){
-			foreach($arrImg['after'] as $value) {
-				$after.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
-			}
-			$after.= '
-						<td></td>';
-		} else if(count($arrImg['after']) == 3){
-			foreach($arrImg['after'] as $value) {
-				$after.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
-			}
-		}
-	}else {
-		$after.= '<td></td>
-					<td></td>
-					<td></td>';
-	}
-
-
-	$imgTable= '<table width="100%" border="0" cellspacing="0" cellpadding="4">
-	<tr>
-	<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภาพถ่ายอาการเสีย/ปัญหาที่พบ</strong></td>
-	<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภาพถ่ายหลังซ่อม</strong></td>
-	</tr>
-	<tr>
-	'.$before.$after.'
-	</tr>
-	</table>';
 }
 
+Class Img {
 
+	public function FullImg($arrImg){
+		$noImg = new NoImg();
+		if(!empty($arrImg['before']) || !empty($arrImg['after'])){
+			if(!empty($arrImg['before'])){
+				$TableBefore = '<table width="100%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+				<td bgcolor="#EAEAEA" colspan="3"><strong>::ภาพถ่ายอาการเสีย/ปัญหาที่พบ</strong></td>
+				</tr>
+			
+				<tr>
+				'.
+					$noImg->countarrImg($arrImg['before'],0).
+					$noImg->countarrImg($arrImg['before'],1).
+					$noImg->countarrImg($arrImg['before'],2)
+				.'
+				</tr>
+			
+				<tr>
+				'.
+					$noImg->countarrImg($arrImg['before'],3).
+					$noImg->countarrImg($arrImg['before'],4).
+					$noImg->countarrImg($arrImg['before'],6)
+				.'
+				</tr>
+				</table>';
+			}
+			else{
+				$TableBefore = '<table width="100%" border="0" cellspacing="0" cellpadding="4">
+					<tr>
+						<td bgcolor="#EAEAEA" colspan="3"><strong>::ภาพถ่ายอาการเสีย/ปัญหาที่พบ</strong></td>
+					</tr>
+					<tr>
+						<td colspan="6" style="text-align:center;color:grey;">ไม่มีภาพถ่ายอาการเสีย/ปัญหาที่พบ</td>
+					</tr>
+				</table>';
+			}
 
+			if(!empty($arrImg['after'])){
+				$TableAfter = '<table width="100%" border="0" cellspacing="0" cellpadding="4">
+				<tr>
+				<td bgcolor="#EAEAEA" colspan="3"><strong>::ภาพถ่ายหลังซ่อม</strong></td>
+				</tr>
+			
+				<tr>
+				'.
+					$noImg->countarrImg($arrImg['after'],0).
+					$noImg->countarrImg($arrImg['after'],1).
+					$noImg->countarrImg($arrImg['after'],2)
+				.'
+				</tr>
+			
+				<tr>
+				'.
+					$noImg->countarrImg($arrImg['after'],3).
+					$noImg->countarrImg($arrImg['after'],4).
+					$noImg->countarrImg($arrImg['after'],6)
+				.'
+				</tr>
+				</table>';
+			}else{
+				$TableAfter = '<table width="100%" border="0" cellspacing="0" cellpadding="4">
+					<tr>
+						<td bgcolor="#EAEAEA" colspan="3"><strong>::ภาพถ่ายหลังซ่อม</strong></td>
+					</tr>
+					<tr>
+						<td colspan="6" style="text-align:center;color:grey;">ไม่มีภาพถ่ายหลังซ่อม</td>
+					</tr>
+				</table>';
+			}
+			return $TableBefore.$TableAfter;
+	
+		} else {
+			return $noImg->noImg;
+		}
+	}
+
+	public function NorImg($arrImg){
+		if (!empty($arrImg['before']) || !empty($arrImg['after'])){
+			$before = '';
+			$after = '';
+			if(!empty($arrImg['before'])){
+				if(count($arrImg['before']) == 1){
+					foreach($arrImg['before'] as $value) {
+						$before.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
+					}
+					$before.= '<td></td>
+								<td></td>';
+				} else if(count($arrImg['before']) == 2){
+					foreach($arrImg['before'] as $value) {
+						$before.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
+					}
+					$before.= '
+								<td></td>';
+				} else if(count($arrImg['before']) == 3){
+					foreach($arrImg['before'] as $value) {
+						$before.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
+					}
+				}
+			} else {
+				$before.= '<td colspan="6" style="text-align:center;color:grey;">ไม่มีภาพถ่าย</td>';
+			}
+		
+			if(!empty($arrImg['after'])){
+				if(count($arrImg['after']) == 1){
+					foreach($arrImg['after'] as $value) {
+						$after.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
+					}
+					$after.= '<td></td>
+								<td></td>';
+				} else if(count($arrImg['after']) == 2){
+					foreach($arrImg['after'] as $value) {
+						$after.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
+					}
+					$after.= '
+								<td></td>';
+				} else if(count($arrImg['after']) == 3){
+					foreach($arrImg['after'] as $value) {
+						$after.= '<td align="center"><img src="upload-pic-req/'.$value.'" height="120" /></td>';
+					}
+				}
+			}else {
+				$after.= '<td colspan="6" style="text-align:center;color:grey;">ไม่มีภาพถ่าย</td>';
+			}
+		
+		
+			return '<table width="100%" border="0" cellspacing="0" cellpadding="4">
+			<tr>
+			<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภาพถ่ายอาการเสีย/ปัญหาที่พบ</strong></td>
+			<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภาพถ่ายหลังซ่อม</strong></td>
+			</tr>
+			<tr>
+			'.$before.$after.'
+			</tr>
+			</table>';
+		} else {
+			$noImg = new NoImg();
+			return $noImg->noImg;
+		}
+	} 
+}
+
+$getImg = new Img();
 
 //----------------------------------Switch Case------------------------------------
 switch($countPart){
 
-	case '>5':
+	case '>3':
 
 		$html.='
 		<tr>
 		<td style="text-align:center" colspan="7"><strong>**รายการอะไหล่อยู่หน้าถัดไป**</strong></td>
 		</tr>';
 
-		$html.= '</table>** หากรายการอะไหล่มีมากกว่า 5 รายการ ระบบจะพิมพ์แยกหน้ารายการอะไหล่ให้อัตโนมัติ<br /><br />';
+		$html.= '</table>** หากรายการอะไหล่มีมากกว่า 3 รายการ ระบบจะพิมพ์แยกหน้ารายการอะไหล่ให้อัตโนมัติ<br /><br />';
+
+		$html.= $partSurvey;
 
 		$html2.= '<table width="100%" border="0" cellspacing="0" cellpadding="4"><tr><td bgcolor="#EAEAEA"><strong>::รายการอะไหล่ที่เปลี่ยน</strong></td></tr></table>';
 
@@ -894,44 +766,14 @@ switch($countPart){
 		</tr>';
 
 		$html2.= $partTable;
+		
+		$pdf->WriteHTML($stylesheet, 1);
+		$pdf->writeHTML($html,  true, 0, true, 0);
 
-		if((empty($arrImg['before'])) && (empty($arrImg['after']))){
-
-			$html.= $noImgTable;
-
-			$pdf->WriteHTML($stylesheet, 1);
-			$pdf->writeHTML($html,  true, 0, true, 0);
-
-			$pdf->AddPage();
-			$pdf->SetPrintHeader(true);
-			$pdf->SetPrintFooter(false);
-			$pdf->writeHTML($html2,  true, 0, true, 0);
-			// Start First Page Group
-			$pdf->startPageGroup();
-
-		}else {
-
-			if((count($arrImg['before']) > 3) || (count($arrImg['after']) > 3)){
-
-				$html.='<table width="100%" border="0" cellspacing="0" cellpadding="4">
-				<tr>
-				<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภาพถ่ายอาการเสีย/ปัญหาที่พบ</strong></td>
-				<td bgcolor="#EAEAEA" width="50%" colspan="3"><strong>::ภาพถ่ายหลังซ่อม</strong></td>
-				</tr>
-				<tr><td></td></tr>
-				<tr><td></td></tr>
-				<tr>
-				<td style="text-align:center" colspan="6"><strong>**ไฟล์แนบรูปภาพอยู่หน้าที่ 3**</strong></td>
-				</tr>
-				</table>';
-
-				$html3 = $imgFullTable;
-
+		if(!empty($arrImg['before']) || !empty($arrImg['after'])){
+			if($countPart < 5 && (count($arrImg['before']) <= 4 || count($arrImg['after']) <= 4)){
+				$html3.= $getImg->FullImg($arrImg);	
 				
-
-				$pdf->WriteHTML($stylesheet, 1);
-				$pdf->writeHTML($html,  true, 0, true, 0);
-
 				$pdf->AddPage();
 				$pdf->SetPrintHeader(true);
 				$pdf->SetPrintFooter(false);
@@ -941,122 +783,53 @@ switch($countPart){
 				$pdf->SetPrintHeader(true);
 				$pdf->SetPrintFooter(false);
 				$pdf->writeHTML($html3,  true, 0, true, 0);
+			} else {
+				$html2.= '<br><br>';
+				$html2.= $getImg->FullImg($arrImg);
 				
-				$pdf->startPageGroup();
-
-			}else{
-
-			$html.=$imgTable;
-			
-			// output the HTML content
-			$pdf->WriteHTML($stylesheet, 1);
-			$pdf->writeHTML($html,  true, 0, true, 0);
-
-			$pdf->AddPage();
-			$pdf->SetPrintHeader(true);
-			$pdf->SetPrintFooter(false);
-			$pdf->writeHTML($html2,  true, 0, true, 0);
-			// Start First Page Group
-			$pdf->startPageGroup();
-
+				$pdf->AddPage();
+				$pdf->SetPrintHeader(true);
+				$pdf->SetPrintFooter(false);
+				$pdf->writeHTML($html2,  true, 0, true, 0);
 			}
 
 		}
-
-	break;
-
-	case '>2' :
-
-		$html.=$partTable;
-	
-		$html.= '** หากรายการอะไหล่มีมากกว่า 5 รายการ ระบบจะพิมพ์แยกหน้ารายการอะไหล่ให้อัตโนมัติ<br /><br />';
-	
-		$before ='';
-		$after ='';
-
-		if((empty($arrImg['before'])) && (empty($arrImg['after']))){
-			$html.= $noImgTable;
-
-			$pdf->WriteHTML($stylesheet, 1);
-			$pdf->writeHTML($html,  true, 0, true, 0);
-			// Start First Page Group
-			$pdf->startPageGroup();
 		
-		}else{
-
-			$html.= $nextImgtable;
-			
-			$html2 = '';
-			
-			$html2.= $imgFullTable;
-			
-				// output the HTML content
-			$pdf->WriteHTML($stylesheet, 1);
-			$pdf->writeHTML($html,  true, 0, true, 0);
-			
-			$pdf->AddPage();
-			$pdf->SetPrintHeader(true);
-			$pdf->SetPrintFooter(false);
-			$pdf->writeHTML($html2,  true, 0, true, 0);
-			$pdf->startPageGroup();
-
-		}
+		$pdf->startPageGroup();
 
 	break;
 
 	case '!0' :
 
 		$html.=$partTable;
-
-		$html.= '** หากรายการอะไหล่มีมากกว่า 5 รายการ ระบบจะพิมพ์แยกหน้ารายการอะไหล่ให้อัตโนมัติ<br /><br />';
-
+	
+		$html.= '** หากรายการอะไหล่มีมากกว่า 3 รายการ ระบบจะพิมพ์แยกหน้ารายการอะไหล่ให้อัตโนมัติ<br /><br />';
+	
 		$before ='';
 		$after ='';
 
-		if((empty($arrImg['before'])) && (empty($arrImg['after']))){
-			$html.= $noImgTable;
-			
-			$pdf->WriteHTML($stylesheet, 1);
-			$pdf->writeHTML($html,  true, 0, true, 0);
-			// Start First Page Group
-			$pdf->startPageGroup();
-		
-		}else{
+		$html.=$partSurvey;
 
-			if((count($arrImg['before']) > 3) || (count($arrImg['after']) > 3)){
-				$html.=$nextImgtable;
-	
-		$html2 = '';
-	
-		$html2.= $imgFullTable;
-	
-			// output the HTML content
+		// output the HTML content
 		$pdf->WriteHTML($stylesheet, 1);
 		$pdf->writeHTML($html,  true, 0, true, 0);
 	
-		$pdf->AddPage();
-		$pdf->SetPrintHeader(true);
-		$pdf->SetPrintFooter(false);
-		$pdf->writeHTML($html2,  true, 0, true, 0);
-		$pdf->startPageGroup();
-			}else{
-			
-				$html.= $imgTable;
-			
-			// output the HTML content
-			$pdf->WriteHTML($stylesheet, 1);
-			$pdf->writeHTML($html,  true, 0, true, 0);
-			// Start First Page Group
-			$pdf->startPageGroup();
-			}
-
+		if(!empty($arrImg['before']) || !empty($arrImg['after'])){
+			$html2.= $getImg->FullImg($arrImg);
+			$pdf->AddPage();
+			$pdf->SetPrintHeader(true);
+			$pdf->SetPrintFooter(false);
+			$pdf->writeHTML($html2,  true, 0, true, 0);
 		}
+		
+		$pdf->startPageGroup();
 
 	break;
 
 	case '0' :
 	
-		$html.='<tr class="bg-white"><td colspan="8" style="text-align:center;color:grey;">ไม่มีรายการเปลี่ยนอะไหล่</td></tr>';
+		$html.='<tr class="bg-white"><td colspan="8" style="text-align:center;color:grey;">ไม่มีรายการเปลี่ยนอะไหล่</td></tr>
+	';
 
 		$html.='
 		<tr bgcolor="#F3F3F3">
@@ -1065,52 +838,26 @@ switch($countPart){
 		<td style="text-align:right;"><u>'.number_format($grand_total,2).'</u></td>
 		</tr>';
 
-		$html.= '</table>** หากรายการอะไหล่มีมากกว่า 5 รายการ ระบบจะพิมพ์แยกหน้ารายการอะไหล่ให้อัตโนมัติ<br /><br />';
+		$html.= '</table>** หากรายการอะไหล่มีมากกว่า 3 รายการ ระบบจะพิมพ์แยกหน้ารายการอะไหล่ให้อัตโนมัติ<br /><br />';
 
 		$before ='';
 		$after ='';
 
-		if((empty($arrImg['before'])) && (empty($arrImg['after']))){
+		$html.= $partSurvey;
 
-			$html.= $noImgTable;
-			
-			$pdf->WriteHTML($stylesheet, 1);
-			$pdf->writeHTML($html,  true, 0, true, 0);
-			// Start First Page Group
-			$pdf->startPageGroup();
-		}else{
-			
-			if((count($arrImg['before']) > 3) || (count($arrImg['after']) > 3)){ //รูปภาพมากกว่า 3 จะขึ้นหน้าใหม่
+		$pdf->WriteHTML($stylesheet, 1);
+		$pdf->writeHTML($html,  true, 0, true, 0);
 
-				$html.=$nextImgtable;
-			
-				$html2 = '';
-			
-				$html2.= $imgFullTable;
-			
-				// output the HTML content
-				$pdf->WriteHTML($stylesheet, 1);
-				$pdf->writeHTML($html,  true, 0, true, 0);
-			
-				$pdf->AddPage();
-				$pdf->SetPrintHeader(true);
-				$pdf->SetPrintFooter(false);
-				$pdf->writeHTML($html2,  true, 0, true, 0);
-				$pdf->startPageGroup();
-			
-			}else {	
-			
-				$html.= $imgTable;
-			
-			// output the HTML content
-			$pdf->WriteHTML($stylesheet, 1);
-			$pdf->writeHTML($html,  true, 0, true, 0);
-			// Start First Page Group
-			$pdf->startPageGroup();
+		if(!empty($arrImg['before']) || !empty($arrImg['after'])){
+			$html2.= $getImg->FullImg($arrImg);
 
-			}
-
+			$pdf->AddPage();
+			$pdf->SetPrintHeader(true);
+			$pdf->SetPrintFooter(false);
+			$pdf->writeHTML($html2,  true, 0, true, 0);
 		}
+	
+		$pdf->startPageGroup();
 	
 	break;
 
@@ -1137,7 +884,6 @@ $pdf->Output($rowData['maintenance_request_no'].'.pdf', "I");
 // echo json_encode($rowData['maintenance_request_no']);
 // exit();
 //--------------------------------------------------------------------------------------------------
->>>>>>> Stashed changes
 
 //============================================================+
 // END OF FILE
@@ -1145,14 +891,11 @@ $pdf->Output($rowData['maintenance_request_no'].'.pdf', "I");
 สำเนาใบเสร็จรับเงิน / ใบกำกับภาษี
 COPY OFFICIAL RECEIPT / COPY TAX INVOICE
 ORIGINAL OFFICIAL RECEIPT / ORIGINAL TAX INVOICE*/
-<<<<<<< Updated upstream
-//============================================================+
-=======
 //============================================================+
 
 //--------------------------Case การแสดงผลหน้า PDFนี้ ------------------------------
 // CASE 1 
-// อะไหล่ มากกว่า 5 (5++)	 
+// อะไหล่ มากกว่า 3 (3++)	 
 
 // อะไหล่ อยู่หน้า 2
 // เช็ครูป
@@ -1161,28 +904,18 @@ ORIGINAL OFFICIAL RECEIPT / ORIGINAL TAX INVOICE*/
 // 	มีมากกว่า 3 - อยู่หน้า 3 มี 3 หน้า
 
 // CASE 2
-// อะไหล่ มากกว่า 2 (3++) แต่ไม่มากกว่า 5 (2-5)
-// อะไหล่หน้า 1 
-// เช็ครูป
-// 	ไม่มี - ว่าง มีหน้าเดียว
-// 	มี - อยู่หน้า 2
+// อะไหล่ ไม่เท่ากับ0 แต่ไม่มากกว่า 3 (1-2)
 
-// CASE 3
-// อะไหล่ ไม่เท่ากับ0 แต่ไม่มากกว่า 2 (1-2)
-
-// อะไหล่หน้า 1 
+// อะไหล่หน้า 1
 // เช็ครูป 
 // 	ไม่มี - ว่าง มีหน้าเดียว
-// 	มีน้อยกว่า 3 - อยู่หน้า 1
-// 	มีมากกว่า 3 - อยู่หน้า 2 
+// 	มี- อยู่หน้า 2
 
-// CASE 4 
+// CASE 3
 // อะไหล่ ไม่มี
 // อะไหล่ไม่มี
 
 // เช็ครูป
 // 	ไม่มี - ว่าง มีหน้าเดียว
-// 	มีน้อยกว่า 3 - อยู่หน้า 1 มี 1 หน้า
-// 	มีมากกว่า 3 - อยู่หน้า 2 มี 2 หน้า
+// 	มี - อยู่หน้า 2 มี 2 หน้า
 //--------------------------------------------------------------------------------
->>>>>>> Stashed changes

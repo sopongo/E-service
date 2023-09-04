@@ -243,13 +243,10 @@ $(document).ready(function () { //When the page has loaded
         $('form#frm_register').fadeIn(1000).show();
   });
 
-  var emailDomains = [<?PHP foreach($domainEmail as $index=> $value){ echo "'".$value."', ";}?>];
 
   //$("#frm_register").on('click', '#chk_register', function(e){
   $(document).on('click','#chk_register',function(e){    
-    var chkdomain = $("#email_regis").val().split('@')[1];
-    //alert($("#email_regis").val()+'------------'+chkdomain+'---xxxx'+emailDomains.indexOf(chkdomain, 0)); return false;
-
+    //alert('111111111');
     if($("#no_user").val()==""){
       sweetAlert("ผิดพลาด...", "กรุณากรอกรหัสพนักงาน", "error"); //The error will display
       return false;
@@ -258,9 +255,6 @@ $(document).ready(function () { //When the page has loaded
       return false;
     }else if (!isEmail($("#email_regis").val())){
       sweetAlert("ผิดพลาด...", "รูปแบบอีเมล์ไม่ถูกต้อง!", "error"); //The error will display
-      return false;
-    }else if(emailDomains.indexOf(chkdomain, 0)<0){
-      sweetAlert("ผิดพลาด...", "อีเมล์แอดเดรสต้องเป็น \n<?PHP foreach($domainEmail as $index=> $value){ echo '@'.$value.', ';}?> \n เท่านั้น", "error"); //The error will display
       return false;
     }else if($("#password_regis").val()==""){
       sweetAlert("ผิดพลาด...", "กรุณากรอกรหัสผ่าน", "error"); //The error will display
@@ -425,19 +419,35 @@ $(document).ready(function () { //When the page has loaded
       $fetchChkReqStatus = $obj->fetchRows("SELECT tb_maintenance_request.id_maintenance_request, tb_maintenance_request.ref_id_user_request, tb_maintenance_request.ref_id_user_hand_over, tb_maintenance_request.hand_over_date , tb_maintenance_request.ref_id_user_survey, tb_maintenance_request.survay_date
       FROM tb_maintenance_request 
       WHERE tb_maintenance_request.hand_over_date IS NOT NULL
-      AND tb_maintenance_request.survay_date IS NULL;");
+      AND tb_maintenance_request.survay_date IS NULL
+      -- AND tb_maintenance_request.ref_id_user_survey = 0
+      ;");
       
       foreach($fetchChkReqStatus as $key => $value){
         $diff_minutes = timeDifference($value['hand_over_date'],date('Y-m-d H:i:s'));
+ 
         if($diff_minutes >= $timeDiff){
           $updateRow = [
             'ref_id_user_survey' => 0,
             'survay_date' => date('Y-m-d H:i:s'),
           ];
+          $ChkScore = array();
+          for($i=0;$i<=5;$i++){
+            $counts = array_count_values($ChkScore);
+            $numberOfZero = isset($counts[0]) ? $counts[0] : 0;
+            $result = $numberOfZero >= 1 ? 1 : rand(0,1);
+            $ChkScore[] = $result;
+            $AutoSurvey = [
+              'ref_id_maintenance_request' => $value['id_maintenance_request'],
+              'ref_topic_survey' => $i,
+              'score_result' => $result
+            ];
+            $addAuto = $obj->addRow($AutoSurvey, 'tb_satisfaction_survey');
+          }
+         
           $Update = $obj->update($updateRow, "id_maintenance_request=".$value['id_maintenance_request']."", "db_eservice_new.tb_maintenance_request");
         }
       }
-// exit();
       //echo $_SESSION['sess_id_user']; exit();
     ?>
     <script type="text/javascript">

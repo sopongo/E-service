@@ -44,47 +44,18 @@
       <div class="col-sm-12">
 
     <!--<a id="some_button" class="btn btn-danger">refesh</a>-->
-
-        <div class="sec-ajax col-md-8 bg-light p-1 m-2">
-            <p>ตย. การส่งค่าด้วย ajax หลังจากโหลด Datatable แล้ว</p>
-          <div class="row">
-          <div class="col-md-4 mb-2">
-          <lebel>Val 1:</lebel>
-            <input type="text" name="val_1" id="val_1" class="form-control form-control-sm" placeholder="val_1" />
-          </div><!--end col-6-->
-
-          <div class="col-md-4 mb-2">
-            <lebel>Val 2:</lebel>
-            <input type="text" name="val_2" id="val_2"  class="form-control form-control-sm" placeholder="val_2" />
-          </div><!--end col-6-->
-
-          <div class="col-md-4 mb-2">
-          <lebel>Radio:</lebel>
-          <div class="form-group clearfix">
-          <div class="icheck-success d-inline">
-            <input type="radio" name="radio_1" id="radioSuccess1"  value="1">
-            <label for="radioSuccess1"  class="text-success">ส่งค่า RADIO= 1</label>
-          </div>
-          <div class="icheck-danger d-inline ml-5">
-            <input type="radio" name="radio_1" id="radioSuccess2" value="2">
-            <label for="radioSuccess2" class="text-danger">ส่งค่า RADIO= 2</label>
-          </div>
-        </div>
-          </div><!--end col-6-->          
-
-          </div><!--end row-->          
-          <button id="sendval" name="sendval" class="btn btn-success btn-md">ส่งค่า</button>            
-        </div><!--end sec-ajax-->
-
-
+    
     <table id="example1" class="table table-bordered table-hover dataTable dtr-inline">
       <thead>
       <tr class="bg-light">
         <th class="sorting_disabled">No</th>
-        <th>ไซต์</th>
-        <th>แผนก</th>
-        <th>ชื่อแบรนด์</th>
-        <th>หมายเหตุ</th>
+        <th>Col-1</th>
+        <th>Col-2</th>
+        <th>Col-3</th>
+        <th>Col-4</th>
+        <th>Col-5</th>
+        <th>Col-6</th>
+        <th>Col-7</th>
         <th>จัดการ</th>
       </tr>
       </thead>
@@ -125,38 +96,27 @@ $('#some_button').click(function refreshData() {
   $('#example1').DataTable().ajax.reload();
 });
 
-/*$(document).on('click','.sendval',function(){
-  $('#example1').DataTable().reload();
-});*/
+$(document).on('change keyup blur','.taxAmount',function(){});
 
 
-  $(document).ready(function () {
-    var applications = '';
-    var val_1 = $('#val_1').val();
-    //var table = $('#example1').DataTable();
-    var table = $('#example1').DataTable({
+    $('#example1').DataTable({
       "processing": true,
       "serverSide": true,
-      "order": [0,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
+      "order": [1,'desc'], //ถ้าโหลดครั้งแรกจะให้เรียงตามคอลัมน์ไหนก็ใส่เลขคอลัมน์ 0,'desc'
       "aoColumnDefs": [
-        { "bSortable": false, "aTargets": [0,1, 4, 5] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
-        { "bSearchable": false, "aTargets": [ 0, 1, 2, 4, 5 ] } //คอลัมน์ที่าจะไม่ให้เสริท
-      ],
+        { "bSortable": false, "aTargets": [0,4,5,6,7,8] }, //คอลัมน์ที่จะไม่ให้ฟังก์ชั่นเรียง
+        { "bSearchable": false, "aTargets": [ 0, 1, 2, 3 ] } //คอลัมน์ที่าจะไม่ให้เสริท
+      ], 
       ajax: {
         beforeSend: function () {
           //จะให้ทำอะไรก่อนส่งค่าไปหรือไม่
         },
-        url: 'module/module_demo/datatable_processing.php?testval=1234', 
-        //data : {"action":"get" },//"slt_search":slt_search ##ส่งแบบที่ 1 ส่งค่าแค่รอบเดียว
-        "data":function(data) { //##ส่งแบบที่ 2 ส่งค่าตาม event Click
-            data.val_1 = $('#val_1').val();
-            data.val_2 = $('#val_2').val();
-            data.radio_1 = $('input[name=radio_1]:checked').val();
-          },
+        url: 'module/module_demo/datatable_processing.php',
         type: 'POST',
+        data : {"action":"get"},//"slt_search":slt_search
         async: false,
         cache: false,
-      },  
+      },
       "paging": true,
       "lengthChange": true,
       "searching": true,
@@ -168,15 +128,11 @@ $('#some_button').click(function refreshData() {
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
+  $(document).ready(function () {
+    
+    
+    var table = $('#example1').DataTable();
     //var info = table.page.info();
-
-    $('#sendval').click(function refreshData() {
-     $('#example1').DataTable().ajax.reload();
-    });
-
-    /*$(document).on('click','#sendval',function(){
-        table.DataTable().draw();
-      });    */
 
     $('#example1_length').append('<div class="col-10 d-inline"><button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-default" id="addData" data-backdrop="static" data-keyboard="false"><i class="fas fa-plus-circle"></i> เพิ่มข้อมูล</button></div>');
     $('input[type=search]').attr('placeholder', 'Col-3 หรือ Col-4');
@@ -193,6 +149,7 @@ $('#some_button').click(function refreshData() {
           cancelButtonText: "ไม่, ยกเลิก",        
           closeOnConfirm: false 
         }, function(isConfirm){   
+
           alert(isConfirm);
           return false;
           $.ajax({

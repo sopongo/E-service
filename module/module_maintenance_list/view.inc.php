@@ -44,6 +44,9 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
     right:2px;
     z-index:500; display:block; opacity:0.7; font-size:1rem;
   }
+  .btn-print{
+    cursor: pointer;
+  }
 </style>
 
 <!-- Select2 -->
@@ -326,7 +329,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                   <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">รายละเอียด</a></li>
                   <li class="nav-item"><a class="nav-link btn-timeline" href="#timeline" data-toggle="tab">ไทม์ไลน์</a></li>
                   <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">ติดตามงานซ่อม</a></li>
-                  <li class="nav-item"><a class="nav-link btn-print" target="_blank"><i class="fas fa-print"></i>&nbsp;พิมพ์ใบแจ้งซ่อม</a></li>
+                  <li class="nav-item"><a class="nav-link btn-print"><i class="fas fa-print"></i>&nbsp;พิมพ์ใบแจ้งซ่อม</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
@@ -547,6 +550,14 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                               $score+=$rowSurvey[$key]['score_result'];
                           }
                           $score_result = $score/count($arrTopicSurvey)*100;
+                          if (floor($score_result) == $score_result) {
+                            // ไม่มีทศนิยม
+                            $score_result;
+                        } else {
+                            // มีทศนิยม
+                            $score_result = number_format($score_result, 2);
+                        }
+                
                           if($score_result<=30){
                               $bg_progress = 'bg-danger';
                           }else if($score_result>=31 && $score_result<=74){
@@ -1136,11 +1147,11 @@ $(document).on("click", ".btn-posttimeline", function (event){
 });
 
 $(document).on("click", ".btn-serv_end", function (event){ 
-  var chk_caused_by = '<?PHP echo  $rowData['txt_caused_by']!='' ? trim($rowData['txt_caused_by']) : ''; ?>';
-  var chk_failure_code = '<?PHP echo $rowData['ref_id_failure_code']!='' ? trim($rowData['ref_id_failure_code']) : ''; ?>';
-  var chk_failure_code_th = '<?PHP echo $rowData['failure_code_th_name']!='' ? trim($rowData['failure_code_th_name']) : '';?>';
-  var chk_repair_code = '<?PHP echo $rowData['repair_code_name']!='' ? trim($rowData['repair_code_name']) : '';?>';
-  var chk_txt_solution = '<?PHP echo $rowData['txt_solution']!='' ? trim($rowData['txt_solution']) : '';?>';
+  var chk_caused_by = '<?PHP echo  $rowData['txt_caused_by']; ?>';
+  var chk_failure_code = '<?PHP echo $rowData['ref_id_failure_code']; ?>';
+  var chk_failure_code_th = '<?PHP echo $rowData['failure_code_th_name'];?>';
+  var chk_repair_code = '<?PHP echo $rowData['repair_code_name'];?>';
+  var chk_txt_solution = '<?PHP echo $rowData['txt_solution'];?>';
   if(chk_caused_by=='' && (chk_failure_code=='' || chk_failure_code_th=='') && chk_repair_code=='' && chk_txt_solution==''){
     sweetAlert("ผิดพลาด!", "ต้องสรุปผลการซ่อมก่อน \r\n ถึงจะปิดงานซ่อมได้", "error");
     return false;
@@ -1466,7 +1477,7 @@ $(document).on("click", ".btn-approved", function (e){
   $.ajax({
       url: "module/module_maintenance_list/update_result.inc.php",
       type: "POST",
-      data:{"action":"approved","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"ref_id_dept_responsibility":<?PHP echo $rowData['ref_id_dept_responsibility']?>},
+      data:{"action":"approved","ref_id":<?PHP echo $rowData['id_maintenance_request']?>,"id_dept_responsibility":<?PHP echo $rowData['id_dept_responsibility']?>},
       beforeSend: function () {
       },
       success: function (data) {

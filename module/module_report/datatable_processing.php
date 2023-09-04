@@ -56,22 +56,79 @@ switch ($action) {
         $cancel = '';
         $and = '';
         $query_status = '';
+        $query_req='';
 
-        if (!empty($formData['radio'])) {
-            if ($formData['radio'] == 'all') {
-                $query_req = "(tb_maintenance_request.ref_id_dept_responsibility=" . $_SESSION['sess_id_dept'] . " OR tb_maintenance_request.ref_id_user_request=" . $_SESSION['sess_id_user'] . ")";
-                if ($_SESSION['sess_class_user'] == 4 || $_SESSION['sess_class_user'] == 5) {
-                    $query_req = " tb_maintenance_request.id_maintenance_request IS NOT NULL ";
+        if(!empty($formData['selectType'])){
+            if($formData['selectType']== 'all'){
+                switch($_SESSION['sess_class_user']){
+                    case 2:
+                        $query_req = "(tb_ref_repairer.ref_id_user_repairer=" . $_SESSION['sess_id_user'] . " OR tb_maintenance_request.ref_id_user_request=" . $_SESSION['sess_id_user'] . ")";
+                    break;
+                    case 3:
+                        $query_req = "(tb_ref_repairer.ref_id_user_repairer=" . $_SESSION['sess_id_user'] . " OR tb_maintenance_request.ref_id_user_request=" . $_SESSION['sess_id_user'] . " OR tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept'].")";
+                    break;
+                    case 4:
+                    case 5:
+                        $query_req = " tb_maintenance_request.id_maintenance_request IS NOT NULL ";
+                    break;
                 }
-            } else if ($formData['radio'] == 'person') {
-                $query_req = " tb_maintenance_request.ref_id_user_request=" . $_SESSION['sess_id_user'] . " ";
-            } else if ($formData['radio'] == 'dept') {
-                $query_req = " tb_maintenance_request.ref_id_dept_responsibility=" . $_SESSION['sess_id_dept'] . " ";
-            } else if ($formData['radio'] == 'responsible') {
-                $query_req = " tb_ref_repairer.ref_id_user_repairer=" . $_SESSION['sess_id_user'] . " ";
-            } else {
-                $query_req = '';
+            } else if($formData['selectType']== 'person'){
+
+                    $query_req = "tb_maintenance_request.ref_id_user_request=" . $_SESSION['sess_id_user'] . "";
+
+            } else if($formData['selectType']== 'responsible'){
+                switch($_SESSION['sess_class_user']){
+                    case 2:
+                        $query_req = "tb_ref_repairer.ref_id_user_repairer=" . $_SESSION['sess_id_user'] . "";
+                    break;
+                    case 3:
+                        $query_req = " tb_ref_repairer.ref_id_user_repairer=" . $_SESSION['sess_id_user'] . "";
+                    break;
+                }
+
+
+            } else if($formData['selectType']== 'dept'){
+
+
+          
+                    if($_SESSION['sess_class_user'] == 4 || $_SESSION['sess_class_user'] == 5){
+                        if($formData['selectDept_responsible'] == 0){
+                               
+                                    $query_req.= " tb_maintenance_request.id_maintenance_request IS NOT NULL AND ";
+
+                        }else{
+                                    $query_req.= " tb_maintenance_request.ref_id_dept_responsibility=".$formData['selectDept_responsible']." AND ";    
+
+                        }
+                    }
+
+                    if($formData['selectDept_request'] == 0){
+                        switch($_SESSION['sess_class_user']){
+                            case 3:
+                                $query_req = " tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." ";
+                            break;
+                            case 4:
+                            case 5:
+                                $query_req.= " tb_maintenance_request.ref_id_user_request IS NOT NULL ";
+                            break;
+                        }
+
+                    }else{
+                        switch($_SESSION['sess_class_user']){
+                            case 3:
+                                $query_req = " (tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." 
+                                AND tb_maintenance_request.ref_id_dept_request=".$formData['selectDept_request'].") ";
+                            break;
+                            case 4:
+                            case 5:
+                                $query_req.= " tb_maintenance_request.ref_id_dept_request=".$formData['selectDept_request']."";
+                            break;
+                        }
+
+                    }
+            
             }
+
         }
 
         // รออนุมัติ /จ่ายงาน
@@ -130,8 +187,7 @@ switch ($action) {
             AND tb_maintenance_request.ref_user_id_accept_request IS NOT NULL
             AND tb_maintenance_request.duration_serv_start IS NOT NULL
             AND tb_maintenance_request.duration_serv_end IS NOT NULL
-            AND tb_maintenance_request.hand_over_date IS NOT NULL
-            AND tb_maintenance_request.survay_date IS NULL)';
+            AND tb_maintenance_request.hand_over_date IS NULL)';
             $and = ' AND';
         };
 
@@ -142,7 +198,7 @@ switch ($action) {
             AND tb_maintenance_request.maintenance_request_status=1
             AND tb_maintenance_request.duration_serv_start IS NOT NULL
             AND tb_maintenance_request.duration_serv_end IS NOT NULL
-            AND tb_maintenance_request.survay_date IS NOT NULL)';
+            AND tb_maintenance_request.hand_over_date IS NOT NULL)';
             $and = ' AND';
         };
 
@@ -298,28 +354,6 @@ switch ($action) {
                 
             break;
 
-            // case 4:
-            //     $sql_fetchRow = "SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
-            //     tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine FROM tb_maintenance_request
-            //     LEFT JOIN tb_machine_site ON (tb_machine_site.id_machine_site=tb_maintenance_request.ref_id_machine_site)
-            //     LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
-            //     LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)
-            //     LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
-            //     LEFT JOIN tb_ref_repairer ON (tb_maintenance_request.id_maintenance_request = tb_ref_repairer.ref_id_maintenance_request)
-            //     WHERE  ".$query_req." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']."
-            //     AND tb_maintenance_request.mt_request_date BETWEEN '".$dateStart."' AND '".$dateEnd."'
-            //     AND tb_maintenance_request.maintenance_request_status!=0".$query_status.$query_search;
-            //     //$query_class.' '.$query_search
-            //     $fetchRow = $obj->fetchRows($sql_fetchRow." ORDER BY ".$orderBY." ".$_POST['order']['0']['dir']." ".$limit."");
-            //     //$sql_numRow = "SELECT count(id_maintenance_request) AS total_row FROM tb_maintenance_request ";
-            //     //$numRow = $obj->getCount($sql_numRow);    //ถ้าจำนวน Row ทั้งหมด
-            //     //$numRow = count($fetchRow);
-            //     $numRow = $obj->getCount("SELECT count(tb_maintenance_request.id_maintenance_request) AS total_row FROM tb_maintenance_request
-            //     WHERE ".$query_req." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']."
-            //     AND tb_maintenance_request.maintenance_request_status!=0
-            //     AND tb_maintenance_request.mt_request_date BETWEEN '".$dateStart."' AND '".$dateEnd."' ".$query_status.$query_search);
-
-            // break;
             case 4:
             case 5:
             
@@ -329,7 +363,7 @@ switch ($action) {
                 LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
                 LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)
                 LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
-                LEFT JOIN tb_ref_repairer ON (tb_maintenance_request.id_maintenance_request = tb_ref_repairer.ref_id_maintenance_request)
+              
                 WHERE " . $query_req . " AND tb_maintenance_request.ref_id_site_request=" . $_SESSION['sess_ref_id_site'] . "
                 AND tb_maintenance_request.mt_request_date BETWEEN '" . $dateStart . "' AND '" . $dateEnd . "'
                 " . $query_status . $query_search;
@@ -341,7 +375,7 @@ switch ($action) {
                 LEFT JOIN tb_machine_master ON (tb_machine_master.id_machine=tb_machine_site.ref_id_machine_master)
                 LEFT JOIN tb_category ON (tb_category.id_menu=tb_machine_master.ref_id_menu)
                 LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
-                LEFT JOIN tb_ref_repairer ON (tb_maintenance_request.id_maintenance_request = tb_ref_repairer.ref_id_maintenance_request)
+               
                 WHERE " . $query_req . " AND tb_maintenance_request.ref_id_site_request=" . $_SESSION['sess_ref_id_site'] . "
                 AND tb_maintenance_request.mt_request_date BETWEEN '" . $dateStart . "' AND '" . $dateEnd . "'
                 " . $query_status . $query_search);
@@ -354,34 +388,8 @@ switch ($action) {
             $No = ($numRow - $_POST['start']);
             foreach ($fetchRow as $key => $value) {
 
-                //&& $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['hand_over_date']==NULL
-                if ($fetchRow[$key]['status_approved'] == 0 && $fetchRow[$key]['allotted_date'] == null && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-danger">รออนุมัติ/จ่ายงาน</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 2 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-danger">ไม่อนุมัติ</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_start'] != null && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['survay_date'] == null
-                    && $fetchRow[$key]['hand_over_date'] == null && $fetchRow[$key]['ref_user_id_accept_request'] != null) {
-                    $req_textstatus = '<span class="text-bold text-success">กำลังซ่อม</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null && $fetchRow[$key]['ref_user_id_accept_request'] != '') {
-                    $req_textstatus = '<span class="text-bold text-danger">รอซ่อม</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_start'] == null && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-danger">รอช่างรับงานซ่อม</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] != null && $fetchRow[$key]['hand_over_date'] != null && $fetchRow[$key]['survay_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-success"> งานรอส่งมอบ</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] != null && $fetchRow[$key]['hand_over_date'] != null && $fetchRow[$key]['survay_date'] != null) {
-                    $req_textstatus = '<span class="text-bold text-success"> ปิดงานและส่งมอบแล้ว</span>';
-                } else if ($fetchRow[$key]['maintenance_request_status'] == 2) {
-                    $req_textstatus = '<span class="text-bold text-gray">ยกเลิกใบแจ้งซ่อม</span>';
-                } else {
-                    $req_textstatus = '-';
-                }
+                $req_textstatus = DataTableStatus($value);
+
                 $dataRow = array();
                 $dataRow[] = $No . '.';
                 //$dataRow[] = $No.'.'.(count($fetchRow)).'---'.$search.'--------'.$query_class.'-------------'.$query_search.$fetchRow[$key]['dept_request'];
@@ -445,8 +453,8 @@ switch ($action) {
 //////////////////////////////////////////////////////////////////////////////
         $dept = '';
         $mydept = '';
-        if ($formData['dept'] != 0) {
-            $dept = " AND tb_maintenance_request.ref_id_dept_request=" . $formData['dept'] . " ";
+        if ($_POST['dept'] != 0) {
+            $dept = " AND tb_maintenance_request.ref_id_dept_request=" . $_POST['dept'] . " ";
         }
 
         if ($_SESSION['sess_class_user'] == 3) {
@@ -493,7 +501,6 @@ switch ($action) {
             11 => "tb_dept_responsibility.dept_initialname",
             12 => "tb_maintenance_request.ref_id_job_type",
             13 => "tb_maintenance_request.related_to_safty",
-
         );
 
         $orderBY = $colunm_sort[$_POST['order']['0']['column']];
@@ -510,7 +517,7 @@ switch ($action) {
         LEFT JOIN tb_dept AS tb_dept_request ON (tb_dept_request.id_dept = tb_maintenance_request.ref_id_dept_request)
         LEFT JOIN tb_ref_repairer ON (tb_maintenance_request.id_maintenance_request = tb_ref_repairer.ref_id_maintenance_request)
         WHERE tb_maintenance_request.ref_id_site_request=" . $_SESSION['sess_ref_id_site'] . $dept . $mydept . "
-        AND tb_maintenance_request.mt_request_date BETWEEN '" . $dateStart . "' AND '" . $dateEnd . "'";
+        AND tb_maintenance_request.mt_request_date BETWEEN '" . $dateStart . "' AND '" . $dateEnd . "'" .$query_search."";
 
         // print_r($sql_fetchRow);
         // exit();
@@ -524,40 +531,14 @@ switch ($action) {
         LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility)
         LEFT JOIN tb_ref_repairer ON (tb_maintenance_request.id_maintenance_request = tb_ref_repairer.ref_id_maintenance_request)
         WHERE tb_maintenance_request.ref_id_site_request=" . $_SESSION['sess_ref_id_site'] . $dept . $mydept . "
-        AND tb_maintenance_request.mt_request_date BETWEEN '" . $dateStart . "' AND '" . $dateEnd . "'");
+        AND tb_maintenance_request.mt_request_date BETWEEN '" . $dateStart . "' AND '" . $dateEnd . "'" .$query_search."");
 
         if (count($fetchRow) > 0) {
             $No = ($numRow - $_POST['start']);
             foreach ($fetchRow as $key => $value) {
 
-                //&& $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['hand_over_date']==NULL
-                if ($fetchRow[$key]['status_approved'] == 0 && $fetchRow[$key]['allotted_date'] == null && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-danger">รออนุมัติ/จ่ายงาน</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 2 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-danger">ไม่อนุมัติ</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_start'] != null && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['survay_date'] == null
-                    && $fetchRow[$key]['hand_over_date'] == null && $fetchRow[$key]['ref_user_id_accept_request'] != null) {
-                    $req_textstatus = '<span class="text-bold text-success">กำลังซ่อม</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null && $fetchRow[$key]['ref_user_id_accept_request'] != '') {
-                    $req_textstatus = '<span class="text-bold text-danger">รอซ่อม</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_start'] == null && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-danger">รอช่างรับงานซ่อม</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] != null && $fetchRow[$key]['hand_over_date'] != null && $fetchRow[$key]['survay_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-success"> งานรอส่งมอบ</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] != null && $fetchRow[$key]['hand_over_date'] != null && $fetchRow[$key]['survay_date'] != null) {
-                    $req_textstatus = '<span class="text-bold text-success"> ปิดงานและส่งมอบแล้ว</span>';
-                } else if ($fetchRow[$key]['maintenance_request_status'] == 2) {
-                    $req_textstatus = '<span class="text-bold text-gray">ยกเลิกใบแจ้งซ่อม</span>';
-                } else {
-                    $req_textstatus = '-';
-                }
+                $req_textstatus = DataTableStatus($value);
+
                 $dataRow = array();
                 $dataRow[] = $No . '.';
                 //$dataRow[] = $No.'.'.(count($fetchRow)).'---'.$search.'--------'.$query_class.'-------------'.$query_search.$fetchRow[$key]['dept_request'];
@@ -684,8 +665,8 @@ switch ($action) {
 
             $dept = '';
             $menu = '';
-            if ($data['dept'] != 0) {
-                $dept = '  AND tb_maintenance_request.ref_id_dept_responsibility=' . $data['dept'] . '  ';
+            if ($_POST['dept'] != 0) {
+                $dept = '  AND tb_maintenance_request.ref_id_dept_responsibility=' . $_POST['dept'] . '  ';
             }
             if ($data['menu'] == 'total') {
                 $menu = '';
@@ -723,7 +704,7 @@ switch ($action) {
                 LEFT JOIN tb_ref_repairer ON (tb_maintenance_request.id_maintenance_request = tb_ref_repairer.ref_id_maintenance_request)
                 WHERE tb_maintenance_request.ref_id_site_request=" . $_SESSION['sess_ref_id_site'] . $dept . $menu . "
                 AND " . $idMachine_site . "
-                AND tb_maintenance_request.mt_request_date BETWEEN '" . $dateStart . "' AND '" . $dateEnd . "'";
+                AND tb_maintenance_request.mt_request_date BETWEEN '" . $dateStart . "' AND '" . $dateEnd . "'" .$query_search."";
 
         $fetchRow = $obj->fetchRows($sql_fetchRow . " ORDER BY " . $orderBY . " " . $_POST['order']['0']['dir'] . " " . $limit . "");
 
@@ -735,40 +716,14 @@ switch ($action) {
                 LEFT JOIN tb_ref_repairer ON (tb_maintenance_request.id_maintenance_request = tb_ref_repairer.ref_id_maintenance_request)
                 WHERE tb_maintenance_request.ref_id_site_request=" . $_SESSION['sess_ref_id_site'] . $dept . $menu . "
                 AND " . $idMachine_site . "
-                AND tb_maintenance_request.mt_request_date BETWEEN '" . $dateStart . "' AND '" . $dateEnd . "'");
+                AND tb_maintenance_request.mt_request_date BETWEEN '" . $dateStart . "' AND '" . $dateEnd . "'" .$query_search."");
 
         if (count($fetchRow) > 0) {
             $No = ($numRow - $_POST['start']);
             foreach ($fetchRow as $key => $value) {
 
-                //&& $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['hand_over_date']==NULL
-                if ($fetchRow[$key]['status_approved'] == 0 && $fetchRow[$key]['allotted_date'] == null && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-danger">รออนุมัติ/จ่ายงาน</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 2 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-danger">ไม่อนุมัติ</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_start'] != null && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['survay_date'] == null
-                    && $fetchRow[$key]['hand_over_date'] == null && $fetchRow[$key]['ref_user_id_accept_request'] != null) {
-                    $req_textstatus = '<span class="text-bold text-success">กำลังซ่อม</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null && $fetchRow[$key]['ref_user_id_accept_request'] != '') {
-                    $req_textstatus = '<span class="text-bold text-danger">รอซ่อม</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_start'] == null && $fetchRow[$key]['duration_serv_end'] == null && $fetchRow[$key]['hand_over_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-danger">รอช่างรับงานซ่อม</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] != null && $fetchRow[$key]['hand_over_date'] != null && $fetchRow[$key]['survay_date'] == null) {
-                    $req_textstatus = '<span class="text-bold text-success"> งานรอส่งมอบ</span>';
-                } else if ($fetchRow[$key]['status_approved'] == 1 && $fetchRow[$key]['allotted_date'] != '' && $fetchRow[$key]['maintenance_request_status'] == 1
-                    && $fetchRow[$key]['duration_serv_end'] != null && $fetchRow[$key]['hand_over_date'] != null && $fetchRow[$key]['survay_date'] != null) {
-                    $req_textstatus = '<span class="text-bold text-success"> ปิดงานและส่งมอบแล้ว</span>';
-                } else if ($fetchRow[$key]['maintenance_request_status'] == 2) {
-                    $req_textstatus = '<span class="text-bold text-gray">ยกเลิกใบแจ้งซ่อม</span>';
-                } else {
-                    $req_textstatus = '-';
-                }
+                $req_textstatus = DataTableStatus($value);
+
                 $dataRow = array();
                 $dataRow[] = $No . '.';
                 //$dataRow[] = $No.'.'.(count($fetchRow)).'---'.$search.'--------'.$query_class.'-------------'.$query_search.$fetchRow[$key]['dept_request'];
