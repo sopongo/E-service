@@ -139,9 +139,9 @@ class MYPDF extends TCPDF {
 		}
 		
         $this->writeHTML('<table width="100%" border="0" cellspacing="0" cellpadding="0"> 
-		<tr><td width="10%" style="align: left; vertical-align:center;"><br><br>
-		<img src="dist/img/logo.png" width="150"></td>
-		<td width="60%" style="text-align: left; vertical-align:top;">
+		<tr><td width="15%" style="align: left; vertical-align:middle;"><br><br>
+		<img src="dist/img/scgjwd_logo.png" width="150"></td>
+		<td width="55%" style="text-align: left; vertical-align:top;">
 			<strong style="font-size:22px;"><br>
 			 บริษัท แปซิฟิค ห้องเย็น จำกัด</strong><br>
 			  47/19 หมู่ 2 ตำบลนาดี อำเภอเมือง จังหวัด สมุทรสาคร 74000 โทร. (+66) 3411-789-9</td>
