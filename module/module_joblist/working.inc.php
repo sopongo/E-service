@@ -10,6 +10,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 <div class="card-body p-2">
 
 <?PHP
+        $sqlGrouprow = $obj->fetchRows("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY','')); ");
         $sql_fetchRow = "SELECT tb_maintenance_request.*, tb_dept_responsibility.dept_initialname AS dept_responsibility,
         tb_machine_site.code_machine_site, tb_category.name_menu, tb_machine_master.name_machine, tb_attachment.path_attachment_name, tb_ref_repairer.*, 
         tb_location.location_name AS machine_location, tb_building.building_name AS machine_building,
@@ -24,7 +25,9 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
         LEFT JOIN tb_dept AS tb_dept_responsibility ON (tb_dept_responsibility.id_dept=tb_maintenance_request.ref_id_dept_responsibility) 
         LEFT JOIN tb_attachment ON (tb_attachment.ref_id_used=tb_maintenance_request.id_maintenance_request AND tb_attachment.attachment_type=1 AND tb_attachment.image_cate=2) 
         LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
-        WHERE tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_start IS NOT NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.duration_serv_end IS NULL AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']."  ";
+        WHERE tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_start IS NOT NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.duration_serv_end IS NULL AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']." GROUP BY tb_maintenance_request.id_maintenance_request ; ";
+
+        // echo $sql_fetchRow ;
         
 //AND tb_ref_repairer.acknowledge_date IS NULL
 //AND tb_maintenance_request.allotted_accept_date IS NULL 
@@ -39,13 +42,14 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
         <div class="text-md text-bold pb-2"><?PHP echo $fetchRow[$key]['name_menu']!='' ? $fetchRow[$key]['name_menu'] : 'ไม่ทราบชื่อ, ไม่ระบุ';?></div>
         <div class="text-sm pb-1"><?PHP echo $fetchRow[$key]['code_machine_site']!='' ? $fetchRow[$key]['code_machine_site'] : '-';?></div>
         <div class="text-sm pb-1"><?PHP echo $fetchRow[$key]['name_machine']!='' ? $fetchRow[$key]['name_machine'] : 'ไม่ทราบชื่อ, ไม่ระบุ';?></div>
-        <div class="border-top border-bottom pt-2 pb-2 mb-2 d-block" style="height:80px;"><lebel class="d-block text-bold text-sm text-red">ปัญหาที่พบ:</lebel><?PHP echo $fetchRow[$key]['problem_statement']!='' ? $fetchRow[$key]['problem_statement'] : '';?></div>
+        <div class="border-top border-bottom pt-2 pb-2 mb-2 d-block" style="height:80px;"><lebel class="d-block text-bold text-sm text-red">ปัญหาที่พบ:</lebel><?PHP echo $fetchRow[$key]['problem_statement']!='' ? (strlen($fetchRow[$key]['problem_statement'])>150 ? mb_substr($fetchRow[$key]['problem_statement'], 0, 110).'...' : $fetchRow[$key]['problem_statement']) : '';?></div>
         <div class="col-md-4 d-inline-block pl-0">ประเภทงานซ่อม:</div><div class="col-md-7 d-inline-block "><?PHP echo $fetchRow[$key]['ref_id_job_type']!='' ? $ref_id_job_typeArr[$fetchRow[$key]['ref_id_job_type']] : '-'; ?></div>
         <div class="col-md-4 d-inline-block pl-0 pt-1">อาคาร:</div><div class="col-md-7 d-inline-block"><?PHP echo $fetchRow[$key]['machine_building']!='' ? $fetchRow[$key]['machine_building'] : '-';?></div>
         <div class="col-md-4 d-inline-block pl-0 pt-1">สถานที่:</div><div class="col-md-7 d-inline-block"><?PHP echo $fetchRow[$key]['machine_location']!='' ? $fetchRow[$key]['machine_location'] : '-';?></div>
         <div class="col-md-4 d-inline-block pl-0 pt-1">ผู้แจ้งซ่อม:</div><div class="col-md-7 d-inline-block"><?PHP echo $fetchRow[$key]['fullname_request']!='' ? $fetchRow[$key]['fullname_request'] : '-';?> (<?PHP echo $fetchRow[$key]['dept_initialname']!='' ? $fetchRow[$key]['dept_initialname'] : '-';?>)</div>
         <?PHP
-                if(file_exists($pathReq.$fetchRow[$key]['path_attachment_name']) && !empty($fetchRow[$key]['path_attachment_name'])){
+                //echo 'xxx'.$pathReq.$fetchRow[$key]['path_attachment_name'];
+                if(!file_exists($pathReq.$fetchRow[$key]['path_attachment_name']) && !empty($fetchRow[$key]['path_attachment_name'])){
                 echo '<div class="divimg_after col-sm-12 mt-2"><img src="'.$pathReq.$fetchRow[$key]['path_attachment_name'].'" class="img-fluid img-rounded mb-2" alt="ภาพถ่ายอาการเสีย / ปัญหาที่พบ" /></div>';
                 }else{
                 $pathReq.$fetchRow[$key]['path_attachment_name'] = $noimg;

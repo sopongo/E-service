@@ -434,7 +434,7 @@ $obj = new CRUD();
 
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+    <img class="animation__shake" src="dist/img/SCGJWDLogo.png" alt="AdminLTELogo" height="40" width="200">
   </div>
 
   <!-- Navbar -->
@@ -464,7 +464,7 @@ $obj = new CRUD();
   <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color:#00387c;">
     <!-- Brand Logo -->
     <a href="./" class="brand-link">
-    <img src="dist/img/logo_2.png" alt="JWD Logo" class="w-100 p-0 m-0" >
+    <img src="dist/img/SCGJWDLogo.png" alt="JWD Logo" class="w-100 p-0 m-0" >
       <!--<img src="dist/img/logo_2.png" alt="JWD Logo" class="brand-image brand-text" >-->
       <span class="font-weight-bold p-1 mt-2 text-pcs-ct"><?PHP echo $title_site_1; ?></span>
     </a>                  

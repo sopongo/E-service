@@ -104,7 +104,7 @@ $obj = new CRUD(); ##สร้างออปเจค $obj เพื่อเ�
 			<div class="row justify-content-md-center h-100">
 				<div class="card-wrapper">
 					<div class="brand">
-						<img src="dist/img/logo_2.png" alt="logo" class="logo img-responsive" >
+						<img src="dist/img/SCGJWDLogo.png" alt="logo" class="logo img-responsive" >
 					</div>
 					<div class="card fat">
 						<div class="card-body">
