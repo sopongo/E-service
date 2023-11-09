@@ -388,33 +388,33 @@ function DataTableStatus($value){
     if ($value['status_approved'] == 0 && $value['allotted_date'] == null && $value['maintenance_request_status'] == 1
     && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
     $req_textstatus = '<span class="text-bold text-danger">รออนุมัติ/จ่ายงาน</span>';
-} else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
-    && $value['allotted_accept_date'] == null && $value['ref_user_id_accept_request'] == null && $value['duration_serv_start'] == null 
-    && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
-    $req_textstatus = '<span class="text-bold text-danger">รอช่างรับงานซ่อม</span>';
-} else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
-    && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] == null 
-    && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
-$req_textstatus = '<span class="text-bold text-danger">รอซ่อม</span>';
-} else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
-    && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] != null 
-    && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
-    $req_textstatus = '<span class="text-bold text-success">กำลังซ่อม</span>';
-} else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
-    && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] != null
-    && $value['duration_serv_end'] != null && $value['hand_over_date'] == null) {
-    $req_textstatus = '<span class="text-bold text-success"> งานรอส่งมอบ</span>';
-} else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
-    && $value['duration_serv_start'] != null && $value['duration_serv_end'] != null && $value['hand_over_date'] != null) {
-    $req_textstatus = '<span class="text-bold text-success"> ปิดงานและส่งมอบแล้ว</span>';
-} else if ($value['status_approved'] == 2 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
-    && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
-    $req_textstatus = '<span class="text-bold text-danger">ไม่อนุมัติ</span>';
-} else if ($value['maintenance_request_status'] == 2) {
-    $req_textstatus = '<span class="text-bold text-gray">ยกเลิกใบแจ้งซ่อม</span>';
-} else {
-    $req_textstatus = '-';
-}
+    } else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+        && $value['allotted_accept_date'] == null && $value['ref_user_id_accept_request'] == null && $value['duration_serv_start'] == null 
+        && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+        $req_textstatus = '<span class="text-bold text-danger">รอช่างรับงานซ่อม</span>';
+    } else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+        && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] == null 
+        && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+    $req_textstatus = '<span class="text-bold text-danger">รอซ่อม</span>';
+    } else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+        && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] != null 
+        && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+        $req_textstatus = '<span class="text-bold text-success">กำลังซ่อม</span>';
+    } else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+        && $value['allotted_accept_date'] != null && $value['ref_user_id_accept_request'] != null && $value['duration_serv_start'] != null
+        && $value['duration_serv_end'] != null && $value['hand_over_date'] == null) {
+        $req_textstatus = '<span class="text-bold text-success"> งานรอส่งมอบ</span>';
+    } else if ($value['status_approved'] == 1 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+        && $value['duration_serv_start'] != null && $value['duration_serv_end'] != null && $value['hand_over_date'] != null) {
+        $req_textstatus = '<span class="text-bold text-success"> ปิดงานและส่งมอบแล้ว</span>';
+    } else if ($value['status_approved'] == 2 && $value['allotted_date'] != null && $value['maintenance_request_status'] == 1
+        && $value['duration_serv_end'] == null && $value['hand_over_date'] == null) {
+        $req_textstatus = '<span class="text-bold text-danger">ไม่อนุมัติ</span>';
+    } else if ($value['maintenance_request_status'] == 2) {
+        $req_textstatus = '<span class="text-bold text-gray">ยกเลิกใบแจ้งซ่อม</span>';
+    } else {
+        $req_textstatus = '-';
+    }
 
 return $req_textstatus;
 
