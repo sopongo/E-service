@@ -203,7 +203,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                   </li>
                 <?PHP } ?>
                 <li class="list-group-item text-red">
-                    <b>ความเร่งด่วน</b> <span class="float-right"> <?PHP echo $rowData['urgent_type']==1 ? '<i class="fas fa-lightbulb fa-1x"></i> '.$urgentArr[$rowData['urgent_type']] : '<span class="text-green">'.$urgentArr[$rowData['urgent_type']].'</span>';?></span>
+                    <b>ความเร่งด่วน</b> <span class="float-right"> <?PHP echo $rowData['urgent_type']==2 ? '<i class="fas fa-lightbulb fa-1x"></i> '.$urgentArr[$rowData['urgent_type']] : '<span class="text-green">'.$urgentArr[$rowData['urgent_type']].'</span>';?></span>
                   </li>
                   <li class="list-group-item">
                     <b>ประเภทใบแจ้งซ่อม</b> <?PHP if((($_SESSION['sess_class_user']==2 && $chk_responsibility==1) || ($_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5)) && $rowData['maintenance_request_status']!=2 && $rowData['duration_serv_end']==NULL){?><button type="button" class="btn btn-default btn-sm float-right btn-update-type ml-2" data-toggle="modal" data-target="#modal-maintenance_type" id="btn_maintenance_type" data-backdrop="static" data-keyboard="false"><i class="fas fa-pencil-alt"></i> อัพเดท</button> <?PHP } ?>

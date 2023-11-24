@@ -240,9 +240,9 @@ div.dataTables_wrapper {
                     <?PHP
                         $rowNews = $obj->fetchRows("SELECT tb_news.*, tb_user.fullname, tb_user.ref_id_dept, tb_user.ref_id_site , tb_site.site_initialname, tb_dept.dept_initialname FROM tb_news 
                         LEFT JOIN tb_user ON (tb_user.id_user=tb_news.ref_id_user_post)
-                        LEFT JOIN tb_site ON (tb_site.id_site=tb_user.ref_id_site) 
+                        LEFT JOIN tb_site ON (tb_site.id_site=tb_news.ref_id_site) 
                         LEFT JOIN tb_dept ON (tb_dept.id_dept=tb_user.ref_id_dept) 
-                        WHERE tb_news.ref_id_site=".$_SESSION['sess_ref_id_site']." ORDER BY tb_news.datetime_post DESC LIMIT 5;");
+                        WHERE tb_news.ref_id_site=".$_SESSION['sess_ref_id_site']." AND tb_news.status_news = 1 ORDER BY tb_news.datetime_post DESC LIMIT 5;");
                         if (count($rowNews)!=0) {
                             foreach($rowNews as $key => $value) {
                                 echo '<tr>
