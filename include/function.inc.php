@@ -43,7 +43,14 @@
       //return $search.'-------มีจำนวน-------'.$count.'---------------ฟิลด์ที่ค้นหา==='.$key.'----------------'.$object[$key];
   }
 
-
+  function searchForKeyName($value, $keyname, $arrays) {
+    foreach ($arrays as $key => $val) {
+        if ($val[$keyname] === $value) {
+            return $key;
+        }
+    }
+    return null;
+  }
 
 //ฟังก์ชั่นหาค่าในอาร์เรย์ว่าอยู่ไอดีไหน **ใช้ชั่วคราวไปก่อน** Function to iteratively search for a given value 
 function searchForId($search_value, $array, $id_path) {
@@ -381,6 +388,20 @@ function SortStatus($fetch){
 
     return $arrTotal;
 
+}
+
+
+function searchArrayKey($array, $key, $value){
+    $results = array();
+    if (is_array($array)) {
+        if (isset($array[$key]) && $array[$key] == $value) {
+            $results[] = $array;
+        }
+        foreach ($array as $subarray) {
+            $results = array_merge($results, search($subarray, $key, $value));
+        }
+    }
+    return $results;
 }
 
 function DataTableStatus($value){
