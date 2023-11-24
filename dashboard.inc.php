@@ -1,6 +1,5 @@
-<style>
-.dataTables_length,
-.form-control-sm {
+<style type="text/css">
+.dataTables_length, .form-control-sm {
   font-size: 0.85rem;
   /* 40px/16=2.5em */
 }
@@ -297,6 +296,7 @@ div.dataTables_wrapper {
                         if (count($fetchRow)>0) {
                           $No = count($fetchRow);
                           foreach($fetchRow as $key=>$value){
+                            /*
                             if($fetchRow[$key]['status_approved']==NULL && $fetchRow[$key]['allotted_date']==NULL && $fetchRow[$key]['maintenance_request_status']==1 && $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['hand_over_date']==NULL){
                               $req_textstatus= '<span class="text-bold text-danger">รออนุมัติ/จ่ายงาน</span>';
                           }else if($fetchRow[$key]['status_approved']==1 && $fetchRow[$key]['allotted_date']!='' && $fetchRow[$key]['maintenance_request_status']==1 && $fetchRow[$key]['duration_serv_end']==NULL && $fetchRow[$key]['allotted_accept_date']==NULL && $fetchRow[$key]['hand_over_date']==NULL){
@@ -310,7 +310,9 @@ div.dataTables_wrapper {
                               $req_textstatus= '<span class="text-bold text-gray">ยกเลิกใบแจ้งซ่อม</span>';
                           }else{
                               $req_textstatus = '-';
-                          }                            
+                          }
+                          */
+                          $req_textstatus = DataTableStatus($value);
                   ?>
                     <tr>
                       <td><?PHP echo $No; ?>.</td>

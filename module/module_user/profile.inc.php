@@ -104,7 +104,6 @@
                                 </div>  
                             </div>  
 
-                            
                             <?PHP if($_SESSION['sess_class_user']==5){?>
                             <div class="row row-6">
                             <div class="col-sm-12 col-md-12 col-xs-12">  

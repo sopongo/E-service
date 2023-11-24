@@ -330,8 +330,8 @@ switch($_SESSION['sess_class_user']){
 if (count($fetchRow)>0) {
     $No = ($numRow-$_POST['start']);
     foreach($fetchRow as $key=>$value){
+        
         $req_textstatus = DataTableStatus($value);
-
         $dataRow = array();
         $dataRow[] = $No.'.';
         //$dataRow[] = $No.'.'.(count($fetchRow)).'---'.$search.'--------'.$query_class.'-------------'.$query_search.$fetchRow[$key]['dept_request'];
