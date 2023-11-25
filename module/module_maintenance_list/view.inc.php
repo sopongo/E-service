@@ -83,25 +83,25 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
       //$chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user'));
       
       $rowMechanic_reject = $rowMechanic;
-
-      echo "<pre>"; print_r($rowMechanic); echo "</pre>";
       $chk_key_responsibility = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user')); //ให้หา index
+      /*echo "<pre>"; print_r($rowMechanic); echo "</pre>";
       echo "<hr />";      
-    echo $rowMechanic[$chk_key_responsibility]['ref_id_user_repairer'];
-    echo "<hr />";
-    echo $_SESSION['sess_id_user'];
-    echo "<hr />";
-    echo 'oooo>'.$rowMechanic[$chk_key_responsibility]['ref_id_user_repairer'];
-    echo "<hr />";
-      if($rowMechanic[$chk_key_responsibility]['ref_id_user_repairer']!=$_SESSION['sess_id_user'] || $rowMechanic[$chk_key_responsibility]['status_repairer']==2){//ปฎิเสธซ่อม
+      echo $rowMechanic[$chk_key_responsibility]['ref_id_user_repairer'];
+      echo "<hr />";
+      echo 'dddddd>'.$_SESSION['sess_id_user'];
+      echo "<hr />";
+      echo 'oooo>'.$rowMechanic[$chk_key_responsibility]['ref_id_user_repairer'];
+      echo "<hr />";
+      echo 'ppppp>'.$rowMechanic[$chk_key_responsibility]['status_repairer'];
+      echo "<hr />";*/
+    
+      if(($rowMechanic[$chk_key_responsibility]['ref_id_user_repairer']!=$_SESSION['sess_id_user']) && ($rowMechanic[$chk_key_responsibility]['status_repairer']==2)){
           $chk_responsibility = 0;
       }else{
           $chk_responsibility = 1;
       }
     }
   }
-
-  echo 'ddddddddd>'.$chk_responsibility;
 
   /*
     $chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user')); //หาแบบใช้คอลัมน์ id_user เป็นค่าที่ต้องการ
@@ -289,13 +289,9 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                 if(!empty($rowMechanic)){
                   $id_repairer = searchForKeyName($_SESSION['sess_id_user'], 'id_user', $rowMechanic);  //เช็คว่ายูเซอร์ที่เข้ามาดู ตรงกับไอดีช่างที่ได้รับมอบหมายหรือไม่
                 }
-
-              echo 'chk_responsibility=='.$chk_responsibility.'status_approved=='.$rowData['status_approved'].'///allotted_accept_date=='.$rowData['allotted_accept_date'];
                 if($chk_responsibility==1 && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3) && isset($id_repairer)){?>
                     <a href="#" class="btn btn-warning btn-block btn-start_repair">เริ่มซ่อม</a>
-                <?PHP }else{echo 'ยังไม่เข้า';} ?>
-
-
+                <?PHP } ?>
                 <?PHP if(($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
                     <a href="#" class="btn btn-warning btn-block btn-serv_end">ปิดงาน</a>
                 <?PHP } ?>
