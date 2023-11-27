@@ -39,6 +39,12 @@ switch($module){
     exit();
   break;  
 
+  case 'datatable':
+    $title_site = "DataTable Demo"; $title_act = "DataTable Demo"; $breadcrumb_txt = "DataTable Demo";
+    $include_module = "module/module_datatable/list.inc.php";
+    $module=="datatable" ? ($active_datatable="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_howto=""); #ไฮไลท์เมนูด้านซ้าย    
+  break;    
+
   case 'howto':
     $title_site = "คู่มือการใช้งาน"; $title_act = "คู่มือการใช้งาน"; $breadcrumb_txt = "คู่มือการใช้งาน";
     $include_module = "module/module_howto/howto.inc.php";

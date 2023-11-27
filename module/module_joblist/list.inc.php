@@ -8,12 +8,12 @@ $accept_numRow = $obj->countAll($sql_fetch_Accept."");
 
 $sql_fetch_WaitStart = "SELECT tb_maintenance_request.*, tb_ref_repairer.* FROM tb_maintenance_request 
 LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
-WHERE tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_start IS NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']."  ";
+WHERE tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_start IS NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND tb_maintenance_request.maintenance_request_status=1 AND (tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']." AND tb_ref_repairer.status_repairer=1)  ";
 $waitStart_numRow = $obj->countAll($sql_fetch_WaitStart."");
 
 $sql_fetch_Working = "SELECT tb_maintenance_request.*, tb_ref_repairer.* FROM tb_maintenance_request 
 LEFT JOIN tb_ref_repairer ON (tb_ref_repairer.ref_id_maintenance_request=tb_maintenance_request.id_maintenance_request) 
-WHERE tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_start IS NOT NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND  tb_maintenance_request.duration_serv_end IS NULL AND tb_maintenance_request.maintenance_request_status=1 AND tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']."  ";
+WHERE tb_maintenance_request.allotted_accept_date IS NOT NULL AND tb_maintenance_request.duration_serv_start IS NOT NULL AND tb_maintenance_request.ref_id_dept_responsibility=".$_SESSION['sess_id_dept']." AND tb_maintenance_request.ref_id_site_request=".$_SESSION['sess_ref_id_site']." AND  tb_maintenance_request.duration_serv_end IS NULL AND tb_maintenance_request.maintenance_request_status=1 AND (tb_ref_repairer.ref_id_user_repairer=".$_SESSION['sess_id_user']." AND tb_ref_repairer.status_repairer=1) ";
 $working_numRow = $obj->countAll($sql_fetch_Working."");
 ?>
 <style type="text/css"> 

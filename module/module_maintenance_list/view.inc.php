@@ -74,20 +74,28 @@ p.problem_statement{ font-size:1rem; text-indent:15px;}
         
   ##ลิงค์โค๊ดส่วนที่ 1
   if($rowData['status_approved']==1){//ถ้าอนุมัติแล้ว จะคิวรี่ผู้รับผิดชอบมารอไว้
+    
     $rowMechanic = $obj->fetchRows("SELECT tb_user.id_user, tb_user.fullname, tb_ref_repairer.* FROM tb_ref_repairer 
     LEFT JOIN tb_user ON (tb_user.id_user=tb_ref_repairer.ref_id_user_repairer) WHERE tb_ref_repairer.ref_id_maintenance_request=".$rowData['id_maintenance_request']." ORDER BY tb_ref_repairer.id_ref_repairer ASC"); // AND tb_ref_repairer.status_repairer=1 
+
     ##เช็คว่าไอดีใน $_SESSION['sess_id_user'] ตรงกับ $rowMechanic ถ้าตรงจะแสดงปุ่มรับงาน-ปฏิเสธ
     if(count($rowMechanic)>0){
       //$chk_id_result = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user', 'id_user'));
-      $rowMechanic_reject = $rowMechanic;
       
-      //echo "<pre>";      print_r($rowMechanic);      echo "</pre>";
-
+      $rowMechanic_reject = $rowMechanic;
       $chk_key_responsibility = array_search($_SESSION['sess_id_user'], array_column($rowMechanic, 'id_user')); //ให้หา index
-    //echo $rowMechanic[$chk_key_responsibility]['ref_id_user_repairer'];
-    //echo "<hr />";
-    //echo $rowMechanic[$chk_key_responsibility]['status_repairer'];
-      if($rowMechanic[$chk_key_responsibility]['ref_id_user_repairer']!=$_SESSION['sess_id_user'] || $rowMechanic[$chk_key_responsibility]['status_repairer']==2){//ปฎิเสธซ่อม
+      /*echo "<pre>"; print_r($rowMechanic); echo "</pre>";
+      echo "<hr />";      
+      echo $rowMechanic[$chk_key_responsibility]['ref_id_user_repairer'];
+      echo "<hr />";
+      echo 'dddddd>'.$_SESSION['sess_id_user'];
+      echo "<hr />";
+      echo 'oooo>'.$rowMechanic[$chk_key_responsibility]['ref_id_user_repairer'];
+      echo "<hr />";
+      echo 'ppppp>'.$rowMechanic[$chk_key_responsibility]['status_repairer'];
+      echo "<hr />";*/
+    
+      if(($rowMechanic[$chk_key_responsibility]['ref_id_user_repairer']!=$_SESSION['sess_id_user']) && ($rowMechanic[$chk_key_responsibility]['status_repairer']==2)){
           $chk_responsibility = 0;
       }else{
           $chk_responsibility = 1;
@@ -270,14 +278,18 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                     <button type="button" class="btn btn-success btn-block btn-approved" data-toggle="modal" data-target="#modal-approved" id="addData" data-backdrop="static" data-keyboard="false"> อนุมัติ, จ่ายงานซ่อม</button>
                     <button type="button" class="btn btn-warning btn-block btn-noapproved" data-toggle="modal" data-target="#modal-noapproved" id="noapproved" data-backdrop="static" data-keyboard="false"> ไม่อนุมัติใบแจ้งซ่อม</button>                    
                 <?PHP }?>
-
                 <?PHP if($rowData['status_approved']==1 && $rowData['allotted_accept_date']==NULL && $rowData['maintenance_request_status']==1){ ?>
                     <?PHP if(($chk_responsibility==1 && $rowData['status_approved']==1) || $_SESSION['sess_class_user']==5){ ##เช็คว่าคนที่เปิดดูหน้านี้ใช้ผู้รับผิดชอบหรือไม่ ?>
                       <a href="#" class="btn btn-success btn-block btn-accept_date">รับทราบ, รับงานซ่อม</a>
                       <a href="#" data-toggle="modal" id="addData" data-backdrop="static" data-keyboard="false" class="btn btn-danger btn-block btn-reject_request">ปฎิเสธรับงาน</a>
                       <?PHP } ?>
-                <?PHP } ?>
-                <?PHP if($chk_responsibility==1 && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1 && $_SESSION['sess_class_user']==2){?>
+                <?PHP } ?>            
+
+                <?PHP 
+                if(!empty($rowMechanic)){
+                  $id_repairer = searchForKeyName($_SESSION['sess_id_user'], 'id_user', $rowMechanic);  //เช็คว่ายูเซอร์ที่เข้ามาดู ตรงกับไอดีช่างที่ได้รับมอบหมายหรือไม่
+                }
+                if($chk_responsibility==1 && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']==NULL && $rowData['maintenance_request_status']==1 && ($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3) && isset($id_repairer)){?>
                     <a href="#" class="btn btn-warning btn-block btn-start_repair">เริ่มซ่อม</a>
                 <?PHP } ?>
                 <?PHP if(($_SESSION['sess_class_user']==2 || $_SESSION['sess_class_user']==3 || $_SESSION['sess_class_user']==5) && $rowData['status_approved']==1 && $rowData['allotted_accept_date']!=NULL && $rowData['duration_serv_start']!=NULL && $rowData['duration_serv_end']==NULL && $rowData['maintenance_request_status']==1){?>
@@ -377,7 +389,7 @@ if (!empty($rowMechanic) && count($rowMechanic)!=0) { //แยกผู้รั
                   $i = 1;
                   echo '<div class="row mt-3 pt-2 border-top">';
                   foreach($rowMechanic_reject as $key => $value) {
-                      echo '<div class="col-sm-2 text-danger"><strong class="d-inline-block">ยกเลิกงานซ่อม'.(count($rowMechanic_reject)>1 ? 'คนที่ '.$i.': ' : ': ').'</strong></div><div class="col-md-9 text-danger">'.$rowMechanic_reject[$key]['fullname'].' ('.$rowMechanic_reject[$key]['reject_caused'].' วันที่: '.$rowMechanic_reject[$key]['reject_date'].')</div>';
+                      echo '<div class="col-sm-2 text-danger"><strong class="d-inline-block">เปลี่ยนช่างซ่อม'.(count($rowMechanic_reject)>1 ? 'คนที่ '.$i.': ' : ': ').'</strong></div><div class="col-md-9 text-danger">'.$rowMechanic_reject[$key]['fullname'].' ('.$rowMechanic_reject[$key]['reject_caused'].' วันที่: '.$rowMechanic_reject[$key]['reject_date'].')</div>';
                       //echo '<span>'.$i.'. '.$rowMechanic[$key]['fullname'].'</span>';
                       $i++;
                   }
@@ -1147,11 +1159,11 @@ $(document).on("click", ".btn-posttimeline", function (event){
 });
 
 $(document).on("click", ".btn-serv_end", function (event){ 
-  var chk_caused_by = '<?PHP echo  $rowData['txt_caused_by']; ?>';
-  var chk_failure_code = '<?PHP echo $rowData['ref_id_failure_code']; ?>';
-  var chk_failure_code_th = '<?PHP echo $rowData['failure_code_th_name'];?>';
-  var chk_repair_code = '<?PHP echo $rowData['repair_code_name'];?>';
-  var chk_txt_solution = '<?PHP echo $rowData['txt_solution'];?>';
+  var chk_caused_by = '<?PHP echo  !empty($rowData['txt_caused_by']) ? preg_replace("/\n|\r/", " ", strip_tags($rowData['txt_caused_by'])) : ''; ?>';
+  var chk_failure_code = '<?PHP echo  !empty($rowData['ref_id_failure_code']) ? preg_replace("/\n|\r/", " ", strip_tags($rowData['ref_id_failure_code'])) : ''; ?>';
+  var chk_failure_code_th = '<?PHP echo  !empty($rowData['failure_code_th_name']) ? preg_replace("/\n|\r/", " ", strip_tags($rowData['failure_code_th_name'])) : ''; ?>';
+  var chk_repair_code = '<?PHP echo  !empty($rowData['repair_code_name']) ? preg_replace("/\n|\r/", " ", strip_tags($rowData['repair_code_name'])) : ''; ?>';
+  var chk_txt_solution = '<?PHP echo  !empty($rowData['txt_solution']) ? preg_replace("/\n|\r/", " ", strip_tags($rowData['txt_solution'])) : ''; ?>';
   if(chk_caused_by=='' && (chk_failure_code=='' || chk_failure_code_th=='') && chk_repair_code=='' && chk_txt_solution==''){
     sweetAlert("ผิดพลาด!", "ต้องสรุปผลการซ่อมก่อน \r\n ถึงจะปิดงานซ่อมได้", "error");
     return false;
