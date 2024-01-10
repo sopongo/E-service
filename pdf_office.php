@@ -200,20 +200,20 @@ class MYPDF extends TCPDF {
 		<tr>
 		<td width="25%" style="text-align:center;">
 			<strong>ผู้แจ้งซ่อม, ผู้ประเมิน:</strong><br />
-			<img src="upload-signature/signature.png" width="200" /><br />
+			<div style="width:200px"></div><br />
 			ชื่อ ('.($rowData['fullname_survay']!='' ? $rowData['fullname_survay'] : '-').')<br />
 			วันที่ '.($rowData['survay_date']!='' ? nowDate($rowData['survay_date']) : '-').'
 		</td>
 		<td width="25%">ประเมินผลการซ่อม:<br/><strong style="text-align: left; vertical-align:middle; font-size:60px;">'.$score_result.'%</strong><br />		วันที่ประเมิน '.($rowData['survay_date']!='' ? nowDate($rowData['survay_date']) : '-').'</td>
 		<td width="25%" style="text-align:center;">
 		<strong>ช่างซ่อม:</strong>
-		<div style="border-bottom:1px solid #333333; padding-bottom:10px; display:block;"><img src="upload-signature/signature.png" width="200" /></div>
+		<div style="border-bottom:1px solid #333333; padding-bottom:10px; display:block;"><div style="width:200px"></div></div>
 		ชื่อ ('.($rowData['fullname_accept']!='' ? $rowData['fullname_accept'] : '-').')<br />
 		วันที่ '.($rowData['allotted_accept_date']!='' ? nowDate($rowData['allotted_accept_date']) : '-').'
 		</td>
 		<td width="25%" style="text-align:center;">
 		<strong>หัวหน้าช่าง, ผู้อนุมัติซ่อม, ส่งมอบงาน:</strong><br />
-		<img src="upload-signature/signature.png" width="200" /><br />
+		<div style="width:200px"></div><br />
 		ชื่อ ('.($rowData['fullname_handover']!='' ? $rowData['fullname_handover'] : '-').')<br />
 		วันที่ '.($rowData['hand_over_date']!='' ? nowDate($rowData['hand_over_date']) : '-').'		
 		</td>
