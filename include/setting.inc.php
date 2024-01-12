@@ -236,3 +236,9 @@ $arr_newMonths = array(
     '7' => '',
     '8' => ''
   );
+
+  Class Setting {
+    public static $l_token = "JusP1kFWnpPJSJyWDJOLczGo2wl4w9LNxjslAzhrZRA";
+    public static $AppTimeZone = 'Asia/Bangkok';
+    public static $PathImg = '../../../dist/img/img_itnotify';
+  }

@@ -334,6 +334,9 @@ $obj = new CRUD();
 <meta name="googlebot" content="noindex, nofollow">
 <title><?PHP echo $title_site; ?></title>
 
+<!-- Favicon -->
+<link rel="icon" type="image/webp" href="dist/img/favicon.webp">
+
 <!-- Google Font: Source Sans Pro -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 

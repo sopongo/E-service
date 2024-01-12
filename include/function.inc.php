@@ -441,6 +441,31 @@ return $req_textstatus;
 
 }
 
+function getPathImg($PathDefault){
+    $path = $PathDefault;
+    $folderName = date("Ymd");
+
+    $folderPath = $path . '/' . $folderName . '/';
+
+    // Check if the folder exists
+    if (is_dir($folderPath)) {
+        // If the folder exists, return its name
+        return $folderName;
+    }
+    
+    // If the folder doesn't exist, create it
+    if (!mkdir($folderPath, 0777, true) && !is_dir($folderPath)) {
+        // Failed to create folder
+        return null;
+    }
+
+    // Set folder permissions to 777
+    chmod($folderPath, 0777);
+
+    return $folderName;
+}
+
+
 
 
 ?>
