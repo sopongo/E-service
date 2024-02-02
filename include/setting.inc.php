@@ -237,8 +237,21 @@ $arr_newMonths = array(
     '8' => ''
   );
 
-  Class Setting {
+Class Setting {
     public static $l_token = "JusP1kFWnpPJSJyWDJOLczGo2wl4w9LNxjslAzhrZRA";
     public static $AppTimeZone = 'Asia/Bangkok';
     public static $PathImg = '../../../dist/img/img_itnotify';
-  }
+    public static $main_l_token = "ZCrKUwZwzjjuV8t15ewPmYDIjToPVaZRuKY4TQivnSq";
+    public static $SQLSET = "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));";
+    public static $notifyStatus = array(
+        0 => "ปิดการแจ้งเตือน",
+        1 => "แจ้งเตือนกลุ่มหลักและที่เลือก",
+        2 => "แจ้งเตือนกลุ่มที่เลือก",
+        3 => "แจ้งเตือนกลุ่มหลัก"
+    );
+
+    public static $notifyStatusIcon = array(
+        true  => "#4cae4c",
+        false => "#d43f3a"
+    );
+}
