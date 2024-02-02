@@ -465,7 +465,9 @@ function getPathImg($PathDefault){
     return $folderName;
 }
 
-
+function IsNullOrEmptyString($str) {
+    return (!isset($str) || trim($str) === '');
+}
 
 
 ?>
