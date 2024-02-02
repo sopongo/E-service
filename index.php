@@ -224,6 +224,12 @@ switch($module){
     $module=="supplier" ? ($active_supplier="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_supplier=""); #ไฮไลท์เมนูด้านซ้าย
   break;  
 
+  case 'notify':
+    $title_site = "การแจ้งเตือน"; $title_act = "การแจ้งเตือน"; $breadcrumb_txt = "การแจ้งเตือน";
+    $include_module = "module/module_notify/list.inc.php";
+    $module=="notify" ? ($active_notify="active") && ($active_treeview_1="menu-open") : ($active_treeview_1="menu-close") && ($active_notify=""); #ไฮไลท์เมนูด้านซ้าย
+  break;  
+
   case 'userlist':
     $title_site = "รายชื่อผู้ใช้งาน"; $title_act = "รายชื่อผู้ใช้งาน"; $breadcrumb_txt = "รายชื่อผู้ใช้งาน";
     $include_module = "module/module_user/list.inc.php";
@@ -570,6 +576,7 @@ $obj = new CRUD();
               <li class="nav-item"><a href="?module=unit" class="nav-link <?PHP echo $active_unit; ?>"><i class="fa fa-caret-right nav-icon"></i><p>หน่วยนับ</p></a></li>
               <li class="nav-item"><a href="?module=brand" class="nav-link <?PHP echo $active_brand; ?>"><i class="fa fa-caret-right nav-icon"></i><p>แบรนด์</p></a></li>
               <li class="nav-item"><a href="?module=supplier" class="nav-link <?PHP echo $active_supplier; ?>"><i class="fa fa-caret-right nav-icon"></i><p>ซัพพลายเออร์</p></a></li>
+              <li class="nav-item"><a href="?module=notify" class="nav-link <?PHP echo $active_notify; ?>"><i class="fa fa-caret-right nav-icon"></i><p>การแจ้งเตือน</p></a></li>
             </ul>
           </li>
           <!--<li class="nav-item"><a href="?module=system-setting" class="nav-link"><i class="nav-icon fas fa-cog"></i> <p>ตั้งค่าระบบ</p></a></li>-->

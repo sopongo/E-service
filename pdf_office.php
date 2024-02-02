@@ -146,7 +146,7 @@ class MYPDF extends TCPDF {
 			 บริษัท แปซิฟิค ห้องเย็น จำกัด</strong><br>
 			  47/19 หมู่ 2 ตำบลนาดี อำเภอเมือง จังหวัด สมุทรสาคร 74000 โทร. (+66) 3411-789-9</td>
 		<td align="right" width="30%" style="text-align:right; vertical-align:middle;"> 
-		<strong style="font-size:24px;">ใบแจ้งซ่อม แผนก: '.$rowData['dept_user_request'].'</strong><br />
+		<strong style="font-size:24px;">ใบแจ้งซ่อม แผนก: '.$rowData['dept_responsibility'].'</strong><br />
 		<span style="font-size:18px;float: right;" align="right">เลขที่ใบแจ้งซ่อม: '.$rowData['maintenance_request_no'].'</span><br>
 		<span style="font-size:18px;float: right;" align="right">วันที่แจ้งซ่อม: '.$mt_req_date.''.$PgNo.'</span>
 		<div style="font-size:18px;">สถานะใบแจ้งซ่อม: '.$req_textstatus.'</div></td>
